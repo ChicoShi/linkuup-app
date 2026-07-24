@@ -97,7 +97,6 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		const options = field.options; // field options
 		const gdtType = field.type; // field type
 		const hierarc = TypeSrvc.TYPES[gdtType]; // Class hierarchy
-		console.log('PARSE', gdtType, options, hierarc);
 		let value = TypeSrvc.parseBinaryType(gdtType, gwsMessage, gdtType, options);
 		if (value === undefined) {
 			for (let i in hierarc) {
@@ -107,12 +106,6 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 				}
 			}
 		}
-		
-		if (value === undefined)
-		{
-			alert('Cannot parse ' + gdtType);
-		}
-		console.log('PARSED', field.type, value);
 		return value;
 	};
 	
@@ -122,7 +115,9 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		case 'GDO\\LinkUUp\\GDT_ICQ': s = gwsMessage.readString(); return s ? parseInt(s) : null;
 		case 'GDO\\Core\\GDT_Array': s = gwsMessage.readString(); return JSON.parse(s);
 		case 'GDO\\Core\\GDT_JSON': s = gwsMessage.readString(); return JSON.parse(s);
-		case 'GDO\\Date\\GDT_Timestamp': const t = Math.round(gwsMessage.readDouble() * 1000.0); return t > 0 ? t : null;
+		case 'GDO\\Date\\GDT_Timestamp':
+			const t = gwsMessage.readDouble();
+			return Number.isNaN(t) ? null : t * 1000.0;
 		case 'GDO\\Core\\GDT_Decimal': return gwsMessage.readDouble();
 		case 'GDO\\Core\\GDT_Float': return gwsMessage.readFloat();
 		case 'GDO\\Core\\GDT_Object':

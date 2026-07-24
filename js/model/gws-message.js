@@ -70,10 +70,11 @@ function GWS_Message(buffer) {
 		const buffer = new ArrayBuffer(8);
 		const view = new DataView(buffer);
 		for (let i = 0; i < 8; i++) {
-			view.setUint8(i, this.BUFFER[index + i]);
+			const v = this.BUFFER.getUint8(index++);
+			view.setUint8(i, v);
 		}
 		const value = view.getFloat64(0, true); // true = little-endian
-		this.INDEX = index + 8;
+		this.INDEX += 8;
 		return value;
 	};
 	this.readCmd = function() { this.CMD = this.CMD < 0 ? (this.read16() & 0x7FFF) : this.CMD; return this.CMD; };
