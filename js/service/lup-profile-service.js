@@ -20,14 +20,21 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 		// Parse profile via TypeSrvc.
 		const profile = new GDO_Profile();
 		profile.user = UserSrvc.getOrCreate(gwsMessage.read32());
-		profile.related = gwsMessage.read16();
+		profile.related = gwsMessage.read8();
+
+		const global = gwsMessage.read8();
+		if (!global) {
+			console.log('ALL HIDDEN!');
+			return profile;
+		}
 
 		for (let moduleName in SettingsSrvc.CACHE) {
 			if (moduleName === 'user') {
-				continue;
+				continue; // This is the user object. we have that elsewhere.
 			}
 			let moduleSettings = SettingsSrvc.CACHE[moduleName];
 			for (let key in moduleSettings) {
+				console.log('Trying to parse ' + moduleName + "." + key);
 				let setting = moduleSettings[key];
 				if (gwsMessage.read8() > 0) {
 					profile.JSON[key] = TypeSrvc.parseBinaryTypeHierarchy(gwsMessage, setting);
@@ -47,8 +54,11 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 		profile.JSON.lup_drinks = profile.JSON.lup_drinks||'0';
 		profile.JSON.lup_smokes = profile.JSON.lup_smokes||'0';
 		profile.JSON.lup_sporty = profile.JSON.lup_sporty||'0';
+
 		// Fix floats
-		profile.JSON.lup_height = parseFloat(profile.JSON.lup_height.toPrecision(3));
+		if (profile.JSON.lup_height) {
+			profile.JSON.lup_height = parseFloat(profile.JSON.lup_height.toPrecision(3));
+		}
 		// Fix country
 		// profile.JSON.lup_origin = profile.JSON.lup_origin||'null';
 		// Success

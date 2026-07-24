@@ -56,7 +56,7 @@ function GWS_Message(buffer) {
 	};
 	this.readString = function(index) {
 		this.index(index);
-		var back = '';
+		let back = '';
 		while (code = this.read8()) {
 			back += String.fromCharCode(code);
 		}

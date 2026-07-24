@@ -16,7 +16,7 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	};
 	
 	SettingsSrvc.settingVar = function(setting) {
-		var val = SettingsSrvc.setting(setting)['var'];
+		const val = SettingsSrvc.setting(setting)['var'];
 		console.log('SettingsSrvc.settingVar()', setting, val);
 		return val;
 	}

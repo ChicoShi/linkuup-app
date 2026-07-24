@@ -70,7 +70,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// Avatar Upload //
 	///////////////////
 	$scope.canUploadProfile = function() {
-		var user = $scope.data.user;
+		let user = $scope.data.ownUser;
 		if ( (!user) || (!user.isSelf()) ) {
 			return false;
 		}
@@ -81,7 +81,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.clickAvatarError = function() {
-		if ($scope.data.user.isSelf()) {
+		if ($scope.data.ownUser.isSelf()) {
 			ErrorSrvc.showError($translate.instant('err_no_guest_avatar'), 'Avatar');
 		}
 	};
@@ -292,7 +292,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	};
 
-		////////////////////
+	////////////////////
 	// --- Events --- //
 	////////////////////
 	$scope.$on('lup-inited', $scope.init);

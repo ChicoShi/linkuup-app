@@ -94,13 +94,13 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 	 * The parsing target format is the json equivalent of a response.
 	 */
 	TypeSrvc.parseBinaryTypeHierarchy = function(gwsMessage, field) {
-		var options = field.options; // field options
-		var gdtType = field.type; // field type
-		var hierarc = TypeSrvc.TYPES[gdtType]; // Class hierarchy
+		const options = field.options; // field options
+		const gdtType = field.type; // field type
+		const hierarc = TypeSrvc.TYPES[gdtType]; // Class hierarchy
 		console.log('PARSE', gdtType, options, hierarc);
-		var value = TypeSrvc.parseBinaryType(gdtType, gwsMessage, gdtType, options);
+		let value = TypeSrvc.parseBinaryType(gdtType, gwsMessage, gdtType, options);
 		if (value === undefined) {
-			for (var i in hierarc) {
+			for (let i in hierarc) {
 				value = TypeSrvc.parseBinaryType(hierarc[i], gwsMessage, gdtType, options);
 				if (value !== undefined) {
 					break;
@@ -122,10 +122,20 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		case 'GDO\\LinkUUp\\GDT_ICQ': s = gwsMessage.readString(); return s ? parseInt(s) : null;
 		case 'GDO\\Core\\GDT_Array': s = gwsMessage.readString(); return JSON.parse(s);
 		case 'GDO\\Core\\GDT_JSON': s = gwsMessage.readString(); return JSON.parse(s);
-		case 'GDO\\Date\\GDT_Timestamp': const t = Math.round(gwsMessage.readDouble() * 1000); return t > 0 ? t : null;
+		case 'GDO\\Date\\GDT_Timestamp': const t = Math.round(gwsMessage.readDouble() * 1000.0); return t > 0 ? t : null;
 		case 'GDO\\Core\\GDT_Decimal': return gwsMessage.readDouble();
 		case 'GDO\\Core\\GDT_Float': return gwsMessage.readFloat();
-		case 'GDO\\Core\\GDT_ObjectSelect': return gwsMessage.read32();
+		case 'GDO\\Core\\GDT_Object':
+		case 'GDO\\Core\\GDT_ObjectSelect':
+			let gid = '';
+			for (let gdt in TypeSrvc.FIELDS[options.table]) {
+				gdt = TypeSrvc.FIELDS[options.table][gdt]
+				if (gdt.options.primary) {
+					gid += gid ? ':' : '';
+					gid += TypeSrvc.parseBinaryTypeHierarchy(gwsMessage, gdt);
+				}
+			}
+			return gid;
 		case 'GDO\\Core\\GDT_Int': return gwsMessage.readN(options.bytes);
 		case 'GDO\\Core\\GDT_String': return gwsMessage.readString();
 		case 'GDO\\Core\\GDT_Enum':
