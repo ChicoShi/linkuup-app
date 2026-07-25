@@ -33,6 +33,18 @@ $v = LUPConfig::$VERSION;
 global $me;
 $me = \GDO\Core\Method\Stub::make();
 
+function protect(string $dir)
+{
+    $content = <<< EOF
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Deny from all
+</IfModule>
+EOF;
+    file_put_contents("$dir/.htaccess", $content);
+}
 
 # Load GDO
 final class Builder extends Application
@@ -118,6 +130,12 @@ $output = str_replace("</body>", "  <script type=\"text/javascript\" src=\"app/l
 
 # Write new index
 file_put_contents($srcpath.'index.php', $output);
+
+# Clean and protect against sniffers
+unlink('linkuup.temp.css');
+protect("{$srcpath}js");
+protect("{$srcpath}css");
+protect("{$srcpath}config");
 
 echo "==== DONE ====\n";
 echo $output;
