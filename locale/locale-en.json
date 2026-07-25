@@ -69,7 +69,7 @@
 "has joined": "joined room",
 "JOIN_CHAT": "enter chat",
 "CHAT_TOO_FAR": "Chat is too far away",
-"ROOM_DISTANCE": "{{distance}}km away!",
+"ROOM_DISTANCE": "{{distance}} away",
 "NAVIGATE_TO_THIS_PLACE": "Navigate from here",
 "SEARCH_FOR_LOCATIONS": "Search for chats",
 

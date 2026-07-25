@@ -77,7 +77,7 @@ angular.module('LUP')
 		console.log("ErrorSrvc.showGDOAjaxError()", response);
 		return ErrorSrvc.websocketJSONError(response, title);
 	};
-	
+
 	// --- Websocket error default --- //
 	ErrorSrvc.websocketError = function(gwsMessage) {
 		console.log('ErrorSrvc.websocketError()', gwsMessage);
@@ -139,6 +139,12 @@ angular.module('LUP')
 		} else {
 			return ErrorSrvc.websocketError(response, title);
 		}
+	};
+
+	ErrorSrvc.ajaxError = function(response) {
+		console.log('ErrorSrvc.ajaxError()', response);
+		debugger;
+		return ErrorSrvc.showError(response, response);
 	};
 	
 	return ErrorSrvc;

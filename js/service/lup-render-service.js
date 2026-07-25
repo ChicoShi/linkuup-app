@@ -1,6 +1,6 @@
 'use strict';
 angular.module('LUP').
-service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, EnumSrvc) {
+service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, TimezoneSrvc, EnumSrvc) {
 
     const RenderSrvc = this;
 
@@ -30,7 +30,8 @@ service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, EnumSrvc) {
             case 'GDO\\Core\\GDT_Array':
             case 'GDO\\Core\\GDT_JSON':
                 return value;
-            case 'GDO\\Date\\GDT_Date':
+            case 'GDO\\Date\\GDT_Timezone':
+                return TimezoneSrvc.renderTimezone(value);
             case 'GDO\\Date\\GDT_Timestamp':
                 if (value === null) {
                     return t('no_data');
@@ -53,6 +54,9 @@ service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, EnumSrvc) {
                 return disp.trimStart();
             case 'GDO\\Core\\GDT_Decimal':
             case 'GDO\\Core\\GDT_Float':
+                if (Number.isNaN(value)) {
+                    return '---';
+                }
             case 'GDO\\Core\\GDT_ObjectSelect':
             case 'GDO\\Core\\GDT_Int':
             case 'GDO\\Core\\GDT_String': return value;
@@ -61,6 +65,12 @@ service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, EnumSrvc) {
                     return type.options.emptyLabel;
                 }
                 return window.t(value);
+            case 'GDO\\Core\\GDT_Checkbox':
+                switch (value) {
+                    case '0': return t('no');
+                    case '1': return t('yes');
+                    case '2': return t('unknown');
+                }
         }
     };
 

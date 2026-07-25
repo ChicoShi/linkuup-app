@@ -24,6 +24,7 @@
     "masonry-layout": "^4.2.2",
     "md-color-picker": "^0.2.6",
     "moment": "^2.24.0",
+    "moment-timezone": "^0.6.3",
     "ng-flow": "^2.1.4",
     "opening_hours": "^3.13.0",
     "slick-carousel": "^1.8.1",

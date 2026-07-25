@@ -62,7 +62,17 @@ function LUPRoom(json) {
 	this.radius = function() { return this.JSON.room_radius; };
 	this.distance = function() { return LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()); };
 	this.inChatRange = function() { return this.distance() <= this.radius(); };
-	
+	this.displayDistance = function() {
+		const km = this.distance();
+		if (km === null || !Number.isFinite(km)) {
+			return '---';
+		}
+		if (km < 1) {
+			return `${Math.round(km * 1000)}m`;
+		}
+		return `${km.toFixed(1)}km`;
+	};
+
 	this.addUser = function(user) {
 		console.log('LUPRoom.addUser()', this, user);
 		if (this.USERS.indexOf(user) < 0) {

@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('ProfileCtrl', function($scope, $routeParams, $translate,
-		UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc,
+		UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
 		ConfigSrvc, ProfileSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
 	$scope.data.title = 'TITLE_PROFILE';
@@ -35,8 +35,14 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('ProfileCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.ownUser = window.GWF_USER;
-			UserSrvc.withUser($routeParams.id, true).
-				then($scope.loadedUser);
+			const timezones = TimezoneSrvc.withTimezones()
+			const user = UserSrvc.withUser($routeParams.id, true).catch(ErrorSrvc.websocketError);
+			$q.all({
+				timezones: timezones,
+				user: user,
+			}).then(function(result) {
+				$scope.loadedUser(result.user);
+			});
 		}
 	};
 	
@@ -44,10 +50,10 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('ProfileCtrl.loadedUser()', user);
 		$scope.data.user = user;
 		$scope.showHelp();
-		if ($scope.data.selectedTab == 0) {
+		if ($scope.data.selectedTab === 0) {
 			$scope.loadInformation();
 		}
-		if ($scope.data.selectedTab == 1) {
+		if ($scope.data.selectedTab === 1) {
 			$scope.showGallery();
 		}
 	};
@@ -173,7 +179,7 @@ angular.module('LUP').config(function($routeProvider) {
 	/////////////////////
 	// --- Gallery --- //
 	/////////////////////
-	$scope.data.galleryAction = window.LUP_CONFIG.server + "/index.php?_mo=Gallery&_me=Crud&_ajax=1&_fmt=json&_cors=" + encodeURIComponent(window.LUP_CONFIG.cors);
+	$scope.data.galleryAction = window.LUP_CONFIG.server + "index.php?_mo=Gallery&_me=Crud&_ajax=1&_fmt=json&_cors=" + encodeURIComponent(window.LUP_CONFIG.cors);
 	
 	$scope.showGallery = function() {
 		console.log('GalleryCtrl.showGallery()');
@@ -217,8 +223,6 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.slickGallery = function(nofocus) {
 		console.log('LocationsCtrl.slickGallery()');
-
-		// Long press
 		if (!$scope.data.slicked) {
 			$scope.data.slicked = true;
 			$scope.galleryAPI = $('#gallery-list').unitegallery({
@@ -236,19 +240,10 @@ angular.module('LUP').config(function($routeProvider) {
 				}
 			});
 		}
-	
 		// Apply new DOM to angular
 		setTimeout($scope.$apply.bind($scope), 1);
 	};
 
-	/**
-	 * Enlarge gallery image.
-	 */
-//	$scope.showGalleryImage = function(image) {
-//		console.log('GalleryCtrl.showGalleryImage()', image);
-//		window.open(image.imageURL(), {target:'_blank'});
-//	};
-	
 	/**
 	 * Delete gallery image.
 	 */

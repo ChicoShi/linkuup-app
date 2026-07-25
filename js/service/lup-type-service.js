@@ -106,6 +106,11 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 				}
 			}
 		}
+		if (value === undefined) {
+			console.error(field);
+			alert('OUCH');
+		}
+		console.log(`Parsed ${field.options.name} to ${value}`);
 		return value;
 	};
 	

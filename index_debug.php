@@ -52,6 +52,7 @@ $min = LUPConfig::$MIN;
   <script src="node_modules/slick-carousel/slick/slick.min.js<?=$v?>"></script>
 
   <script src="node_modules/moment/min/moment-with-locales.min.js<?=$v?>"></script>
+  <script src="node_modules/moment-timezone/builds/moment-timezone-with-data.js<?=$v?>"></script>
   <script src="node_modules/angular/angular.js<?=$v?>"></script>
   <script src="node_modules/angular-animate/angular-animate.js<?=$v?>"></script>
   <script src="node_modules/angular-aria/angular-aria.js<?=$v?>"></script>
