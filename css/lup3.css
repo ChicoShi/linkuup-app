@@ -89,3 +89,7 @@ img.country-image {
 	height: 24px;
 	border: 1px solid black;
 }
+
+.profile-country {
+	height: 22px;
+}

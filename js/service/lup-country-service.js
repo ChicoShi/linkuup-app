@@ -22,7 +22,7 @@ service('CountrySrvc', function($q, RequestSrvc) {
 	};
 	
 	CountrySrvc.countryURL = function(id) {
-		return window.LUP_CONFIG.server + "GDO/Country/img/" + id.toLowerCase() + ".png";
+		return window.LUP_CONFIG.server + "GDO/Country/img/" + id.toUpperCase() + ".png";
 	};
 	
 	return CountrySrvc;

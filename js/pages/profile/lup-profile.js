@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('ProfileCtrl', function($scope, $routeParams, $translate,
+}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q,
 		UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
 		ConfigSrvc, ProfileSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	

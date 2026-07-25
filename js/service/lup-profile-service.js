@@ -38,7 +38,7 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 				let setting = moduleSettings[key];
 				if (gwsMessage.read8() > 0) {
 					profile.JSON[key] = TypeSrvc.parseBinaryTypeHierarchy(gwsMessage, setting);
-					console.log(key, profile.JSON[key]);
+					console.log(`Parsed ${setting.module}.${setting.name} to ${profile.JSON[key]}`);
 				}
 				else {
 					profile.ERRORS[key] = gwsMessage.readString();
