@@ -4,6 +4,7 @@
 "FMT_LONG": "M/D YYYY - HH:mm",
 "FMT_SHORT": "M/D/YY",
 
+"form_error_title": "Form Error",
 "err_no_cookie": "You cannot obtain a cookie from the server.",
 "err_websocket_connection": "The connection to the server failed.",
 "err_no_guest_avatar": "Only members are allowed to set their avatar.",
