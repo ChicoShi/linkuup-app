@@ -1,13 +1,10 @@
 <md-content layout="column" flex=100 style="height: 100%;">
-
   <div class="error" ng-if="data.galleryError">{{data.galleryError}}</div>
-
   <div id="gallery-list" style="display: none;">
-    <img
-     ng-repeat="image in data.galleryImages"
-     alt="{{image.description()}}"
-     data-image="{{image.imageURL()}}"
-     ng-src="{{image.thumbURL()}}" />
+    <img ng-repeat="image in data.galleryImages track by image.id"
+     alt="{{::image.description}}"
+     data-image="{{::image.imageURL}}"
+     ng-src="{{::image.thumbURL}}"
+    />
   </div>
-  
 </md-content>

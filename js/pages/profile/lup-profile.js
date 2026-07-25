@@ -180,6 +180,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Query websocket
 		$scope.data.galleryImages = [];
 		$scope.data.galleryError = undefined;
+		$('#gallery-list *').remove();
 		GallerySrvc.withGalleryForUser($scope.data.user).
 			then($scope.withGallery, $scope.galleryError);
 	};
@@ -191,12 +192,16 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.withGallery = function(gallery) {
 		console.log('GalleryCtrl.withGallery()', gallery);
-		
-		$('#gallery-list *').remove();
-		
-		// Hook new gallery into DOM
 		if (gallery) {
-			$scope.data.galleryImages = gallery.IMAGES;
+			const images = gallery.IMAGES;
+			$scope.data.galleryImages = images.map(function(image) {
+				return {
+					id: image.id(),
+					description: image.description(),
+					imageURL: image.imageURL(),
+					thumbURL: image.thumbURL(),
+				};
+			});
 			setTimeout($scope.slickGallery, 137);
 		}
 	};

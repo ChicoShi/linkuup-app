@@ -257,6 +257,10 @@
 "BTN_LOGIN_GUEST": "Try as a guest",
 "BTN_LOGIN_NORMAL": "I use a real account",
 
+"acl_all": "All",
+"acl_noone": "Nobody",
+"last_activity": "Last Activity",
+
 "COPYRIGHT": "(c) 2019 linkuup.de",
 "Legal": "Legal"
 }

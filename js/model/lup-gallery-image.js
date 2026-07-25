@@ -12,8 +12,8 @@ function LUPGalleryImage(json) {
 
 	this.id = function() { return this.JSON.files_id; };
 	this.fileId = function() { return this.JSON.files_file; };
-	this.thumbURL = function() { return window.LUP_CONFIG.server + "/index.php?_mo=Gallery&_me=Image&nodisposition=1&variant=thumb&id=" + this.fileId(); };
-	this.imageURL = function() { return window.LUP_CONFIG.server + "/index.php?_mo=Gallery&_me=Image&nodisposition=1&id=" + this.fileId(); };
+	this.thumbURL = function() { return window.LUP_CONFIG.server + "index.php?_mo=Gallery&_me=Image&nodisposition=1&variant=thumb&id=" + this.id(); };
+	this.imageURL = function() { return window.LUP_CONFIG.server + "index.php?_mo=Gallery&_me=Image&nodisposition=1&id=" + this.id(); };
 	this.description = function() { return "Gallery Image"; }
 }
 
