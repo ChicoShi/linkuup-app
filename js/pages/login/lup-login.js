@@ -52,12 +52,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 
 		const $scope2 = $scope;
-		function DialogController($scope, $mdDialog) {
-			$scope.gotoGuestLogin = function () {
+		function DialogController($mdDialog) {
+			$scope2.gotoGuestLogin = function () {
 				$mdDialog.cancel();
 				$scope2.goto('/guest-login');
 			};
-			$scope.cancel = function() {
+			$scope2.cancel = function() {
 				$mdDialog.cancel();
 			};
 		};
