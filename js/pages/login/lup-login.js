@@ -38,38 +38,38 @@ angular.module('LUP').config(function($routeProvider) {
 			requestAnimationFrame(function () {
 				setTimeout(function () {
 					$scope.showGuestDialog();
-				}, 500);
+				}, 200);
 			});
-		}, 500);
+		}, 200);
 	});
 
 	$scope.showGuestDialog = function () {
-		if (window.localStorage.getItem('lup_guest')) {
-			return;
-		}
-		else {
-			window.localStorage.setItem('lup_guest', '1');
-		}
+		// if (window.localStorage.getItem('lup_guest')) {
+		// 	return;
+		// }
+		// else {
+		// 	window.localStorage.setItem('lup_guest', '1');
+		// }
 
-		const $scope2 = $scope;
-		function DialogController($mdDialog) {
-			$scope2.gotoGuestLogin = function () {
-				$mdDialog.cancel();
-				$scope2.goto('/guest-login');
-			};
-			$scope2.cancel = function() {
-				$mdDialog.cancel();
-			};
-		};
-
-		// Return promise
-		return $mdDialog.show({
-			controller: DialogController,
-			templateUrl: 'js/dialogs/lup-login-choice-dialog.html',
-			parent: angular.element(document.body),
-			// targetEvent: event,
-			clickOutsideToClose: true,
-		});
+		// const $scope2 = $scope;
+		// function DialogController($scope, $mdDialog) {
+		// 	$scope.gotoGuestLogin = function () {
+		// 		$mdDialog.cancel();
+		// 		$scope2.goto('/guest-login');
+		// 	};
+		// 	$scope.cancel = function() {
+		// 		$mdDialog.cancel();
+		// 	};
+		// };
+		//
+		// // Return promise
+		// return $mdDialog.show({
+		// 	controller: DialogController,
+		// 	templateUrl: 'js/dialogs/lup-login-choice-dialog.html',
+		// 	parent: angular.element(document.body),
+		// 	// targetEvent: event,
+		// 	clickOutsideToClose: true,
+		// });
 
 	};
 
