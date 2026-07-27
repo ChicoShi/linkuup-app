@@ -116,14 +116,14 @@ foreach ($javascripts as $file)
 	$jsmerge .= file_get_contents($srcpath.$file);
 	$jsmerge .= "\n";
 }
-file_put_contents($destpath.'linkuup.js', $jsmerge);
+file_put_contents($destpath.'linkuup.merged.js', $jsmerge);
 
 # Minify
 chdir($destpath);
 echo "Running annotate-ng on merge file\n";
-system("ng-annotate-patched -ar -o linkuup.js linkuup.js");
+system("ng-annotate-patched -ar linkuup.merged.js > linkuup.annotated.js");
 echo "Running uglifyjs on merge file\n";
-system("uglifyjs -c drop_console=true --mangle -o linkuup.js linkuup.js");
+system("uglifyjs -c drop_console=true --mangle -o linkuup.js linkuup.annotated.js");
 
 # Hook JS into index
 $output = str_replace("</body>", "  <script type=\"text/javascript\" src=\"app/linkuup.js?v={$v}\"></script>\n</body>", $output);
@@ -133,6 +133,8 @@ file_put_contents($srcpath.'index.php', $output);
 
 # Clean and protect against sniffers
 unlink('linkuup.temp.css');
+unlink('linkuup.merged.js');
+unlink('linkuup.annotated.js');
 protect("{$srcpath}js");
 protect("{$srcpath}css");
 protect("{$srcpath}config");
