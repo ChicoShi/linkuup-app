@@ -124,16 +124,15 @@ file_put_contents($destpath.'linkuup.merged.js', $jsmerge);
 
 # Minify
 chdir($destpath);
-echo "Running annotate-ng on merge file\n";
 $annotate = 'node ' . escapeshellarg($srcpath . 'tools/ng-annotate-wrapper.js') .
 	' ' . escapeshellarg($destpath . 'linkuup.merged.js') .
 	' ' . escapeshellarg($destpath . 'linkuup.annotated.js');
-if (system($annotate) !== 0)
-{
-	exit("ng-annotate-patched wrapper failed\n");
-}
-echo "Running uglifyjs on merge file\n";
-system("uglifyjs -c drop_console=true --mangle -o linkuup.js linkuup.annotated.js");
+echo "$annotate\n";
+system($annotate);
+
+$uglify = "uglifyjs -c drop_console=true --mangle -o linkuup.js linkuup.annotated.js";
+echo "$uglify\n";
+system($uglify);
 
 # Hook JS into index
 $output = str_replace("</body>", "  <script type=\"text/javascript\" src=\"app/linkuup.js?v={$v}\"></script>\n</body>", $output);
