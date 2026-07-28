@@ -15,6 +15,10 @@ use GDO\Util\FileUtil;
 $srcpath = str_replace("\\", '/', __DIR__.'/');
 $destpath = str_replace("\\", '/', __DIR__.'/app/');
 
+unlink($destpath.'linkuup.temp.css');
+unlink($destpath.'linkuup.merged.js');
+unlink($destpath.'linkuup.annotated.js');
+
 # Patch build number
 $file = file_get_contents('config/lup-php-config.php');
 $file = preg_replace_callback('/\\$VERSION *= *(\\d+)/', function($matches) {
