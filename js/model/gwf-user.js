@@ -48,6 +48,10 @@ var GWF_User = function(json) {
 	};
 	this.status = function() { return this.JSON.lup_status; };
 	this.avatarURI = function() {
+		if (this.id() === 0 || this.id() === '0') {
+			return window.LUP_CONFIG.server +
+				'index.php?_mo=Avatar&_me=Image&nodisposition=1';
+		}
 		return window.LUP_CONFIG.server +
 			'index.php?_mo=Avatar&_me=ForUser&id='+this.id()+'&v='+this.avatarVersion() +
 			'&nodisposition=1';
