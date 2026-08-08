@@ -12,7 +12,9 @@ var GWF_User = function(json) {
 	this.isNotSelf = function() { return !this.isSelf(); };
 	this.isMale = function() { return this.gender() === 'male'; };
 	this.isFemale = function() { return this.gender() === 'female'; };
-	this.isFriend = function() { return this.JSON.relationship !== null; };
+	this.isFriend = function() {
+		return this.JSON.relationship !== null && this.JSON.relationship !== 'Not specified';
+	};
 
 	this.likes = function() { return this.JSON.lup_likes||0; };
 	this.friends = function() { return this.JSON.lup_friends||0; };

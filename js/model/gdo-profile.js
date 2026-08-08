@@ -57,7 +57,7 @@ function GDO_Profile(json) {
 	/////////////////////
 	// --- Display --- //
 	/////////////////////
-	this.displayAbout = function() { return this.JSON.lup_aboutme; };
+	this.displayAbout = function() { return this.JSON.about_me; };
 	this.displayEyeColor = function() { return t(this.JSON.lup_eyecolor); };
 	this.displayICQ = function() { return this.JSON.lup_icq; };
 	this.displayHeight = function() { return sprintf('%.02fm', this.JSON.lup_height); };
