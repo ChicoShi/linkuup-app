@@ -69,6 +69,9 @@ angular.module('LUP')
 			title = form.form_title;
 		} catch (e) {
 		}
+		if (data.form.top) {
+			text += data.form.top;
+		}
 		return ErrorSrvc.showError(text, title);
 	};
 	
