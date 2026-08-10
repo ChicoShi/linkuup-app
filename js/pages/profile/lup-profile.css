@@ -25,11 +25,11 @@
 }
 
 .user-top-information {
-	width: 85%;
+	width: min(85%, 680px);
 	margin: 0 auto;
-	padding-top: 25px;
-	box-shadow: 0px 10px 10px 0px #f0f0f0;
-	border-radius: 20px;
+	padding-top: 18px;
+	box-shadow: 0 16px 35px rgba(27, 25, 50, .12);
+	border-radius: 18px;
 	z-index: 10;
 	background: #fff;
 	text-align: center;
@@ -37,11 +37,7 @@
 	margin-top: -50px;
 	display: block;
 	position: relative;
-	background: rgb(255,255,255); /* Old browsers */
-	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(243,243,243,1) 50%, rgba(237,237,237,1) 51%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(243,243,243,1) 50%,rgba(237,237,237,1) 51%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */	
+	background: #fff;
 }
 .profile-page md-tabs-wrapper.md-stretch-tabs md-pagination-wrapper{
 	background:#fff;
@@ -59,28 +55,32 @@
 }
 
 .user-top-information .countitems {
-	float: left;
-	margin-bottom: 40px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	margin-bottom: 18px;
 	width: 100%;
 	margin-top: 0;
 }
 .user-top-information .countitem .count {
-	float: left;
+	display: block;
 	width: 100%;
 	font-weight: 500;
-	font-size: 1.6rem;
+	font-size: 1.35rem;
+	color: #292542;
 }
 
 .user-top-information .countitem .item {
-	float: left;
+	display: block;
 	width: 100%;
-	color: #999999;
-	font-size: 0.7rem;
+	color: #77758a;
+	font-size: 0.68rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
 }
 
 .user-top-information .countitem {
-	float: left;
-	width: 25%;
+	width: auto;
+	cursor: pointer;
 }
 
 .user-top-information img.country-image {
@@ -235,9 +235,19 @@
 	display: block;
 }
 .avatar-bg{
-	background-color: #333333;
-	padding: 25px 0 80px 0;
+	background: radial-gradient(circle at 20% 20%, #8b63e8 0, transparent 42%), linear-gradient(135deg, #24213d, #155d9f);
+	padding: 28px 0 88px;
 }
+.profile-identity { color: #fff; text-align: center; margin-top: 12px; }
+.profile-identity h2 { margin: 0; font-size: 24px; font-weight: 700; }
+.profile-identity p { margin: 5px 0; opacity: .84; font-size: 14px; }
+.profile-identity span { display: inline-block; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 4px 10px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+.profile-page .large-avatar img, .profile-page .large-avatar .avatar { box-shadow: 0 8px 30px rgba(0,0,0,.34); border: 3px solid rgba(255,255,255,.9); }
+.profile-information { width: min(92%, 680px); margin: 20px auto; }
+.profile-information .md-list-item-text { padding: 14px 15px; border: 1px solid #ecebf3; border-radius: 12px; background: #fff; margin: 5px; min-height: 72px; }
+.profile-information .full .md-list-item-text { background: #f6f3ff; border-color: #e0d6ff; }
+.profile-information h5 { color: #716d88; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.profile-information p { color: #282542; font-size: 14px; }
 .profile-page{
 	width: 100%;
 	overflow-x: hidden;

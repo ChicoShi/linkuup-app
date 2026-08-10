@@ -13,6 +13,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
+	$scope.data.category = $scope.data.category || '';
 	$scope.data.slickedEvents = false;
 	$scope.data.locationsInitialized = false;
 	$scope.data.currentRoom = null;
@@ -148,6 +149,10 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////
 	$scope.filteredRoom = function(room) {
 		var s = $scope.data.searchvalue.trim().toLowerCase();
+		var categoryMatches = !$scope.data.category || String(room.category()) === String($scope.data.category);
+		if (!categoryMatches) {
+			return false;
+		}
 		// TODO: Split s by spaces and do an AND match for each of them.
 		if (room.name().toLowerCase().indexOf(s) >= 0) {
 //			console.log("LocationCtrl.filteredRoom()", room.name());
@@ -155,6 +160,11 @@ angular.module('LUP').config(function($routeProvider) {
 		} 
 //		console.log("LocationCtrl.notFilteredRoom()", room.name());
 		return false;
+	};
+
+	$scope.selectCategory = function(category) {
+		$scope.data.category = category;
+		$scope.searchLocation($scope.data.searchvalue);
 	};
 	
 	/**

@@ -6,10 +6,10 @@
  md-whiteframe="4"
  flex>
 
-  <md-toolbar>
+  <md-toolbar class="sidenav-brand">
    <div class="md-toolbar-tools">
-    <i class="material-icons" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')">menu</i>
-    <h1>LinkUUp App</h1>
+    <i class="material-icons nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')">close</i>
+    <div><h1>LinkUUp</h1><span>Zusammen unterwegs</span></div>
    </div>
   </md-toolbar>
 
@@ -18,42 +18,42 @@
 	<md-list class="md-dense" flex layout="column">
 
 	  <md-list-item class="md-1-line" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/nearby.svg' />
+	    <i class="material-icons nav-icon">explore</i>
 		<p>{{'TITLE_LOCATIONS'|translate}}</p>
 	  </md-list-item>
 	  
 	  <md-list-item class="md-1-line" ng-click="gotoRegister()" ng-if="!data.ownUser.isAuthed()">
-	    <img src='images/settings.svg' />
+	    <i class="material-icons nav-icon">person_add</i>
 		<p>{{'BTN_REGISTER'|translate}}</p>
 	  </md-list-item>
 
 		<md-list-item class="md-1-line" ng-click="gotoOwnProfile()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/ic_person_48px.svg' />
+	    <i class="material-icons nav-icon">person</i>
 	    <p>{{'TITLE_OWN_PROFILE'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/settings.svg' />
+	    <i class="material-icons nav-icon">settings</i>
 		<p>{{'TITLE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line" ng-click="gotoAccount()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/ic_person_48px.svg' />
+	    <i class="material-icons nav-icon">manage_accounts</i>
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line" ng-click="gotoProfileSettings()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/ic_person_48px.svg' />
+	    <i class="material-icons nav-icon">edit</i>
 		<p>{{'TITLE_PROFILE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/ic_people_48px.svg' />
+	    <i class="material-icons nav-icon">groups</i>
 		<p>{{'TITLE_FRIENDS'|translate}}</p>
 	  </md-list-item>
 	  
 	  <md-list-item class="md-1-line" ng-click="logout()" ng-if="data.ownUser.isAuthed()">
-	    <img src='images/logout.svg' />
+	    <i class="material-icons nav-icon">logout</i>
 		<p>{{'BTN_LOGOUT'|translate}}</p>
 	  </md-list-item>
 

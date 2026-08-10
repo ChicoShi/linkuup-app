@@ -12,6 +12,16 @@
 			ng-keyup="searchLocation(data.searchvalue)" ng-model="data.searchvalue" />
 		</div>
 
+		<div class="location-categories" aria-label="Kategorien">
+			<button type="button" ng-class="{active: !data.category}" ng-click="selectCategory('')">Alle</button>
+			<button type="button" ng-class="{active: data.category === '3'}" ng-click="selectCategory('3')">Bars</button>
+			<button type="button" ng-class="{active: data.category === '4'}" ng-click="selectCategory('4')">Kneipen</button>
+			<button type="button" ng-class="{active: data.category === '5'}" ng-click="selectCategory('5')">Cafés</button>
+			<button type="button" ng-class="{active: data.category === '11'}" ng-click="selectCategory('11')">Clubs</button>
+			<button type="button" ng-class="{active: data.category === '12'}" ng-click="selectCategory('12')">Kultur</button>
+			<button type="button" ng-class="{active: data.category === '13'}" ng-click="selectCategory('13')">Sport &amp; Freizeit</button>
+		</div>
+
 		<div class="slickit" layout="column" flex>
 			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer" ng-class="{'lup-hidden-slide':filteredRoom(room)}">
 	
@@ -23,6 +33,7 @@
 						
 						<!--<span class="categoryicon" ng-bind-html="room.categoryIcon()"></span>-->
 						<div class="roomhead">
+							<div class="room-category-label">{{room.categoryName()}}</div>
 							<div class="roomname">
 								<span>{{room.name()}}</span>
 							</div>

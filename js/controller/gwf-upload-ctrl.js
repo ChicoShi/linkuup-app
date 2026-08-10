@@ -152,7 +152,9 @@ controller('GDOUploadCtrl', function($scope, $http, ErrorSrvc) {
 	
 	$scope.isValidFile = function($file) {
 		console.log('UploadCtrl.isValidFile()', $file, $scope.config);
-		var maxSize = $scope.config.maxsize;
+		// Older templates used maxSize while this controller used maxsize.
+		// Accept both spellings so uploads are actually checked in the browser.
+		var maxSize = $scope.config.maxSize || $scope.config.maxsize;
 		var mimeTypes = $scope.config.mimes;
 		if ($file.size > maxSize) {
 			$scope.denyFile($file, 'Max size exceeded.');

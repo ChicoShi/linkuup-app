@@ -24,7 +24,7 @@
 
 		<div class="avatar" ng-if="canUploadProfile()">
 			  <div
-			   ng-init="initConfig({maxSize: 512000})"
+			   ng-init="initConfig({maxSize: 10485760})"
 			   ng-controller="GDOUploadCtrl"
 			   flow-init="{target: data.avatarAction, singleFile: true, fileParameterName: 'avatar_file_id', withCredentials: true, testChunks: false, query: {flowField:'avatar_file_id'}, allowDuplicateUploads: true}"
 			   flow-file-progress="onFlowProgress($file, $flow, $message);"
@@ -37,10 +37,14 @@
 				 <lup-avatar flow-btn class="large-avatar" ng-user="data.user"></lup-avatar>
 			  </div>
 		</div>
+		<div class="profile-identity" ng-if="data.user">
+			<h2>{{data.user.displayName()}}</h2>
+			<span>LinkUUp Mitglied</span>
+		</div>
 	</div>
 		
 		<div class="user-top-information" ng-class="{ownuserprofile: data.user.isSelf()}">
-			<div class="countitems">
+			<div class="countitems profile-stats">
 				<p class="countitem" ng-click="gotoUserCourse(data.user)"><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
 				<p class="countitem" ng-click="gotoLikes(data.user)"><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
 				<p class="countitem" ng-click="gotoUserFriends(data.user)"><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
@@ -59,7 +63,7 @@
    		    <i id="gallery-add-area"
 			   ng-if="data.user.isSelf() && data.user.isMember()&& data.selectedTab == 1"
 			   ng-controller="GDOUploadCtrl"
-			   ng-init="initConfig({maxSize: 65535, success:'onGalleryUploaded'})"
+			   ng-init="initConfig({maxSize: 10485760, success:'onGalleryUploaded'})"
 			   flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
 			   flow-file-progress="onFlowProgress($file, $flow, $message);"
 			   flow-file-success="onFlowSuccess($file, $flow, $message);"
