@@ -7,32 +7,38 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('LocationsCtrl', function($scope, $location, $translate,
+}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout,
 		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
 	$scope.data.slickedEvents = false;
+	$scope.data.locationsInitialized = false;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
 
 	$scope.init = function(event) {
 		console.log('LocationsCtrl.init()', event);
-		if ($scope.data.authenticated) {
-			console.log('LocationsCtrl.init() runs...');
-			HelpSrvc.showHelp('help_locations', $translate.instant('HELP_LOCATIONS'));
-			if (!$scope.data.rooms.length) {
-				$scope.data.user = window.GWF_USER;
-				LoadingSrvc.addTask('ws_rooms');
-				var promise = RoomSrvc.withRooms().then($scope.gotRooms);
-				promise['finally'](function(){
-					LoadingSrvc.removeTask('ws_rooms');
-				});
-			}
-			else {
-				$scope.gotRooms($scope.data.rooms);
-			}
+		if (!$scope.data.authenticated) {
+			return;
+		}
+		if ($scope.data.locationsInitialized) {
+			return;
+		}
+		$scope.data.locationsInitialized = true;
+		console.log('LocationsCtrl.init() runs...');
+		HelpSrvc.showHelp('help_locations', $translate.instant('HELP_LOCATIONS'));
+		if (!$scope.data.rooms.length) {
+			$scope.data.user = window.GWF_USER;
+			LoadingSrvc.addTask('ws_rooms');
+			var promise = RoomSrvc.withRooms().then($scope.gotRooms);
+			promise['finally'](function(){
+				LoadingSrvc.removeTask('ws_rooms');
+			});
+		}
+		else {
+			$scope.gotRooms($scope.data.rooms);
 		}
 	};
 	$scope.$on('lup-inited', $scope.init);
@@ -42,7 +48,8 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationsCtrl.gotRooms()', rooms);
 		$scope.data.rooms = rooms;
 		LoadingSrvc.addTask('slick_rooms');
-		setTimeout($scope.slick, 10);
+		// Let Angular render ng-repeat before Slick reads its slides.
+		$timeout($scope.slick, 0);
 	};
 	
 	$scope.maybeGotoRoom = function(room) {
@@ -54,10 +61,14 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.slick = function(nofocus) {
 		console.log('LocationsCtrl.slick()');
+		var $slick = window.jQuery('.slickit');
+		if (!$slick.length || $slick.hasClass('slick-initialized')) {
+			return;
+		}
 
 		if (!$scope.data.slickedEvents) {
 			$scope.data.slickedEvents = true;
-			window.jQuery('.slickit').on('init', function(){
+			$slick.off('.lupSlick').on('init.lupSlick', function(){
 				console.log('slickit.onInit()');
 				if ($scope.data.currentRoomIndex >= 0) {
 					setTimeout(function(){
@@ -66,12 +77,12 @@ angular.module('LUP').config(function($routeProvider) {
 				}
 				window.jQuery('.slickit').addClass('slick-inited');
 				LoadingSrvc.removeTask('slick_rooms');
-			}).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
 				$scope.focusRoom(nextSlide);
 			});
 		}
 		
-		window.jQuery('.slickit').slick({
+		$slick.slick({
 			arrows: false,
 			centerMode: true,
 			slidesToShow: 1,
@@ -153,9 +164,13 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.searchLocation = function(query) {
 		console.log("LocationCtrl.searchLocation()", query);
-		window.jQuery('.slickit').slick('slickUnfilter'); // Restore
+		var $slick = window.jQuery('.slickit');
+		if (!$slick.hasClass('slick-initialized')) {
+			return;
+		}
+		$slick.slick('slickUnfilter'); // Restore
 		// Reset
-		window.jQuery('.slickit').slick('unslick');
+		$slick.slick('unslick');
 		LoadingSrvc.addTask('slick_rooms');
 		$scope.slick(true);
 	};
