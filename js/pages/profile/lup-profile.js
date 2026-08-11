@@ -50,16 +50,28 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.profileDetails = function(profile) {
 		var json = (profile && profile.JSON) || {};
 		var user = ($scope.data.user && $scope.data.user.JSON) || {};
-		var keys = [
-			'user_language', 'lup_origin', 'lup_city', 'lup_state', 'lup_religion',
-			'lup_smokes', 'lup_sporty', 'lup_drinks', 'lup_has_pet', 'lup_student',
-			'lup_school', 'lup_work', 'lup_sexo', 'lup_interest'
+		// Prefer the real LinkUUp profile fields. Any additional public setting is
+		// appended afterwards, so a new field never silently disappears again.
+		var preferred = [
+			'lup_origin', 'lup_city', 'lup_state', 'lup_religion', 'lup_smokes',
+			'lup_sporty', 'lup_drinks', 'lup_has_pet', 'lup_eyecolor', 'lup_height',
+			'lup_interest', 'lup_sexo'
 		];
+		var extras = Object.keys(json).filter(function(key) {
+			return preferred.indexOf(key) === -1 &&
+				key !== 'lup_status' &&
+				key.indexOf('_visible') === -1 &&
+				key.indexOf('lup_course') !== 0 &&
+				key.indexOf('lup_cuddle') !== 0;
+		});
+		var keys = ['user_language'].concat(preferred, extras).filter(function(key, index, all) {
+			return all.indexOf(key) === index;
+		});
 		return keys.map(function(key) {
 			return {key: key, value: key === 'user_language' ? user.user_language : json[key]};
 		}).filter(function(detail) {
 			return detail.value !== undefined && detail.value !== null && detail.value !== '' && detail.value !== '0';
-		});
+		}).slice(0, 14);
 	};
 	$scope.languageLabel = function(language) {
 		var key = 'LANG_' + String(language || '').toUpperCase();
