@@ -104,7 +104,11 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.error = null;
 			$scope.data.errors = {};
 			var data = $scope.data;
-			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(data.email).writeString(data.password).write16(1).writeString("");
+			// Some local keyboard layouts emit æ for AltGr+Q. Normalise it here so
+			// an e-mail login reaches the server as an actual e-mail address.
+			var login = String(data.email || '').trim().replace(/[æÆ]/g, '@');
+			data.email = login;
+			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(login).writeString(data.password).write16(1).writeString("");
 			var sendLogin = function() {
 				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
 			};
