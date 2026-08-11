@@ -71,10 +71,6 @@
 							</span>
 						
 						</div>
-						<div class="room-live-strip" aria-label="Live-Status der Location">
-							<span><i class="material-icons">bolt</i>{{room.USERS.length > 8 ? 'lebendig' : (room.USERS.length > 0 ? 'aktiv' : 'entspannt')}}</span>
-							<span><i class="material-icons">{{room.inChatRange() ? 'forum' : 'place'}}</i>{{room.inChatRange() ? 'Chat vor Ort' : 'Vor Ort entdecken'}}</span>
-						</div>
 					</div>
 
 					<section class="chatbutton" layout="column" ng-class="{'chatbutton--locked': !room.inChatRange()}">
