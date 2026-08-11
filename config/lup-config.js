@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider, $locationProvider, $transl
 	
 	$translateProvider.useSanitizeValueStrategy('escapeParameters');
 	
-	$translateProvider.preferredLanguage('en');
+	$translateProvider.preferredLanguage('de');
 	
 	moment.locale('de');
 });

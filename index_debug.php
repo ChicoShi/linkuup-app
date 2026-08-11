@@ -31,6 +31,7 @@ $min = LUPConfig::$MIN;
   <link rel="stylesheet" href="js/pages/recovery/lup-recovery.css<?=$v?>">
   <link rel="stylesheet" href="js/pages/settings/lup-settings.css<?=$v?>">
   <link rel="stylesheet" href="js/pages/sidenav/lup-sidenav.css<?=$v?>">
+  <link rel="stylesheet" href="css/linkuup-design-system.css<?=$v?>">
 
 </head>
 

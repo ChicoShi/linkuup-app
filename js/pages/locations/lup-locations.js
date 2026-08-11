@@ -7,13 +7,13 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc) {
+}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
-	$scope.data.category = $scope.data.category || '';
+	$scope.data.category = Array.isArray($scope.data.category) ? $scope.data.category : [];
 	$scope.data.slickedEvents = false;
 	$scope.data.locationsInitialized = false;
 	$scope.data.currentRoom = null;
@@ -51,11 +51,27 @@ angular.module('LUP').config(function($routeProvider) {
 		LoadingSrvc.addTask('slick_rooms');
 		// Let Angular render ng-repeat before Slick reads its slides.
 		$timeout($scope.slick, 0);
+		// Never leave the discovery view blank if the third-party carousel
+		// fails to emit its init event. A plain list is always better than
+		// an invisible, apparently stuck screen.
+		$timeout(function() {
+			var $slick = window.jQuery('.slickit');
+			if ($slick.length && !$slick.hasClass('slick-inited')) {
+				$slick.addClass('slick-inited');
+				LoadingSrvc.removeTask('slick_rooms');
+			}
+		}, 1200);
 	};
 	
 	$scope.maybeGotoRoom = function(room) {
 		console.log('LocationsCtrl.maybeGotoRoom()', room);
-		if ($scope.data.currentRoom == room) { // Prevent desktop goto too early.
+		// A category change recreates Slick's visible slides. In that moment no
+		// room is focused yet, so the first tap must still be allowed to open it.
+		if ($scope.data.currentRoom === null || $scope.data.currentRoom == room) {
+			// The overview already contains the full public location record. Keep it
+			// for the profile view so an out-of-range visit never needs a room/chat
+			// lookup first; only Chat and Online enforce the radius afterwards.
+			RoomSrvc.CACHE[room.id()] = room;
 			$scope.gotoRoom(room);
 		}
 	};
@@ -63,7 +79,17 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.slick = function(nofocus) {
 		console.log('LocationsCtrl.slick()');
 		var $slick = window.jQuery('.slickit');
-		if (!$slick.length || $slick.hasClass('slick-initialized')) {
+		if (!$slick.length) {
+			LoadingSrvc.removeTask('slick_rooms');
+			return;
+		}
+		if (!$slick.children().length) {
+			LoadingSrvc.removeTask('slick_rooms');
+			return;
+		}
+		if ($slick.hasClass('slick-initialized')) {
+			$slick.addClass('slick-inited');
+			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
 
@@ -73,7 +99,7 @@ angular.module('LUP').config(function($routeProvider) {
 				console.log('slickit.onInit()');
 				if ($scope.data.currentRoomIndex >= 0) {
 					setTimeout(function(){
-						window.jQuery('.slickit').slick('goTo', $scope.data.currentRoomIndex, true);
+						window.jQuery('.slickit').slick('slickGoTo', $scope.data.currentRoomIndex, true);
 					}, 10);
 				}
 				window.jQuery('.slickit').addClass('slick-inited');
@@ -83,6 +109,7 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 		}
 		
+		try {
 		$slick.slick({
 			arrows: false,
 			centerMode: true,
@@ -91,7 +118,9 @@ angular.module('LUP').config(function($routeProvider) {
 			mobileFirst: true,
 			variableWidth: false,
 			infiniteScroll: false,
-			speed:50,
+			speed: 360,
+			cssEase: 'cubic-bezier(.22,.75,.24,1)',
+			touchThreshold: 9,
 			responsive: [
 				{
 					breakpoint: 480,
@@ -125,6 +154,11 @@ angular.module('LUP').config(function($routeProvider) {
 		}).slick('slickFilter', function() {
 			return window.jQuery(this).hasClass('lup-hidden-slide');
 		});
+		} catch (error) {
+			console.warn('LinkUUp carousel unavailable; showing the room list instead.', error);
+			LoadingSrvc.removeTask('slick_rooms');
+			return;
+		}
 		
 		if (!nofocus) {
 //			$scope.focusRoom(0);
@@ -144,12 +178,39 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 
+	$scope.openRoomVote = function(room, event) {
+		function VoteDialogController($scope, $mdDialog) {
+			$scope.room = room;
+			$scope.data = {rating: Math.max(1, Math.round(Number(room.rating()) || 0))};
+			$scope.cancel = function() { $mdDialog.cancel(); };
+			$scope.save = function() {
+				$scope.working = true;
+				WebsocketSrvc.sendBinary(new GWS_Message().cmd(0x1120).sync().write32(room.id()).write8($scope.data.rating)).
+					then(function(message) {
+						RoomSrvc.parseRoomsMessage(message);
+						$mdDialog.hide();
+					}, function(error) {
+						$scope.working = false;
+						ErrorSrvc.websocketJSONError(error);
+					});
+			};
+		}
+
+		return $mdDialog.show({
+			controller: VoteDialogController,
+			templateUrl: 'js/dialogs/lup-room-quick-vote-dialog.html?v=' + window.LUP_BUILD,
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose: true,
+		});
+	};
+
 	////////////////
 	// Suchfilter //
 	////////////////
 	$scope.filteredRoom = function(room) {
 		var s = $scope.data.searchvalue.trim().toLowerCase();
-		var categoryMatches = !$scope.data.category || String(room.category()) === String($scope.data.category);
+		var categoryMatches = !$scope.data.category.length || $scope.data.category.indexOf(String(room.category())) >= 0;
 		if (!categoryMatches) {
 			return false;
 		}
@@ -162,9 +223,46 @@ angular.module('LUP').config(function($routeProvider) {
 		return false;
 	};
 
-	$scope.selectCategory = function(category) {
-		$scope.data.category = category;
-		$scope.searchLocation($scope.data.searchvalue);
+	$scope.isCategoryActive = function(categories) {
+		return $scope.data.category.join(',') === categories.join(',');
+	};
+
+	$scope.selectCategory = function(categories) {
+		$scope.data.category = categories;
+		// Do not retain a focus object from the previously filtered carousel.
+		$scope.data.currentRoom = null;
+		$scope.data.currentRoomIndex = -1;
+		// Let Angular update the slide classes before Slick reads them again.
+		// Without this small delay, tapping a new category could retain the
+		// previous list and make Bar/Café appear identical.
+		$timeout(function() {
+			$scope.searchLocation($scope.data.searchvalue);
+		}, 0);
+	};
+
+	$scope.categoryVisual = function(room) {
+		var visuals = {
+			'1': {icon: 'public', class: 'category-country'},
+			'2': {icon: 'location_city', class: 'category-city'},
+			'3': {icon: 'local_bar', class: 'category-bar'},
+			'4': {icon: 'sports_bar', class: 'category-pub'},
+			'5': {icon: 'local_cafe', class: 'category-cafe'},
+			'6': {icon: 'business', class: 'category-business'},
+			'7': {icon: 'shopping_cart', class: 'category-shop'},
+			'8': {icon: 'account_balance', class: 'category-religion'},
+			'9': {icon: 'content_cut', class: 'category-salon'},
+			'10': {icon: 'map', class: 'category-town'},
+			'11': {icon: 'nightlife', class: 'category-club'},
+			'12': {icon: 'theater_comedy', class: 'category-culture'},
+			'13': {icon: 'sports_soccer', class: 'category-sport'},
+			'14': {icon: 'restaurant', class: 'category-food'},
+			'15': {icon: 'park', class: 'category-outdoors'},
+			'16': {icon: 'school', class: 'category-community'},
+			'17': {icon: 'account_balance', class: 'category-university'},
+			'18': {icon: 'local_hospital', class: 'category-health'},
+			'19': {icon: 'hotel', class: 'category-hotel'},
+		};
+		return visuals[String(room.category())] || {icon: 'place', class: 'category-default'};
 	};
 	
 	/**
@@ -183,6 +281,11 @@ angular.module('LUP').config(function($routeProvider) {
 		$slick.slick('unslick');
 		LoadingSrvc.addTask('slick_rooms');
 		$scope.slick(true);
+		// Slick can lose its init callback after unslick/filter cycles. Never let
+		// that third-party callback keep the whole page in a loading state.
+		$timeout(function() {
+			LoadingSrvc.removeTask('slick_rooms');
+		}, 450);
 	};
 
 	//////////
@@ -193,17 +296,27 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.mapsHref = function(room) {
 //		console.log("LocationsCtrl.mapsHref()", room);
-		var dest = $scope.mapsDestination(room);
-		return "https://www.google.com/maps/dir/?api=1&destination=" + dest;
+		var destination = $scope.mapsDestination(room);
+		return "https://www.google.com/maps/dir/?api=1&dir_action=navigate&travelmode=walking&destination=" + encodeURIComponent(destination);
 	};
 	
 	$scope.mapsDestination = function(room) {
 //		console.log("LocationsCtrl.mapsDestination()", room);
-		return room.lat() + "," + room.lng(); // TODO: Use street if available?
+		var lat = Number(room.lat());
+		var lng = Number(room.lng());
+		if (Number.isFinite(lat) && Number.isFinite(lng)) {
+			return lat + "," + lng;
+		}
+		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
 	};
 	
 	$scope.sortedVisitors = function(room) {
 		return UserSrvc.sortedUsers(room.USERS);
+	};
+
+	$scope.visitorOverflowLabel = function(room) {
+		var remaining = Math.max(0, (room.USERS || []).length - 3);
+		return remaining > 99 ? '99+' : remaining;
 	};
 	
 

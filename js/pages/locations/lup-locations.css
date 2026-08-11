@@ -143,6 +143,36 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
 	background-repeat: no-repeat;
 }
 
+.room-category-hero {
+	width: 85%;
+	height: 190px;
+	margin: -50px auto 0;
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	box-shadow: 0 12px 30px rgba(0,0,0,.28);
+	color: #fff;
+	cursor: pointer;
+}
+.room-category-hero .material-icons { font-size: 74px; }
+.room-category-hero span { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.category-country { background: linear-gradient(135deg, #282a62, #d42d43); }
+.category-city { background: linear-gradient(135deg, #364756, #607d8b); }
+.category-bar, .category-pub { background: linear-gradient(135deg, #5b246c, #c85e30); }
+.category-cafe { background: linear-gradient(135deg, #795548, #d69b63); }
+.category-club { background: linear-gradient(135deg, #24115a, #c53cff); }
+.category-culture { background: linear-gradient(135deg, #17355b, #398cc6); }
+.category-sport { background: linear-gradient(135deg, #14634a, #52ac67); }
+.category-food { background: linear-gradient(135deg, #ac3b2f, #eb932c); }
+.category-outdoors { background: linear-gradient(135deg, #1d6b56, #8fcf6a); }
+.category-community { background: linear-gradient(135deg, #31578e, #789ed2); }
+.category-business, .category-shop, .category-salon, .category-town, .category-hotel { background: linear-gradient(135deg, #35415f, #7887aa); }
+.category-religion { background: linear-gradient(135deg, #785d2d, #c9aa67); }
+.category-default { background: linear-gradient(135deg, #45465b, #787b94); }
+
 .distrat {
     border-bottom: 1px solid #444444;
     float: left;

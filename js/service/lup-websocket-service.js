@@ -7,6 +7,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.SYNC_MSGS = {};
 	WebsocketSrvc.SOCKET = null;
 	WebsocketSrvc.CONNECTED = false;
+	WebsocketSrvc.CONNECTING = null;
 	
 	WebsocketSrvc.MSGS_SENT = 0;
 	WebsocketSrvc.MSGS_RECV = 0;
@@ -57,7 +58,14 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.connect = function(url) {
 		url = url || WebsocketSrvc.CONFIG.url;
 		console.log('WebsocketSrvc.connect()', url);
+		if (WebsocketSrvc.connected()) {
+			return $q.resolve();
+		}
+		if (WebsocketSrvc.CONNECTING) {
+			return WebsocketSrvc.CONNECTING;
+		}
 		var defer = $q.defer();
+		WebsocketSrvc.CONNECTING = defer.promise;
 		if (WebsocketSrvc.SOCKET == null) {
 			LoadingSrvc.addTask('wsconnect');
 			var ws = WebsocketSrvc.SOCKET = new WebSocket(url);
@@ -65,6 +73,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 				ws.binaryType = 'arraybuffer';
 			}
 			ws.onopen = function() {
+				WebsocketSrvc.CONNECTING = null;
 				LoadingSrvc.stopTask('wsconnect');
 				WebsocketSrvc.startQueue();
 		    	WebsocketSrvc.CONNECTED = true;
@@ -76,6 +85,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    	});
 			};
 		    ws.onclose = function() {
+				WebsocketSrvc.CONNECTING = null;
 				LoadingSrvc.stopTask('wsconnect');
 		    	WebsocketSrvc.disconnect(true);
 		    	if (WebsocketSrvc.CONNECTED) {
@@ -84,6 +94,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    	}
 		    };
 		    ws.onerror = function(error) {
+				WebsocketSrvc.CONNECTING = null;
 		    	WebsocketSrvc.disconnect(true);
 				defer.reject(error);
 		    };
@@ -98,6 +109,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    };
 		}
 		else {
+			WebsocketSrvc.CONNECTING = null;
 			defer.reject();
 		}
 		return defer.promise;

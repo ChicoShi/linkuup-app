@@ -94,14 +94,24 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.login = function() {
 		console.log('LoginCtrl.login()');
-		$scope.withPosition().then(function(pos){
-			console.log('LoginCtrl.login() has pos', pos);
+		var submitLogin = function(pos) {
+			console.log('LoginCtrl.login() has position', pos);
 			$scope.data.error = null;
 			$scope.data.errors = {};
 			var data = $scope.data;
 			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(data.email).writeString(data.password).write16(1).writeString("");
-			WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
-		});
+			var sendLogin = function() {
+				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
+			};
+			if (WebsocketSrvc.connected()) {
+				sendLogin();
+			} else {
+				WebsocketSrvc.withConnection().then(sendLogin, $scope.loginFailure);
+			}
+		};
+		// A location is helpful for nearby places, but must never delay login.
+		// It is requested again after authentication for nearby rooms.
+		submitLogin(null);
 	};
 
 	$scope.loginSuccess = function(response) {

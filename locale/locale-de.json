@@ -1,6 +1,8 @@
 {
 "LUP": "LinkUUp",
 
+"form_error_title": "Formularfehler",
+
 "FMT_LONG": "D.M.YYYY - HH:mm",
 "FMT_SHORT": "D.M.YY",
 
@@ -108,7 +110,15 @@
 "ROOM_VOTE": "Bewerten",
 "BTN_JOIN": "Chatraum betreten",
 "OPEN_TIMES": "Öffnungszeiten",
+"OPEN_TIMES_NONE": "Keine Öffnungszeiten vorhanden.",
 "MSG_JOIN_TOO_FAR": "Du bist {{current_distance}}km vom Zentrum entfernt. Eine Mindestentfernung von {{needed_distance}}km ist erforderlich, um {{room_name}} betreten zu können.",
+"PHONE_HEAD": "Telefon {{room_name}}",
+"PHONE_TEXT": "Du kannst {{room_name}} direkt anrufen:",
+"PHONE_NONE": "{{room_name}} hat keinen Telefonkontakt.",
+"QR_ROOM_DIALOG_TITLE": "Einladungscode",
+"QR_ROOM_DIALOG_PARAGRAPH": "Lass Menschen diesen Code scannen, um dieser Location beizutreten.",
+"QR_FRIEND_DIALOG_TITLE": "Profilcode",
+"QR_FRIEND_DIALOG_PARAGRAPH": "Lass Menschen diesen Code scannen, um dein Profil zu öffnen.",
 
 "TITLE_LIKES": "Likes",
 "SUBHEADER_LIKES": "{{user}} hat {{count}} Likes erhalten.",
@@ -136,6 +146,10 @@
 "NO_GENDER": "unbestimmt",
 "MALE": "männlich",
 "FEMALE": "weiblich",
+"male": "männlich",
+"female": "weiblich",
+"TIMEZONE": "Zeitzone",
+"LAST_ACTIVITY": "Zuletzt aktiv",
 "COUNTRY": "Land",
 "LANGUAGE": "Sprache",
 "UNKNOWN": "unbekannt",
@@ -145,8 +159,8 @@
 
 "TITLE_PROFILE": "Profil",
 "TAB_INFORMATION": "Informationen",
-"TAB_COURSE": "Course",
-"TAB_GALLERY": "Gallery",
+"TAB_COURSE": "Besuchte Orte",
+"TAB_GALLERY": "Galerie",
 "DLGT_DELETE_IMAGE": "Bild löschen",
 "DLGP_DELETE_IMAGE": "Dieses Bild wirklich löschen?",
 "EYE_COLOR": "Augenfarbe",
@@ -208,6 +222,25 @@
 "lup_drink_yes": "Häufiger",
 "SHD_PROFILE_PET": "Haustiere",
 "LBL_PROFILE_PET": "Haustier",
+"LBL_PROFILE_RELIGION": "Religion",
+"LBL_PROFILE_OCCUPATION": "Tätigkeit",
+"LBL_PROFILE_LICENSE": "Führerschein",
+"religion_none": "Keine Religion",
+"religion_christian": "Christlich",
+"religion_muslim": "Muslimisch",
+"religion_jewish": "Jüdisch",
+"religion_buddhist": "Buddhistisch",
+"religion_hindu": "Hinduistisch",
+"religion_other": "Andere Religion",
+"occupation_student": "Student/in",
+"occupation_pupil": "Schüler/in",
+"occupation_working": "Berufstätig",
+"occupation_self_employed": "Selbstständig",
+"occupation_training": "In Ausbildung",
+"occupation_other": "Anderes",
+"license_yes": "Ja",
+"license_no": "Nein",
+"license_in_progress": "In Ausbildung",
 "yes": "Ja",
 "no": "Nein",
 "SHD_PROFILE_HEIGHT": "Körpergrösse",
@@ -251,5 +284,9 @@
 "BTN_LOGIN_NORMAL": "Ich nutze ein echtes Konto",
 
 "COPYRIGHT": "(c) 2019 linkuup.de",
-"Legal": "Rechtliches"
+"Legal": "Rechtliches",
+"acl_all": "Alle",
+"acl_noone": "Niemand",
+"last_activity": "Letzte Aktivität",
+"country_DE": "Deutschland"
 }

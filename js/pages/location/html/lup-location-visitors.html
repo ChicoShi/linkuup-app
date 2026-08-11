@@ -5,19 +5,22 @@
  XXin-view-options="{considerPageVisibility:true}"
  flex>
   
-  <md-subheader class="md-no-sticky">
-    <div translate="VISITORS_ATM"
-     translate-value-count="{{data.room.USERS.length}}"></div>
+  <md-subheader class="md-no-sticky location-presence-heading">
+    <i class="material-icons">wifi_tethering</i>
+    <div>
+      <strong translate="VISITORS_ATM" translate-value-count="{{data.room.USERS.length}}"></strong>
+      <span>Menschen, die gerade wirklich hier sind</span>
+    </div>
   </md-subheader>
 
   <div class="visitors-list">
-	  <md-list-item class="md-2-line" ng-repeat="user in sortedVisitors()" class="no-right">
-		<lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
-		<div ng-click="gotoProfile(user)" class="md-list-item-text" layout="column">
+	  <md-list-item class="md-2-line presence-person" ng-repeat="user in sortedVisitors()" class="no-right">
+		<lup-avatar class="presence-avatar" ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
+		<div ng-click="gotoProfile(user)" class="md-list-item-text presence-person-copy" layout="column">
 		  <p class="username">{{ user.displayName(); }}</p>
-		  <p>{{ user.status(); }}</p>
+		  <p>{{ user.status() || 'Gerade in dieser Location' }}</p>
 		</div>
-		<div>
+		<div class="presence-actions">
 		  <i class="md-secondary usericon likeuser" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()"></i>
 		  <i class="md-secondary usericon addfriend" ng-click="FriendSrvc.addFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend()"></i>
 		  <i class="md-secondary usericon removefriend" ng-click="FriendSrvc.removeFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && user.isFriend()"></i>

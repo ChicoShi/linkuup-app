@@ -14,10 +14,16 @@
   </md-toolbar>
 
   <md-content>
+	<div class="sidebar-user-card" ng-if="data.ownUser.isAuthed()" ng-click="gotoOwnProfile()">
+	  <lup-avatar ng-user="data.ownUser"></lup-avatar>
+	  <div><strong>{{data.ownUser.displayName()}}</strong><span>Mein LinkUUp</span></div>
+	  <i class="material-icons">chevron_right</i>
+	</div>
     
 	<md-list class="md-dense" flex layout="column">
+	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Entdecken</md-subheader>
 
-	  <md-list-item class="md-1-line" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
+	  <md-list-item class="md-1-line nav-discover" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">explore</i>
 		<p>{{'TITLE_LOCATIONS'|translate}}</p>
 	  </md-list-item>
@@ -27,32 +33,36 @@
 		<p>{{'BTN_REGISTER'|translate}}</p>
 	  </md-list-item>
 
-		<md-list-item class="md-1-line" ng-click="gotoOwnProfile()" ng-if="data.ownUser.isAuthed()">
+	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Mein Bereich</md-subheader>
+
+		<md-list-item class="md-1-line nav-profile" ng-click="gotoOwnProfile()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">person</i>
 	    <p>{{'TITLE_OWN_PROFILE'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">
+	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Verwaltung</md-subheader>
+
+	  <md-list-item class="md-1-line nav-settings" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">settings</i>
 		<p>{{'TITLE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line" ng-click="gotoAccount()" ng-if="data.ownUser.isAuthed()">
+	  <md-list-item class="md-1-line nav-account" ng-click="gotoAccount()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">manage_accounts</i>
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line" ng-click="gotoProfileSettings()" ng-if="data.ownUser.isAuthed()">
+	  <md-list-item class="md-1-line nav-profile-settings" ng-click="gotoProfileSettings()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">edit</i>
 		<p>{{'TITLE_PROFILE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
+	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">groups</i>
 		<p>{{'TITLE_FRIENDS'|translate}}</p>
 	  </md-list-item>
 	  
-	  <md-list-item class="md-1-line" ng-click="logout()" ng-if="data.ownUser.isAuthed()">
+	  <md-list-item class="md-1-line nav-logout" ng-click="logout()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">logout</i>
 		<p>{{'BTN_LOGOUT'|translate}}</p>
 	  </md-list-item>
@@ -73,7 +83,7 @@
 	  </div>
 
       <!-- Fineprint -->
-      <md-subheader class="md-no-sticky">{{'Legal'|translate}}</md-subheader>
+	  <md-subheader class="md-no-sticky sidebar-section-title sidebar-legal-title">{{'Legal'|translate}}</md-subheader>
 	  <md-list-item class="md-1-line" ng-click="DialogSrvc.openImpressum()">
 		<p class="impressum">{{'IMPRESSUM'|translate}}</p>
 	  </md-list-item>

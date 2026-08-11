@@ -1,7 +1,7 @@
 <!-- FORM -->
 <div class="error">{{data.error}}</div>
 
-<section layout="column" layout-padding ng-hide="data.facebookMode">
+<section class="login-credentials" layout="column" layout-padding ng-hide="data.facebookMode">
 
   <md-input-container class="md-icon-float md-block">
     <label translate="LOGIN_FIELD"></label>
@@ -19,18 +19,18 @@
 
 </section>
   
-<section layout="row" layout-padding ng-hide="data.facebookMode">
+<section class="login-links" layout="row" layout-padding ng-hide="data.facebookMode">
 	<p class="signup"><span translate="NEW_MEMBER"></span><span><a href="" ng-hide="data.facebookMode" ng-click="switchToSignUp()" translate="SIGN_UP_HERE"></a></span></p>
 	<p class="pwforgot"><a href="" ng-click="gotoRecovery()" translate="FORGOT_PASSWORD"></a></p>
 </section>
-<section layout="row" ng-hide="data.facebookMode" layout-padding>
+<section class="login-submit" layout="row" ng-hide="data.facebookMode" layout-padding>
   <md-button
    aria-label="Login with this data"
    ng-click="login()"
    class="md-primary md-raised login-button"
    translate="LOGIN"></md-button>
 </section>
-<section layout="row" ng-hide="data.facebookMode" layout-padding>
+<section class="login-social" layout="row" ng-hide="data.facebookMode" layout-padding>
 	<md-button
 	 aria-label="Login with facebook"
      ng-click="initFacebook()"
@@ -43,7 +43,7 @@
      class="md-raised instagram-button"
      translate=""><span></span></md-button>
 </section>
-<section layout="row" ng-hide="data.facebookMode" layout-padding>
+<section class="login-guest" layout="row" ng-hide="data.facebookMode" layout-padding>
 	  <md-button
 	   aria-label="Login as guest"
        ng-hide="data.facebookMode"

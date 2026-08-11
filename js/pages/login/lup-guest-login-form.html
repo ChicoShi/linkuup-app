@@ -1,4 +1,4 @@
-<section layout="column" layout-padding>
+<section class="guest-credentials" layout="column" layout-padding>
   <md-input-container class="md-icon-float md-block">
     <label translate="NICKNAME"></label>
 <!--   <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
@@ -21,7 +21,7 @@
   
 </section>
 
-<section layout="row" flex>
+<section class="guest-submit" layout="row" flex>
   <md-button
    aria-label="Login as guest"
    ng-click="loginAsGuest()"
@@ -29,7 +29,7 @@
    translate="CONTINUE_GUEST"></md-button>
 </section>
 
-<section layout="row" flex>
+<section class="guest-back" layout="row" flex>
   <md-button
    aria-label="Back to login"
    ng-click="gotoLogin()"

@@ -1,0 +1,19 @@
+<md-dialog aria-label="Location bewerten" class="lup-quick-vote-dialog">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>{{room.name()}} bewerten</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="Schließen" ng-click="cancel()"><i class="material-icons">close</i></md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div class="md-dialog-content quick-vote-content">
+      <p>Wie gefällt dir diese Location?</p>
+      <jk-rating-stars max-rating="5" rating="data.rating" reset-allowed="false"></jk-rating-stars>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="cancel()">Abbrechen</md-button>
+    <md-button class="md-raised md-primary" ng-disabled="working" ng-click="save()">Bewertung speichern</md-button>
+  </md-dialog-actions>
+</md-dialog>

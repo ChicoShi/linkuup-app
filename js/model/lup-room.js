@@ -19,6 +19,10 @@ function LUPRoom(json) {
 	this.zip = function() { return this.JSON.address_zip; };
 	this.street = function() { return this.JSON.address_street; };
 	this.city = function() { return this.JSON.address_city; };
+	this.addressDisplay = function() {
+		var firstLine = [this.street(), this.zip()].filter(Boolean).join(', ');
+		return [firstLine, this.city()].filter(Boolean).join(' · ');
+	};
 	this.openTimes = function() { return this.JSON.room_hours; };
 	this.showDistance = function() { return this.JSON.room_show_distance > 0; };
 

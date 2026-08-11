@@ -31,11 +31,11 @@
 			   flow-file-success="onFlowSuccess($file, $flow, $message);"
 			   flow-file-removed="onRemoveFile($file, $flow);"
 			   flow-file-error="onFlowError($file, $flow, $message);"
-			   xxxflow-error="onFlowError($file, $flow, $message);"
-			   flow-files-submitted="onFlowSubmitted($flow);">
-				 <!--<i class="material-icons edit" flow-btn>edit</i>-->
-				 <lup-avatar flow-btn class="large-avatar" ng-user="data.user"></lup-avatar>
-			  </div>
+				   xxxflow-error="onFlowError($file, $flow, $message);"
+				   flow-files-submitted="onFlowSubmitted($flow);">
+					 <!--<i class="material-icons edit" flow-btn>edit</i>-->
+					 <lup-avatar flow-btn class="large-avatar" ng-user="data.user"></lup-avatar>
+				  </div>
 		</div>
 		<div class="profile-identity" ng-if="data.user">
 			<h2>{{data.user.displayName()}}</h2>
@@ -45,39 +45,22 @@
 		
 		<div class="user-top-information" ng-class="{ownuserprofile: data.user.isSelf()}">
 			<div class="countitems profile-stats">
-				<p class="countitem" ng-click="gotoUserCourse(data.user)"><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
-				<p class="countitem" ng-click="gotoLikes(data.user)"><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
-				<p class="countitem" ng-click="gotoUserFriends(data.user)"><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
-				<p class="countitem" ng-click="gotoUserCuddles(data.user)"><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
+				<p class="countitem stat-locations" ng-click="gotoUserCourse(data.user)"><i class="material-icons">place</i><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
+				<p class="countitem stat-ups" ng-click="gotoLikes(data.user)"><i class="material-icons">bolt</i><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
+				<p class="countitem stat-friends" ng-click="gotoUserFriends(data.user)"><i class="material-icons">groups</i><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
+				<p class="countitem stat-cuddles" ng-click="gotoUserCuddles(data.user)"><i class="material-icons qr-cuddle-action" title="Knuddel-QR anzeigen" ng-click="$event.stopPropagation(); showQRCode()">qr_code_2</i><i class="material-icons">favorite</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
 			</div>
 		</div>
 	 
-	  <div class="profile-actions">
+	  <div class="profile-actions" ng-if="!data.user.isSelf()">
 		  <div class="content-center">
-            <i class="md-secondary usericon qrcode-dummy" ng-click="showQRCode()">QR</i>
 			<i ng-if="!data.user.isSelf()" class="md-secondary usericon likeuser" ng-click="LikeSrvc.likeUser(data.user)"></i>
             <i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (data.user.JSON.relation_pending)" class="md-secondary usericon addfriend pendingfriend"></i>
 			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (!data.user.JSON.relation_pending)" class="md-secondary usericon addfriend" ng-click="FriendSrvc.addFriend(data.user)"></i>
 			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (data.user.isFriend())" class="md-secondary usericon removefriend" ng-click="FriendSrvc.removeFriend(data.user)"></i>
 			<i ng-if="!data.user.isSelf()" class="md-secondary usericon sendmessage" ng-click="openQuery(data.user)"></i>
-   		    <i id="gallery-add-area"
-			   ng-if="data.user.isSelf() && data.user.isMember()&& data.selectedTab == 1"
-			   ng-controller="GDOUploadCtrl"
-			   ng-init="initConfig({maxSize: 10485760, success:'onGalleryUploaded'})"
-			   flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
-			   flow-file-progress="onFlowProgress($file, $flow, $message);"
-			   flow-file-success="onFlowSuccess($file, $flow, $message);"
-			   flow-file-removed="onRemoveFile($file, $flow);"
-			   flow-file-error="onFlowError($file, $flow, $message);"
-			   flow-files-submitted="onFlowSubmitted($flow);">
-				  <span flow-btn>+ Bild hinzufügen</span>
-			  </i>
-			  <i id="profile-logo"
-				 ng-if="data.user.isSelf() && data.user.isMember()&& data.selectedTab == 0"
-				 ng-click="gotoProfileSettings()">
-			  </i>
 		</div>
-	</div>
+		</div>
 	
 	<div class="cb"></div>
 	

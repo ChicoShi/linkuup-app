@@ -30,6 +30,19 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.data.profile = new GDO_Profile();
+	$scope.profileDetailIcon = function(key) {
+		var k = String(key || '').toLowerCase();
+		if (k.indexOf('sport') >= 0) return 'fitness_center';
+		if (k.indexOf('smok') >= 0) return 'smoking_rooms';
+		if (k.indexOf('drink') >= 0 || k.indexOf('alcohol') >= 0) return 'local_bar';
+		if (k.indexOf('work') >= 0 || k.indexOf('job') >= 0) return 'work';
+		if (k.indexOf('student') >= 0 || k.indexOf('school') >= 0) return 'school';
+		if (k.indexOf('relig') >= 0) return 'auto_awesome';
+		if (k.indexOf('pet') >= 0) return 'pets';
+		if (k.indexOf('city') >= 0 || k.indexOf('origin') >= 0 || k.indexOf('country') >= 0) return 'place';
+		if (k.indexOf('gender') >= 0 || k.indexOf('sexo') >= 0 || k.indexOf('interest') >= 0) return 'favorite';
+		return 'push_pin';
+	};
 	
 	$scope.init = function() {
 		console.log('ProfileCtrl.init()', $routeParams.id);
@@ -186,6 +199,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Query websocket
 		$scope.data.galleryImages = [];
 		$scope.data.galleryError = undefined;
+		$scope.data.galleryReady = false;
 		$('#gallery-list *').remove();
 		GallerySrvc.withGalleryForUser($scope.data.user).
 			then($scope.withGallery, $scope.galleryError);
@@ -199,6 +213,12 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.withGallery = function(gallery) {
 		console.log('GalleryCtrl.withGallery()', gallery);
 		if (gallery) {
+			// Flow uploads must target the persisted gallery, otherwise the file
+			// reaches the server without being attached to this user's gallery.
+			$scope.data.galleryAction = window.LUP_CONFIG.server + "index.php?_mo=Gallery&_me=Crud&id=" +
+				encodeURIComponent(gallery.id()) + "&edit=1&_ajax=1&_fmt=json&_cors=" +
+				encodeURIComponent(window.LUP_CONFIG.cors);
+			$scope.data.galleryReady = !!gallery.id();
 			const images = gallery.IMAGES;
 			$scope.data.galleryImages = images.map(function(image) {
 				return {
@@ -208,7 +228,7 @@ angular.module('LUP').config(function($routeProvider) {
 					thumbURL: image.thumbURL(),
 				};
 			});
-			setTimeout($scope.slickGallery, 137);
+			// Native grid rendering is reliable on desktop and phone alike.
 		}
 	};
 

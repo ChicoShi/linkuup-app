@@ -245,13 +245,18 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.mapsHref = function(room) {
 //		console.log("LocationCtrl.mapsHref()", room);
-		var dest = $scope.mapsDestination(room);
-		return "https://www.google.com/maps/dir/?api=1&destination=" + dest;
+		var destination = $scope.mapsDestination(room);
+		return "https://www.google.com/maps/dir/?api=1&dir_action=navigate&travelmode=walking&destination=" + encodeURIComponent(destination);
 	};
 	
 	$scope.mapsDestination = function(room) {
 //		console.log("LocationCtrl.mapsDestination()", room);
-		return room.lat() + "," + room.lng();
+		var lat = Number(room.lat());
+		var lng = Number(room.lng());
+		if (Number.isFinite(lat) && Number.isFinite(lng)) {
+			return lat + "," + lng;
+		}
+		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
 	};
 
 	/////////////////////
@@ -325,5 +330,4 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 });
-
 

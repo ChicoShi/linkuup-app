@@ -1,4 +1,4 @@
-<md-list flex>
+<md-list flex class="course-collection">
   
   <md-subheader class="md-no-sticky">
     <div
@@ -13,6 +13,11 @@
     <img class="md-avatar"
      ng-src="{{visit.room.iconImageURI()}}"
      ng-click="gotoRoom(visit.room)" />
+    <div class="course-visit-badge" aria-label="{{visit.visit_count}} Besuche">
+      <i class="material-icons">emoji_events</i>
+      <strong>{{visit.visit_count}}</strong>
+      <span>Besuche</span>
+    </div>
     <div class="md-list-item-text">
       <p
        translate="ROOM_COURSE_VISITS"
@@ -22,7 +27,6 @@
       <h5
        translate="ROOM_COURSE_VISIT"
        translate-value-last="{{visit.visit_last|msgDate}}"></h5>
-    
     </div>
   </md-list-item>
   

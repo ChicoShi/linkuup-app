@@ -29,9 +29,12 @@
 }
 
 .sidenav-brand {
-	background: linear-gradient(135deg, #6f42d7, #2676d9) !important;
-	min-height: 82px;
+	display: none;
 }
+.sidenav-brand::after {
+	display: none;
+}
+.sidenav-brand .md-toolbar-tools { position: relative; z-index: 2; }
 .sidenav-brand h1 { margin: 0; font-size: 22px; line-height: 24px; font-weight: 700; }
 .sidenav-brand span { font-size: 12px; opacity: .84; }
 .nav-close { margin-right: 14px; cursor: pointer; }

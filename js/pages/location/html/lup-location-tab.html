@@ -96,44 +96,50 @@
 </div>
 </md-content>
  -->
-<md-content layout="column" flex layout-fill>
-  
-  <div class="lup-room-large-image" flex>
-    <img ng-src="{{data.room.largeImageURI()}}" />
-  </div>
-  
-  <div class="roominfosingle" flex=10 layout="row">
-	<a class="address" ng-href="{{mapsHref(data.room)}}" target="__blank" flex ng-if="data.room.showDistance()">
-		<div style="background-color: #333;" class="addressmap"></div>
-<!--	<p>{{data.room.street()}}</p>
-		<p>{{data.room.zip()}} {{data.room.city()}}</p>  -->
-    <div>
-      <a class="qrcode-dummy" ng-click="onShowQRCode()">QR</a>
+<md-content class="location-experience" layout="column" flex layout-fill>
+  <div class="location-hero">
+    <img ng-src="{{data.room.largeImageURI()}}" alt="{{data.room.name()}}" />
+    <div class="location-hero-shade"></div>
+    <div class="location-hero-copy">
+      <span class="location-live-pill"><i class="material-icons">bolt</i> vor Ort erleben</span>
+      <h1>{{data.room.name()}}</h1>
+      <p ng-if="data.room.addressDisplay()">{{data.room.addressDisplay()}}</p>
     </div>
-	<div class="phone" flex ng-if="data.room.phone()">
-        <div class="addressphone" ng-click="onOpenPhone()" ng-class="{'no-phone': !data.room.phone()}"></div>
-	</div>
-	<div class="opening" ng-click="showOpenTimes($event)" flex>
-        <div ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}"></div>
-	</div>
-  </div> 
-
-  <div flex=10 style="position: relative; max-height: 55px;" ng-click="onVoteDialog()">
-    <jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true" on-rating="onVoteRoom(rating)" class="lup-location-rating"></jk-rating-stars>
-  </div>
-  
-  <div flex=10>
-    <md-list>
-      <md-list-item class="md-2-line comments-preview" ng-repeat="comment in data.topComments" ng-click="gotoComments(data.room)">
-	    <lup-avatar ng-user="comment.user()" ng-if="!comment.isBlankComment()"></lup-avatar>
-        <div class="md-list-item-text" layout="column">
-  	      <lup-comment-text ng-bind-html="comment.text()"></lup-comment-text>
-  	    </div>
-  	    <md-button class="md-secondary md-icon-button" aria-label="goto comments">
-    	    <i class="material-icons">chevron_right</i>
-    	 </md-button>
-      </md-list-item>
-    </md-list>
   </div>
 
+  <div class="location-action-row">
+    <a class="location-action route" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener" ng-if="data.room.showDistance()">
+      <i class="material-icons">near_me</i><span>Route</span>
+    </a>
+    <button class="location-action" type="button" ng-click="onShowQRCode()">
+      <i class="material-icons">qr_code_2</i><span>Vor Ort</span>
+    </button>
+    <button class="location-action" type="button" ng-if="data.room.phone()" ng-click="onOpenPhone()">
+      <i class="material-icons">phone</i><span>Anrufen</span>
+    </button>
+    <button class="location-action" type="button" ng-click="showOpenTimes($event)">
+      <i class="material-icons" ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}">schedule</i><span>Zeiten</span>
+    </button>
+  </div>
+
+  <section class="location-rating-card" ng-click="onVoteDialog()" role="button" tabindex="0">
+    <div class="rating-copy">
+      <span>Wie war dein Besuch?</span>
+      <strong>Bewerte den Ort und teile deine Stimmung</strong>
+    </div>
+    <div class="rating-stars">
+      <jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true" on-rating="onVoteRoom(rating)" class="lup-location-rating"></jk-rating-stars>
+      <small>{{data.room.comments()}} Bewertungen</small>
+    </div>
+    <i class="material-icons rating-arrow">arrow_forward</i>
+  </section>
+
+  <section class="location-comments" ng-click="gotoComments(data.room)">
+    <div class="location-section-title"><span>Stimmen aus dem Ort</span><button type="button">Alle ansehen <i class="material-icons">chevron_right</i></button></div>
+    <div class="location-comment" ng-repeat="comment in data.topComments" ng-if="!comment.isBlankComment()">
+      <lup-avatar ng-user="comment.user()"></lup-avatar>
+      <lup-comment-text ng-bind-html="comment.text()"></lup-comment-text>
+    </div>
+    <p class="location-comment-empty" ng-if="!data.topComments.length || data.topComments[0].isBlankComment()">Sei die erste Person, die diesen Ort bewertet.</p>
+  </section>
 </md-content>
