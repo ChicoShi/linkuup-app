@@ -9,7 +9,8 @@
 		<md-list flex class="md-dense">
 		  
 		  <md-subheader class="md-no-sticky">
-		    <div
+		    <div ng-if="data.isOwnLikeList">Du hast {{data.pagemenu.nItems}} Ups erhalten.</div>
+		    <div ng-if="!data.isOwnLikeList"
 		     translate="SUBHEADER_LIKES"
 		     translate-value-user="{{data.likeuser.displayName()}}"
 		     translate-value-count="{{data.pagemenu.nItems}}"
@@ -20,7 +21,7 @@
 			  <md-list-item class="md-2-line" ng-repeat="user in data.likes" class="no-right">
 				<lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
 				<div class="md-list-item-text" layout="column">
-				  <p class="username">{{ user.displayName(); }} ({{ user.likedMe }} times)</p>
+				  <p class="username">{{ user.displayName(); }} ({{ user.likedMe }} Ups)</p>
 				  <p class="lup-user-status">{{ user.status(); }}</p>
 				</div>
 				<div>

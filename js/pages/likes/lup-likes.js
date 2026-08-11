@@ -34,6 +34,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedUser = function(user) {
 		console.log('LikesCtrl.loadedUser()', user);
 		$scope.data.likeuser = user;
+		$scope.data.isOwnLikeList = $scope.data.user && user.id() === $scope.data.user.id();
 		$scope.loadLikers();
 	};
 	
