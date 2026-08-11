@@ -116,7 +116,7 @@ md-input-container .md-input, input, textarea {
 .login .login-credentials md-input-container > label { padding-left: 3px !important; color: #bdb5d4 !important; font-size: 12px; font-weight: 650; }
 .login .login-credentials input[type=text], .login .login-credentials input[type=password] { color: #f8f7ff !important; font-size: 16px; }
 .login .login-credentials md-input-container.md-input-focused { border-bottom-color:rgba(214,207,243,.38); box-shadow:none; }.login .login-credentials input:focus, .login .login-credentials input:focus-visible { outline:0; box-shadow:none; }
-.login .login-credentials md-input-container .md-input { position:relative; top:11px; line-height:24px; }
+.login .login-credentials md-input-container .md-input { position:relative; top:15px; line-height:24px; }
 .login .login-links { width: min(88%, 410px); box-sizing: border-box; margin: 0 auto; padding: 10px 4px 4px; }
 .login .signup, .login .pwforgot { margin: 0; font-size: 12px; }
 .login .signup { color: var(--lup-muted); }
