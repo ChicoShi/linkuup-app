@@ -30,55 +30,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.data.profile = new GDO_Profile();
-	$scope.profileDetailIcon = function(key) {
-		var k = String(key || '').toLowerCase();
-		if (k.indexOf('language') >= 0) return 'translate';
-		if (k.indexOf('sport') >= 0) return 'fitness_center';
-		if (k.indexOf('smok') >= 0) return 'smoking_rooms';
-		if (k.indexOf('drink') >= 0 || k.indexOf('alcohol') >= 0) return 'local_bar';
-		if (k.indexOf('work') >= 0 || k.indexOf('job') >= 0) return 'work';
-		if (k.indexOf('student') >= 0 || k.indexOf('school') >= 0) return 'school';
-		if (k.indexOf('relig') >= 0) return 'auto_awesome';
-		if (k.indexOf('pet') >= 0) return 'pets';
-		if (k.indexOf('city') >= 0 || k.indexOf('origin') >= 0 || k.indexOf('country') >= 0) return 'place';
-		if (k.indexOf('gender') >= 0 || k.indexOf('sexo') >= 0 || k.indexOf('interest') >= 0) return 'favorite';
-		return 'push_pin';
-	};
-	$scope.profileDetailLabel = function(key) {
-		return key === 'user_language' ? 'LANGUAGE' : key;
-	};
-	$scope.profileDetails = function(profile) {
-		var json = (profile && profile.JSON) || {};
-		var user = ($scope.data.user && $scope.data.user.JSON) || {};
-		// Prefer the real LinkUUp profile fields. Any additional public setting is
-		// appended afterwards, so a new field never silently disappears again.
-		var preferred = [
-			'lup_origin', 'lup_city', 'lup_state', 'lup_religion', 'lup_smokes',
-			'lup_sporty', 'lup_drinks', 'lup_has_pet', 'lup_eyecolor', 'lup_height',
-			'lup_interest', 'lup_sexo'
-		];
-		var extras = Object.keys(json).filter(function(key) {
-			return preferred.indexOf(key) === -1 &&
-				key !== 'lup_status' &&
-				key.indexOf('_visible') === -1 &&
-				key.indexOf('lup_course') !== 0 &&
-				key.indexOf('lup_cuddle') !== 0;
-		});
-		var keys = ['user_language'].concat(preferred, extras).filter(function(key, index, all) {
-			return all.indexOf(key) === index;
-		});
-		return keys.map(function(key) {
-			return {key: key, value: key === 'user_language' ? user.user_language : json[key]};
-		}).filter(function(detail) {
-			return detail.value !== undefined && detail.value !== null && detail.value !== '' && detail.value !== '0';
-		}).slice(0, 14);
-	};
-	$scope.languageLabel = function(language) {
-		var key = 'LANG_' + String(language || '').toUpperCase();
-		var translated = $translate.instant(key);
-		return translated === key ? language : translated;
-	};
-	
 	$scope.init = function() {
 		console.log('ProfileCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {

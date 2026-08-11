@@ -24,10 +24,12 @@
 
       <!-- About me -->
       <md-subheader class="md-no-sticky">{{'SHD_PROFILE_ABOUT'|translate}}</md-subheader>
-      <md-list-item>
+      <md-list-item class="profile-about-editor">
         <md-input-container flex>
+          <label>Erzähl etwas über dich</label>
           <textarea
            rows="8"
+           placeholder="Was macht dich aus? Was möchtest du anderen zeigen?"
            ng-blur="changeSetting('about_me')"
            ng-model="data.profile.JSON.about_me"></textarea>
         </md-input-container>
