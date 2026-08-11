@@ -27,6 +27,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.error = null;
 	$scope.data.errors = {};
 	$scope.data.tosLine = AuthSrvc.tosLine();
+	$scope.data.loginPending = false;
 
 	$scope.init = function() {
 		console.log('LoginCtrl.init()', window.GWF_USER);
@@ -94,6 +95,10 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.login = function() {
 		console.log('LoginCtrl.login()');
+		if ($scope.data.loginPending) {
+			return;
+		}
+		$scope.data.loginPending = true;
 		var submitLogin = function(pos) {
 			console.log('LoginCtrl.login() has position', pos);
 			$scope.data.error = null;
@@ -116,12 +121,14 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.loginSuccess = function(response) {
 		console.log('LoginCtrl.loginSuccess()', response);
+		$scope.data.loginPending = false;
 		window.GWF_USER.update(JSON.parse(response));
 		LoadingSrvc.stopTask('oauth');
 		$rootScope.$broadcast('lup-authenticated', window.GWF_USER);
 	};
 	$scope.loginFailure = function(response) {
 		console.log('LoginCtrl.loginFailure()', response);
+		$scope.data.loginPending = false;
 		LoadingSrvc.stopTask('oauth');
 		if (response === undefined) {
 			ErrorSrvc.showError(t('err_websocket_connection'));
