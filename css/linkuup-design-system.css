@@ -275,6 +275,9 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .room-category-hero::before { content: ''; position: absolute; inset: 12px; border-radius: 28px; border: 1px solid rgba(255,255,255,.12); }
 .nearby .room-category-hero .material-icons { position: relative; z-index: 1; font-size: 56px; }
 .nearby .room-category-hero span { position: relative; z-index: 1; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+.nearby .roominfo { min-height:362px; }
+.nearby .room-category-hero { width:150px; height:150px; margin-top:-43px; border-radius:42px; border-color:rgba(255,255,255,.24); box-shadow:0 18px 0 rgba(23,21,58,.28),0 28px 42px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.28); }
+.nearby .room-category-hero::before { inset:14px; border-radius:33px; }.nearby .room-category-hero .material-icons { font-size:64px; }.nearby .room-category-hero span { max-width:120px; font-size:11px; }
 .nearby .chatbutton { width: min(100%, 390px); margin: 7px auto 0; }
 .nearby .chatbutton.chatbutton--locked { width:min(72%,275px); margin-top:10px; }
 .nearby .chatbutton.chatbutton--locked button { height:36px; min-height:36px; margin:0; border:1px solid rgba(255,255,255,.10); border-radius:999px; background:rgba(30,29,48,.50) !important; color:#b9b2cc; font-size:10px; font-weight:700; letter-spacing:.035em; box-shadow:none; }
