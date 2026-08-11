@@ -6,17 +6,11 @@
 
 <md-list class="profile-information" ng-if="data.profile.canGloballySee()">
 
-  <md-list-item class="md-2-line full profile-story-card" ng-if="data.profile.displayAbout()">
+  <md-list-item class="md-2-line half profile-detail-card" ng-repeat="detail in profileDetails(data.profile) track by detail.key">
     <md-list-item-text>
-       <h5><i class="material-icons">auto_awesome</i><span translate="SHD_PROFILE_ABOUT"></span></h5>
-       <p class="profile-about-me">{{data.profile.displayAbout()}}</p>
-    </md-list-item-text>
-  </md-list-item>
-
-  <md-list-item class="md-2-line half profile-detail-card" ng-repeat="(key, value) in data.profile.JSON">
-    <md-list-item-text>
-      <h5><i class="material-icons">{{profileDetailIcon(key)}}</i>{{key|translate}}</h5>
-      <p ng-bind-html="RenderSrvc.displaySetting(key, value)"></p>
+      <h5><i class="material-icons">{{profileDetailIcon(detail.key)}}</i>{{profileDetailLabel(detail.key)|translate}}</h5>
+      <p ng-if="detail.key === 'user_language'">{{languageLabel(detail.value)}}</p>
+      <p ng-if="detail.key !== 'user_language'" ng-bind-html="RenderSrvc.displaySetting(detail.key, detail.value)"></p>
     </md-list-item-text>
   </md-list-item>
 

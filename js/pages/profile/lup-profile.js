@@ -32,6 +32,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.profile = new GDO_Profile();
 	$scope.profileDetailIcon = function(key) {
 		var k = String(key || '').toLowerCase();
+		if (k.indexOf('language') >= 0) return 'translate';
 		if (k.indexOf('sport') >= 0) return 'fitness_center';
 		if (k.indexOf('smok') >= 0) return 'smoking_rooms';
 		if (k.indexOf('drink') >= 0 || k.indexOf('alcohol') >= 0) return 'local_bar';
@@ -42,6 +43,28 @@ angular.module('LUP').config(function($routeProvider) {
 		if (k.indexOf('city') >= 0 || k.indexOf('origin') >= 0 || k.indexOf('country') >= 0) return 'place';
 		if (k.indexOf('gender') >= 0 || k.indexOf('sexo') >= 0 || k.indexOf('interest') >= 0) return 'favorite';
 		return 'push_pin';
+	};
+	$scope.profileDetailLabel = function(key) {
+		return key === 'user_language' ? 'LANGUAGE' : key;
+	};
+	$scope.profileDetails = function(profile) {
+		var json = (profile && profile.JSON) || {};
+		var user = ($scope.data.user && $scope.data.user.JSON) || {};
+		var keys = [
+			'user_language', 'lup_origin', 'lup_city', 'lup_state', 'lup_religion',
+			'lup_smokes', 'lup_sporty', 'lup_drinks', 'lup_has_pet', 'lup_student',
+			'lup_school', 'lup_work', 'lup_sexo', 'lup_interest'
+		];
+		return keys.map(function(key) {
+			return {key: key, value: key === 'user_language' ? user.user_language : json[key]};
+		}).filter(function(detail) {
+			return detail.value !== undefined && detail.value !== null && detail.value !== '' && detail.value !== '0';
+		});
+	};
+	$scope.languageLabel = function(language) {
+		var key = 'LANG_' + String(language || '').toUpperCase();
+		var translated = $translate.instant(key);
+		return translated === key ? language : translated;
 	};
 	
 	$scope.init = function() {
