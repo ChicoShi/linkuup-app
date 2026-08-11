@@ -86,7 +86,11 @@ function LUPRoom(json) {
 
 	this.removeUser = function(user) {
 		var index = this.USERS.indexOf(user);
-		this.USERS.splice(index, 1);
+		// A delayed leave message may arrive after the user was already removed.
+		// Never splice(-1, 1): that would remove the wrong last visitor.
+		if (index >= 0) {
+			this.USERS.splice(index, 1);
+		}
 		console.log('LUPRoom.removeUser()', user, index);
 	};
 	
