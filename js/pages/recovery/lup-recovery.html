@@ -1,13 +1,16 @@
-<section layout="row" flex class="login">
+<section layout="row" flex class="login recovery-page">
 
   <md-content flex>
-	  
-	<section layout="column" layout-padding flex>
-		<img class="logo" src="js/pages/login/images/lup-logo.png"/>
+
+	<section class="login-brand-stage recovery-brand-stage" layout="column" layout-padding flex>
+		<div class="login-brand-glow" aria-hidden="true"></div>
+		<div class="login-emblem" aria-hidden="true"><span class="login-paperclip login-paperclip-left"></span><span class="login-paperclip login-paperclip-right"></span></div>
+		<div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
+		<p class="login-brand-claim">Setze dein Passwort sicher zurück.</p>
 	</section>
 	
     <!-- CONTENT -->
-    <section layout="column" layout-padding flex>
+	<section class="recovery-panel" layout="column" layout-padding flex>
 		<ng-include src="'js/pages/recovery/lup-recovery-form.html?v='+V"></ng-include>
     </section>
     <!-- END CONTENT -->
