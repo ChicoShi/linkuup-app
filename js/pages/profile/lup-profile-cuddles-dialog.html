@@ -1,0 +1,14 @@
+<md-dialog class="lup-cuddles-dialog" aria-label="Cuddels sammeln">
+  <form ng-cloak>
+    <md-dialog-content>
+      <div class="lup-cuddles-dialog-content">
+        <button class="lup-cuddles-close" type="button" ng-click="cancel()" aria-label="Schließen"><i class="material-icons">close</i></button>
+        <div class="lup-cuddles-heart"><i class="material-icons">favorite</i></div>
+        <h2>Cuddels sammeln</h2>
+        <p>Zeige deinen Code vor Ort. Ein Scan verbindet euch und macht aus Begegnungen echte LinkUUps.</p>
+        <div class="lup-cuddles-qr"><img class="qrcode" src="{{data.url}}" alt="Dein Cuddels-QR-Code" /></div>
+        <span class="lup-cuddles-hint"><i class="material-icons">qr_code_2</i> Nur gemeinsam vor Ort</span>
+      </div>
+    </md-dialog-content>
+  </form>
+</md-dialog>

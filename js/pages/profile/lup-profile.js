@@ -134,7 +134,7 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	$scope.showQRCode = function() {
 		let url = LUP_CONFIG.server + 'linkuup;qrforprofile;user_id;' + $scope.data.ownUser.id() + '.html?lang=en';
-		return DialogSrvc.confirm('js/pages/friends/lup-friends-qr-dialog.html', {url: url});
+		return DialogSrvc.confirm('js/pages/profile/lup-profile-cuddles-dialog.html', {url: url});
 	}
 
 	/////////////////////////
@@ -309,7 +309,9 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.gotoUserCuddles = function(user) {
 		console.log('ProfileCtrl.gotoUserCuddles()', user);
-
+		if (user && user.isSelf()) {
+			$scope.showQRCode();
+		}
 	};
 
 	////////////////////
