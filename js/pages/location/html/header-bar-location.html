@@ -7,8 +7,13 @@
 			<i class="material-icons">arrow_back</i>
 		</md-button>
 
-		<div flex md-truncate>
-			<div class="room-name" ng-bind-html="data.room.name()"></div>
+		<div flex md-truncate class="location-top-identity">
+			<span class="location-top-icon"><i class="material-icons">forum</i></span>
+			<div class="location-top-copy">
+				<div class="room-name" ng-bind-html="headerRoomName()"></div>
+				<span ng-if="data.room.isSelfInRoom() && inChatRange()"><i class="material-icons">fiber_manual_record</i> Chat aktiv</span>
+				<span ng-if="!data.room.isSelfInRoom() || !inChatRange()"><i class="material-icons">place</i> Ort ansehen</span>
+			</div>
 		</div>
     
         <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>

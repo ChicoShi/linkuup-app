@@ -64,6 +64,13 @@ angular.module('LUP').config(function($routeProvider) {
 //			return false;
 //		}
 	};
+
+	$scope.headerRoomName = function() {
+		var name = $scope.data.room.name();
+		// Test rooms such as "Braunschweig Chat" are named for the chat, but
+		// an out-of-range visitor is only viewing the place and its comments.
+		return $scope.inChatRange() ? name : name.replace(/\s+Chat$/i, '');
+	};
 	
 	$scope.afterLoadedRoom = function() {
 		console.log('LocationCtrl.afterLoadedRoom()', $scope.data.room.id());

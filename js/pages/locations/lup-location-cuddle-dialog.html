@@ -1,0 +1,12 @@
+<md-dialog class="lup-location-cuddle-dialog" aria-label="Location cuddlen">
+  <div class="lup-location-cuddle-content">
+    <button type="button" class="lup-location-cuddle-close" ng-click="cancel()" aria-label="Schließen"><i class="material-icons">close</i></button>
+    <div class="lup-location-cuddle-seal"><i class="material-icons">qr_code_2</i></div>
+    <span class="lup-location-cuddle-eyebrow">CUDDLE VOR ORT</span>
+    <h2>{{data.room.name()}}</h2>
+    <p>Scanne den QR-Code, den die Location vor Ort aufstellt. Damit gibst du dieser Location einmalig dein Cuddle.</p>
+    <div class="lup-location-cuddle-rule"><i class="material-icons">verified</i><span>Ein Cuddle pro Account und Location</span></div>
+    <p class="lup-location-cuddle-note">So werden die Orte sichtbar, an denen echte Begegnungen stattfinden.</p>
+    <button type="button" class="lup-location-cuddle-done" ng-click="cancel()">Verstanden</button>
+  </div>
+</md-dialog>

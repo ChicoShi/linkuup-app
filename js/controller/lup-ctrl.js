@@ -128,7 +128,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 
 			// Connect chain
 			var timezone = TimezoneSrvc.withTimezoneFor(window.GWF_USER);
-			timezone['catch']($scope.failedTimezone);
+			// Timezone is supplementary profile data. It must never block the whole
+			// app from opening when the browser or a background request stalls.
+			timezone['catch'](function(error) {
+				console.warn('Timezone unavailable; continuing application startup.', error);
+			});
 			var connection = WebsocketSrvc.connect();
 			connection['catch']($scope.failedConnection);
 //			var position = PositionSrvc.probe();
@@ -142,9 +146,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 			var settings = SettingsSrvc.withConfig();
 			settings['catch']($scope.failedTypes);
 			var categories = CategorySrvc.withCategories();
-			config['catch']($scope.failedCategories);
+			categories['catch']($scope.failedCategories);
 			// All at once
-			$q.all([connection, types, enums, config, settings, categories, timezone]).then(
+			$q.all([connection, types, enums, config, settings, categories]).then(
 					$scope.initedConnection,
 					$scope.fatalError);
 		}
@@ -210,10 +214,23 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 	 */
 	$scope.initedConnection = function() {
 		console.log('LUPCtrl.initedConnection()', window.GWF_USER);
-		UserSrvc.withUser(window.GWF_USER.id(), true).then(function(){
+		var finished = false;
+		var finish = function() {
+			if (finished) {
+				return;
+			}
+			finished = true;
 			$scope.data.inited = true;
+			// The app is usable once the authenticated user is available. A stale
+			// optional background task must never keep the whole interface covered
+			// by the loading screen after a data reinstall.
+			LoadingSrvc.stopTasks();
 			GWFPagination.IPP = ConfigSrvc.ipp();
 			$scope.doAuthCheck();
+		};
+		UserSrvc.withUser(window.GWF_USER.id(), true).then(finish, function(error) {
+			console.warn('LUP: Could not refresh the current user; continuing with the authenticated session.', error);
+			finish();
 		});
 	};
 	

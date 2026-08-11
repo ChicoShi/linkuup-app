@@ -158,20 +158,36 @@ angular.module('LUP').config(function($routeProvider) {
 			 ($scope.data.user) &&
 			 ($scope.data.course.page < $scope.data.course.nPages) ) {
 			$scope.data.course.working = true;
-			CourseSrvc.getCourse($scope.data.user, $scope.data.course.page+1).then(
-					$scope.gotCourse);
+			CourseSrvc.getCourse($scope.data.user).then(
+				$scope.gotCourse,
+				function(error) {
+					$scope.data.course.working = false;
+					ErrorSrvc.websocketMaybeJSONError(error);
+				});
 		}
 	};
 	
-	$scope.gotCourse = function(data) {
-		console.log('ProfileCtrl.gotCourse()', data);
-		// Copy pagemenu
-		var pagemenu = data[0];
-		$scope.data.course.page = pagemenu.page;
-		$scope.data.course.nPages = pagemenu.nPages;
-		// Merge visits
-		var course = data[1];
-		$scope.data.course.visits = $scope.data.course.visits.concat(course);
+	$scope.gotCourse = function(gwsMessage) {
+		console.log('ProfileCtrl.gotCourse()', gwsMessage);
+		var visits = [];
+		// 0x1160 returns room id, number of visits and last visit timestamp.
+		// The old profile code expected an unrelated paginated HTTP response,
+		// so it discarded the persisted websocket data after every reload.
+		while (gwsMessage.hasMore()) {
+			var roomId = gwsMessage.read32();
+			var count = gwsMessage.read32();
+			var lastVisit = gwsMessage.read32();
+			visits.push(new LUPRoomVisit({
+				visit_id: 'room-' + roomId,
+				visit_user: $scope.data.user.id(),
+				visit_room: roomId,
+				visit_at: lastVisit,
+				visit_count: count,
+			}));
+		}
+		$scope.data.course.page = 1;
+		$scope.data.course.nPages = 1;
+		$scope.data.course.visits = visits;
 		$scope.data.course.working = false;
 	};
 	

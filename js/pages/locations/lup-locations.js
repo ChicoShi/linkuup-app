@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
@@ -41,6 +41,12 @@ angular.module('LUP').config(function($routeProvider) {
 		else {
 			$scope.gotRooms($scope.data.rooms);
 		}
+		// A visual carousel is optional. Never let one stalled async callback keep
+		// the whole discovery page behind the global loading curtain forever.
+		$timeout(function() {
+			LoadingSrvc.stopTask('ws_rooms');
+			LoadingSrvc.stopTask('slick_rooms');
+		}, 3200);
 	};
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
@@ -48,6 +54,11 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.gotRooms = function(rooms) {
 		console.log('LocationsCtrl.gotRooms()', rooms);
 		$scope.data.rooms = rooms;
+		// A reinstall replaces category records. Never carry a stale category or
+		// search term into the freshly received location list, otherwise every
+		// new room can appear to be missing until the user manually clears it.
+		$scope.data.searchvalue = '';
+		$scope.data.category = [];
 		LoadingSrvc.addTask('slick_rooms');
 		// Let Angular render ng-repeat before Slick reads its slides.
 		$timeout($scope.slick, 0);
@@ -65,15 +76,25 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.maybeGotoRoom = function(room) {
 		console.log('LocationsCtrl.maybeGotoRoom()', room);
-		// A category change recreates Slick's visible slides. In that moment no
-		// room is focused yet, so the first tap must still be allowed to open it.
-		if ($scope.data.currentRoom === null || $scope.data.currentRoom == room) {
-			// The overview already contains the full public location record. Keep it
-			// for the profile view so an out-of-range visit never needs a room/chat
-			// lookup first; only Chat and Online enforce the radius afterwards.
-			RoomSrvc.CACHE[room.id()] = room;
-			$scope.gotoRoom(room);
+		// Slick indexes its filtered slides, while data.rooms keeps the complete
+		// list. Comparing a visible room with currentRoom can therefore reject a
+		// valid tap after selecting a category. The clicked card is authoritative.
+		// Chat and Online still enforce the location radius in the detail view.
+		RoomSrvc.CACHE[room.id()] = room;
+		$scope.gotoRoom(room);
+	};
+
+	// Room cuddles will be supplied by the QR check-in protocol.  Until then the
+	// counter remains an honest zero instead of borrowing unrelated visitor data.
+	$scope.roomCuddles = function(room) {
+		return Math.max(0, Number(room && room.JSON && room.JSON.room_cuddles) || 0);
+	};
+
+	$scope.showRoomCuddleQRCode = function(room, event) {
+		if (event) {
+			event.stopPropagation();
 		}
+		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room});
 	};
 	
 	$scope.slick = function(nofocus) {
@@ -105,6 +126,11 @@ angular.module('LUP').config(function($routeProvider) {
 				window.jQuery('.slickit').addClass('slick-inited');
 				LoadingSrvc.removeTask('slick_rooms');
 			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
+				// Give every change of place a clear direction. The CSS uses this
+				// lightweight state to stage the destination rather than merely
+				// sliding a static card sideways.
+				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
+					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
 				$scope.focusRoom(nextSlide);
 			});
 		}
@@ -112,45 +138,19 @@ angular.module('LUP').config(function($routeProvider) {
 		try {
 		$slick.slick({
 			arrows: false,
-			centerMode: true,
+			centerMode: false,
 			slidesToShow: 1,
-			focusOnSelect: true,
+			slidesToScroll: 1,
+			focusOnSelect: false,
 			mobileFirst: true,
 			variableWidth: false,
-			infiniteScroll: false,
+			infinite: false,
+			swipeToSlide: false,
+			waitForAnimate: true,
+			edgeFriction: 0.22,
 			speed: 360,
-			cssEase: 'cubic-bezier(.22,.75,.24,1)',
-			touchThreshold: 9,
-			responsive: [
-				{
-					breakpoint: 480,
-					settings: {
-						slidesToShow: 2,
-						slidesToScroll: 2,
-					}
-				},
-				{
-					breakpoint: 800,
-					settings: {
-						slidesToShow: 3,
-						slidesToScroll: 3,
-					}
-				},
-				{
-					breakpoint: 1024,
-					settings: {
-						slidesToShow: 4,
-						slidesToScroll: 4,
-					}
-				},
-				{
-					breakpoint: 1400,
-					settings: {
-						slidesToShow: 5,
-						slidesToScroll: 5,
-					}
-				},
-			],
+			cssEase: 'cubic-bezier(.22,.78,.24,1)',
+			touchThreshold: 6,
 		}).slick('slickFilter', function() {
 			return window.jQuery(this).hasClass('lup-hidden-slide');
 		});

@@ -11,6 +11,15 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	
 	WebsocketSrvc.MSGS_SENT = 0;
 	WebsocketSrvc.MSGS_RECV = 0;
+
+	// Native WebSocket callbacks run outside Angular's digest cycle.  Schedule
+	// UI broadcasts inside it, otherwise a received update can stay visually
+	// stale until the next unrelated tap/click happens.
+	WebsocketSrvc.broadcast = function(event, payload) {
+		$rootScope.$evalAsync(function() {
+			$rootScope.$broadcast(event, payload);
+		});
+	};
 	
 	////////////
 	// Config //
@@ -81,7 +90,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    	WebsocketSrvc.MSGS_RECV = 0;
 		    	defer.resolve();
 		    	WebsocketSrvc.authenticate().then(function(result){
-		    		$rootScope.$broadcast('gws-ws-open');
+					WebsocketSrvc.broadcast('gws-ws-open');
 		    	});
 			};
 		    ws.onclose = function() {
@@ -90,7 +99,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    	WebsocketSrvc.disconnect(true);
 		    	if (WebsocketSrvc.CONNECTED) {
 			    	WebsocketSrvc.CONNECTED = false;
-		    		$rootScope.$broadcast('gws-ws-close');
+					WebsocketSrvc.broadcast('gws-ws-close');
 		    	}
 		    };
 		    ws.onerror = function(error) {
@@ -161,7 +170,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 //				setTimeout(CommandSrvc[method].bind(CommandSrvc, gwsMessage), 1);
 //			}
 //			else {
-				$rootScope.$broadcast('gws-ws-message', gwsMessage);
+				WebsocketSrvc.broadcast('gws-ws-message', gwsMessage);
 //			}
 		}
 		else {
@@ -180,7 +189,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 //			CommandSrvc[command](messageText.substrFrom(':'));
 //		}
 //		else {
-	    	$rootScope.$broadcast('gws-ws-text-message', messageText);
+		WebsocketSrvc.broadcast('gws-ws-text-message', messageText);
 //		}
 	};
 
@@ -191,7 +200,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 			WebsocketSrvc.SOCKET = null;
 			WebsocketSrvc.SYNC_MSGS = {};
 			if (event) {
-				$rootScope.$broadcast('gws-ws-disconnect');
+				WebsocketSrvc.broadcast('gws-ws-disconnect');
 			}
 		}
 	};
