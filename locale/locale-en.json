@@ -41,7 +41,7 @@
 
 "HELLO_STRANGER": "Hello Stranger,",
 "DO_WE_KNOW_YOU": "Do we know you, or are you a guest?",
-"LOGIN_FIELD": "Email",
+"LOGIN_FIELD": "Email or username",
 "PASSWORD": "Password",
 "NEW_MEMBER": "New member?",
 "SIGN_UP_HERE": "Register here.",
