@@ -56,7 +56,7 @@ service('GallerySrvc', function(WebsocketSrvc, TypeSrvc, EnumSrvc, SettingsSrvc,
 	 * Triggers the upload finalization on the websocket after flow upload.
 	 * This saves the file and copies the image data after the flow process.
 	 */
-	GallerySrvc.onGalleryUpload = function() {
+	GallerySrvc.onGalleryUpload = function(flowIdentifier) {
 		console.log('GallerySrvc.onGalleryUpload()');
 		// Call 0x1152 LUPWS_GalleryUpload
 		var gwsMessage = new GWS_Message().cmd(0x1152).sync();
@@ -64,6 +64,7 @@ service('GallerySrvc', function(WebsocketSrvc, TypeSrvc, EnumSrvc, SettingsSrvc,
 		gwsMessage.writeString('LinkUUp_App'); // Title is notNull.
 		gwsMessage.writeString(''); // Description empty
 		gwsMessage.write16(EnumSrvc.galleryACLToInt(GallerySrvc.OWN_GALLERY.JSON['gallery_acl']));
+		gwsMessage.writeString(flowIdentifier || '');
 //		gwsMessage.write32(0) // This is enoguh stub data to not raise exceptions on the backend :)
 		return WebsocketSrvc.sendBinary(gwsMessage); // return promise
 	};

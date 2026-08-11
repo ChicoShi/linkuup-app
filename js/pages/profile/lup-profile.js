@@ -230,8 +230,13 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.onGalleryUploaded = function($file, $flow, $msg) {
 		console.log('GalleryCtrl.onGalleryUploaded()');
-		return GallerySrvc.onGalleryUpload().
-			then($scope.showGallery, ErrorSrvc.websocketFormError);
+		return GallerySrvc.onGalleryUpload($file.uniqueIdentifier).
+			then(function(response) {
+				// Allow selecting the very same file again after it was removed
+				// from the gallery; otherwise Flow treats it as a duplicate.
+				$flow.removeFile($file);
+				return $scope.showGallery();
+			}, ErrorSrvc.websocketFormError);
 	};
 	
 	/**
