@@ -1,7 +1,7 @@
 "use strict";
 angular.module('LUP').config(function($routeProvider) {
 	$routeProvider.when('/profilesettings', {
-		templateUrl: 'js/pages/profile/lup-profile-settings.html',
+		templateUrl: 'js/pages/profile/lup-profile-settings.html?v='+window.LUP_BUILD,
 		controller: 'ProfileSettingsCtrl',
 		params: {
 			authCheck: true,

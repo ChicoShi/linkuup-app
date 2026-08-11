@@ -1,6 +1,6 @@
 angular.module('LUP').config(function($routeProvider) {
 	$routeProvider.when('/new-location', {
-		templateUrl: 'js/pages/location/lup-new-location.html',
+		templateUrl: 'js/pages/location/lup-new-location.html?v='+window.LUP_BUILD,
 		controller: 'NewLocationCtrl'
 	});
 }).controller('NewLocationCtrl', function($scope, $location, WebsocketSrvc, PositionSrvc) {

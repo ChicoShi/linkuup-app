@@ -153,7 +153,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Return promise
 		return $mdDialog.show({
 			controller: DialogController,
-			templateUrl: 'js/dialogs/lup-room-vote-dialog.html',
+			templateUrl: 'js/dialogs/lup-room-vote-dialog.html?v='+window.LUP_BUILD,
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose:true,
@@ -286,7 +286,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Return promise
 		return $mdDialog.show({
 			controller: DialogController,
-			templateUrl: 'js/dialogs/lup-open-times-dialog.html',
+			templateUrl: 'js/dialogs/lup-open-times-dialog.html?v='+window.LUP_BUILD,
 			parent: angular.element(document.body),
 			targetEvent: event,
 			clickOutsideToClose:true,
@@ -310,7 +310,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Return promise
 		return $mdDialog.show({
 			controller: DialogController,
-			templateUrl: 'js/dialogs/lup-location-phone-dialog.html',
+			templateUrl: 'js/dialogs/lup-location-phone-dialog.html?v='+window.LUP_BUILD,
 			parent: angular.element(document.body),
 			targetEvent: event,
 			clickOutsideToClose: true,
@@ -330,4 +330,3 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 });
-

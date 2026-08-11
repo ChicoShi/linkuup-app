@@ -3,6 +3,9 @@ angular.module('LUP').
 service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 	
 	var DialogSrvc = this;
+	DialogSrvc.versionedTemplate = function(templateUrl) {
+		return templateUrl.indexOf('?') === -1 ? templateUrl + '?v=' + window.LUP_BUILD : templateUrl;
+	};
 	
 	//////////////////
 	// --- Base --- //
@@ -69,7 +72,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 		}
 		var config = {
 			controller: ['$scope', '$mdDialog', DialogController],
-			templateUrl: 'js/dialogs/lup-ajax-dialog.html',
+			templateUrl: DialogSrvc.versionedTemplate('js/dialogs/lup-ajax-dialog.html'),
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose:true,
@@ -123,7 +126,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 		
 		DialogSrvc.show({
 			controller: ['$scope', '$mdDialog', DialogController],
-			templateUrl: templateUrl,
+			templateUrl: DialogSrvc.versionedTemplate(templateUrl),
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: false,
