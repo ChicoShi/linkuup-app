@@ -252,6 +252,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.email = '';
 		$scope.data.password = '';
 		$scope.data.nickname = '';
+		$scope.data.loginPending = false;
 		$scope.data.fbInited = false;
 		if ($scope.data.authenticated) {
 			console.log('LoginCtrl.init()');
@@ -263,4 +264,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.tosLine = line;
 		}
 	};
+	// The root data object is shared between routes. Always clear stale guest
+	// values when this controller is created after a logout.
+	$scope.init();
 });
