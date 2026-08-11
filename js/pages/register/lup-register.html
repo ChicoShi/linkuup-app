@@ -1,13 +1,15 @@
-<section layout="row" flex class="login">
+<section layout="row" flex class="login register-page">
 
   <md-content flex>
-	  
-	<section layout="column" layout-padding flex>
-		<img class="logo" src="js/pages/login/images/lup-logo.png"/>
+
+	<section class="login-brand-stage register-brand-stage" layout="column" layout-padding flex>
+		<div class="login-emblem" aria-hidden="true"><span></span></div>
+		<div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
+		<p class="login-brand-claim">Dein Profil. Deine Orte. Deine Begegnungen.</p>
 	</section>
 		
     <!-- CONTENT -->
-    <section layout="column" layout-padding flex>
+	<section class="register-panel" layout="column" layout-padding flex>
 		<ng-include src="'js/pages/register/lup-register-form.html?v='+V"></ng-include>
 	</section>
 	

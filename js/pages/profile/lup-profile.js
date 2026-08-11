@@ -221,15 +221,9 @@ angular.module('LUP').config(function($routeProvider) {
 				encodeURIComponent(gallery.id()) + "&edit=1&_ajax=1&_fmt=json&_cors=" +
 				encodeURIComponent(window.LUP_CONFIG.cors);
 			$scope.data.galleryReady = !!gallery.id();
-			const images = gallery.IMAGES;
-			$scope.data.galleryImages = images.map(function(image) {
-				return {
-					id: image.id(),
-					description: image.description(),
-					imageURL: image.imageURL(),
-					thumbURL: image.thumbURL(),
-				};
-			});
+			// Keep the gallery image objects intact. Besides their display URLs,
+			// they carry the file id required by the delete command.
+			$scope.data.galleryImages = gallery.IMAGES;
 			// Native grid rendering is reliable on desktop and phone alike.
 		}
 	};

@@ -729,14 +729,15 @@ md-list .md-list-item-text .username,
 .profile-section-switcher button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 11px 10px; border: 1px solid transparent; border-radius: 12px; background: rgba(255,255,255,.045); color: var(--lup-muted); font: 700 12px/1 Ubuntu, sans-serif; text-align: left; cursor: pointer; }
 .profile-section-switcher button .material-icons { font-size: 19px; }
 .profile-section-switcher button.active { border-color: rgba(122,92,255,.55); background: linear-gradient(135deg, rgba(122,92,255,.30), rgba(43,157,244,.18)); color: var(--lup-text); box-shadow: inset 0 1px 0 rgba(255,255,255,.12); }
-.profile-page .gallery-upload { display: flex; justify-content: center; padding: 14px 12px 6px; }
-.profile-page .gallery-upload-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border: 1px solid rgba(122,92,255,.55); border-radius: 13px; background: linear-gradient(135deg, rgba(122,92,255,.34), rgba(43,157,244,.20)); color: var(--lup-text); box-shadow: 0 8px 18px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.12); font: 700 12px/1 Ubuntu, sans-serif; cursor: pointer; }
-.profile-page .gallery-upload-button .material-icons { font-size: 20px; color: #d9d1ff; }
-.profile-page .gallery-upload-button:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.profile-page .gallery-upload { display: contents; }
+.profile-page .gallery-upload-button { display: none; }
 .profile-page .gallery-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 8px 12px 28px; }
 .profile-page .gallery-tile { aspect-ratio: 1 / .82; display: block; overflow: hidden; padding: 0; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; background: rgba(255,255,255,.05); box-shadow: 0 8px 18px rgba(0,0,0,.18); cursor: pointer; }
 .profile-page .gallery-tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .profile-page .gallery-tile:hover { border-color: rgba(176,160,255,.75); transform: translateY(-1px); }
+.profile-page .gallery-add-tile { aspect-ratio: 1 / .82; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; overflow:hidden; padding:0; border:1px dashed rgba(186,170,255,.55); border-radius:15px; background:linear-gradient(145deg,rgba(126,94,233,.20),rgba(43,157,244,.09)); color:#e9e4ff; box-shadow:inset 0 1px 0 rgba(255,255,255,.11); font:700 12px/1.15 Ubuntu,sans-serif; cursor:pointer; }
+.profile-page .gallery-add-tile .material-icons { display:grid; place-items:center; width:39px; height:39px; border-radius:50%; background:linear-gradient(145deg,#aa92ff,#5f7ee7); color:#fff; box-shadow:0 6px 14px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.30); font-size:25px; }
+.profile-page .gallery-add-tile:hover { border-color:#dacfff; background:linear-gradient(145deg,rgba(142,108,250,.34),rgba(63,177,245,.18)); transform:translateY(-1px); }
 .profile-page .cuddle-qr-trigger { position: absolute; top: 3px; left: 50%; width: 24px; height: 24px; transform: translateX(-50%); display: grid; place-items: center; padding: 0; border: 1px solid rgba(255,255,255,.20); border-radius: 50%; background: rgba(255,117,146,.26); color: #ffd5df; cursor: pointer; z-index: 2; }
 .profile-page .cuddle-qr-trigger .material-icons { margin: 0; color: inherit; font-size: 15px; }
 .profile-contact-actions { display: flex; justify-content: center; gap: 8px; margin: 12px auto 0; }
@@ -1710,3 +1711,19 @@ md-list.usernavigation .presence-actions .usericon {
 .nearby .room-presence-count { margin-left:auto; padding:5px 7px; border:1px solid rgba(110,224,172,.24); border-radius:999px; background:rgba(52,175,119,.14); box-shadow:none; color:#c6f4db; font-size:9px; font-weight:800; }
 .nearby .room-presence-count .material-icons { margin-right:3px; color:#7de6af; font-size:14px; }
 @media (max-width:600px) { .nearby .room-user-preview { margin-right:12px; margin-left:18px; padding:6px 8px; }.nearby .room-presence-count { font-size:8px; } }
+
+/* Registration is the same calm LinkUUp entry experience as login. */
+.register-page > md-content { min-height:100vh; background:linear-gradient(160deg,#1d1f31 0%,#151724 58%,#11121d 100%); }
+.register-page .register-brand-stage { min-height:220px; }
+.register-page .register-panel { width:min(88%,410px); box-sizing:border-box; margin:0 auto; padding:22px 0 14px; }
+.register-page .register-title { margin:0 0 18px; color:#f7f5ff; font-size:25px; font-weight:750; letter-spacing:-.03em; text-align:center; }
+.register-page .register-panel md-input-container { margin:0 0 12px; padding:0 14px; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.055); }
+.register-page .register-panel md-input-container label { color:#bcb5d1 !important; }
+.register-page .register-panel md-input-container input { color:#faf9ff !important; }
+.register-page .register-panel md-input-container.md-input-focused { border-color:rgba(173,154,255,.70); background:rgba(128,100,231,.12); }
+.register-page .register-panel .tos-line { margin:5px 12px 17px; color:#c9c3d9; font-size:11px; line-height:1.4; }
+.register-page .register-panel .lup-tos-line a { color:#cbbdff; }
+.register-page .register-panel > section { width:100%; margin:0; padding:0; }
+.register-page .register-panel .login-button { width:100%; height:48px; margin:0 0 9px; border:1px solid rgba(233,227,255,.26); border-radius:14px; background:linear-gradient(105deg,#8d75e5,#5a94d8) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 10px 20px rgba(42,48,113,.24); color:#fff; font-size:14px; font-weight:800; }
+.register-page .register-panel .backtologin { width:100%; height:42px; margin:0; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.045) !important; color:#ded9ec; font-size:12px; font-weight:750; }
+.register-page .login-bottom { width:min(88%,410px); margin:8px auto 0; padding-bottom:18px; }
