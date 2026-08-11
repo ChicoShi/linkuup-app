@@ -800,6 +800,11 @@ md-list .md-list-item-text .username,
 .location-chat-surface .chatbottom .chat-button { display:flex; align-items:center; justify-content:center; flex: 0 0 54px; width:54px; height:54px; padding:0; margin-left:10px; border-radius:16px; background: linear-gradient(135deg,#987eff,#6d92ed); box-shadow: 0 8px 19px rgba(91,70,188,.35), inset 0 1px 0 rgba(255,255,255,.24); }
 .location-chat-surface .chatbottom button, .location-chat-surface .chatbottom button.sendmessage { width:25px; height:25px; min-width:25px; max-width:25px; padding:0; border-radius:0; background-color:#fff; -webkit-mask-size:contain; mask-size:contain; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; }
 .location-chat-surface .chatbottom .chat-button:has(button.sendmessage) { background: linear-gradient(135deg,#a78cff,#6da3ff); transform: translateY(-1px); }
+/* The composer must never fall back to the old white Material surface. */
+.location-chat-surface .chatbottom { background:#141522 !important; border-top-color:rgba(255,255,255,.08) !important; }
+.location-chat-surface .chatbottom .chat-input { background:transparent !important; }
+.location-chat-surface .chatbottom input { background:#25263b !important; color:#f7f5ff !important; -webkit-text-fill-color:#f7f5ff; border-color:rgba(185,169,255,.24) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.045); }
+.location-chat-surface .chatbottom input::placeholder { color:#aaa3bf; opacity:1; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
