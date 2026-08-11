@@ -10,8 +10,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.title = 'TITLE_RECOVERY';
 	
-	$scope.data.login  = '';
-	$scope.data.email  = '';
+	$scope.data.identifier = '';
 	$scope.data.captcha = '';
 
 	$scope.data.error = null;
@@ -30,11 +29,13 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.recover = function() {
 		console.log('RecoveryCtrl.recover()');
 		var gwsMessage = new GWS_Message().cmd(0x0106).sync();
+		var identifier = String($scope.data.identifier || '').trim();
+		var isEmail = identifier.indexOf('@') !== -1;
 		if (ConfigSrvc.recoveryLogin()) {
-			gwsMessage.writeString($scope.data.login);
+			gwsMessage.writeString(isEmail && ConfigSrvc.recoveryEmail() ? '' : identifier);
 		}
 		if (ConfigSrvc.recoveryEmail()) {
-			gwsMessage.writeString($scope.data.email);
+			gwsMessage.writeString(isEmail || !ConfigSrvc.recoveryLogin() ? identifier : '');
 		}
 		if (ConfigSrvc.recoveryCaptcha()) {
 			gwsMessage.writeString($scope.data.captcha);

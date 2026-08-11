@@ -1,15 +1,10 @@
 <h1 translate="TITLE_RECOVERY"></h1>
+<p class="recovery-explainer">Wir senden dir einen sicheren Link zum Festlegen eines neuen Passworts.</p>
 
-<md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryLogin()">
-  <label translate="USERNAME"></label>
-  <input ng-model="data.login" type="text">
-  <div class="error">{{data.errors.login}}</div>
-</md-input-container>
-
-<md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryEmail()">
-  <label translate="EMAIL"></label>
-  <input ng-model="data.email" type="email">
-  <div class="error">{{data.errors.email}}</div>
+<md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryLogin() || ConfigSrvc.recoveryEmail()">
+  <label>E-Mail oder Nutzername</label>
+  <input ng-model="data.identifier" type="text">
+  <div class="error">{{data.errors.login || data.errors.email}}</div>
 </md-input-container>
 
 <md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryCaptcha()">
