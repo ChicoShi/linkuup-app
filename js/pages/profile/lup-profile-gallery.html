@@ -16,7 +16,7 @@
     <div id="gallery-list" class="gallery-grid">
       <button type="button" class="gallery-add-tile" flow-btn
         aria-label="Bild zur Galerie hinzufügen">
-        <i class="material-icons">add</i><span>Foto<br>hinzufügen</span>
+        <i class="material-icons">add_a_photo</i><span>Neu</span>
       </button>
       <button type="button" class="gallery-tile" ng-repeat="image in data.galleryImages track by image.id()"
         ng-click="data.user.isSelf() && deleteGalleryImage(image)" aria-label="Galeriebild öffnen">

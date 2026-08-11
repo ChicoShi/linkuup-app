@@ -521,6 +521,12 @@ md-button.md-raised, .md-button.md-raised {
 /* Presence becomes a small live signal between the location identity and its actions. */
 .nearby .room-user-preview { position:relative; top:31px; display:flex; min-height:40px; margin-right:20px; margin-left:20px; padding:6px 10px 6px 12px; border:1px solid rgba(143,225,190,.16); border-radius:13px; background:linear-gradient(90deg,rgba(70,183,133,.14),rgba(255,255,255,.025) 64%,transparent); box-shadow:inset 3px 0 0 #62d3a0,inset 0 1px 0 rgba(255,255,255,.07); }
 .nearby .room-user-preview .lup-avatar { border-color:#222b39; }.nearby .room-presence-count { padding:5px 8px; border-color:rgba(104,218,166,.25); background:rgba(79,196,140,.11); color:#b8f0d4; box-shadow:none; font-size:10px; }.nearby .room-presence-count .material-icons { color:#7be0ac; }
+
+/* Nearby people: compact visual weight, larger faces, no stretched banner. */
+.nearby .room-user-preview { top:35px; min-height:58px; margin:8px 30px 0 14px; padding:8px 12px; border:1px solid rgba(129,227,181,.18); border-radius:18px; background:linear-gradient(110deg,rgba(60,168,122,.17),rgba(51,64,94,.20) 62%,rgba(255,255,255,.025)); box-shadow:0 10px 22px rgba(0,0,0,.14),inset 3px 0 0 #69d9a4,inset 0 1px 0 rgba(255,255,255,.09); }
+.nearby .room-user-preview .lup-avatar { width:42px; height:42px; margin-left:-12px; border:3px solid #202838; box-shadow:0 5px 12px rgba(0,0,0,.26); }.nearby .room-user-preview .lup-avatar:first-child { margin-left:0; }.nearby .room-user-preview .lup-avatar img { width:42px; height:42px; }
+.nearby .room-user-preview .more-users { flex-basis:42px; width:42px; height:42px; margin-left:-10px; border:3px solid #202838; background:linear-gradient(145deg,#70d8ad,#4c86c5); }.nearby .room-user-preview .more-users b { line-height:36px; font-size:11px; }
+.nearby .room-presence-count { margin-left:auto; padding:6px 9px; border-radius:12px; background:rgba(13,37,34,.37); color:#caf7df; font-size:10px; }
 .nearby .chatbutton button { border-color:rgba(226,220,255,.34); background:linear-gradient(135deg,rgba(176,157,255,.52),rgba(91,165,220,.36)) !important; box-shadow:0 7px 18px rgba(26,35,86,.22),inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(255,255,255,.08); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
 
 /* The category seal leads the card with enough presence to be recognised at a glance. */
@@ -1727,3 +1733,129 @@ md-list.usernavigation .presence-actions .usericon {
 .register-page .register-panel .login-button { width:100%; height:48px; margin:0 0 9px; border:1px solid rgba(233,227,255,.26); border-radius:14px; background:linear-gradient(105deg,#8d75e5,#5a94d8) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 10px 20px rgba(42,48,113,.24); color:#fff; font-size:14px; font-weight:800; }
 .register-page .register-panel .backtologin { width:100%; height:42px; margin:0; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.045) !important; color:#ded9ec; font-size:12px; font-weight:750; }
 .register-page .login-bottom { width:min(88%,410px); margin:8px auto 0; padding-bottom:18px; }
+
+/* Final nearby-presence layout override for phone breakpoints. */
+.nearby .room-user-preview { top:35px; min-height:58px; margin:8px 30px 0 14px; padding:8px 12px; border:1px solid rgba(129,227,181,.18); border-radius:18px; background:linear-gradient(110deg,rgba(60,168,122,.17),rgba(51,64,94,.20) 62%,rgba(255,255,255,.025)); box-shadow:0 10px 22px rgba(0,0,0,.14),inset 3px 0 0 #69d9a4,inset 0 1px 0 rgba(255,255,255,.09); }
+.nearby .room-user-preview .lup-avatar { width:42px; height:42px; margin-left:-12px; border:3px solid #202838; box-shadow:0 5px 12px rgba(0,0,0,.26); }.nearby .room-user-preview .lup-avatar:first-child { margin-left:0; }.nearby .room-user-preview .lup-avatar img { width:42px; height:42px; }
+.nearby .room-user-preview .more-users { flex-basis:42px; width:42px; height:42px; margin-left:-10px; border:3px solid #202838; background:linear-gradient(145deg,#70d8ad,#4c86c5); }.nearby .room-user-preview .more-users b { line-height:36px; font-size:11px; }.nearby .room-presence-count { padding:6px 9px; border-radius:12px; background:rgba(13,37,34,.37); color:#caf7df; font-size:10px; }
+
+/* Nearby people, refined: a light rail with an overlapping group of faces. */
+.nearby .room-user-preview { top:37px; min-height:54px; margin-left:25px; margin-right:18px; padding:7px 10px 7px 13px; border:0; border-radius:0; background:linear-gradient(90deg,rgba(93,216,164,.12),rgba(255,255,255,.018) 66%,transparent); box-shadow:none; }
+.nearby .room-user-preview::before { content:''; position:absolute; top:7px; bottom:7px; left:0; width:2px; border-radius:2px; background:linear-gradient(#83e2b4,rgba(101,195,237,.42)); box-shadow:0 0 11px rgba(104,224,170,.35); }
+.nearby .room-user-preview .lup-avatar { width:38px; height:38px; margin-left:-14px; border:2px solid #202838; box-shadow:0 4px 10px rgba(0,0,0,.22); }.nearby .room-user-preview .lup-avatar img { width:38px; height:38px; }.nearby .room-user-preview .lup-avatar:first-child { margin-left:0; }
+.nearby .room-user-preview .more-users { flex-basis:38px; width:38px; height:38px; margin-left:-12px; border:2px solid #202838; border-radius:50%; background:linear-gradient(145deg,#84dcba,#527fc0); box-shadow:0 4px 10px rgba(0,0,0,.22); }.nearby .room-user-preview .more-users b { line-height:34px; font-size:10px; }
+.nearby .room-presence-count { margin-left:auto; padding:5px 7px; border:0; border-radius:10px; background:rgba(13,37,34,.28); box-shadow:none; }
+
+/* Nearby people: faces resting on a single, quiet rail — no card or green frame. */
+.nearby .room-user-preview {
+  top:39px;
+  min-height:64px;
+  margin:7px 18px 0 25px;
+  padding:4px 9px 10px;
+  align-items:flex-start;
+  overflow:visible;
+  background:transparent;
+}
+.nearby .room-user-preview::before {
+  top:auto;
+  right:9px;
+  bottom:4px;
+  left:9px;
+  width:auto;
+  height:1px;
+  border-radius:0;
+  background:linear-gradient(90deg,transparent,rgba(218,224,255,.42) 16%,rgba(157,184,245,.62) 50%,rgba(218,224,255,.30) 84%,transparent);
+  box-shadow:0 0 8px rgba(144,168,236,.16);
+}
+.nearby .room-user-preview .lup-avatar {
+  width:46px;
+  height:46px;
+  margin-top:2px;
+  margin-left:-16px;
+  border:2px solid #202838;
+  border-radius:50%;
+  box-shadow:0 5px 12px rgba(0,0,0,.26);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+.nearby .room-user-preview .lup-avatar img { width:46px; height:46px; }
+.nearby .room-user-preview .lup-avatar:first-child { margin-left:0; transform:translateY(0); }
+.nearby .room-user-preview .lup-avatar:nth-child(2) { transform:translateY(4px); }
+.nearby .room-user-preview .lup-avatar:nth-child(3) { transform:translateY(1px); }
+.nearby .room-user-preview .lup-avatar:nth-child(4) { transform:translateY(5px); }
+.nearby .room-user-preview .lup-avatar:nth-child(5) { transform:translateY(2px); }
+.nearby .room-user-preview .lup-avatar:nth-child(6) { transform:translateY(5px); }
+.nearby .room-user-preview .lup-avatar:hover { transform:translateY(-4px) scale(1.06); box-shadow:0 9px 16px rgba(0,0,0,.34); }
+.nearby .room-user-preview .more-users { flex-basis:42px; width:42px; height:42px; margin-top:5px; margin-left:-13px; border:2px solid #202838; background:linear-gradient(145deg,#657aa7,#48566f); }
+.nearby .room-user-preview .more-users b { line-height:38px; }
+.nearby .room-presence-count { margin-top:8px; padding:4px 6px; background:transparent; color:#d8deed; }
+.nearby .room-presence-count .material-icons { color:#aebce0; }
+
+/* The avatar directive uses a background-image div, not an img element.  Give
+   that real image the full circle and suppress the old blue gender backdrop. */
+.nearby .room-user-preview .lup-avatar {
+  box-sizing:border-box;
+  width:48px;
+  height:48px;
+  padding:2px;
+  background:transparent !important;
+}
+.nearby .room-user-preview .lup-avatar .img,
+.nearby .room-user-preview .lup-avatar span {
+  display:block;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+.nearby .room-user-preview .lup-avatar span { background:#31394b; }
+
+/* The small people symbol answers one question at a glance: is anyone here? */
+.nearby .room-presence-count .material-icons {
+  display:grid;
+  place-items:center;
+  width:19px;
+  height:19px;
+  margin-right:4px;
+  border-radius:50%;
+  background:rgba(173,188,224,.10);
+  color:#9da9c2;
+  font-size:13px;
+  transition:color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+.nearby .room-presence-count.has-visitors .material-icons {
+  background:rgba(86,221,151,.16);
+  color:#82eeb1;
+  box-shadow:0 0 0 3px rgba(86,221,151,.08),0 0 12px rgba(86,221,151,.36);
+  animation:lup-presence-pulse 2.1s ease-in-out infinite;
+}
+@keyframes lup-presence-pulse {
+  0%,100% { box-shadow:0 0 0 3px rgba(86,221,151,.08),0 0 9px rgba(86,221,151,.22); }
+  50% { box-shadow:0 0 0 5px rgba(86,221,151,.04),0 0 15px rgba(86,221,151,.48); }
+}
+@media (prefers-reduced-motion:reduce) { .nearby .room-presence-count.has-visitors .material-icons { animation:none; } }
+
+/* Gallery add action: a compact camera invitation, not a technical drop zone. */
+.profile-page .gallery-add-tile {
+  position:relative;
+  isolation:isolate;
+  gap:7px;
+  border:1px solid rgba(194,202,231,.18);
+  border-radius:18px;
+  background:radial-gradient(circle at 50% 35%,rgba(139,158,217,.17),transparent 33%),linear-gradient(145deg,rgba(44,51,73,.90),rgba(26,31,45,.88));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 9px 18px rgba(0,0,0,.16);
+  color:#dce5fb;
+}
+.profile-page .gallery-add-tile::before { display:none; }
+.profile-page .gallery-add-tile .material-icons {
+  width:38px;
+  height:38px;
+  border:1px solid rgba(225,232,255,.28);
+  border-radius:13px;
+  background:linear-gradient(145deg,#8298d7,#5e75aa);
+  box-shadow:0 7px 13px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.30);
+  font-size:21px;
+}
+.profile-page .gallery-add-tile span { display:none; }
+.profile-page .gallery-add-tile:hover { border-color:rgba(209,220,255,.46); background:radial-gradient(circle at 50% 35%,rgba(150,174,243,.24),transparent 37%),linear-gradient(145deg,rgba(54,63,89,.96),rgba(28,34,50,.94)); transform:translateY(-2px); }

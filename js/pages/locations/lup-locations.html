@@ -43,14 +43,14 @@
 						</div>
 			<div class="info room-user-preview">
 							<lup-avatar
-							 ng-repeat="user in sortedVisitors(room) | limitTo: 3"
+							 ng-repeat="user in sortedVisitors(room) | limitTo: 6"
 							 ng-click="gotoProfile(user)"
 							 ng-user="user"></lup-avatar>
 							
-							<span class="more-users" ng-if="room.USERS.length>3" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
+							<span class="more-users" ng-if="room.USERS.length>6" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
 							  <b>+{{visitorOverflowLabel(room)}}</b>
 							</span>
-							<span class="room-presence-count" ng-click="gotoVisitors(room)">
+							<span class="room-presence-count" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
 								<i class="material-icons">groups</i>{{room.USERS.length || 0}} gerade hier
 							</span>
 						

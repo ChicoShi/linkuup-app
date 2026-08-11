@@ -315,7 +315,8 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.visitorOverflowLabel = function(room) {
-		var remaining = Math.max(0, (room.USERS || []).length - 3);
+		// Six faces are visible in the stack; the badge shows only the rest.
+		var remaining = Math.max(0, (room.USERS || []).length - 6);
 		return remaining > 99 ? '99+' : remaining;
 	};
 	
