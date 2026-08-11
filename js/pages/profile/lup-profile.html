@@ -48,13 +48,13 @@
 				<p class="countitem stat-locations" ng-click="gotoUserCourse(data.user)"><i class="material-icons">place</i><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
 				<p class="countitem stat-ups" ng-click="gotoLikes(data.user)"><i class="material-icons">bolt</i><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
 				<p class="countitem stat-friends" ng-click="gotoUserFriends(data.user)"><i class="material-icons">groups</i><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
-				<p class="countitem stat-cuddles" ng-click="gotoUserCuddles(data.user)"><i class="material-icons qr-cuddle-action" title="Knuddel-QR anzeigen" ng-click="$event.stopPropagation(); showQRCode()">qr_code_2</i><i class="material-icons">favorite</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
+				<p class="countitem stat-cuddles" ng-click="showQRCode()" title="Knuddel-QR anzeigen"><i class="material-icons qr-cuddle-main">qr_code_2</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
 			</div>
 		</div>
 	 
 	  <div class="profile-actions" ng-if="!data.user.isSelf()">
 		  <div class="content-center">
-			<i ng-if="!data.user.isSelf()" class="md-secondary usericon likeuser" ng-click="LikeSrvc.likeUser(data.user)"></i>
+			<button ng-if="!data.user.isSelf()" class="profile-up-action" type="button" ng-click="LikeSrvc.likeUser(data.user)"><i class="material-icons">bolt</i><span>Up geben</span></button>
             <i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (data.user.JSON.relation_pending)" class="md-secondary usericon addfriend pendingfriend"></i>
 			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (!data.user.JSON.relation_pending)" class="md-secondary usericon addfriend" ng-click="FriendSrvc.addFriend(data.user)"></i>
 			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (data.user.isFriend())" class="md-secondary usericon removefriend" ng-click="FriendSrvc.removeFriend(data.user)"></i>
