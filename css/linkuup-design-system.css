@@ -436,7 +436,7 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .distrat { margin:0 13px; padding:0 10px; border:1px solid rgba(255,255,255,.075); border-radius:13px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
 .nearby .room-user-preview { margin:8px 13px 0; padding:7px 9px; border:1px solid rgba(255,255,255,.07); border-radius:14px; background:linear-gradient(90deg,rgba(122,92,255,.12),rgba(255,255,255,.035)); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
 .nearby .room-presence-count { background:rgba(85,214,154,.13); box-shadow:0 5px 12px rgba(46,178,126,.10),inset 0 1px 0 rgba(255,255,255,.10); }
-.nearby .roominfo { min-height:510px; perspective:900px; }
+.nearby .roominfo { min-height:448px; perspective:900px; }
 .nearby .room-category-hero { height:246px; padding-top:25px; padding-bottom:24px; }
 .nearby .roominfo::before { top:266px; }
 .nearby .slick-current .room-category-hero { transform:translateY(-7px) rotateX(2deg); border-color:rgba(221,213,255,.34); box-shadow:0 13px 0 rgba(19,19,52,.40),0 30px 48px rgba(0,0,0,.42),0 0 38px rgba(128,98,246,.20),inset 0 1px 0 rgba(255,255,255,.30); }
