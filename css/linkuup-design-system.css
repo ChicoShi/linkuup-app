@@ -1665,8 +1665,8 @@ md-list.usernavigation .presence-actions .usericon {
   .nearby .roominfo { min-height:432px; }
   .nearby .distrat { top:21px; gap:80px; height:96px; }
   .nearby .distrat .location-cuddles,
-  .nearby .distrat .distance { transform:translateY(59px); }
-  .nearby .distrat .location-cuddles:hover { transform:translateY(59px); }
+  .nearby .distrat .distance { transform:translateY(70px); }
+  .nearby .distrat .location-cuddles:hover { transform:translateY(70px); }
   .nearby .distrat .location-cuddles,
   .nearby .distrat .distance,
   .nearby .distrat .distance a::before { width:60px; height:60px; }
@@ -1683,6 +1683,48 @@ md-list.usernavigation .presence-actions .usericon {
 .location-categories button.active { border-color:rgba(214,205,255,.22); background:rgba(255,255,255,.075) !important; color:#faf8ff; }
 .location-categories button.active::after { right:22%; bottom:3px; left:22%; width:auto; height:2px; border-radius:2px; background:#e0d8ff; box-shadow:none; }
 .location-categories button:nth-child(1) { color:#b9a7ff; }.location-categories button:nth-child(2) { color:#a8bddc; }.location-categories button:nth-child(3) { color:#e7b887; }.location-categories button:nth-child(4) { color:#e2a1dc; }.location-categories button:nth-child(5) { color:#9bd5dc; }.location-categories button:nth-child(6) { color:#daaabd; }
+
+/* Nearby actions: deliberately flat, quiet and precise. */
+.nearby .distrat { gap:26px; }
+.nearby .distrat .location-cuddles,
+.nearby .distrat .distance { width:52px; min-width:52px; height:52px; transform:none; }
+.nearby .distrat .location-cuddles {
+  border:1px solid rgba(255,183,211,.46);
+  border-radius:12px;
+  background:rgba(183,78,121,.16);
+  color:#f6bed4;
+}
+.nearby .distrat .location-cuddles::before { display:none; }
+.nearby .distrat .location-cuddles > .material-icons { font-size:29px; }
+.nearby .distrat .location-cuddles strong {
+  right:-6px; bottom:-6px; min-width:18px; height:18px;
+  border:1px solid #28283a; background:#f3bfd1; color:#442c3b;
+  font-size:9px;
+}
+.nearby .distrat .distance { align-items:center; }
+.nearby .distrat .distance a { width:52px; min-width:52px; gap:5px; color:#cfe9f7; }
+.nearby .distrat .distance a::before { display:none; content:none; }
+.nearby .distrat .distance a > .material-icons {
+  display:grid; place-items:center; width:52px; height:52px;
+  border:1px solid rgba(158,220,242,.50); border-radius:50%;
+  background:rgba(68,137,180,.16); color:#9edcf2; font-size:28px;
+}
+.nearby .distrat .distance a > span { color:#cfe9f7; font-size:10px; font-weight:750; letter-spacing:0; }
+/* Match the QR mark's quiet live accent: the route pin gets a thin travelling
+   ring, while the distance text and the actual link remain untouched. */
+.nearby .distrat .distance a { position:relative; isolation:isolate; }
+.nearby .distrat .distance a::after {
+  content:none;
+}
+@media (max-width:600px) {
+  .nearby .distrat .distance { transform:translateY(70px); }
+}
+@media (max-width:600px) {
+  .nearby .distrat { gap:54px; }
+  .nearby .distrat .location-cuddles,
+  .nearby .distrat .distance { transform:translateY(70px); }
+  .nearby .distrat .location-cuddles:hover { transform:translateY(70px); }
+}
 .location-categories button.active .material-icons { background:currentColor !important; color:#222334 !important; border-color:currentColor; }
 @media (max-width:380px) { .location-categories { gap:2px; margin-right:5px; margin-left:5px; padding:4px; }.location-categories button { min-height:50px; }.location-categories button .material-icons { width:23px; height:23px; font-size:15px; }.location-categories button span { font-size:7px; } }
 
@@ -1859,3 +1901,73 @@ md-list.usernavigation .presence-actions .usericon {
 }
 .profile-page .gallery-add-tile span { display:none; }
 .profile-page .gallery-add-tile:hover { border-color:rgba(209,220,255,.46); background:radial-gradient(circle at 50% 35%,rgba(150,174,243,.24),transparent 37%),linear-gradient(145deg,rgba(54,63,89,.96),rgba(28,34,50,.94)); transform:translateY(-2px); }
+
+/* Venue Cuddle: a crisp QR tile and a calm, readable counter. */
+.nearby .distrat .location-cuddles {
+  overflow:visible;
+  border:1px solid #eaa2c0;
+  border-radius:12px;
+  background:#6b3656;
+  box-shadow:none;
+  color:#ffe8f1;
+}
+.nearby .distrat .location-cuddles::before,
+.nearby .distrat .location-cuddles::after { display:none; content:none; }
+.nearby .distrat .location-cuddles > .material-icons {
+  font-size:28px;
+  filter:none;
+  text-shadow:none;
+}
+.nearby .distrat .location-cuddles strong {
+  right:-7px;
+  bottom:-7px;
+  display:grid;
+  place-items:center;
+  min-width:20px;
+  height:20px;
+  padding:0 3px;
+  border:2px solid #252939;
+  border-radius:50%;
+  background:#f5c9d9;
+  box-shadow:none;
+  color:#412a37;
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+}
+.nearby .distrat .location-cuddles:hover { transform:none; filter:brightness(1.12); }
+@media (max-width:600px) {
+  .nearby .distrat .distance { transform:translateY(80px); }
+}
+
+/* App pass 1 — inbox and reviews use the same calm dark surfaces as places. */
+.notification > md-content,
+.comments-template > md-content { background:radial-gradient(circle at 88% 0,rgba(122,92,255,.13),transparent 31%),var(--lup-bg); color:var(--lup-text); }
+.notification .md-tab-content > div,
+.notification md-tabs-content-wrapper,
+.notification .scroll-notifications,
+.notification md-list,
+.comments-template md-list { background:transparent !important; }
+.notification md-tabs-canvas { background:transparent; border-bottom:1px solid rgba(255,255,255,.09); }
+.notification md-tab-item { color:#afa8c2 !important; font-size:12px; font-weight:750; }
+.notification md-tab-item.md-active { color:#f8f6ff !important; }
+.notification md-ink-bar { height:3px; border-radius:3px 3px 0 0; background:linear-gradient(90deg,#9c7dff,#65acef) !important; }
+.notification .lup-notification-list,
+.notification md-tabs md-list { padding:10px 13px 28px; }
+.notification .lup-notification-list md-list-item,
+.notification md-tabs md-list > md-list-item { min-height:68px; margin:7px 0; padding:8px 10px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(255,255,255,.045); }
+.notification .lup-notification-list md-list-item.lup-notification-unread,
+.notification .lup-notification-unread { border-color:rgba(166,143,255,.32); background:linear-gradient(135deg,rgba(122,92,255,.18),rgba(50,132,209,.08)); }
+.notification .md-list-item-text h4,
+.notification .md-list-item-text p { color:#eeeaf8 !important; }
+.notification .md-list-item-text p { font-size:12px; line-height:1.4; }
+.notification .lup-item-date { margin:0 0 4px; color:#aaa2c2; font-size:10px; font-weight:700; }
+.notification .md-secondary-container .material-icons,
+.notification .md-secondary .material-icons { color:#b9a8ff; }
+.notification .md-list-item-text a { color:#a9d8ff; }
+.comments-template md-list { padding:10px 13px 28px; }
+.comments-template md-subheader { margin:4px 0 9px; padding:8px 2px; background:transparent !important; color:#b9b1ce !important; font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+.comments-template md-list-item { min-height:65px; margin:7px 0; padding:8px 10px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(255,255,255,.045); }
+.comments-template .lup-comment-text { color:#f2effa !important; font-size:13px; line-height:1.42; }
+.comments-template .lup-comment-date { color:#aaa3bb !important; font-size:11px; }
+.comments-template .md-secondary .material-icons { color:#ff9cad; }

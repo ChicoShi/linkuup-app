@@ -237,12 +237,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 	/////////////////
 	// --- GPS --- //
 	/////////////////
-	$scope.withPosition = function() {
+	$scope.withPosition = function(silent) {
 		console.log('LUPCtrl.withPosition()');
 		return PositionSrvc.probe().then(function(pos){
 //			PositionSrvc.start();
 			$scope.updatePosition(pos);
-		}, $scope.failedPosition);
+		}, silent ? function(error) { return $q.reject(error); } : $scope.failedPosition);
 	};
 	
 	$scope.updatePosition = function(pos) {
@@ -304,7 +304,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 	/////////////////////
 	// --- Routing --- //
 	/////////////////////
-	$scope.isLoading = function() { return LoadingSrvc.isLoading(); };
+	$scope.isLoading = function() {
+		// The full-screen loader belongs only to the initial connection. Once the
+		// app has an authenticated session, optional requests must stay local to
+		// their view and may never block navigation or the complete interface.
+		return !$scope.data.inited && LoadingSrvc.isLoading();
+	};
 
 	/** These 3 are subject to be removed soon **/
 	$scope.gotoHome = function() { $scope.goto('/home'); };
@@ -466,12 +471,19 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 	$scope.passedAuthCheck = function() {
 		console.log('LUPCtrl.passedAuthCheck()');
 		$scope.data.authenticated = true;
-		$scope.withPosition().then(function() {
+		var initialize = function() {
 			if (!$scope.initedOnce) {
 				console.log('LUPCtrl.passedAuthCheck() broadcasts init...');
 				$scope.initedOnce = true;
 				$scope.$broadcast('lup-inited');
 			}
+		};
+		// Opening the app must not wait for the browser's GPS retry cycle (which
+		// can take minutes if permission is undecided). GPS continues in the
+		// background; discovery starts immediately and can use its safe fallback.
+		initialize();
+		$scope.withPosition(true)['catch'](function(error) {
+			console.warn('LinkUUp: GPS unavailable during startup.', error);
 		});
 	};
 	

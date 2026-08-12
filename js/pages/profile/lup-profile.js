@@ -18,7 +18,10 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.CountrySrvc = CountrySrvc;
 	$scope.RenderSrvc = RenderSrvc;
 
-	$scope.data.selectedTab = $scope.data.selectedTab === undefined ? 1 : $scope.data.selectedTab;
+	// The legacy UniteGallery renderer is optional and has historically been
+	// fragile with changed image data. Open profiles on the stable About tab;
+	// load the gallery only after the user explicitly selects it.
+	$scope.data.selectedTab = 0;
 	
 	$scope.galleryAPI = null; // gallery handle for unitegallery
 	
@@ -34,14 +37,12 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('ProfileCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.ownUser = window.GWF_USER;
-			const timezones = TimezoneSrvc.withTimezones()
-			const user = UserSrvc.withUser($routeParams.id, true).catch(ErrorSrvc.websocketError);
-			$q.all({
-				timezones: timezones,
-				user: user,
-			}).then(function(result) {
-				$scope.loadedUser(result.user);
-			});
+			// Do not request the optional timezone catalogue on profile entry. The
+			// legacy Date endpoint can stall and its global HTTP loader would hide
+			// an otherwise fully usable profile.
+			UserSrvc.withUser($routeParams.id, true).then(
+				$scope.loadedUser,
+				ErrorSrvc.websocketError);
 		}
 	};
 	
@@ -51,9 +52,6 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.showHelp();
 		if ($scope.data.selectedTab === 0) {
 			$scope.loadInformation();
-		}
-		if ($scope.data.selectedTab === 1) {
-			$scope.showGallery();
 		}
 	};
 

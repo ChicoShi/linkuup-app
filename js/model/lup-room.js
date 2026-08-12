@@ -64,12 +64,17 @@ function LUPRoom(json) {
 	this.lng = function() { return this.JSON.room_pos_lng; };
 	this.view = function() { return this.JSON.room_view; };
 	this.radius = function() { return this.JSON.room_radius; };
-	this.distance = function() { return LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()); };
-	this.inChatRange = function() { return this.distance() <= this.radius(); };
+	this.distance = function() {
+		return LUPRoom.PositionSrvc.hasPosition(false) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
+	};
+	this.inChatRange = function() {
+		const distance = this.distance();
+		return distance !== null && distance <= this.radius();
+	};
 	this.displayDistance = function() {
 		const km = this.distance();
 		if (km === null || !Number.isFinite(km)) {
-			return '---';
+			return 'Standort aktivieren';
 		}
 		if (km < 1) {
 			return `${Math.round(km * 1000)}m`;

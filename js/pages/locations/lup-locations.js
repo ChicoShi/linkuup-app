@@ -50,18 +50,29 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
+	$scope.requestLocation = function(room, event) {
+		if (PositionSrvc.hasPosition(false)) {
+			return; // Normal case: keep the route link working.
+		}
+		// A user gesture is the correct time to request browser geolocation. It
+		// avoids repeated startup dialogs and gives the distance button a clear,
+		// honest purpose until the exact position is available.
+		event.preventDefault();
+		event.stopPropagation();
+		PositionSrvc.probe().then(function(position) {
+			$scope.updatePosition(position);
+			return RoomSrvc.withRooms();
+		}).then($scope.gotRooms, function(error) {
+			console.warn('LinkUUp: location permission was not granted.', error);
+		});
+	};
 	
 	$scope.gotRooms = function(rooms) {
 		console.log('LocationsCtrl.gotRooms()', rooms);
 		$scope.data.rooms = rooms;
-		// A reinstall replaces category records. Never carry a stale category or
-		// search term into the freshly received location list, otherwise every
-		// new room can appear to be missing until the user manually clears it.
-		$scope.data.searchvalue = '';
-		$scope.data.category = [];
 		LoadingSrvc.addTask('slick_rooms');
-		// Let Angular render ng-repeat before Slick reads its slides.
 		$timeout($scope.slick, 0);
+		$timeout($scope.slick, 180);
 		// Never leave the discovery view blank if the third-party carousel
 		// fails to emit its init event. A plain list is always better than
 		// an invisible, apparently stuck screen.
@@ -152,7 +163,9 @@ angular.module('LUP').config(function($routeProvider) {
 			cssEase: 'cubic-bezier(.22,.78,.24,1)',
 			touchThreshold: 6,
 		}).slick('slickFilter', function() {
-			return window.jQuery(this).hasClass('lup-hidden-slide');
+			// Slick keeps the slides for which this callback returns true. Hidden
+			// search/category results must therefore be excluded, not selected.
+			return !window.jQuery(this).hasClass('lup-hidden-slide');
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the room list instead.', error);
@@ -209,18 +222,11 @@ angular.module('LUP').config(function($routeProvider) {
 	// Suchfilter //
 	////////////////
 	$scope.filteredRoom = function(room) {
-		var s = $scope.data.searchvalue.trim().toLowerCase();
 		var categoryMatches = !$scope.data.category.length || $scope.data.category.indexOf(String(room.category())) >= 0;
 		if (!categoryMatches) {
 			return false;
 		}
-		// TODO: Split s by spaces and do an AND match for each of them.
-		if (room.name().toLowerCase().indexOf(s) >= 0) {
-//			console.log("LocationCtrl.filteredRoom()", room.name());
-			return true;
-		} 
-//		console.log("LocationCtrl.notFilteredRoom()", room.name());
-		return false;
+		return true;
 	};
 
 	$scope.isCategoryActive = function(categories) {
@@ -272,20 +278,42 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.searchLocation = function(query) {
 		console.log("LocationCtrl.searchLocation()", query);
-		var $slick = window.jQuery('.slickit');
-		if (!$slick.hasClass('slick-initialized')) {
+		query = (query || '').trim();
+		// Nearby discovery stays within the 6 km visibility radius. Searches go
+		// to the server and return only matching rooms, never the full catalogue.
+		if (query && $scope.data.searchSource !== query) {
+			$scope.data.searchSource = query;
+			RoomSrvc.searchRooms(query).then(function(rooms) {
+				// Requests for earlier keystrokes can resolve after the user has
+				// already typed more. Never let an old answer replace the current one.
+				if (($scope.data.searchvalue || '').trim() !== query) {
+					return;
+				}
+				$scope.data.rooms = rooms;
+				$timeout(function() { $scope.searchLocation(query); }, 180);
+			}, function(error) {
+				if (($scope.data.searchvalue || '').trim() === query) {
+					$scope.data.searchSource = null;
+				}
+				console.warn('LinkUUp: location search failed.', error);
+			});
 			return;
 		}
-		$slick.slick('slickUnfilter'); // Restore
-		// Reset
-		$slick.slick('unslick');
-		LoadingSrvc.addTask('slick_rooms');
-		$scope.slick(true);
-		// Slick can lose its init callback after unslick/filter cycles. Never let
-		// that third-party callback keep the whole page in a loading state.
-		$timeout(function() {
-			LoadingSrvc.removeTask('slick_rooms');
-		}, 450);
+		if (!query && $scope.data.searchSource) {
+			$scope.data.searchSource = null;
+			RoomSrvc.withRooms().then($scope.gotRooms, function(error) {
+				console.warn('LinkUUp: nearby location refresh failed.', error);
+			});
+			return;
+		}
+		var $slick = window.jQuery('.slickit');
+		if ($slick.hasClass('slick-initialized')) {
+			// Local category changes keep the current result set; only then do we
+			// need Slick's filter. No room data or asynchronous response is replaced.
+			$slick.slick('slickUnfilter').slick('slickFilter', function() {
+				return !window.jQuery(this).hasClass('lup-hidden-slide');
+			});
+		}
 	};
 
 	//////////

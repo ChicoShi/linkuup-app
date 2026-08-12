@@ -12,6 +12,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	PositionSrvc.TIMEOUT = 3;
 
 	PositionSrvc.PROBED = false;
+	PositionSrvc.PROBING = null;
 	PositionSrvc.HIGH_PRECISION = true;
 
 	PositionSrvc.OPTIONS = {
@@ -64,10 +65,19 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		if (PositionSrvc.PROBED) {
 			defer.resolve(PositionSrvc.CURRENT);
 		}
+		else if (PositionSrvc.PROBING) {
+			// Several controllers can ask for GPS while the app connects. Reuse
+			// the same browser request; never create a stack of permission prompts.
+			return PositionSrvc.PROBING;
+		}
 		else if (!navigator.geolocation) {
 			defer.reject('Browser has no geolocation');
 		}
 		else {
+			PositionSrvc.PROBING = defer.promise;
+			defer.promise['finally'](function() {
+				PositionSrvc.PROBING = null;
+			});
 			PositionSrvc.MAX_TRY = 0;
 			PositionSrvc.sendProbe(defer);
 		}

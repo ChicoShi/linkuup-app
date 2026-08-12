@@ -32,7 +32,6 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	// --- Binary Parser --- //
 	///////////////////////////
 	RoomSrvc.parseRoomsMessage = function(gwsMessage) {
-		console.log('RoomSrvc.parseRoomsMessage()', gwsMessage);
 		var rooms = [];
 		while (gwsMessage.hasMore()) {
 			var room = RoomSrvc.parseRoomMessage(gwsMessage);
@@ -43,7 +42,6 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.parseRoomMessage = function(gwsMessage) {
-		console.log('RoomSrvc.parseRoomMessage()', gwsMessage);
 		var roomid = gwsMessage.read32();
 		gwsMessage.moveIndex(-4);
 		var room = RoomSrvc.CACHE[roomid] ? RoomSrvc.CACHE[roomid] : new LUPRoom({room_id: roomid});
@@ -54,7 +52,6 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.parseRoomMessageUsers = function(room, gwsMessage) {
-		console.log('RoomSrvc.parseRoomMessageUsers()', room, gwsMessage);
 		var uid = 0;
 		while (uid = gwsMessage.read32()) {
 			var user = UserSrvc.getOrCreate(uid);
@@ -158,10 +155,9 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		}
 	};
 	
-	RoomSrvc.withRooms = function() {
-		console.log('RoomSrvc.withRooms()');
+	RoomSrvc.withRooms = function(includeAll) {
 		var defer = $q.defer();
-		PositionSrvc.withPosition().then(function(p){
+		var loadRooms = function(p) {
 			var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(p.lat).writeFloat(p.lng);
 			WebsocketSrvc.sendBinary(gwsMessage).then(function(msg){
 				var rooms = RoomSrvc.parseRoomsMessage(msg);
@@ -169,8 +165,26 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 //				rooms = rooms.sort(RoomSrvc.sortJoinable);
 				defer.resolve(rooms);
 			}, defer.reject);
-		}, defer.reject);
+		};
+		// Do not make the location catalogue depend on the browser's GPS dialog
+		// or its retry timeout. A known position is used immediately; otherwise
+		// the server receives (0,0) and returns the public discovery list.
+		var position = PositionSrvc.CURRENT;
+		if (!includeAll && PositionSrvc.hasPosition(false)) {
+			loadRooms(position);
+		}
+		else {
+			console.warn('LinkUUp: loading full location catalogue.');
+			loadRooms({lat: 0, lng: 0});
+		}
 		return defer.promise;
+	};
+
+	RoomSrvc.searchRooms = function(query) {
+		var gwsMessage = new GWS_Message().cmd(0x1163).sync().writeString(query);
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
+			return RoomSrvc.parseRoomsMessage(msg);
+		});
 	};
 	
 	RoomSrvc.part = function(room) {

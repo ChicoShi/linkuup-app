@@ -9,7 +9,7 @@
 		<div class="search-input-wrap">
 			<input
 			type="text" class="search-input" placeholder="{{'SEARCH_FOR_LOCATIONS'|translate}}"
-			ng-keyup="searchLocation(data.searchvalue)" ng-model="data.searchvalue" />
+			ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" />
 		</div>
 
 		<div class="location-categories" aria-label="Kategorien">
@@ -22,7 +22,7 @@
 		</div>
 
 		<div class="slickit" layout="column" flex>
-			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer" ng-class="{'lup-hidden-slide':filteredRoom(room)}">
+			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer" ng-class="{'lup-hidden-slide':!filteredRoom(room)}">
 	
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
 					<div class="roominfo">
@@ -59,7 +59,7 @@
 							<div class="location-cuddles" ng-click="showRoomCuddleQRCode(room, $event)" title="QR-Code dieser Location öffnen">
 								<i class="material-icons">qr_code_2</i><strong>{{roomCuddles(room)}}</strong>
 							</div>
-							<div class="distance" ng-if="room.showDistance()"><p><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}"><span>{{room.displayDistance()}} entfernt</span></a></p></div>
+							<div class="distance" ng-if="room.showDistance()"><p><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><span>{{room.displayDistance()}}</span></a></p></div>
 						</div>
 					</div>
 					<section class="chatbutton" layout="column" ng-class="{'chatbutton--locked': !room.inChatRange()}">
