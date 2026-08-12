@@ -298,6 +298,13 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.scrollChatToBottom(false);
 		}
 	});
+	$scope.$on('$destroy', function() {
+		// Leaving a location page also means leaving its live-presence room.
+		// The server broadcasts the part event, removing the mini avatar at once.
+		if (ChatSrvc.CHATROOM && ChatSrvc.CHATROOM.id() === $scope.data.room.id()) {
+			ChatSrvc.part($scope.data.room);
+		}
+	});
 
 	//////////
 	// Maps //

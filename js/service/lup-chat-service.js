@@ -24,17 +24,25 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			defer.resolve();
 			return defer.promise;
 		} else {
-			ChatSrvc.CHATROOM = room;
+			var previousRoom = ChatSrvc.CHATROOM;
+			var sendJoin = function() {
 			var pos = window.GWF_POSITION;
 			var gwsMessage = new GWS_Message().cmd(0x1103);
 			gwsMessage.write32(room.id());
 			gwsMessage.writeFloat(pos.lat).writeFloat(pos.lng)
 			gwsMessage.writeString(password||"");
 			return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
-//				ChatSrvc.CHATROOM = room;
+				ChatSrvc.CHATROOM = room;
 			}, function() {
 				ChatSrvc.CHATROOM = null;
 			});
+			};
+			// Presence is exclusive: moving to another venue always parts the old
+			// room first, so a person cannot remain shown as online in both cards.
+			if (previousRoom) {
+				return ChatSrvc.part(previousRoom).then(sendJoin, sendJoin);
+			}
+			return sendJoin();
 		}
 	};
 	

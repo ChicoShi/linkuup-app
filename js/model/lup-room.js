@@ -66,6 +66,8 @@ function LUPRoom(json) {
 		return LUPRoom.PositionSrvc.hasPosition(false) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
 	};
 	this.inChatRange = function() {
+		// The Germany test chat is intentionally a non-physical, nationwide room.
+		// Every actual location remains controlled by its GPS radius.
 		const distance = this.distance();
 		return distance !== null && distance <= this.radius();
 	};

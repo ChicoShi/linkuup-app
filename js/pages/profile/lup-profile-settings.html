@@ -22,6 +22,20 @@
         </md-select>
       </md-list-item>
 
+	  <md-list-item>
+		<div class="md-list-item-text" flex>
+		  <h5>Profil außerhalb meines Orts erlauben</h5>
+		  <p>Aus: Dein Profil ist nur für Personen im selben aktiven Ort sichtbar.</p>
+		</div>
+		<md-switch
+		 ng-model="data.profile.JSON.lup_profile_outside_visible"
+		 ng-true-value="'1'"
+		 ng-false-value="'0'"
+		 ng-change="changeSetting('lup_profile_outside_visible')"
+		 aria-label="Profil außerhalb des Orts erlauben">
+		</md-switch>
+	  </md-list-item>
+
       <!-- About me -->
       <md-subheader class="md-no-sticky">{{'SHD_PROFILE_ABOUT'|translate}}</md-subheader>
       <md-list-item class="profile-about-editor">

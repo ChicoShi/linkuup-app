@@ -15,10 +15,10 @@
 		<div class="location-categories" aria-label="Kategorien">
 			<button type="button" ng-class="{active: isCategoryActive([])}" ng-click="selectCategory([])"><i class="material-icons">grid_view</i><span>Alle</span></button>
 			<button type="button" ng-class="{active: isCategoryActive(['2'])}" ng-click="selectCategory(['2'])"><i class="material-icons">apartment</i><span>Städte</span></button>
-			<button type="button" ng-class="{active: isCategoryActive(['3','4','5','14'])}" ng-click="selectCategory(['3','4','5','14'])"><i class="material-icons">storefront</i><span>Bar &amp; Café</span></button>
-			<button type="button" ng-class="{active: isCategoryActive(['11'])}" ng-click="selectCategory(['11'])"><i class="material-icons">music_note</i><span>Club &amp; Disco</span></button>
-			<button type="button" ng-class="{active: isCategoryActive(['16','17'])}" ng-click="selectCategory(['16','17'])"><i class="material-icons">account_balance</i><span>Bildung &amp; Uni</span></button>
-			<button type="button" ng-class="{active: isCategoryActive(['12','13','18'])}" ng-click="selectCategory(['12','13','18'])"><i class="material-icons">menu_book</i><span>Kultur &amp; Hilfe</span></button>
+			<button type="button" ng-class="{active: isCategoryActive(['3','4','5','14'])}" ng-click="selectCategory(['3','4','5','14'])"><i class="material-icons">storefront</i><span>Bar<br>&amp; Café</span></button>
+			<button type="button" ng-class="{active: isCategoryActive(['11'])}" ng-click="selectCategory(['11'])"><i class="material-icons">music_note</i><span>Club<br>&amp; Disco</span></button>
+			<button type="button" ng-class="{active: isCategoryActive(['16','17'])}" ng-click="selectCategory(['16','17'])"><i class="material-icons">account_balance</i><span>Bildung<br>&amp; Uni</span></button>
+			<button type="button" ng-class="{active: isCategoryActive(['12','13','18'])}" ng-click="selectCategory(['12','13','18'])"><i class="material-icons">menu_book</i><span>Kultur<br>&amp; Hilfe</span></button>
 		</div>
 
 		<div class="slickit" layout="column" flex>
@@ -31,7 +31,7 @@
 								<div class="room-category-orbit"><i class="material-icons">{{categoryVisual(room).icon}}</i></div>
 								<span class="room-category-name">{{room.categoryName()}}</span>
 								<strong class="room-hero-name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
-								<span class="room-hero-meta">{{room.city()}}</span>
+								<span class="room-hero-meta"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
 							</div>
 						</div>
 						
@@ -44,15 +44,15 @@
 						</div>
 			<div class="info room-user-preview">
 							<lup-avatar
-							 ng-repeat="user in sortedVisitors(room) | limitTo: 6"
+							 ng-repeat="user in sortedVisitors(room) | limitTo: 5"
 							 ng-click="gotoProfile(user)"
 							 ng-user="user"></lup-avatar>
 							
-							<span class="more-users" ng-if="room.USERS.length>6" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
+							<span class="more-users" ng-if="room.USERS.length>5" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
 							  <b>+{{visitorOverflowLabel(room)}}</b>
 							</span>
 							<span class="room-presence-count" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
-								<i class="material-icons">groups</i>{{room.USERS.length || 0}} gerade hier
+								<i class="material-icons">groups</i>{{visitorCountLabel(room)}} gerade hier
 							</span>
 						
 						</div>
@@ -68,18 +68,10 @@
 <!-- 						<div class="gotoroom" ng-click="gotoRoom(room)"></div> -->
 					
 						<md-button
-						 style="background:#252525"
 						 class="md-raised md-primary inactive"
 						 ng-if="!room.inChatRange()">{{'CHAT_TOO_FAR'|translate}}</md-button>
 				
 						<md-button
-						 style="
-						 background: rgb(76,76,76); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(76,76,76,1) 0%, rgba(89,89,89,1) 13%, rgba(102,102,102,1) 22%, rgba(71,71,71,1) 34%, rgba(44,44,44,1) 46%, rgba(17,17,17,1) 60%, rgba(0,0,0,1) 66%, rgba(43,43,43,1) 85%, rgba(28,28,28,1) 91%, rgba(19,19,19,1) 92%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top, rgba(76,76,76,1) 0%,rgba(89,89,89,1) 13%,rgba(102,102,102,1) 22%,rgba(71,71,71,1) 34%,rgba(44,44,44,1) 46%,rgba(17,17,17,1) 60%,rgba(0,0,0,1) 66%,rgba(43,43,43,1) 85%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 92%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, rgba(76,76,76,1) 0%,rgba(89,89,89,1) 13%,rgba(102,102,102,1) 22%,rgba(71,71,71,1) 34%,rgba(44,44,44,1) 46%,rgba(17,17,17,1) 60%,rgba(0,0,0,1) 66%,rgba(43,43,43,1) 85%,rgba(28,28,28,1) 91%,rgba(19,19,19,1) 92%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
-						 "
 						 class="md-raised md-primary"
 						 ng-if="room.inChatRange()"
 						 ng-click="gotoChat(room)">{{'JOIN_CHAT'|translate}}</md-button>

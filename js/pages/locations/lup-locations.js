@@ -246,22 +246,40 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.selectCategory = function(categories) {
-		$scope.data.category = categories;
+		$scope.data.category = categories.slice(0);
 		// Do not retain a focus object from the previously filtered carousel.
 		$scope.data.currentRoom = null;
 		$scope.data.currentRoomIndex = -1;
-		// Let Angular update the slide classes before Slick reads them again.
-		// Without this small delay, tapping a new category could retain the
-		// previous list and make Bar/Café appear identical.
-		// If the catalogue is still arriving, gotRooms() will apply this category
-		// during the first Slick initialisation. Do not wake the old carousel in
-		// between; that was the brief loading/flicker seen after tapping a filter.
-		if (!$scope.data.rooms.length) {
+		// Let Angular update slide classes, then always use the same Slick path.
+		// Previously "Alle" and the other categories used competing recovery
+		// paths, which could leave the filter bar visually active but inert.
+		$timeout(function() {
+			$scope.refreshCategoryFilter();
+		}, 0);
+	};
+
+	$scope.refreshCategoryFilter = function() {
+		var $slick = window.jQuery('.slickit');
+		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
 		}
-		$timeout(function() {
-			$scope.searchLocation($scope.data.searchvalue);
-		}, 0);
+		if (!$slick.hasClass('slick-initialized')) {
+			return $scope.slick();
+		}
+		try {
+			$slick.slick('slickUnfilter');
+			if ($scope.data.category.length) {
+				$slick.slick('slickFilter', function() {
+					return !window.jQuery(this).hasClass('lup-hidden-slide');
+				});
+			}
+			$slick.slick('slickGoTo', 0, true);
+			$slick.slick('setPosition').addClass('slick-inited');
+		}
+		catch (error) {
+			console.warn('LinkUUp: category filter could not refresh the carousel.', error);
+			$slick.addClass('slick-inited');
+		}
 	};
 
 	$scope.categoryVisual = function(room) {
@@ -344,34 +362,7 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 			return;
 		}
-		var $slick = window.jQuery('.slickit');
-		if ($slick.hasClass('slick-initialized')) {
-			// Local category changes keep the current result set; only then do we
-			// need Slick's filter. No room data or asynchronous response is replaced.
-			try {
-				$slick.slick('slickUnfilter').slick('slickFilter', function() {
-					return !window.jQuery(this).hasClass('lup-hidden-slide');
-				});
-				// The old index can belong to a card that the new category removed.
-				// Start with the first valid result, rather than briefly rendering an
-				// empty Slick track while it tries to recover that stale position.
-				if ($slick.find('.slick-slide:not(.slick-cloned)').length) {
-					$slick.slick('slickGoTo', 0, true);
-				}
-				// Filtering temporarily rebuilds Slick's track. Keep the already
-				// rendered discovery view visible throughout that short operation.
-				$slick.addClass('slick-inited');
-				$timeout(function() {
-					if ($slick.hasClass('slick-initialized')) {
-						$slick.slick('setPosition').addClass('slick-inited');
-					}
-				}, 0, false);
-			}
-			catch (error) {
-				console.warn('LinkUUp: category filter could not refresh the carousel.', error);
-				$slick.addClass('slick-inited');
-			}
-		}
+		$scope.refreshCategoryFilter();
 	};
 
 	//////////
@@ -401,9 +392,14 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.visitorOverflowLabel = function(room) {
-		// Six faces are visible in the stack; the badge shows only the rest.
-		var remaining = Math.max(0, (room.USERS || []).length - 6);
+		// Five faces remain recognisable on a phone; the badge represents the rest.
+		var remaining = Math.max(0, (room.USERS || []).length - 5);
 		return remaining > 99 ? '99+' : remaining;
+	};
+
+	$scope.visitorCountLabel = function(room) {
+		var count = (room.USERS || []).length;
+		return count > 99 ? '99+' : count;
 	};
 	
 

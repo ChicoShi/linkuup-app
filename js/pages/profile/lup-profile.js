@@ -133,7 +133,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
 		$scope.data.profile = profile;
 	};
-	
+
 	$scope.countryURL = function(user) {
 		return CountrySrvc.countryURL(user.countryId());
 	};

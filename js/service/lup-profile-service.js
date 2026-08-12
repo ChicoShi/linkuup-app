@@ -54,6 +54,7 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 		profile.JSON.lup_drinks = profile.JSON.lup_drinks||'0';
 		profile.JSON.lup_smokes = profile.JSON.lup_smokes||'0';
 		profile.JSON.lup_sporty = profile.JSON.lup_sporty||'0';
+		profile.JSON.lup_profile_outside_visible = String(profile.JSON.lup_profile_outside_visible) === '1' ? '1' : '0';
 
 		// Fix floats
 		if (profile.JSON.lup_height) {

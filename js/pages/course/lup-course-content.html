@@ -1,33 +1,37 @@
-<md-list flex class="course-collection">
-  
-  <md-subheader class="md-no-sticky">
-    <div
-     translate="SUBHEADER_COURSE"
-     translate-value-user="{{data.courseUser.displayName()}}"
-     translate-value-count="{{data.course.length}}"></div>
-  </md-subheader>
-  
-  <md-list-item
-   class="md-2-line"
-   ng-repeat="visit in data.course">
-    <img class="md-avatar"
-     ng-src="{{visit.room.iconImageURI()}}"
-     ng-click="gotoRoom(visit.room)" />
-    <div class="course-visit-badge" aria-label="{{visit.visit_count}} Besuche">
-      <i class="material-icons">emoji_events</i>
-      <strong>{{visit.visit_count}}</strong>
-      <span>Besuche</span>
+<section class="course-page" flex>
+  <header class="course-hero">
+    <div class="course-hero-mark"><i class="material-icons">explore</i></div>
+    <div>
+      <small>BESUCHSCHRONIK</small>
+      <h2>{{data.courseUser.displayName()}}</h2>
+      <p>Echte Orte, die du live besucht hast.</p>
     </div>
-    <div class="md-list-item-text">
-      <p
-       translate="ROOM_COURSE_VISITS"
-       translate-value-count="{{visit.visit_count}}"
-       translate-value-room="{{visit.room.name()}}">
-      </p>
-      <h5
-       translate="ROOM_COURSE_VISIT"
-       translate-value-last="{{visit.visit_last|msgDate}}"></h5>
-    </div>
-  </md-list-item>
-  
-</md-list>
+  </header>
+
+  <div class="course-overview" aria-label="Besuchsübersicht">
+    <div><strong>{{data.courseStats.places}}</strong><span>Orte entdeckt</span></div>
+    <div><strong>{{data.courseStats.visits}}</strong><span>Besuche</span></div>
+    <div class="course-goal"><i class="material-icons">flag</i><span>Noch {{data.courseStats.remaining}} bis {{data.courseStats.next}}</span></div>
+  </div>
+
+  <div class="course-timeline" ng-if="data.course.length">
+    <article class="course-stop" ng-repeat="visit in data.course" ng-click="gotoRoom(visit.room)">
+      <div class="course-stop-pin"><i class="material-icons">place</i></div>
+	  <div class="course-stop-icon" ng-class="visitVisual(visit).class"><i class="material-icons">{{visitVisual(visit).icon}}</i></div>
+      <div class="course-stop-main">
+        <small>{{visit.room.categoryName() || 'Location'}}</small>
+        <h3>{{visit.room.name()}}</h3>
+        <p><i class="material-icons">schedule</i>{{visitTime(visit.visit_last)}} <span>· {{visit.visit_last|msgDate}}</span></p>
+      </div>
+      <div class="course-stop-count" aria-label="{{visit.visit_count}} Besuche">
+        <strong>{{visit.visit_count}}</strong><span>Besuche</span>
+      </div>
+    </article>
+  </div>
+
+  <div class="course-empty" ng-if="!data.course.length">
+    <i class="material-icons">near_me</i>
+    <strong>Noch keine Besuche gespeichert</strong>
+    <span>Besuche einen Ort und tritt seinem Chat bei – dann startet deine Chronik.</span>
+  </div>
+</section>
