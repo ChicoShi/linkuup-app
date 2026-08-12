@@ -2278,3 +2278,285 @@ md-list.usernavigation .presence-actions .usericon {
   .nearby .distrat { gap:46px; }
   .nearby .distrat .distance { transform:translate(8px,78px); }
 }
+
+/* Discovery depth: a subtle blue-violet mesh keeps the dark surface alive
+   without competing with the place cards or reducing text contrast. */
+.nearby md-content.greybg {
+  background:
+    radial-gradient(ellipse 80% 38% at 8% -10%,rgba(85,116,205,.16),transparent 70%),
+    radial-gradient(ellipse 62% 34% at 94% 24%,rgba(143,91,214,.13),transparent 72%),
+    radial-gradient(circle at 22% 74%,rgba(63,144,191,.08),transparent 35%),
+    linear-gradient(155deg,#171a29 0%,#1b1d2d 48%,#151724 100%) !important;
+}
+.nearby md-content.greybg::before {
+  content:'';
+  position:fixed;
+  z-index:0;
+  inset:0;
+  pointer-events:none;
+  opacity:.20;
+  background-image:radial-gradient(rgba(204,214,255,.34) .55px,transparent .8px);
+  background-size:17px 17px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.75),transparent 82%);
+}
+.nearby md-content.greybg > * { position:relative; z-index:1; }
+
+/* City is the entry into the wider world: make its small building mark read
+   like a beacon above the card, not just another neutral category glyph. */
+.nearby .room-category-hero.category-city .room-category-orbit {
+  position:relative;
+  z-index:2;
+  border-color:rgba(207,228,255,.82);
+  background:linear-gradient(145deg,rgba(128,183,245,.30),rgba(74,101,184,.20));
+  box-shadow:0 0 0 3px rgba(135,192,255,.08),0 0 18px rgba(114,186,255,.52),0 0 38px rgba(117,103,244,.28),inset 0 1px 0 rgba(255,255,255,.36);
+  transform:translate(-3px,-9px) !important;
+}
+.nearby .room-category-hero.category-city .room-category-orbit .material-icons {
+  color:#d8efff;
+  text-shadow:0 0 8px rgba(205,240,255,.85),0 0 17px rgba(114,181,255,.68);
+}
+.nearby .room-category-hero.category-city .room-category-orbit::after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:-13px;
+  border:1px solid rgba(139,193,255,.24);
+  border-radius:25px;
+  box-shadow:0 0 26px rgba(111,171,255,.22);
+}
+
+/* More breathing room between the destination card and live presence. */
+.nearby .room-user-preview { top:53px; }
+@media (max-width:600px) {
+  .nearby .room-user-preview { top:51px; }
+  .nearby .room-category-hero.category-city .room-category-orbit { transform:translate(-2px,-7px) !important; }
+}
+
+/* Every place gets the same readable landmark treatment; its category colour
+   carries the personality, while the geometry stays coherent across the app. */
+.nearby .room-category-hero .room-category-orbit {
+  position:relative;
+  z-index:2;
+  border-color:color-mix(in srgb,var(--lup-place-accent) 68%,#eef4ff);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-place-accent) 28%,rgba(255,255,255,.14)),rgba(26,31,51,.48));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--lup-place-accent) 11%,transparent),0 0 18px var(--lup-place-glow),0 10px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.30);
+  transform:translate(-3px,-7px) !important;
+}
+.nearby .room-category-hero .room-category-orbit .material-icons {
+  color:color-mix(in srgb,var(--lup-place-accent) 42%,#fff);
+  text-shadow:0 0 8px color-mix(in srgb,var(--lup-place-accent) 66%,#fff),0 0 17px var(--lup-place-glow);
+}
+.nearby .room-category-hero .room-category-orbit::after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:-11px;
+  display:block;
+  border:1px solid color-mix(in srgb,var(--lup-place-accent) 25%,transparent);
+  border-radius:24px;
+  box-shadow:0 0 24px var(--lup-place-glow);
+}
+/* A venue name should be the confident headline, not a heavy block. */
+.nearby .room-hero-name {
+  font-weight:680;
+  letter-spacing:-.025em;
+}
+@media (max-width:600px) {
+  .nearby .room-category-hero .room-category-orbit { transform:translate(-2px,-6px) !important; }
+  .nearby .room-hero-name { font-weight:670; }
+}
+
+/* One material language for every category mark. Colour may vary, but none of
+   the symbols should look washed out or like it belongs to another component. */
+.nearby .room-category-hero .room-category-orbit,
+.nearby .room-category-hero.category-city .room-category-orbit {
+  border:1px solid color-mix(in srgb,var(--lup-place-accent) 58%,#eef4ff);
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-place-accent) 38%,#526071),color-mix(in srgb,var(--lup-place-accent) 17%,#202534));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--lup-place-accent) 10%,transparent),0 0 19px var(--lup-place-glow),0 10px 20px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.32),inset 0 -8px 15px rgba(10,13,25,.20);
+  opacity:1;
+}
+.nearby .room-category-hero .room-category-orbit .material-icons,
+.nearby .room-category-hero.category-city .room-category-orbit .material-icons {
+  color:#f5f8ff;
+  opacity:1;
+  text-shadow:0 0 7px color-mix(in srgb,var(--lup-place-accent) 48%,#fff),0 0 15px var(--lup-place-glow);
+}
+.nearby .room-category-hero .room-category-orbit::after,
+.nearby .room-category-hero.category-city .room-category-orbit::after {
+  border-color:color-mix(in srgb,var(--lup-place-accent) 30%,rgba(255,255,255,.18));
+  box-shadow:0 0 23px var(--lup-place-glow);
+  opacity:1;
+}
+
+/* Location detail: replace the shared Braunschweig fallback image with a
+   category-aware atmosphere. A bar should look like a bar, not like a city. */
+.location-hero { --location-accent:#9e8bff; --location-glow:rgba(158,139,255,.30); background:radial-gradient(circle at 78% 20%,var(--location-glow),transparent 38%),linear-gradient(145deg,#2b2c45,#171826 72%) !important; }
+.location-hero-art { position:absolute; inset:0; display:grid; place-items:center; overflow:hidden; }
+.location-hero-art::before { content:''; position:absolute; width:250px; height:250px; border:1px solid color-mix(in srgb,var(--location-accent) 44%,transparent); border-radius:42%; box-shadow:0 0 0 26px color-mix(in srgb,var(--location-accent) 6%,transparent),0 0 48px var(--location-glow); transform:translate(30%,-8%) rotate(-13deg); }
+.location-hero-art .material-icons { position:relative; color:color-mix(in srgb,var(--location-accent) 46%,#fff); font-size:136px; opacity:.30; text-shadow:0 0 28px var(--location-glow); transform:translate(30px,-14px); }
+.location-hero.location-category-city { --location-accent:#8fc8ff; --location-glow:rgba(101,180,255,.32); }.location-hero.location-category-bar,.location-hero.location-category-food { --location-accent:#f2aa72; --location-glow:rgba(238,132,83,.30); }.location-hero.location-category-cafe { --location-accent:#e2b87f; --location-glow:rgba(207,151,95,.28); }.location-hero.location-category-club { --location-accent:#ec8de3; --location-glow:rgba(213,83,211,.31); }.location-hero.location-category-culture { --location-accent:#8cc7ee; --location-glow:rgba(90,172,229,.28); }.location-hero.location-category-sport,.location-hero.location-category-outdoors { --location-accent:#83d2a2; --location-glow:rgba(75,192,135,.28); }.location-hero.location-category-education { --location-accent:#88d6e6; --location-glow:rgba(85,189,209,.28); }.location-hero.location-category-health { --location-accent:#f49ab2; --location-glow:rgba(228,103,144,.28); }
+
+/* Long place names belong to the card, not behind its edge. */
+.nearby .room-hero-name {
+  display:-webkit-box;
+  max-width:100%;
+  max-height:2.12em;
+  overflow:hidden;
+  font-size:clamp(19px,5.5vw,27px);
+  font-weight:670;
+  line-height:1.06;
+  letter-spacing:-.035em;
+  overflow-wrap:anywhere;
+  text-overflow:clip;
+  white-space:normal;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+@media (max-width:600px) {
+  .nearby .room-hero-name {
+    font-size:clamp(18px,5.8vw,24px);
+    line-height:1.08;
+  }
+}
+
+/* A quieter display treatment makes long venue names feel intentional rather
+   than merely shrunk to fit. */
+.nearby .room-hero-name {
+  align-self:center;
+  padding-right:5px;
+  color:#fbfaff;
+  font-family:"Segoe UI",Inter,Roboto,Arial,sans-serif;
+  font-weight:640;
+  text-shadow:0 2px 12px rgba(0,0,0,.48),0 0 18px color-mix(in srgb,var(--lup-place-accent) 18%,transparent);
+  text-wrap:balance;
+}
+.nearby .room-category-hero .room-category-name {
+  position:relative;
+  padding-left:11px;
+}
+.nearby .room-category-hero .room-category-name::before {
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--lup-place-accent);
+  box-shadow:0 0 8px var(--lup-place-glow);
+  transform:translateY(-50%);
+}
+
+/* Name tiers are chosen by the actual venue-name length in the controller. */
+.nearby .room-hero-name {
+  max-height:2.2em;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:clamp(20px,5.1vw,25px);
+  font-weight:560;
+  line-height:1.1;
+  letter-spacing:-.028em;
+  overflow-wrap:break-word;
+  text-wrap:pretty;
+}
+.nearby .room-hero-name.room-hero-name--compact {
+  font-size:clamp(18px,4.7vw,22px);
+  font-weight:555;
+  letter-spacing:-.022em;
+}
+.nearby .room-hero-name.room-hero-name--long {
+  font-size:clamp(16px,4.25vw,20px);
+  font-weight:545;
+  line-height:1.13;
+  letter-spacing:-.012em;
+}
+.nearby .room-hero-name.room-hero-name--longword {
+  font-size:clamp(16px,4.05vw,19px);
+  font-weight:505;
+  letter-spacing:-.035em;
+  line-height:1.12;
+}
+@media (max-width:600px) {
+  .nearby .room-hero-name { font-size:clamp(19px,5.1vw,23px); }
+  .nearby .room-hero-name.room-hero-name--compact { font-size:clamp(17px,4.7vw,21px); }
+  .nearby .room-hero-name.room-hero-name--long { font-size:clamp(16px,4.2vw,19px); }
+  .nearby .room-hero-name.room-hero-name--longword { font-size:clamp(15px,4vw,18px); }
+}
+
+/* Final type polish for venue names: light, precise, and readable. */
+.nearby .room-hero-name {
+  color:#f4f2fa;
+  font-weight:520;
+  letter-spacing:-.018em;
+  text-shadow:0 2px 8px rgba(0,0,0,.38);
+}
+.nearby .room-hero-name.room-hero-name--compact { font-weight:510; }
+.nearby .room-hero-name.room-hero-name--long { font-weight:500; letter-spacing:-.008em; }
+
+/* Never detach the final letter of a venue name (for example the “g” in
+   Braunschweig). Titles may wrap between words, but not inside a word. */
+.nearby .room-hero-name {
+  overflow-wrap:normal;
+  word-break:keep-all;
+  hyphens:none;
+}
+
+/* Older Bar/Club overrides were still opaque and heavier than the shared
+   category language. Keep their warm/pink accents, but give them the same
+   transparent surface, rim and depth as every other place type. */
+.nearby .room-category-hero.category-bar .room-category-orbit,
+.nearby .room-category-hero.category-pub .room-category-orbit,
+.nearby .room-category-hero.category-cafe .room-category-orbit,
+.nearby .room-category-hero.category-food .room-category-orbit,
+.nearby .room-category-hero.category-club .room-category-orbit {
+  border-color:color-mix(in srgb,var(--lup-place-accent) 58%,#eef4ff) !important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-place-accent) 25%,rgba(255,255,255,.12)),rgba(28,32,47,.42)) !important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--lup-place-accent) 10%,transparent),0 0 19px var(--lup-place-glow),0 10px 20px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+
+/* Final override: category-specific legacy rules may only supply the accent
+   variable. Geometry, transparency and depth are universal. */
+.nearby .room-category-hero[class*="category-"] .room-category-orbit {
+  border:1px solid color-mix(in srgb,var(--lup-place-accent) 58%,#eef4ff) !important;
+  border-radius:19px !important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-place-accent) 25%,rgba(255,255,255,.12)),rgba(28,32,47,.42)) !important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--lup-place-accent) 10%,transparent),0 0 19px var(--lup-place-glow),0 10px 20px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.28) !important;
+  opacity:1 !important;
+}
+.nearby .room-category-hero[class*="category-"] .room-category-orbit .material-icons {
+  color:#f5f8ff !important;
+  opacity:1 !important;
+  filter:none !important;
+  text-shadow:0 0 7px color-mix(in srgb,var(--lup-place-accent) 48%,#fff),0 0 15px var(--lup-place-glow) !important;
+}
+
+/* The primary action shares the discovery cards' luminous glass material. */
+.nearby .chatbutton:not(.chatbutton--locked) button {
+  border-color:rgba(197,189,255,.48) !important;
+  background:linear-gradient(120deg,rgba(133,106,225,.50),rgba(69,147,211,.34)) !important;
+  box-shadow:0 0 0 1px rgba(185,174,255,.08),0 0 20px rgba(127,108,238,.20),0 11px 23px rgba(10,15,42,.26),inset 0 1px 0 rgba(255,255,255,.33),inset 0 -1px 0 rgba(255,255,255,.08) !important;
+  backdrop-filter:blur(13px) saturate(125%);
+  -webkit-backdrop-filter:blur(13px) saturate(125%);
+  color:#fbfaff;
+  text-shadow:0 1px 5px rgba(22,20,63,.38);
+}
+.nearby .chatbutton:not(.chatbutton--locked) button:hover { filter:brightness(1.10); }
+.nearby .chatbutton:not(.chatbutton--locked) button:active { filter:brightness(.97); }
+
+/* A room chat inherits its venue's atmosphere without becoming a visual
+   distraction behind actual conversation. */
+.location-chat-surface {
+  --chat-accent:#9d8bff;
+  --chat-glow:rgba(135,110,241,.20);
+  position:relative;
+  overflow:hidden;
+  background:radial-gradient(circle at 92% 7%,var(--chat-glow),transparent 36%),linear-gradient(155deg,#191b2b,#12141f 76%) !important;
+}
+.location-chat-surface.location-category-city { --chat-accent:#91c9ff; --chat-glow:rgba(91,171,246,.19); }.location-chat-surface.location-category-bar,.location-chat-surface.location-category-food { --chat-accent:#efb17c; --chat-glow:rgba(226,125,79,.18); }.location-chat-surface.location-category-cafe { --chat-accent:#e1bd8b; --chat-glow:rgba(198,149,96,.18); }.location-chat-surface.location-category-club { --chat-accent:#ea91e3; --chat-glow:rgba(204,86,205,.20); }.location-chat-surface.location-category-culture { --chat-accent:#91c9ee; --chat-glow:rgba(80,160,219,.18); }.location-chat-surface.location-category-sport,.location-chat-surface.location-category-outdoors { --chat-accent:#88d4a5; --chat-glow:rgba(70,182,127,.18); }.location-chat-surface.location-category-education { --chat-accent:#90dae7; --chat-glow:rgba(78,185,204,.18); }.location-chat-surface.location-category-health { --chat-accent:#f2a0b7; --chat-glow:rgba(223,98,141,.18); }
+.location-chat-surface .chat-location-atmosphere { position:absolute; z-index:0; top:-34px; right:-26px; display:grid; place-items:center; width:178px; height:178px; border:1px solid color-mix(in srgb,var(--chat-accent) 23%,transparent); border-radius:50%; box-shadow:0 0 0 25px color-mix(in srgb,var(--chat-accent) 5%,transparent),0 0 42px var(--chat-glow); color:color-mix(in srgb,var(--chat-accent) 34%,#fff); opacity:.28; pointer-events:none; transform:rotate(-14deg); }
+.location-chat-surface .chat-location-atmosphere .material-icons { font-size:96px; text-shadow:0 0 22px var(--chat-glow); }
+.location-chat-surface .chat-msgs { position:relative; z-index:1; background:linear-gradient(180deg,rgba(16,18,29,.25),rgba(16,18,29,.60)) !important; }
+.location-chat-surface .chatbottom { position:relative; z-index:2; height:64px; padding:9px 11px; background:rgba(18,20,31,.82) !important; border-top-color:color-mix(in srgb,var(--chat-accent) 22%,rgba(255,255,255,.08)) !important; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+.location-chat-surface .chatbottom input { height:42px; padding:0 13px; border-radius:13px; border-color:color-mix(in srgb,var(--chat-accent) 27%,rgba(255,255,255,.15)) !important; background:rgba(38,40,59,.78) !important; font-size:13px; }
+.location-chat-surface .chatbottom .chat-button { flex:0 0 44px; width:44px; height:44px; margin-left:8px; border:1px solid color-mix(in srgb,var(--chat-accent) 48%,rgba(255,255,255,.20)); border-radius:14px; background:linear-gradient(135deg,color-mix(in srgb,var(--chat-accent) 66%,#8f77ef),color-mix(in srgb,var(--chat-accent) 40%,#4e7fc9)) !important; box-shadow:0 6px 14px var(--chat-glow),inset 0 1px 0 rgba(255,255,255,.28); }
+.location-chat-surface .chatbottom button,
+.location-chat-surface .chatbottom button.sendmessage { width:20px; height:20px; min-width:20px; max-width:20px; }

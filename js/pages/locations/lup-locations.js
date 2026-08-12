@@ -288,6 +288,26 @@ angular.module('LUP').config(function($routeProvider) {
 		};
 		return visuals[String(room.category())] || {icon: 'place', class: 'category-default'};
 	};
+
+	// Long real-world venue names need a deliberate typographic tier, not a
+	// one-size-fits-all headline that runs beyond the card on smaller phones.
+	$scope.roomNameClass = function(room) {
+		var name = (room.name() || '').trim();
+		var length = name.length;
+		var longestWord = name.split(/\s+/).reduce(function(longest, word) {
+			return Math.max(longest, word.length);
+		}, 0);
+		if (longestWord > 15) {
+			return 'room-hero-name--longword';
+		}
+		if (length > 25) {
+			return 'room-hero-name--long';
+		}
+		if (length > 14) {
+			return 'room-hero-name--compact';
+		}
+		return 'room-hero-name--regular';
+	};
 	
 	/**
 	 * This one was tricky!
@@ -332,6 +352,12 @@ angular.module('LUP').config(function($routeProvider) {
 				$slick.slick('slickUnfilter').slick('slickFilter', function() {
 					return !window.jQuery(this).hasClass('lup-hidden-slide');
 				});
+				// The old index can belong to a card that the new category removed.
+				// Start with the first valid result, rather than briefly rendering an
+				// empty Slick track while it tries to recover that stale position.
+				if ($slick.find('.slick-slide:not(.slick-cloned)').length) {
+					$slick.slick('slickGoTo', 0, true);
+				}
 				// Filtering temporarily rebuilds Slick's track. Keep the already
 				// rendered discovery view visible throughout that short operation.
 				$slick.addClass('slick-inited');

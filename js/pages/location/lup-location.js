@@ -24,9 +24,9 @@ angular.module('LUP').config(function($routeProvider) {
 			gotoTab: 2,
 		},
 	});
-}).controller('LocationCtrl', function($scope, $location, $route, $routeParams, $mdDialog, $translate,
+}).controller('LocationCtrl', function($scope, $location, $route, $routeParams, $mdDialog, $translate, $timeout,
 		RoomSrvc, CommentSrvc, ChatSrvc, UserSrvc, AuthSrvc, LikeSrvc, FriendSrvc,
-		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc) {
+		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, PositionSrvc) {
 	
 	$scope.LikeSrvc = LikeSrvc;
 	$scope.FriendSrvc = FriendSrvc;
@@ -70,6 +70,27 @@ angular.module('LUP').config(function($routeProvider) {
 		// Test rooms such as "Braunschweig Chat" are named for the chat, but
 		// an out-of-range visitor is only viewing the place and its comments.
 		return $scope.inChatRange() ? name : name.replace(/\s+Chat$/i, '');
+	};
+
+	// A room without an individually supplied photo must not inherit the generic
+	// Braunschweig artwork. The detail hero uses the room's own category instead.
+	$scope.locationVisual = function(room) {
+		var visuals = {
+			'1': {icon:'public', class:'location-category-country'},
+			'2': {icon:'location_city', class:'location-category-city'},
+			'3': {icon:'local_bar', class:'location-category-bar'},
+			'4': {icon:'sports_bar', class:'location-category-bar'},
+			'5': {icon:'local_cafe', class:'location-category-cafe'},
+			'11': {icon:'nightlife', class:'location-category-club'},
+			'12': {icon:'theater_comedy', class:'location-category-culture'},
+			'13': {icon:'sports_soccer', class:'location-category-sport'},
+			'14': {icon:'restaurant', class:'location-category-food'},
+			'15': {icon:'park', class:'location-category-outdoors'},
+			'16': {icon:'school', class:'location-category-education'},
+			'17': {icon:'account_balance', class:'location-category-education'},
+			'18': {icon:'local_hospital', class:'location-category-health'},
+		};
+		return visuals[String(room.category())] || {icon:'place', class:'location-category-default'};
 	};
 	
 	$scope.afterLoadedRoom = function() {
@@ -196,6 +217,20 @@ angular.module('LUP').config(function($routeProvider) {
 	//////////////////
 	$scope.joinChat = function(event) {
 		let room = $scope.data.room;
+		// A location check only makes sense with a real browser position. Ask at
+		// the moment the person actually enters the chat; this is a user gesture,
+		// so Chromium can show a fresh permission prompt after an F5 reload.
+		if (!PositionSrvc.hasPosition(false)) {
+			return PositionSrvc.probe().then(function(position) {
+				return $scope.updatePosition(position);
+			}).then(function() {
+				return $scope.joinChat(event);
+			}, function(error) {
+				return DialogSrvc.openHTMLDialog(
+					'<p>Bitte erlaube den Standort im Browser, damit Entfernung und Chat-Radius geprüft werden können.</p>',
+					'Standort aktivieren');
+			});
+		}
 		if (room.inChatRange()) {
 			return $scope.chatVisible();
 		}
@@ -209,7 +244,10 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.chatVisible = function() {
 		console.log('LocationCtrl.chatVisible()', $scope.data.room);
-		ChatSrvc.join($scope.data.room).then($scope.joinedRoom);
+		ChatSrvc.join($scope.data.room).then(function() {
+			$scope.joinedRoom();
+			$scope.scrollChatToBottom(true);
+		});
 	};
 	
 	$scope.joinedRoom = function() {
@@ -217,14 +255,29 @@ angular.module('LUP').config(function($routeProvider) {
 		HelpSrvc.showHelp('help_chat', $translate.instant('HELP_CHAT'));
 	};
 
+	$scope.scrollChatToBottom = function(focusInput) {
+		// Wait for Angular to render the newest ng-repeat message before reading
+		// the scroll height. This also preserves the cursor after Enter/send.
+		return $timeout(function() {
+			var $chat = window.jQuery('.location-chat-surface .chat-msgs:visible');
+			$chat.each(function() {
+				this.scrollTop = this.scrollHeight;
+			});
+			if (focusInput) {
+				window.jQuery('.location-chat-surface .chatbottom input:visible').first().focus();
+			}
+		}, 0, false);
+	};
+
 	$scope.sendMessage = function() {
 		console.log('LocationCtrl.sendMessage()');
-		if($scope.data.message){
-			ChatSrvc.sendMessage($scope.data.room, $scope.data.message);
+		var message = ($scope.data.message || '').trim();
+		if (message) {
+			ChatSrvc.sendMessage($scope.data.room, message);
 		}
-		jQuery('.chatbottom input').val('');
 		jQuery('.chatbottom button').removeClass('sendmessage');
-		$scope.data.message = null;
+		$scope.data.message = '';
+		$scope.scrollChatToBottom(true);
 	};
 
 	$scope.onMessageRead = function(lupMessage) {
@@ -240,9 +293,11 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.$on('gwf-position-changed', function(event, position){
 		console.log('LocationCtrl.$on-gwf-position-changed', position);
 	});
-//	$scope.$on('lup-room-message', function(event, room, message) {
-//		console.log('LocationCtrl.$on-lup-room-message', room, message);
-//	});
+	$scope.$on('lup-room-message', function(event, room, message) {
+		if (room && room.id() === $scope.data.room.id()) {
+			$scope.scrollChatToBottom(false);
+		}
+	});
 
 	//////////
 	// Maps //

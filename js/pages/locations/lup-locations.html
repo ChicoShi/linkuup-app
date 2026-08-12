@@ -30,7 +30,7 @@
 							<div class="room-category-hero" ng-class="categoryVisual(room).class">
 								<div class="room-category-orbit"><i class="material-icons">{{categoryVisual(room).icon}}</i></div>
 								<span class="room-category-name">{{room.categoryName()}}</span>
-								<strong class="room-hero-name">{{room.name()}}</strong>
+								<strong class="room-hero-name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 								<span class="room-hero-meta">{{room.city()}}</span>
 							</div>
 						</div>

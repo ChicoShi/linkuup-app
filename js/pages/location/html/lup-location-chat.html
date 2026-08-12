@@ -1,5 +1,6 @@
-<div class="location-chat-surface" layout="column" flex
+<div class="location-chat-surface" ng-class="locationVisual(data.room).class" layout="column" flex
  XXin-view="$inview&&chatVisible()">
+  <div class="chat-location-atmosphere" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
   <div class="chat-msgs md-padding" flex="100">
     <div ng-if="!data.room.isSelfInRoom()" class="chat-join-button">
       <md-button

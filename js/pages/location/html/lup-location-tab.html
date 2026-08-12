@@ -97,8 +97,8 @@
 </md-content>
  -->
 <md-content class="location-experience" layout="column" flex layout-fill>
-  <div class="location-hero">
-    <img ng-src="{{data.room.largeImageURI()}}" alt="{{data.room.name()}}" />
+  <div class="location-hero" ng-class="locationVisual(data.room).class">
+    <div class="location-hero-art" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
     <div class="location-hero-shade"></div>
     <div class="location-hero-copy">
       <span class="location-live-pill"><i class="material-icons">bolt</i> vor Ort erleben</span>
