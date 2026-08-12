@@ -1,7 +1,5 @@
 "use strict";
 function LUPRoom(json) {
-	console.log('new LUPRoom()', json);
-
 	this.USERS = [];
 	this.MESSAGES = [];
 

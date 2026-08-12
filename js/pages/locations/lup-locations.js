@@ -15,6 +15,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
 	$scope.data.category = Array.isArray($scope.data.category) ? $scope.data.category : [];
 	$scope.data.slickedEvents = false;
+	$scope.data.locationsRoomsRendered = false;
 	$scope.data.locationsInitialized = false;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
@@ -50,6 +51,11 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
+	$scope.$on('lup-rooms-ready', function(event, rooms) {
+		if ($scope.data.locationsInitialized && rooms && rooms.length) {
+			$scope.gotRooms(rooms);
+		}
+	});
 	$scope.requestLocation = function(room, event) {
 		if (PositionSrvc.hasPosition(false)) {
 			return; // Normal case: keep the route link working.
@@ -68,8 +74,14 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.gotRooms = function(rooms) {
-		console.log('LocationsCtrl.gotRooms()', rooms);
+		// Both the page and the background preload can observe the same promise.
+		// Render that result once; Slick otherwise performs needless work and can
+		// keep its visibility guard active longer than necessary.
+		if ($scope.data.locationsRoomsRendered && $scope.data.rooms === rooms) {
+			return;
+		}
 		$scope.data.rooms = rooms;
+		$scope.data.locationsRoomsRendered = true;
 		LoadingSrvc.addTask('slick_rooms');
 		$timeout($scope.slick, 0);
 		$timeout($scope.slick, 180);
@@ -241,6 +253,12 @@ angular.module('LUP').config(function($routeProvider) {
 		// Let Angular update the slide classes before Slick reads them again.
 		// Without this small delay, tapping a new category could retain the
 		// previous list and make Bar/Café appear identical.
+		// If the catalogue is still arriving, gotRooms() will apply this category
+		// during the first Slick initialisation. Do not wake the old carousel in
+		// between; that was the brief loading/flicker seen after tapping a filter.
+		if (!$scope.data.rooms.length) {
+			return;
+		}
 		$timeout(function() {
 			$scope.searchLocation($scope.data.searchvalue);
 		}, 0);
@@ -310,9 +328,23 @@ angular.module('LUP').config(function($routeProvider) {
 		if ($slick.hasClass('slick-initialized')) {
 			// Local category changes keep the current result set; only then do we
 			// need Slick's filter. No room data or asynchronous response is replaced.
-			$slick.slick('slickUnfilter').slick('slickFilter', function() {
-				return !window.jQuery(this).hasClass('lup-hidden-slide');
-			});
+			try {
+				$slick.slick('slickUnfilter').slick('slickFilter', function() {
+					return !window.jQuery(this).hasClass('lup-hidden-slide');
+				});
+				// Filtering temporarily rebuilds Slick's track. Keep the already
+				// rendered discovery view visible throughout that short operation.
+				$slick.addClass('slick-inited');
+				$timeout(function() {
+					if ($slick.hasClass('slick-initialized')) {
+						$slick.slick('setPosition').addClass('slick-inited');
+					}
+				}, 0, false);
+			}
+			catch (error) {
+				console.warn('LinkUUp: category filter could not refresh the carousel.', error);
+				$slick.addClass('slick-inited');
+			}
 		}
 	};
 

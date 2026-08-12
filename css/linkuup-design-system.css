@@ -1971,3 +1971,310 @@ md-list.usernavigation .presence-actions .usericon {
 .comments-template .lup-comment-text { color:#f2effa !important; font-size:13px; line-height:1.42; }
 .comments-template .lup-comment-date { color:#aaa3bb !important; font-size:11px; }
 .comments-template .md-secondary .material-icons { color:#ff9cad; }
+
+/* Discovery pass — entry and filters use one restrained LinkUUp language. */
+.nearby .chatbutton:not(.chatbutton--locked) {
+  width:min(86%,330px);
+  margin:13px auto 0;
+}
+.nearby .chatbutton:not(.chatbutton--locked) button {
+  float:none;
+  width:100%;
+  height:50px;
+  min-height:50px;
+  margin:0;
+  border:1px solid rgba(192,180,255,.32);
+  border-radius:16px;
+  background:linear-gradient(105deg,rgba(129,103,224,.94),rgba(72,133,204,.92)) !important;
+  box-shadow:0 10px 22px rgba(41,49,116,.26),inset 0 1px 0 rgba(255,255,255,.26);
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.025em;
+  text-transform:none;
+}
+.nearby .chatbutton:not(.chatbutton--locked) button::before {
+  content:'forum';
+  margin-right:7px;
+  font-family:'Material Icons';
+  font-size:18px;
+  vertical-align:-3px;
+}
+.nearby .chatbutton:not(.chatbutton--locked) button:active { transform:translateY(1px); box-shadow:0 5px 13px rgba(41,49,116,.25),inset 0 1px 0 rgba(255,255,255,.2); }
+.location-categories {
+  gap:5px;
+  margin:7px 10px 4px;
+  padding:5px;
+  border:1px solid rgba(214,207,244,.12);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(40,41,61,.95),rgba(25,27,42,.95));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.location-categories button {
+  min-height:55px;
+  border:1px solid transparent;
+  border-radius:11px;
+  color:#bab4cc;
+}
+.location-categories button .material-icons {
+  width:27px;
+  height:27px;
+  border:1px solid currentColor;
+  border-radius:9px;
+  background:rgba(255,255,255,.035) !important;
+  color:inherit !important;
+  font-size:17px;
+}
+.location-categories button span { margin-top:4px; font-size:7px; font-weight:800; letter-spacing:.01em; }
+.location-categories button:hover { background:rgba(255,255,255,.055) !important; }
+.location-categories button.active { border-color:rgba(208,198,255,.22); background:rgba(167,145,255,.13) !important; color:#f5f2ff; }
+.location-categories button.active::after { right:25%; bottom:3px; left:25%; height:2px; background:#bbaaff; box-shadow:none; }
+.location-categories button:nth-child(1) { color:#c5b4ff; }
+.location-categories button:nth-child(2) { color:#9fc2e8; }
+.location-categories button:nth-child(3) { color:#e9b286; }
+.location-categories button:nth-child(4) { color:#e5a0dc; }
+.location-categories button:nth-child(5) { color:#9edbe0; }
+.location-categories button:nth-child(6) { color:#e0b1bd; }
+
+/* The place card carries the essential context itself, without increasing the
+   screen's overall height or moving the action area below it. */
+.nearby .room-category-hero {
+  grid-template-rows:22px minmax(0,1fr) 18px;
+  margin-top:28px;
+  padding-top:18px;
+  padding-bottom:15px;
+}
+.nearby .room-category-hero .room-category-orbit { grid-row:1 / 4; }
+.nearby .room-hero-name { align-self:center; }
+.nearby .room-hero-meta {
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  overflow:hidden;
+  color:#c7c1d9;
+  font-size:10px;
+  font-weight:650;
+  line-height:1;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.nearby .room-hero-meta .material-icons { color:var(--lup-place-accent); font-size:14px; filter:none; }
+@media (max-width:600px) {
+  /* Give the actual place profile enough room to read as a destination, while
+     keeping the live-presence and two actions directly beneath it. */
+  .nearby .roominfo { min-height:490px; }
+  .nearby .room-category-hero {
+    grid-template-columns:82px minmax(0,1fr);
+    grid-template-rows:31px minmax(0,1fr) 24px;
+    height:188px;
+    margin-top:31px;
+    padding:24px 20px 20px;
+    border-radius:22px;
+  }
+  .nearby .room-category-hero .room-category-orbit { width:62px; height:62px; border-color:color-mix(in srgb,var(--lup-place-accent) 68%,rgba(255,255,255,.25)); background:color-mix(in srgb,var(--lup-place-accent) 19%,rgba(255,255,255,.03)); }
+  .nearby .room-category-hero .room-category-orbit .material-icons { color:var(--lup-place-accent); font-size:33px; }
+  .nearby .room-category-hero .room-category-name { align-self:center; width:max-content; max-width:100%; padding:5px 8px; overflow:hidden; border:1px solid color-mix(in srgb,var(--lup-place-accent) 48%,transparent); border-radius:999px; background:color-mix(in srgb,var(--lup-place-accent) 13%,transparent); color:color-mix(in srgb,var(--lup-place-accent) 78%,#fff); font-size:8px; font-weight:850; letter-spacing:.12em; text-overflow:ellipsis; }
+  .nearby .room-hero-name { align-self:center; max-width:100%; margin-top:3px; overflow:hidden; font-size:clamp(22px,6.4vw,29px); font-weight:780; line-height:1.04; letter-spacing:-.03em; text-wrap:balance; }
+  .nearby .room-hero-meta { padding-top:5px; color:#d3cde2; font-size:11px; }
+  .nearby .room-user-preview { margin-top:7px; }
+}
+
+/* Discovery refinement: venue symbols must guide, never compete with the
+   place itself.  This intentionally replaces the earlier playful badge look
+   with one restrained, editorial icon system. */
+.location-categories {
+  gap:2px;
+  padding:3px;
+  border-color:rgba(255,255,255,.08);
+  border-radius:12px;
+  background:rgba(21,23,35,.78);
+}
+.location-categories button {
+  min-height:48px;
+  border-radius:8px;
+  color:#aaa8b6 !important;
+}
+.location-categories button .material-icons {
+  width:20px;
+  height:20px;
+  color:#bdbacb !important;
+  font-size:19px;
+  line-height:20px;
+  opacity:.82;
+}
+.location-categories button span {
+  margin-top:3px;
+  color:#aaa8b6 !important;
+  font-size:7px;
+  font-weight:720;
+  letter-spacing:0;
+}
+.location-categories button.active {
+  border-color:rgba(194,185,255,.20);
+  background:rgba(151,133,232,.14) !important;
+  color:#f6f4ff !important;
+}
+.location-categories button.active .material-icons,
+.location-categories button.active span { color:#ded8ff !important; opacity:1; }
+.location-categories button.active::after {
+  right:35%;
+  bottom:2px;
+  left:35%;
+  background:#c1b5ff;
+  box-shadow:none;
+}
+
+.nearby .room-category-hero {
+  border-color:rgba(255,255,255,.10);
+  background:linear-gradient(115deg,rgba(40,42,59,.96),rgba(23,25,37,.98)) !important;
+  box-shadow:0 13px 28px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+.nearby .room-category-hero::before {
+  width:2px;
+  background:var(--lup-place-accent);
+  box-shadow:none;
+}
+.nearby .room-category-hero .room-category-orbit {
+  border-color:color-mix(in srgb,var(--lup-place-accent) 40%,rgba(255,255,255,.12));
+  border-radius:16px;
+  background:color-mix(in srgb,var(--lup-place-accent) 10%,rgba(255,255,255,.025));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+}
+.nearby .room-category-orbit::before,
+.nearby .room-category-orbit::after { display:none; }
+.nearby .room-category-hero .room-category-orbit .material-icons {
+  color:var(--lup-place-accent);
+  filter:none;
+  text-shadow:none;
+}
+.nearby .room-category-hero .room-category-name {
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#aaa7b8;
+  font-weight:760;
+  letter-spacing:.10em;
+  text-shadow:none;
+}
+
+.nearby .distrat { gap:34px; }
+.nearby .distrat .location-cuddles {
+  border-color:rgba(239,178,205,.32);
+  border-radius:14px;
+  background:rgba(196,93,139,.12);
+  color:#f1bad0;
+}
+.nearby .distrat .location-cuddles > .material-icons { font-size:27px; }
+.nearby .distrat .location-cuddles strong {
+  border-color:#252737;
+  background:#e6b4c8;
+  color:#382b38;
+}
+.nearby .distrat .distance a > .material-icons {
+  border-color:rgba(158,211,233,.32);
+  background:rgba(74,143,178,.10);
+  color:#acdced;
+  font-size:27px;
+}
+.nearby .distrat .distance a > span { color:#afcbd7; font-weight:700; }
+@media (max-width:600px) {
+  .location-categories button { min-height:46px; }
+  .nearby .distrat { gap:46px; }
+  .nearby .room-category-hero .room-category-orbit { border-radius:15px; }
+}
+
+/* Keep the symbols unmistakable at a glance.  Contrast and scale carry the
+   meaning; decoration stays deliberately restrained. */
+.location-categories { gap:4px; padding:5px; }
+.location-categories button { min-height:58px; }
+.location-categories button .material-icons {
+  width:29px;
+  height:29px;
+  font-size:27px;
+  line-height:29px;
+  opacity:1;
+}
+.location-categories button span {
+  margin-top:5px;
+  color:#cbc8d7 !important;
+  font-size:8px;
+  font-weight:800;
+}
+.location-categories button:nth-child(1) .material-icons { color:#c5b4ff !important; }
+.location-categories button:nth-child(2) .material-icons { color:#a8c7ed !important; }
+.location-categories button:nth-child(3) .material-icons { color:#efbb82 !important; }
+.location-categories button:nth-child(4) .material-icons { color:#ef9ee8 !important; }
+.location-categories button:nth-child(5) .material-icons { color:#91d9e4 !important; }
+.location-categories button:nth-child(6) .material-icons { color:#e9afc0 !important; }
+.location-categories button.active .material-icons { filter:drop-shadow(0 0 7px currentColor); }
+
+.nearby .room-category-hero { grid-template-columns:94px minmax(0,1fr); }
+.nearby .room-category-hero .room-category-orbit {
+  width:74px;
+  height:74px;
+  border-radius:20px;
+  background:color-mix(in srgb,var(--lup-place-accent) 18%,rgba(255,255,255,.035));
+}
+.nearby .room-category-hero .room-category-orbit .material-icons { font-size:41px; }
+.nearby .room-category-hero .room-category-name { color:#c3bfce; font-size:9px; }
+.nearby .distrat .location-cuddles,
+.nearby .distrat .distance { width:60px; min-width:60px; height:60px; }
+.nearby .distrat .location-cuddles {
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+}
+.nearby .distrat .location-cuddles > .material-icons {
+  display:block;
+  width:auto;
+  height:auto;
+  margin:0;
+  padding:0;
+  font-size:32px;
+  line-height:1;
+}
+.nearby .distrat .distance a > .material-icons { width:60px; height:60px; font-size:32px; }
+@media (max-width:600px) {
+  .location-categories button { min-height:54px; }
+  .location-categories button .material-icons { width:26px; height:26px; font-size:24px; line-height:26px; }
+  .location-categories button span { font-size:7px; }
+  .nearby .room-category-hero { grid-template-columns:88px minmax(0,1fr); }
+  .nearby .room-category-hero .room-category-orbit { width:68px; height:68px; border-radius:19px; }
+  .nearby .room-category-hero .room-category-orbit .material-icons { font-size:38px; }
+}
+
+/* The distance is data, not decoration: retain it below the route mark on
+   every breakpoint, and offset only this action a touch to the right. */
+.nearby .distrat .distance {
+  transform:translateX(8px);
+}
+.nearby .distrat .distance a > span {
+  position:absolute !important;
+  z-index:2;
+  right:-11px;
+  bottom:-3px;
+  display:block !important;
+  visibility:visible !important;
+  min-width:27px;
+  max-width:62px;
+  margin:0 !important;
+  padding:4px 6px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(170,224,242,.42) !important;
+  border-radius:999px;
+  background:#263b52 !important;
+  box-shadow:0 4px 9px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.12);
+  color:#d6f3ff !important;
+  font-size:8px !important;
+  font-weight:850 !important;
+  line-height:1;
+  text-align:center;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+@media (max-width:600px) {
+  .nearby .distrat { gap:46px; }
+  .nearby .distrat .distance { transform:translate(8px,78px); }
+}

@@ -1,5 +1,11 @@
 <?php
 require "config/lup-php-config.php";
+// This HTML document carries the asset build number. Never let a browser keep
+// an older copy of it, otherwise it can request yesterday's CSS/JS once before
+// the user manually refreshes.
+header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 $v = sprintf("?v=%s", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 ?>

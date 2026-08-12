@@ -47,7 +47,8 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 				console.error('TypeSrvc.parseBinaryGDO() has no fields for '+classname);
 				return;
 			}
-			console.log('TypeSrvc.parseBinaryGDO()', fields);
+			// Room lists contain many objects. Logging every field turns a fast binary
+			// response into thousands of expensive browser console operations.
 			for (var key in fields) {
 				var field = fields[key];
 				if (TypeSrvc.isTypeSubmitted(field)) {
@@ -110,7 +111,6 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 			console.error(field);
 			alert('OUCH');
 		}
-		console.log(`Parsed ${field.options.name} to ${value}`);
 		return value;
 	};
 	

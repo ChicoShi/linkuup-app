@@ -33,13 +33,6 @@
 		<p>{{'BTN_REGISTER'|translate}}</p>
 	  </md-list-item>
 
-	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Mein Bereich</md-subheader>
-
-		<md-list-item class="md-1-line nav-profile" ng-click="gotoOwnProfile()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">person</i>
-	    <p>{{'TITLE_OWN_PROFILE'|translate}}</p>
-	  </md-list-item>
-
 	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Verwaltung</md-subheader>
 
 	  <md-list-item class="md-1-line nav-settings" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">

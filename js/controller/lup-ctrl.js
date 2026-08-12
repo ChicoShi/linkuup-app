@@ -221,6 +221,17 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 			}
 			finished = true;
 			$scope.data.inited = true;
+			// Begin fetching locations before the visitor opens the discovery view.
+			// The locations controller reuses this promise, so the first visit is as
+			// quick as returning from the profile screen without duplicate traffic.
+			RoomSrvc.withRooms().then(function(rooms) {
+				$scope.data.rooms = rooms;
+				// The discovery page may already be open while this background
+				// request resolves. Tell it to initialise its carousel immediately.
+				$rootScope.$broadcast('lup-rooms-ready', rooms);
+			}, function(error) {
+				console.warn('LinkUUp: location preload failed; it will retry on opening the view.', error);
+			});
 			// The app is usable once the authenticated user is available. A stale
 			// optional background task must never keep the whole interface covered
 			// by the loading screen after a data reinstall.
@@ -574,6 +585,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 	$scope.cmd_1105 = function userList(gwsMessage) {
 		console.log('LUPCtrl.userList()', gwsMessage.dump());
 		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
+		// This is a complete snapshot from the server, not a delta.
+		room.USERS = [];
 		while (gwsMessage.hasMore()) {
 			var user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);

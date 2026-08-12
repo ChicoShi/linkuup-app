@@ -26,6 +26,9 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.CACHE = {};
+	// One shared request prevents the initial screen and a background preload
+	// from asking the WebSocket for the same location catalogue twice.
+	RoomSrvc.ROOMS_LOADING = null;
 	RoomSrvc.BLANK_ROOM = RoomSrvc.NEW_BLANK_ROOM(0);
 
 	///////////////////////////
@@ -52,6 +55,9 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.parseRoomMessageUsers = function(room, gwsMessage) {
+		// A room-list response is authoritative. Rebuild its visitor list rather
+		// than appending to a stale one left over from a previous screen or socket.
+		room.USERS = [];
 		var uid = 0;
 		while (uid = gwsMessage.read32()) {
 			var user = UserSrvc.getOrCreate(uid);
@@ -123,6 +129,7 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		if (!room) {
 			return defer.reject("no such room");
 		}
+		room.USERS = [];
 		while (gwsMessage.hasMore()) {
 			var user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);
@@ -156,7 +163,16 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {
+		if (!includeAll && RoomSrvc.ROOMS_LOADING) {
+			return RoomSrvc.ROOMS_LOADING;
+		}
 		var defer = $q.defer();
+		if (!includeAll) {
+			RoomSrvc.ROOMS_LOADING = defer.promise;
+			defer.promise['finally'](function() {
+				RoomSrvc.ROOMS_LOADING = null;
+			});
+		}
 		var loadRooms = function(p) {
 			var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(p.lat).writeFloat(p.lng);
 			WebsocketSrvc.sendBinary(gwsMessage).then(function(msg){

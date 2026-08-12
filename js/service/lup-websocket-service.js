@@ -11,6 +11,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	
 	WebsocketSrvc.MSGS_SENT = 0;
 	WebsocketSrvc.MSGS_RECV = 0;
+	WebsocketSrvc.TRACE_BINARY = false;
 
 	// Native WebSocket callbacks run outside Angular's digest cycle.  Schedule
 	// UI broadcasts inside it, otherwise a received update can stay visually
@@ -144,8 +145,12 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		var mid = gwsMessage.isSync() ? gwsMessage.readMid() : 0;
 		var error = command > 0 ? 0 : gwsMessage.read16();
 //		console.log(sprintf('WebsocketSrvc.onBinaryMessage() CMD %04X, MID %04X, ERR=%04X', command, mid, error));
-		console.log('WebsocketSrvc.onBinaryMessage() BINARY', gwsMessage.dump());
-		console.log('WebsocketSrvc.onBinaryMessage() ASCII:', gwsMessage.asciiDump());
+		// Binary and ASCII dumps are protocol-debug tools only. Creating them for
+		// every complete room list can block rendering on phones.
+		if (WebsocketSrvc.TRACE_BINARY === true) {
+			console.log('WebsocketSrvc.onBinaryMessage() BINARY', gwsMessage.dump());
+			console.log('WebsocketSrvc.onBinaryMessage() ASCII:', gwsMessage.asciiDump());
+		}
 		if (mid > 0) {
 			if (WebsocketSrvc.SYNC_MSGS[mid]) {
 				if (error) {
@@ -317,7 +322,9 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 			}
 
 			// send it 
-			console.log('WebsocketSrvc.sendBinary()', gwsMessage.dump());
+			if (WebsocketSrvc.TRACE_BINARY === true) {
+				console.log('WebsocketSrvc.sendBinary()', gwsMessage.dump());
+			}
 			WebsocketSrvc.MSGS_SENT += 1;
 			WebsocketSrvc.SOCKET.send(gwsMessage.binaryBuffer());
 			
