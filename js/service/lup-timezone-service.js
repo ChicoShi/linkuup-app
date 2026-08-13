@@ -54,6 +54,11 @@ service('TimezoneSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		var options = Array.isArray(timezones) ? timezones : Object.keys(timezones).map(function(id) {
 			return timezones[id];
 		});
+		// Ajax payloads may contain an auxiliary/non-timezone value. Do not let
+		// one malformed entry make the whole Settings or Account page unusable.
+		options = options.filter(function(timezone) {
+			return timezone && (typeof timezone.tz_name === 'string') && timezone.tz_name.length;
+		});
 		return options.sort(function(a, b) {
 			return a.tz_name.localeCompare(b.tz_name);
 		});
