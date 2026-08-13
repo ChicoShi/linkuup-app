@@ -21,10 +21,21 @@
 		  <p>{{ user.status() || 'Gerade in dieser Location' }}</p>
 		</div>
 		<div class="presence-actions">
-		  <i class="md-secondary usericon likeuser" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()"></i>
-		  <i class="md-secondary usericon addfriend" ng-click="FriendSrvc.addFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend()"></i>
-		  <i class="md-secondary usericon removefriend" ng-click="FriendSrvc.removeFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && user.isFriend()"></i>
-		  <i class="md-secondary usericon sendmessage" ng-click="gotoQuery(user)" ng-if="!user.isSelf()"></i>
+		  <button type="button" class="presence-action presence-message" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()">
+			<i class="material-icons">send</i>
+		  </button>
+		  <button type="button" class="presence-action presence-friend" aria-label="Freundschaftsanfrage senden" title="Freundschaftsanfrage senden" ng-click="FriendSrvc.addFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && !user.JSON.relation_pending">
+			<i class="material-icons">person_add</i>
+		  </button>
+		  <button type="button" class="presence-action presence-friend presence-pending" aria-label="Freundschaftsanfrage zurücknehmen" title="Anfrage zurücknehmen" ng-click="FriendSrvc.cancelFriendRequest(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && user.JSON.relation_pending">
+			<i class="material-icons">person_remove</i>
+		  </button>
+		  <button type="button" class="presence-action presence-friend presence-connected" aria-label="Freundschaft entfernen" title="Freundschaft entfernen" ng-click="FriendSrvc.removeFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && user.isFriend()">
+			<i class="material-icons">person_remove</i>
+		  </button>
+		  <button type="button" class="presence-action presence-up" aria-label="Up senden" title="Up senden" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()">
+			<i class="material-icons">bolt</i>
+		  </button>
 		</div>
 	  </md-list-item>
    </div>

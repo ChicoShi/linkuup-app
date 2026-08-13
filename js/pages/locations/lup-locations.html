@@ -22,7 +22,7 @@
 		</div>
 
 		<div class="slickit">
-			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer"
+			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer" ng-init="$last && slick(true)"
 				 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}"
 				 ng-class="{'lup-hidden-slide':!filteredRoom(room)}">
 	
