@@ -55,4 +55,44 @@
 	color: #f5f6ff;
 }
 
+.lup-settings-list .lup-setting-input {
+	min-width: 160px;
+	margin: 0;
+}
+
+.lup-settings-list .lup-setting-input input,
+.lup-settings-list .lup-setting-input textarea {
+	color: #f5f6ff;
+}
+
+.lup-settings-list .lup-setting-textarea {
+	display: block;
+	min-height: 132px;
+}
+
+.lup-settings-list .lup-setting-textarea .md-list-item-text {
+	margin-bottom: 8px;
+}
+
+.lup-settings-list .lup-setting-textarea .lup-setting-input {
+	display: block;
+	width: 100%;
+	max-width: none;
+}
+
+.lup-settings-list .lup-setting-textarea textarea {
+	width: 100%;
+	resize: vertical;
+}
+
+.lup-setting-acl-above {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	margin: 0 8px 5px;
+	color: #a9aec7;
+	font-size: 12px;
+}
+
 .lup-settings-list md-divider { display: none; }

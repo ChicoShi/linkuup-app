@@ -13,10 +13,12 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	SettingsSrvc.gotConfig = function(config) {
 		console.log('SettingsSrvc.gotConfig()', config);
 		SettingsSrvc.CACHE = config.data.data;
+		return SettingsSrvc.CACHE;
 	};
 	
 	SettingsSrvc.settingVar = function(setting) {
-		const val = SettingsSrvc.setting(setting)['var'];
+		const config = SettingsSrvc.setting(setting);
+		const val = config.options.var !== undefined ? config.options.var : config.options.selected;
 		console.log('SettingsSrvc.settingVar()', setting, val);
 		return val;
 	}
@@ -34,15 +36,25 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		console.error("SettingsSrvc.setting() yields null", setting);
 	};
 	
-	SettingsSrvc.changeSetting = function(setting, value) {
+	SettingsSrvc.changeSetting = function(setting, value, relation) {
+		var config = typeof setting === 'string' ? SettingsSrvc.setting(setting) : setting;
 		var gwsMessage = new GWS_Message().cmd(0x0107).sync();
-		var module = SettingsSrvc.setting(setting).module;
-		console.log("SettingSrvc.changeSetting()", module, setting, value);
+		var module = config.module;
+		var key = config.name || setting;
+		console.log("SettingSrvc.changeSetting()", module, key, value, relation);
 		gwsMessage.writeString(module);
-		gwsMessage.writeString(setting);
+		gwsMessage.writeString(key);
 		gwsMessage.writeString(value);
+		if (relation !== undefined && relation !== null) {
+			gwsMessage.writeString(relation);
+		}
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
-			SettingsSrvc.setting(setting)['selected'] = value;
+			config.options = config.options || {};
+			config.options.var = value;
+			config.options.selected = value;
+			if (relation !== undefined && relation !== null) {
+				config.acl = relation;
+			}
 		});
 	};
 
