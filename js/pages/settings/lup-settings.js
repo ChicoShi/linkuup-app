@@ -19,7 +19,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.moduleLabel = function(module) {
-		return 'module_' + (module === 'User' ? 'user' : module);
+		return 'module_' + module.toLowerCase();
 	};
 
 	$scope.enumLabel = function(value) {
@@ -72,10 +72,23 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.settingsLoaded = true;
 			SettingsSrvc.withConfig().then(function(cache) {
 				var groups = {};
+				$scope.data.profileVisibility = cache.User && cache.User.profile_visibility;
+				if ($scope.data.profileVisibility) {
+					var profile = $scope.data.profileVisibility;
+					profile.module = 'User';
+					profile.name = 'profile_visibility';
+					profile.options = profile.options || {};
+					profile.renderer = GDTRendererSrvc.forSetting(profile);
+					var profileValue = profile.options.var !== undefined && profile.options.var !== null ? profile.options.var : profile.options.selected;
+					profile.value = GDTRendererSrvc.valueForSetting(profile, profileValue);
+					profile.initialValue = profile.value;
+					profile.initialACL = profile.acl;
+				}
 				for (var module in cache) {
 					if (module === 'user') { continue; }
 					for (var key in cache[module]) {
 						var setting = cache[module][key];
+						if (module === 'User' && key === 'profile_visibility') { continue; }
 						if (!setting.writeable || (HIDDEN_SETTINGS[module] && HIDDEN_SETTINGS[module][key])) { continue; }
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;

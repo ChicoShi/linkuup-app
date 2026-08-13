@@ -1,11 +1,22 @@
 <md-list class="lup-settings-list">
 
+ <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
+   <md-list-item class="md-2-line">
+     <div class="md-list-item-text" layout="column">
+       <h3>{{'profile_visibility'|translate}}</h3>
+     </div>
+     <md-select ng-model="data.profileVisibility.value" ng-change="changeSetting(data.profileVisibility)">
+       <md-option ng-repeat="relation in aclChoices(data.profileVisibility)" value="{{relation}}">{{enumLabel(relation)|translate}}</md-option>
+     </md-select>
+   </md-list-item>
+ </section>
+ <md-divider class="lup-settings-profile-divider"></md-divider>
+
  <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
    <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
 
    <div ng-repeat="setting in group.settings track by setting.name">
      <div ng-if="controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl-above">
-       <span translate="visibility"></span>
        <md-select ng-model="setting.acl" ng-change="changeSetting(setting)">
          <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
        </md-select>

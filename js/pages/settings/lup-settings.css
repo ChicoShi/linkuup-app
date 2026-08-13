@@ -16,6 +16,16 @@
 	text-transform: uppercase;
 }
 
+.lup-settings-profile-visibility {
+	margin: 0 0 15px;
+}
+
+.lup-settings-list .lup-settings-profile-divider {
+	display: block;
+	margin: 0 4px 15px;
+	border-color: rgba(180,166,255,.34);
+}
+
 .lup-settings-list md-list-item.md-2-line {
 	min-height: 76px;
 	margin: 7px 0;
