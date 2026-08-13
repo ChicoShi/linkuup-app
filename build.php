@@ -50,6 +50,27 @@ EOF;
     file_put_contents("$dir/.htaccess", $content);
 }
 
+/**
+ * The production bundle contains all JavaScript. Angular still loads its
+ * page templates from js/pages at runtime, so expose HTML there and deny
+ * every other source file after a successful build.
+ */
+function protectTemplatesOnly(string $dir)
+{
+	$content = <<< EOF
+Options -Indexes
+<FilesMatch "^(?!.*\\.html$).*$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Deny from all
+  </IfModule>
+</FilesMatch>
+EOF;
+	file_put_contents("$dir/.htaccess", $content);
+}
+
 # Load GDO
 final class Builder extends Application
 {
@@ -149,8 +170,7 @@ file_put_contents($srcpath.'index.php', $output);
 unlink('linkuup.temp.css');
 unlink('linkuup.merged.js');
 unlink('linkuup.annotated.js');
-// Angular loads HTML templates from js/pages at runtime. Do not deny this
-// directory after bundling: that would also deny the application's views.
+protectTemplatesOnly("{$srcpath}js");
 protect("{$srcpath}css");
 protect("{$srcpath}config");
 
