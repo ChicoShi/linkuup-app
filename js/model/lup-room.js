@@ -74,7 +74,7 @@ function LUPRoom(json) {
 	this.displayDistance = function() {
 		const km = this.distance();
 		if (km === null || !Number.isFinite(km)) {
-			return 'Standort aktivieren';
+			return '----';
 		}
 		if (km < 1) {
 			return `${Math.round(km * 1000)}m`;
