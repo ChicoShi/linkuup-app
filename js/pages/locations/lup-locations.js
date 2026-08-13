@@ -154,7 +154,7 @@ angular.module('LUP').config(function($routeProvider) {
 				// sliding a static card sideways.
 				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
 					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
-				$scope.focusRoom(nextSlide);
+				$scope.focusSlide(slick.$slides.eq(nextSlide));
 			});
 		}
 		
@@ -168,16 +168,21 @@ angular.module('LUP').config(function($routeProvider) {
 			mobileFirst: true,
 			variableWidth: false,
 			infinite: false,
-			swipeToSlide: false,
+			swipe: true,
+			touchMove: true,
+			draggable: true,
+			verticalSwiping: false,
+			swipeToSlide: true,
 			waitForAnimate: true,
 			edgeFriction: 0.22,
 			speed: 360,
 			cssEase: 'cubic-bezier(.22,.78,.24,1)',
 			touchThreshold: 6,
 		}).slick('slickFilter', function() {
-			// Slick keeps the slides for which this callback returns true. Hidden
-			// search/category results must therefore be excluded, not selected.
-			return !window.jQuery(this).hasClass('lup-hidden-slide');
+			// Filter by stable data attributes, not an Angular class that can be
+			// between digest updates while Slick rebuilds its slides.
+			var category = String(window.jQuery(this).attr('data-room-category'));
+			return !$scope.data.category.length || $scope.data.category.indexOf(category) >= 0;
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the room list instead.', error);
@@ -200,6 +205,18 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.currentRoomIndex = roomIndex;
 				RoomSrvc.withUsers(room);
 			}
+		}
+	};
+
+	$scope.focusSlide = function($slide) {
+		var roomId = String($slide && $slide.attr('data-room-id') || '');
+		var room = $scope.data.rooms.find(function(candidate) {
+			return String(candidate.id()) === roomId;
+		});
+		if (room) {
+			$scope.data.currentRoom = room;
+			$scope.data.currentRoomIndex = $scope.data.rooms.indexOf(room);
+			RoomSrvc.withUsers(room);
 		}
 	};
 
@@ -269,8 +286,9 @@ angular.module('LUP').config(function($routeProvider) {
 		try {
 			$slick.slick('slickUnfilter');
 			if ($scope.data.category.length) {
+				var categories = $scope.data.category.slice(0);
 				$slick.slick('slickFilter', function() {
-					return !window.jQuery(this).hasClass('lup-hidden-slide');
+					return categories.indexOf(String(window.jQuery(this).attr('data-room-category'))) >= 0;
 				});
 			}
 			$slick.slick('slickGoTo', 0, true);
