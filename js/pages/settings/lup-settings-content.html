@@ -1,81 +1,66 @@
 <md-list class="lup-settings-list">
 
- <md-subheader class="md-no-sticky">{{"SUBHEADER_DATA_PERMISSIONS"|translate}}</md-subheader>
- 
- <md-list-item class="md-2-line">
-   <div class="md-list-item-text" layout="column">
-     <h3 translate="SETTING_FRIEND_REQUESTS"></h3>
-     <p translate="SETTING_FRIEND_REQUESTS_INFOs"></p>
-   </div>
-   <md-select ng-model="data.friend_who" ng-change="changeSetting('friend_who')">
-     <md-option value="acl_all" translate="SETTING_ALL"></md-option>
-     <md-option value="acl_members" translate="SETTING_MEMBERS"></md-option>
-     <md-option value="acl_noone" translate="SETTING_NONE"></md-option>
-   </md-select>
- </md-list-item>
+ <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
+   <md-list-item class="md-2-line">
+     <div class="md-list-item-text" layout="column">
+       <h3>{{'profile_visibility'|translate}}</h3>
+     </div>
+     <md-select ng-model="data.profileVisibility.value" ng-change="changeSetting(data.profileVisibility)">
+       <md-option ng-repeat="relation in aclChoices(data.profileVisibility)" value="{{relation}}">{{enumLabel(relation)|translate}}</md-option>
+     </md-select>
+   </md-list-item>
+ </section>
+ <md-divider class="lup-settings-profile-divider"></md-divider>
 
+ <!--
  <md-list-item class="md-2-line">
    <div class="md-list-item-text" layout="column">
-     <h3 translate="SETTING_FRIEND_LIST"></h3>
-     <p translate="SETTING_FRIEND_LIST_INFO"></p>
+     <h3>{{'lup_profile_outside_visible'|translate}}</h3>
    </div>
-   <md-select ng-model="data.friends_show" ng-change="changeSetting('friends_show')">
-<!--      <md-option value="acl_all" translate="SETTING_ALL"></md-option> -->
-     <md-option value="acl_members" translate="SETTING_MEMBERS"></md-option>
-     <md-option value="acl_friends" translate="SETTING_FRIENDS"></md-option>
-     <md-option value="acl_noone" translate="SETTING_NONE"></md-option>
-   </md-select>
+   <md-switch ng-model="data.profileOutsideVisible" ng-true-value="'1'" ng-false-value="'0'"></md-switch>
  </md-list-item>
- 
- <md-list-item class="md-2-line">
-   <div class="md-list-item-text" layout="column">
-     <h3 translate="SETTING_GALLERY"></h3>
-     <p translate="SETTING_GALLERY_INFO"></p>
-   </div>
-   <md-select ng-model="data.gallery_acl" ng-change="changeSetting('gallery_acl')">
-     <md-option value="acl_all" translate="SETTING_ALL"></md-option>
-     <md-option value="acl_members" translate="SETTING_MEMBERS"></md-option>
-     <md-option value="acl_friends" translate="SETTING_FRIENDS"></md-option>
-     <md-option value="acl_noone" translate="SETTING_NONE"></md-option>
-   </md-select>
- </md-list-item>
+ <md-divider class="lup-settings-profile-divider"></md-divider>
+ -->
 
- <md-list-item class="md-2-line">
-   <div class="md-list-item-text" layout="column">
-     <h3 translate="SETTING_COURSE"></h3>
-     <p translate="SETTING_COURSE_INFO"></p>
-   </div>
-   <md-select ng-model="data.lup_course_visible" ng-change="changeSetting('lup_course_visible')">
-     <md-option value="acl_all" translate="SETTING_ALL"></md-option>
-     <md-option value="acl_members" translate="SETTING_MEMBERS"></md-option>
-     <md-option value="acl_friends" translate="SETTING_FRIENDS"></md-option>
-     <md-option value="acl_noone" translate="SETTING_NONE"></md-option>
-   </md-select>
- </md-list-item>
-  
- <md-list-item class="md-2-line">
-   <div class="md-list-item-text" layout="column">
-     <h3 translate="SETTING_PROFILE"></h3>
-     <p translate="SETTING_PROFILE_INFO"></p>
-   </div>
-   <md-select ng-model="data.profile_visibility" ng-change="changeSetting('profile_visibility')">
-     <md-option value="acl_all" translate="SETTING_ALL"></md-option>
-     <md-option value="acl_members" translate="SETTING_MEMBERS"></md-option>
-     <md-option value="acl_friends" translate="SETTING_FRIENDS"></md-option>
-     <md-option value="acl_noone" translate="SETTING_NONE"></md-option>
-   </md-select>
- </md-list-item>
- 
- <md-divider></md-divider>
- <md-divider></md-divider>
- 
- <md-list-item class="md-2-line" ng-click="gotoProfileSettings()">
-   <div class="md-list-item-text" layout="column">
-     <h3 translate="TITLE_PROFILE_SETTINGS"></h3>
-     <p translate="EDIT_YOUR_PROFILE"></p>
-   </div>
- </md-list-item>
+ <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
+   <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
 
- <md-divider></md-divider>
+   <div ng-repeat="setting in group.settings track by setting.name">
+     <div ng-if="controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl-above">
+       <md-select ng-model="setting.acl" ng-change="changeSetting(setting)">
+         <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
+       </md-select>
+     </div>
+
+     <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
+       <div class="md-list-item-text" layout="column">
+         <h3>{{setting.label|translate}}</h3>
+       </div>
+
+       <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)"></md-switch>
+       <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting) && !isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+         <md-option ng-if="!setting.options.notNull" value="0">{{'PLEASE_SELECT'|translate}}</md-option>
+         <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
+       </md-select>
+       <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+         <md-option value="0">{{'not_specified'|translate}}</md-option>
+         <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}">
+           <span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span> {{country.text}}
+         </md-option>
+       </md-select>
+       <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+         <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
+       </md-select>
+       <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input">
+         <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-blur="changeSetting(setting)">
+         <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
+       </md-input-container>
+
+       <md-select ng-if="!controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl" ng-model="setting.acl" ng-change="changeSetting(setting)">
+         <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
+       </md-select>
+     </md-list-item>
+   </div>
+ </section>
 
 </md-list>

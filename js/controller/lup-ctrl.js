@@ -2,7 +2,7 @@
  * Base controller that catches some nav/auth/connection events.
  */
 angular.module('LUP').
-controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdSidenav, $translate,
+controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdMedia, $mdSidenav, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
 		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc,
@@ -430,10 +430,30 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $location, $mdMedia, $mdS
 		console.log('LUPCtrl.$on-$viewContentLoaded()', event);
 //		$scope.doAuthCheck();
 	});
+
+	var roomRefreshTimer = null;
+	$scope.refreshRoomsForPosition = function() {
+		if (!$scope.data.inited) {
+			return;
+		}
+		if (roomRefreshTimer) {
+			$timeout.cancel(roomRefreshTimer);
+		}
+		roomRefreshTimer = $timeout(function() {
+			roomRefreshTimer = null;
+			RoomSrvc.withRooms().then(function(rooms) {
+				$scope.data.rooms = rooms;
+				$rootScope.$broadcast('lup-rooms-ready', rooms);
+			}, function(error) {
+				console.warn('LinkUUp: nearby location refresh failed.', error);
+			});
+		}, 250);
+	};
 	
 	$scope.$on('gwf-position-changed', function(event, pos) {
 		console.log('LUPCtrl.$on-gwf-position-changed()', pos);
 		$scope.updatePosition(pos);
+		$scope.refreshRoomsForPosition();
 	});
 	
 	////////////////////////

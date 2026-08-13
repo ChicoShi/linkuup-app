@@ -15,6 +15,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.title = "TITLE_ACCOUNT";
 	
 	$scope.ConfigSrvc = ConfigSrvc;
+	$scope.data.backendUrl = window.LUP_CONFIG.server;
 	
 	$scope.data.countries = CountrySrvc.CACHE||[];
 	$scope.data.timezones = TimezoneSrvc.CACHE||[];
@@ -45,11 +46,11 @@ angular.module('LUP').config(function($routeProvider) {
 	/////////////////////
 	// --- Country --- //
 	/////////////////////´
-	$scope.countryURL = function(country) {
-		return CountrySrvc.countryURL(country.id);
+	$scope.countryStyle = function(country) {
+		return CountrySrvc.flagStyle(country.id);
 	};
-	$scope.countryURLzz = function() {
-		return CountrySrvc.countryURL('zz');
+	$scope.countryStyleZZ = function() {
+		return CountrySrvc.flagStyle('zz');
 	};
 	
 	//////////////////////

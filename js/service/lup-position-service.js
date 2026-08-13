@@ -25,6 +25,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	PositionSrvc.KNOWN = 2;
 	PositionSrvc.PATCHED = 3;
 	
+	PositionSrvc.WATCH = null;
 	PositionSrvc.INTERVAL = null;
 	
 	window.GWF_POSITION = PositionSrvc.CURRENT = {
@@ -124,17 +125,39 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	///////////
 	PositionSrvc.start = function() {
 		console.log('PositionSrvc.start()');
-		if (!PositionSrvc.INTERVAL) {
-			PositionSrvc.INTERVAL = navigator.geolocation.watchPosition(PositionSrvc.watchSuccess, PositionSrvc.watchFailure, PositionSrvc.OPTIONS);	
+		if (PositionSrvc.WATCH === null) {
+			PositionSrvc.WATCH = navigator.geolocation.watchPosition(PositionSrvc.watchSuccess, PositionSrvc.watchFailure, PositionSrvc.OPTIONS);
+		}
+		PositionSrvc.startInterval();
+	};
+
+	PositionSrvc.startInterval = function() {
+		var seconds = Number(window.LUP_CONFIG.positionInterval);
+		if (seconds > 0 && PositionSrvc.INTERVAL === null) {
+			PositionSrvc.INTERVAL = setInterval(PositionSrvc.intervalCalled, seconds * 1000);
+		}
+	};
+
+	// A stationary device does not necessarily trigger watchPosition again.
+	// Keep the server-side presence fresh at the explicitly configured cadence,
+	// but only after the user has already granted a real GPS position.
+	PositionSrvc.intervalCalled = function() {
+		if (PositionSrvc.PROBED && PositionSrvc.hasPosition(true)) {
+			console.log('PositionSrvc.intervalCalled()');
+			$rootScope.$broadcast('gwf-position-changed', PositionSrvc.CURRENT);
 		}
 	};
 	
 	PositionSrvc.stop = function() {
 		console.log('PositionSrvc.stop()');
-		if (PositionSrvc.INTERVAL !== null) {
-			navigator.geolocation.clearWatch(PositionSrvc.INTERVAL);
+		if (PositionSrvc.WATCH !== null) {
+			navigator.geolocation.clearWatch(PositionSrvc.WATCH);
+			PositionSrvc.WATCH = null;
 		}
-		PositionSrvc.INTERVAL = null;
+		if (PositionSrvc.INTERVAL !== null) {
+			clearInterval(PositionSrvc.INTERVAL);
+			PositionSrvc.INTERVAL = null;
+		}
 	};
 	
 	PositionSrvc.watchSuccess = function(position) {
@@ -163,6 +186,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		c.patch.lng = lng;
 		PositionSrvc.setCurrent(lat, lng, PositionSrvc.PATCHED);
 		PositionSrvc.PROBED = true;
+		PositionSrvc.startInterval();
 	};
 	
 	PositionSrvc.stopPatching = function() {
@@ -171,7 +195,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		c.patch.lat = null;
 		c.patch.lng = null;
 		PositionSrvc.setState(c.real.lat === null ? PositionSrvc.UNKNOWN : PositionSrvc.KNOWN);
-		if (c.real.lat) {
+		if (c.real.lat !== null) {
 			PositionSrvc.setCurrent(c.real.lat, c.real.lng, PositionSrvc.KNOWN);
 		}
 		else {
@@ -209,7 +233,9 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		}
 	};
 	
-	PositionSrvc.LAST = { lat: 0.0, lng: 0.0 };
+	// No coordinate has been sent yet. The first valid position must always
+	// refresh rooms, including an explicitly configured debug patch.
+	PositionSrvc.LAST = null;
 	PositionSrvc.EVENT_TOLERANCE_KM = 0.025;
 	PositionSrvc.setCoordinates = function(lat, lng) {
 		console.log('PositionSrvc.setCoordinates()', lat, lng);
@@ -225,15 +251,16 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 
 	PositionSrvc.hasPositionChangedSignificantly = function(current) {
 		
-		// On a patched debug position we randomly send an event
-		if (PositionSrvc.patching()) {
-			var result = Math.floor(Math.random() * 100) > 80;
-			console.log('PositionSrvc.hasPositionChangedSignificantly() PATCHED=', result);
-			return result;
-		}
-		
-		// Only notify the server after moving at least 25 metres.
+		// Always announce the first valid coordinate. Further updates need an
+		// actual 25 metre movement, whether they originate from GPS or a patch.
 		var last = PositionSrvc.LAST;
+		if (last === null) {
+			PositionSrvc.LAST = { lat: current.lat, lng: current.lng };
+			console.log('PositionSrvc.hasPositionChangedSignificantly() FIRST');
+			return true;
+		}
+
+		// Only notify the server after moving at least 25 metres.
 		var distance = PositionSrvc.distanceBetween(current.lat, current.lng, last.lat, last.lng);
 		if (distance >= PositionSrvc.EVENT_TOLERANCE_KM) {
 			console.log('PositionSrvc.hasPositionChangedSignificantly()', distance);
@@ -264,7 +291,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	///////////////////
 	PositionSrvc.hasPosition = function(allowPatched) {
 		var c = PositionSrvc.CURRENT;
-		return (c.real.lat) || ((allowPatched && c.patch.lat))
+		return c.real.lat !== null || (allowPatched && c.patch.lat !== null);
 	};
 	
 	PositionSrvc.withPosition = function(allowPatched) {

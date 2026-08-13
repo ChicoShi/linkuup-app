@@ -63,7 +63,7 @@ function LUPRoom(json) {
 	this.view = function() { return this.JSON.room_view; };
 	this.radius = function() { return this.JSON.room_radius; };
 	this.distance = function() {
-		return LUPRoom.PositionSrvc.hasPosition(false) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
+		return LUPRoom.PositionSrvc.hasPosition(true) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
 	};
 	this.inChatRange = function() {
 		// The Germany test chat is intentionally a non-physical, nationwide room.
@@ -74,7 +74,7 @@ function LUPRoom(json) {
 	this.displayDistance = function() {
 		const km = this.distance();
 		if (km === null || !Number.isFinite(km)) {
-			return 'Standort aktivieren';
+			return '----';
 		}
 		if (km < 1) {
 			return `${Math.round(km * 1000)}m`;

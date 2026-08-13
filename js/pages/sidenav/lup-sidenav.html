@@ -45,11 +45,6 @@
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line nav-profile-settings" ng-click="gotoProfileSettings()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">edit</i>
-		<p>{{'TITLE_PROFILE_SETTINGS'|translate}}</p>
-	  </md-list-item>
-
 	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">groups</i>
 		<p>{{'TITLE_FRIENDS'|translate}}</p>

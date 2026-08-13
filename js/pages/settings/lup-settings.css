@@ -16,6 +16,16 @@
 	text-transform: uppercase;
 }
 
+.lup-settings-profile-visibility {
+	margin: 0 0 15px;
+}
+
+.lup-settings-list .lup-settings-profile-divider {
+	display: block;
+	margin: 0 4px 15px;
+	border-color: rgba(180,166,255,.34);
+}
+
 .lup-settings-list md-list-item.md-2-line {
 	min-height: 76px;
 	margin: 7px 0;
@@ -53,6 +63,57 @@
 	border-radius: 10px;
 	background: rgba(16,18,29,.40);
 	color: #f5f6ff;
+}
+
+.lup-settings-list .lup-setting-input {
+	min-width: 160px;
+	margin: 0;
+}
+
+.lup-settings-list .lup-setting-input input,
+.lup-settings-list .lup-setting-input textarea {
+	color: #f5f6ff;
+	background: red;
+}
+
+.lup-settings-list .lup-setting-input input[type="color"] {
+	width: 48px;
+	height: 38px;
+	padding: 3px;
+	border: 1px solid rgba(255,255,255,.20);
+	border-radius: 9px;
+	background: rgba(16,18,29,.40);
+	cursor: pointer;
+}
+
+.lup-settings-list .lup-setting-textarea {
+	display: block;
+	min-height: 132px;
+}
+
+.lup-settings-list .lup-setting-textarea .md-list-item-text {
+	margin-bottom: 8px;
+}
+
+.lup-settings-list .lup-setting-textarea .lup-setting-input {
+	display: block;
+	width: 100%;
+	max-width: none;
+}
+
+.lup-settings-list .lup-setting-textarea textarea {
+	width: 100%;
+	resize: vertical;
+}
+
+.lup-setting-acl-above {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	margin: 0 8px 5px;
+	color: #a9aec7;
+	font-size: 12px;
 }
 
 .lup-settings-list md-divider { display: none; }

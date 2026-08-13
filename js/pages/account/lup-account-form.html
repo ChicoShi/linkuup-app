@@ -3,118 +3,19 @@
 <h4>{{'TITLE_ACCOUNT'|translate}}</h4>
 <p>{{'INFO_ACCOUNT'|translate}}</p>
 
-<section layout="row">
-  <md-input-container flex=50 ng-if="data.user.isGuest()">
-    <label>{{'USERNAME'|translate}}</label>
-    <input type="text" disabled="disabled" ng-model="data.account.user_guest_name">
-  </md-input-container>
-  <md-input-container flex=50 ng-if="data.user.isMember()">
-    <label>{{'USERNAME'|translate}}</label>
-    <input type="text" disabled="disabled" ng-model="data.account.user_name">
-  </md-input-container>
-  <md-input-container flex=50 ng-if="ConfigSrvc.realname()">
-    <label>{{'REALNAME'|translate}}</label>
-    <input type="text" ng-model="data.account.user_real_name" ng-disabled="data.user.hasRealName()">
-  </md-input-container>
+<section class="lup-account-overview" layout="column">
+  <div>
+    <strong>{{'USERNAME'|translate}}</strong>
+    <span ng-if="data.user.isGuest()">{{data.account.user_guest_name}}</span>
+    <span ng-if="data.user.isMember()">{{data.account.user_name}}</span>
+  </div>
+  <div>
+    <strong>{{'EMAIL'|translate}}</strong>
+    <span>{{data.account.user_email || ('UNKNOWN'|translate)}}</span>
+  </div>
 </section>
 
-<section layout="row">
-  <md-input-container flex=50>
-    <label>{{'EMAIL'|translate}}</label>
-    <input type="email" ng-model="data.account.user_email" nyg-disabled="!ConfigSrvc.emailChange()">
-  </md-input-container>
-<!--   <md-input-container flex=50> -->
-<!--     <label>{{'EMAIL_FMT'|translate}}</label> -->
-<!--     <md-select ng-model="data.account.user_email_fmt"> -->
-<!--       <md-option value="text" translate="EFMT_TEXT"></md-option> -->
-<!--       <md-option value="html" translate="EFMT_HTML"></md-option> -->
-<!--     </md-select> -->
-<!--   </md-input-container> -->
-</section>
-
-<h4>{{'TITLE_DEMOCRAPHIC'|translate}}</h4>
-<!-- <p>{{'INFO_DEMOCRAPHIC'|translate}}</p> -->
-
-<section layout="row">
-<!--   <md-input-container flex=50> -->
-<!--     <label>{{'BIRTHDATE'|translate}}</label> -->
-<!--     <input type="date" ng-model="data.user_birthdate" /> -->
-<!--   </md-input-container> -->
-  <md-input-container flex=50>
-    <label>{{'GENDER'|translate}}</label>
-    <md-select ng-model="data.account.user_gender">
-      <md-option value="none">{{'NO_GENDER'|translate}}</md-option>
-      <md-option value="male">{{'MALE'|translate}}</md-option>
-      <md-option value="female">{{'FEMALE'|translate}}</md-option>
-    </md-select>
-  </md-input-container>
-</section>
-
-<section layout="row" flex>
-  <md-input-container flex=50 class="country-input">
-    <label>{{'COUNTRY'|translate}}</label>
-    <md-select ng-model="data.account.user_country">
-
-      <md-option
-       class="country-option"
-       value="null"
-       aria-label="None">
-        <span>
-          <img ng-src="{{countryURLzz()}}" alt="none" />
-          <b>{{"UNKNOWN"|translate}}</b>
-        </span>
-      </md-option>
-
-      <md-option
-       class="country-option"
-       ng-repeat="country in data.countries"
-       value="{{country.id}}"
-       aria-label="{{country.text}}">
-        <span>
-          <img ng-src="{{countryURL(country)}}" alt="flag" />
-          <b>{{country.text}}</b>
-        </span>
-      </md-option>
-    </md-select>
-  </md-input-container>
-  
-  <md-input-container flex=50>
-    <label>{{'LANGUAGE'|translate}}</label>
-    <md-select ng-model="data.account.user_language">
-      <md-option value="en" translate="LANG_EN"></md-option>
-      <md-option value="de" translate="LANG_DE"></md-option>
-    </md-select>
-  </md-input-container>
-
-</section>
-
-<section layout="row" flex>
-  <md-input-container flex=50>
-    <label>{{'TIMEZONE'|translate}}</label>
-    <md-select ng-model="data.account.user_timezone">
-      <md-option
-       class="timezone-option"
-       ng-repeat="timezone in data.timezones"
-       value="{{timezone.tz_id}}"
-       aria-label="{{timezone.tz_name}}">
-        <span>{{displayTimezone(timezone)}}</span>
-      </md-option>
-    </md-select>
-  </md-input-container>
-</section>
-
-
-<!-- 
-<section layout="row" flex>
-  <md-input-container flex>
-    <label>{{'STATUS'|translate}}</label>
-    <input type="text" ng-model="data.account.lup_status">
-  </md-input-container>
-</section>
- -->
-
-<section layout="row" flex>
-  <md-button flex class="md-raised md-primary" ng-click="save()">{{'BTN_SAVE'|translate}}</md-button>
-</section>
+<p class="lup-account-backend-hint">{{'INFO_ACCOUNT_BACKEND'|translate}}</p>
+<md-button class="md-raised md-primary" ng-href="{{data.backendUrl}}" target="_blank" rel="noopener">{{'BTN_BACKEND'|translate}}</md-button>
 
 </section>

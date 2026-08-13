@@ -128,6 +128,7 @@ $min = LUPConfig::$MIN;
   <script src="js/service/lup-exception-service.js<?=$v?>"></script>
   <script src="js/service/lup-friend-service.js<?=$v?>"></script>
   <script src="js/service/lup-fx-service.js<?=$v?>"></script>
+	<script src="js/service/lup-gdt-renderer-service.js<?=$v?>"></script>
   <script src="js/service/lup-gallery-service.js<?=$v?>"></script>
   <script src="js/service/lup-help-service.js<?=$v?>"></script>
   <script src="js/service/lup-like-service.js<?=$v?>"></script>

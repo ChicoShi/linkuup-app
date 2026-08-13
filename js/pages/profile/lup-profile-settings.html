@@ -180,7 +180,7 @@
              value="null"
              aria-label="None">
               <span>
-                <img ng-src="{{CountrySrvc.countryURL('zz')}}" alt="none" />
+                <span class="country-flag" ng-style="CountrySrvc.flagStyle('zz')" aria-hidden="true"></span>
                 <b>{{"UNKNOWN"|translate}}</b>
               </span>
             </md-option>
@@ -190,7 +190,7 @@
              value="{{country.id}}"
              aria-label="{{country.text}}">
               <span>
-                <img ng-src="{{CountrySrvc.countryURL(country.id)}}" alt="flag" />
+                <span class="country-flag" ng-style="CountrySrvc.flagStyle(country.id)" aria-hidden="true"></span>
                 <b>{{country.text}}</b>
               </span>
             </md-option>

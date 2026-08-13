@@ -57,7 +57,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.requestLocation = function(room, event) {
-		if (PositionSrvc.hasPosition(false)) {
+		if (PositionSrvc.hasPosition(true)) {
 			return; // Normal case: keep the route link working.
 		}
 		// A user gesture is the correct time to request browser geolocation. It
