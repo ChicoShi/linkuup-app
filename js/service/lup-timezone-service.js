@@ -48,6 +48,16 @@ service('TimezoneSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		}
 		return `${name} (${clock})`;
 	};
+
+	TimezoneSrvc.options = function() {
+		var timezones = TimezoneSrvc.CACHE || {};
+		var options = Array.isArray(timezones) ? timezones : Object.keys(timezones).map(function(id) {
+			return timezones[id];
+		});
+		return options.sort(function(a, b) {
+			return a.tz_name.localeCompare(b.tz_name);
+		});
+	};
 	
 	return TimezoneSrvc;
 });

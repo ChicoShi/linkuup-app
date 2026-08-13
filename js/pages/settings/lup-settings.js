@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 ;
-}).controller('SettingsCtrl', function($scope, $translate, SettingsSrvc, CountrySrvc, GDTRendererSrvc, ErrorSrvc) {
+}).controller('SettingsCtrl', function($scope, $q, $translate, SettingsSrvc, CountrySrvc, TimezoneSrvc, GDTRendererSrvc, ErrorSrvc) {
 
 	$scope.data.title = 'TITLE_SETTINGS';
 	$scope.data.groups = [];
@@ -27,6 +27,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.data.countries = CountrySrvc.CACHE || [];
+	$scope.data.timezones = TimezoneSrvc.options();
 
 	$scope.controlIs = function(setting, control) {
 		return setting.renderer.control === control;
@@ -34,6 +35,14 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.isCountry = function(setting) {
 		return $scope.controlIs(setting, 'select') && setting.renderer.source === 'countries';
+	};
+
+	$scope.isTimezone = function(setting) {
+		return $scope.controlIs(setting, 'select') && setting.renderer.source === 'timezones';
+	};
+
+	$scope.displayTimezone = function(timezone) {
+		return TimezoneSrvc.renderTimezone(timezone.tz_id);
 	};
 
 	$scope.inputType = function(setting) {
@@ -95,9 +104,10 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.groups.forEach(function(group) {
 					group.settings.sort(function(a, b) { return a.name.localeCompare(b.name); });
 				});
-				return CountrySrvc.withCountries();
-			}).then(function(countries) {
-				$scope.data.countries = countries;
+				return $q.all([CountrySrvc.withCountries(), TimezoneSrvc.withTimezones()]);
+			}).then(function(results) {
+				$scope.data.countries = results[0];
+				$scope.data.timezones = TimezoneSrvc.options();
 			})['catch'](function(error) {
 				$scope.data.settingsLoaded = false;
 				ErrorSrvc.showError(error, 'Settings');

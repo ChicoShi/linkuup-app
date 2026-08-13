@@ -10,6 +10,9 @@ service('GDTRendererSrvc', function() {
 		if (type === 'GDO\\Country\\GDT_Country') {
 			return {control: 'select', source: 'countries'};
 		}
+		if (type === 'GDO\\Date\\GDT_Timezone') {
+			return {control: 'select', source: 'timezones'};
+		}
 		if (setting.options && setting.options.enumValues) {
 			return {control: 'select', source: 'enum'};
 		}
