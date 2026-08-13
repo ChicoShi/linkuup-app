@@ -14,6 +14,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.groups = [];
 	const ACLS = ['acl_all', 'acl_guests', 'acl_members', 'acl_friend_friends', 'acl_friends', 'acl_noone'];
 	const HIDDEN_SETTINGS = {
+		Date: {activity_accuracy: true},
 		Friends: {friends_level: true},
 	};
 
@@ -22,7 +23,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.enumLabel = function(value) {
-		return 'enum_' + value;
+		return value;
 	};
 
 	$scope.data.countries = CountrySrvc.CACHE || [];
