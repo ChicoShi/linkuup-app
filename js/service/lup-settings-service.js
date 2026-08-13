@@ -18,7 +18,7 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	
 	SettingsSrvc.settingVar = function(setting) {
 		const config = SettingsSrvc.setting(setting);
-		const val = config.options.var !== undefined ? config.options.var : config.options.selected;
+		const val = config.options.var !== undefined && config.options.var !== null ? config.options.var : config.options.selected;
 		console.log('SettingsSrvc.settingVar()', setting, val);
 		return val;
 	}

@@ -4,28 +4,34 @@
    <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
 
    <div ng-repeat="setting in group.settings track by setting.name">
-     <div ng-if="isTextarea(setting) && setting.acl !== null" class="lup-setting-acl-above">
+     <div ng-if="controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl-above">
        <span translate="visibility"></span>
        <md-select ng-model="setting.acl" ng-change="changeSetting(setting)">
          <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
        </md-select>
      </div>
 
-     <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': isTextarea(setting)}">
+     <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
        <div class="md-list-item-text" layout="column">
          <h3>{{setting.label|translate}}</h3>
        </div>
 
-       <md-switch ng-if="isCheckbox(setting)" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)"></md-switch>
-       <md-select ng-if="!isCheckbox(setting) && isChoice(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+       <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)"></md-switch>
+       <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
          <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
        </md-select>
-       <md-input-container ng-if="!isCheckbox(setting) && !isChoice(setting)" class="lup-setting-input">
-         <input ng-if="!isTextarea(setting)" type="{{inputType(setting)}}" ng-model="setting.value" ng-blur="changeSetting(setting)">
-         <textarea ng-if="isTextarea(setting)" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
+       <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+         <md-option value="0">{{'not_specified'|translate}}</md-option>
+         <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}">
+           <img ng-src="{{countryURL(country)}}" alt=""> {{country.text}}
+         </md-option>
+       </md-select>
+       <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input">
+         <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" ng-model="setting.value" ng-blur="changeSetting(setting)">
+         <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
        </md-input-container>
 
-       <md-select ng-if="!isTextarea(setting) && setting.acl !== null" class="lup-setting-acl" ng-model="setting.acl" ng-change="changeSetting(setting)">
+       <md-select ng-if="!controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl" ng-model="setting.acl" ng-change="changeSetting(setting)">
          <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
        </md-select>
      </md-list-item>

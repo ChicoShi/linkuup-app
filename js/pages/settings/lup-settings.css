@@ -65,6 +65,16 @@
 	color: #f5f6ff;
 }
 
+.lup-settings-list .lup-setting-input input[type="color"] {
+	width: 48px;
+	height: 38px;
+	padding: 3px;
+	border: 1px solid rgba(255,255,255,.20);
+	border-radius: 9px;
+	background: rgba(16,18,29,.40);
+	cursor: pointer;
+}
+
 .lup-settings-list .lup-setting-textarea {
 	display: block;
 	min-height: 132px;

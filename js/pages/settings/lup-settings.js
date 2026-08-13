@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 ;
-}).controller('SettingsCtrl', function($scope, $translate, SettingsSrvc, ErrorSrvc) {
+}).controller('SettingsCtrl', function($scope, $translate, SettingsSrvc, CountrySrvc, GDTRendererSrvc, ErrorSrvc) {
 
 	$scope.data.title = 'TITLE_SETTINGS';
 	$scope.data.groups = [];
@@ -22,20 +22,22 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'enum_' + value;
 	};
 
-	$scope.isTextarea = function(setting) {
-		return /GDT_(Message|Text)$/.test(setting.type || '');
+	$scope.data.countries = CountrySrvc.CACHE || [];
+
+	$scope.controlIs = function(setting, control) {
+		return setting.renderer.control === control;
 	};
 
-	$scope.isCheckbox = function(setting) {
-		return /GDT_Checkbox$/.test(setting.type || '');
-	};
-
-	$scope.isChoice = function(setting) {
-		return !!(setting.options && setting.options.enumValues);
+	$scope.isCountry = function(setting) {
+		return $scope.controlIs(setting, 'select') && setting.renderer.source === 'countries';
 	};
 
 	$scope.inputType = function(setting) {
-		return /GDT_(Int|UInt|Float|Decimal)$/.test(setting.type || '') ? 'number' : 'text';
+		return setting.renderer && setting.renderer.input_type || 'text';
+	};
+
+	$scope.countryURL = function(country) {
+		return CountrySrvc.countryURL(country.id);
 	};
 
 	$scope.aclChoices = function(setting) {
@@ -65,7 +67,9 @@ angular.module('LUP').config(function($routeProvider) {
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;
 						setting.options = setting.options || {};
-						setting.value = setting.options.var !== undefined ? setting.options.var : setting.options.selected;
+						setting.renderer = GDTRendererSrvc.forSetting(setting);
+						var selected = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
+						setting.value = selected && typeof selected === 'object' && selected.id !== undefined ? selected.id : selected;
 						setting.initialValue = setting.value;
 						setting.initialACL = setting.acl;
 						groups[module] = groups[module] || {
@@ -83,6 +87,9 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.groups.forEach(function(group) {
 					group.settings.sort(function(a, b) { return a.name.localeCompare(b.name); });
 				});
+				return CountrySrvc.withCountries();
+			}).then(function(countries) {
+				$scope.data.countries = countries;
 			})['catch'](function(error) {
 				$scope.data.settingsLoaded = false;
 				ErrorSrvc.showError(error, 'Settings');

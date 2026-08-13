@@ -25,6 +25,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	PositionSrvc.KNOWN = 2;
 	PositionSrvc.PATCHED = 3;
 	
+	PositionSrvc.WATCH = null;
 	PositionSrvc.INTERVAL = null;
 	
 	window.GWF_POSITION = PositionSrvc.CURRENT = {
@@ -124,17 +125,39 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	///////////
 	PositionSrvc.start = function() {
 		console.log('PositionSrvc.start()');
-		if (!PositionSrvc.INTERVAL) {
-			PositionSrvc.INTERVAL = navigator.geolocation.watchPosition(PositionSrvc.watchSuccess, PositionSrvc.watchFailure, PositionSrvc.OPTIONS);	
+		if (PositionSrvc.WATCH === null) {
+			PositionSrvc.WATCH = navigator.geolocation.watchPosition(PositionSrvc.watchSuccess, PositionSrvc.watchFailure, PositionSrvc.OPTIONS);
+		}
+		PositionSrvc.startInterval();
+	};
+
+	PositionSrvc.startInterval = function() {
+		var seconds = Number(window.LUP_CONFIG.positionInterval);
+		if (seconds > 0 && PositionSrvc.INTERVAL === null) {
+			PositionSrvc.INTERVAL = setInterval(PositionSrvc.intervalCalled, seconds * 1000);
+		}
+	};
+
+	// A stationary device does not necessarily trigger watchPosition again.
+	// Keep the server-side presence fresh at the explicitly configured cadence,
+	// but only after the user has already granted a real GPS position.
+	PositionSrvc.intervalCalled = function() {
+		if (PositionSrvc.PROBED && PositionSrvc.hasPosition(true)) {
+			console.log('PositionSrvc.intervalCalled()');
+			$rootScope.$broadcast('gwf-position-changed', PositionSrvc.CURRENT);
 		}
 	};
 	
 	PositionSrvc.stop = function() {
 		console.log('PositionSrvc.stop()');
-		if (PositionSrvc.INTERVAL !== null) {
-			navigator.geolocation.clearWatch(PositionSrvc.INTERVAL);
+		if (PositionSrvc.WATCH !== null) {
+			navigator.geolocation.clearWatch(PositionSrvc.WATCH);
+			PositionSrvc.WATCH = null;
 		}
-		PositionSrvc.INTERVAL = null;
+		if (PositionSrvc.INTERVAL !== null) {
+			clearInterval(PositionSrvc.INTERVAL);
+			PositionSrvc.INTERVAL = null;
+		}
 	};
 	
 	PositionSrvc.watchSuccess = function(position) {
@@ -163,6 +186,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		c.patch.lng = lng;
 		PositionSrvc.setCurrent(lat, lng, PositionSrvc.PATCHED);
 		PositionSrvc.PROBED = true;
+		PositionSrvc.startInterval();
 	};
 	
 	PositionSrvc.stopPatching = function() {
@@ -171,7 +195,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		c.patch.lat = null;
 		c.patch.lng = null;
 		PositionSrvc.setState(c.real.lat === null ? PositionSrvc.UNKNOWN : PositionSrvc.KNOWN);
-		if (c.real.lat) {
+		if (c.real.lat !== null) {
 			PositionSrvc.setCurrent(c.real.lat, c.real.lng, PositionSrvc.KNOWN);
 		}
 		else {
@@ -264,7 +288,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	///////////////////
 	PositionSrvc.hasPosition = function(allowPatched) {
 		var c = PositionSrvc.CURRENT;
-		return (c.real.lat) || ((allowPatched && c.patch.lat))
+		return c.real.lat !== null || (allowPatched && c.patch.lat !== null);
 	};
 	
 	PositionSrvc.withPosition = function(allowPatched) {
