@@ -12,6 +12,16 @@
  </section>
  <md-divider class="lup-settings-profile-divider"></md-divider>
 
+ <!--
+ <md-list-item class="md-2-line">
+   <div class="md-list-item-text" layout="column">
+     <h3>{{'lup_profile_outside_visible'|translate}}</h3>
+   </div>
+   <md-switch ng-model="data.profileOutsideVisible" ng-true-value="'1'" ng-false-value="'0'"></md-switch>
+ </md-list-item>
+ <md-divider class="lup-settings-profile-divider"></md-divider>
+ -->
+
  <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
    <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
 

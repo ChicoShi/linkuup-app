@@ -16,6 +16,9 @@ angular.module('LUP').config(function($routeProvider) {
 	const HIDDEN_SETTINGS = {
 		Date: {activity_accuracy: true},
 		Friends: {friends_level: true},
+		// The location-bound profile visibility policy is not implemented yet.
+		// Keep the stored setting out of the generic renderer until it is.
+		LinkUUp: {lup_profile_outside_visible: true},
 	};
 
 	$scope.moduleLabel = function(module) {
