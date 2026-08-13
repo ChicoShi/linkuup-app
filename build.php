@@ -106,8 +106,13 @@ foreach ($css as $file)
 	$cssmerge .= file_get_contents($srcpath.$file);
 }
 file_put_contents($destpath.'linkuup.temp.css', $cssmerge);
-echo "Running minify on CSS file...\n";
-system("minify \"{$destpath}linkuup.temp.css\" > \"{$destpath}linkuup.css\"");
+echo "Running clean-css on CSS file...\n";
+$status = 0;
+system("cleancss -O2 -o \"{$destpath}linkuup.css\" \"{$destpath}linkuup.temp.css\"", $status);
+if ($status !== 0)
+{
+	throw new RuntimeException('CSS bundling failed.');
+}
 
 // # Hook Merged css into index
 $output = str_replace("</head>", "  <link rel=\"stylesheet\" href=\"app/linkuup.css?v={$v}\" />\n</head>", $output);
@@ -144,7 +149,8 @@ file_put_contents($srcpath.'index.php', $output);
 unlink('linkuup.temp.css');
 unlink('linkuup.merged.js');
 unlink('linkuup.annotated.js');
-protect("{$srcpath}js");
+// Angular loads HTML templates from js/pages at runtime. Do not deny this
+// directory after bundling: that would also deny the application's views.
 protect("{$srcpath}css");
 protect("{$srcpath}config");
 

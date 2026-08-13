@@ -91,16 +91,16 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.onFileUploaded = function($file, $flow, $msg) {
 		console.log('ProfileCtrl.onFileUploaded()', $file, $flow, $msg);
-		return $scope.sendAvatarUploadCommand().then(function(response) {
+		return $scope.sendAvatarUploadCommand($file.uniqueIdentifier).then(function(response) {
 			$flow.removeFile($file);
 			return $scope.avatarUploadSuccess(response);
 			}, $scope.avatarUploadFailure);
 	};
 
-	$scope.sendAvatarUploadCommand = function() {
+	$scope.sendAvatarUploadCommand = function(flowIdentifier) {
 		console.log('ProfileCtrl.sendAvatarUploadCommand()');
 		var gwsMessage = new GWS_Message().cmd(0x0402).sync() // Upload Form
-		gwsMessage.write32(0); // Needed stub byte for GDT_File.
+		gwsMessage.writeString(flowIdentifier || '');
 		return WebsocketSrvc.sendBinary(gwsMessage);
 	};
 
