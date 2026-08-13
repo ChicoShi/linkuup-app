@@ -348,6 +348,7 @@ md-button.md-raised, .md-button.md-raised {
   .nearby .slick-slide .chatbutton,
   .nearby .slick-current .room-category-hero { transition: none; animation: none; }
 }
+
 .nearby .roomhead,
 .nearby .distrat,
 .nearby .room-user-preview { position: relative; top: 16px; }
@@ -557,6 +558,71 @@ md-button.md-raised, .md-button.md-raised {
   .nearby .distrat .distance a::after { content:none; }
   .nearby .chatbutton { margin-top:8px; }
 }
+
+/* The QR check-in and route marker belong to the lower edge of the place
+   card, not to a height-dependent flow position.  Anchor the pair so changing
+   between phone and wide-screen views cannot make either mark jump upward. */
+.nearby .roominfo { position:relative; }
+.nearby .roominfo .distrat {
+  position:absolute;
+  top:auto;
+  right:auto;
+  bottom:24px;
+  left:50%;
+  width:auto;
+  margin:0;
+  transform:translateX(-50%);
+}
+.nearby .roominfo .distrat .location-cuddles,
+.nearby .roominfo .distrat .distance {
+  top:auto !important;
+  right:auto;
+  bottom:auto;
+  left:auto;
+  transform:none !important;
+}
+
+/* Profile: About and Gallery are plain adjacent labels.  Angular Material can
+   recreate its ink runner after a tab change, so suppress both the runner and
+   the old divider at the final cascade level. */
+.profile-page .information-tabs .md-ink-bar,
+.profile-page .information-tabs [class*="ink-bar"] {
+  display:none !important;
+  visibility:hidden !important;
+}
+.profile-page .information-tabs md-tabs-canvas,
+.profile-page .information-tabs md-pagination-wrapper,
+.profile-page .information-tabs md-tabs-wrapper,
+.profile-page .information-tabs md-tab-item:first-child {
+  border-color:transparent !important;
+  border-right-color:transparent !important;
+}
+.nearby .roominfo .distrat .location-cuddles,
+.nearby .roominfo .distrat .distance { align-self:flex-start !important; }
+.nearby .roominfo .distrat .distance a > .material-icons {
+  margin-top:9px !important;
+  margin-left:14px !important;
+}
+.nearby .roominfo .distrat { gap:54px !important; }
+.nearby .roominfo .distrat .distance { transform:translateY(45px) !important; }
+
+/* A 600×900 preview is still a phone/tablet portrait layout.  Keep its card
+   geometry identical to the compact view instead of switching abruptly into
+   the wide desktop measurements at 601px. */
+@media (min-width:601px) and (max-width:900px) {
+  .nearby .roominfo { min-height:432px !important; margin-top:-8px; }
+  .nearby .room-category-hero {
+    height:136px;
+    margin-top:4px;
+    padding:17px 18px;
+    grid-template-columns:76px minmax(0,1fr);
+  }
+  .nearby .room-category-hero .room-category-orbit { width:56px; height:56px; }
+  .nearby .room-category-hero .room-category-orbit .material-icons { font-size:30px; }
+  .nearby .room-user-preview { top:28px; margin-top:5px; margin-right:8px; margin-left:27px; }
+  .nearby .roominfo .distrat { bottom:24px !important; }
+}
+.nearby .roominfo .distrat .location-cuddles:hover { transform:none !important; }
 
 /* A Cuddle is a real-world check-in, not an action that silently joins a chatroom. */
 .lup-location-cuddle-dialog { width:min(90vw,360px); overflow:hidden; border:1px solid rgba(215,201,255,.19); border-radius:25px !important; background:radial-gradient(circle at 50% -8%,rgba(155,124,255,.34),transparent 43%),linear-gradient(150deg,#302b4c,#171923) !important; }
@@ -887,7 +953,9 @@ md-list .md-list-item-text .username,
   background: transparent !important;
   border-bottom: 0 !important;
 }
-.profile-page .information-tabs md-tabs md-ink-bar { display: none; }
+/* Gallery/About stay as clean text tabs; no coloured runner between them. */
+.profile-page .information-tabs md-tabs md-ink-bar,
+.profile-page .information-tabs .md-ink-bar { display: none !important; }
 .profile-page .information-tabs md-tab-item:first-child { border-right: 0; }
 
 .location-chat-surface {
@@ -2652,6 +2720,9 @@ md-list.usernavigation .presence-actions .usericon {
   pointer-events:none;
 }
 .nearby .slickit { position:relative; isolation:isolate; }
+.nearby md-content.greybg,
+.nearby .slickit,
+.nearby .slickit .slick-list { min-width:0; max-width:100%; }
 .nearby .slickit::before {
   content:'';
   position:absolute;
@@ -2683,6 +2754,25 @@ md-list.usernavigation .presence-actions .usericon {
 }
 .nearby .slickit .slick-list,
 .nearby .slickit .slick-track { position:relative; z-index:1; }
+
+/* The discovery rail is horizontal.  It owns gestures while a finger is on a
+   location card: vertical feed-scrolling must never replace a place swipe. */
+.nearby .slickit .slick-list {
+  touch-action:none;
+  overscroll-behavior:contain;
+  cursor:grab;
+}
+.nearby .slickit .slick-list:active { cursor:grabbing; }
+
+/* A brief Angular/Slick re-render must not expose all cards as a vertical
+   fallback list. The controller restores Slick immediately after a resize. */
+.nearby .slickit:not(.slick-initialized) {
+  overflow:hidden;
+  touch-action:none;
+}
+.nearby .slickit:not(.slick-initialized) > .lup-room-slide-outer:not(:first-child) {
+  display:none;
+}
 
 /* Keep the category response, remove the visible circuit. The discovery strip
    stays calm while the matching seal still gives the user orientation. */
@@ -3187,9 +3277,162 @@ md-list.usernavigation .presence-actions .usericon {
   .location-page md-list.usernavigation .presence-actions .presence-action .material-icons { font-size:16px; }
 }
 
+/* Settings, account and profile administration share the same calm, tactile
+   system as the public LinkUUp surfaces.  These selectors intentionally sit
+   last, so dynamically rendered setting controls receive one stable look. */
+.settings-page > md-content,
+.account-page > md-content,
+.profile-settings-page > md-content {
+  background:
+    radial-gradient(circle at 92% 0,rgba(115,91,232,.17),transparent 30%),
+    radial-gradient(circle at 5% 22%,rgba(63,170,236,.10),transparent 26%),
+    linear-gradient(155deg,#171a29,#10121c 82%) !important;
+}
+.settings-page .lup-settings-list,
+.profile-settings-page md-list {
+  position:relative;
+  max-width:760px;
+  padding:16px 13px 32px;
+}
+.settings-page .lup-settings-list::before,
+.profile-settings-page md-list::before {
+  content:'';
+  display:block;
+  height:3px;
+  margin:0 5px 16px;
+  border-radius:99px;
+  background:linear-gradient(90deg,#76bfff,rgba(173,128,255,.8),rgba(126,221,185,.72));
+  box-shadow:0 0 16px rgba(132,132,255,.35);
+}
+.settings-page .lup-settings-list .md-subheader,
+.profile-settings-page .md-subheader {
+  display:flex;
+  align-items:center;
+  min-height:30px;
+  margin:18px 5px 8px;
+  padding:0 2px;
+  color:#c7c1e2 !important;
+  font-size:10px;
+  letter-spacing:.13em;
+}
+.settings-page .lup-settings-list md-list-item.md-2-line,
+.profile-settings-page md-list-item {
+  position:relative;
+  overflow:hidden;
+  min-height:73px;
+  margin:8px 0;
+  padding:8px 13px;
+  border:1px solid rgba(213,221,255,.105) !important;
+  border-radius:17px;
+  background:linear-gradient(128deg,rgba(255,255,255,.075),rgba(255,255,255,.028)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 20px rgba(0,0,0,.12);
+}
+.settings-page .lup-settings-list md-list-item.md-2-line::before,
+.profile-settings-page md-list-item::before {
+  content:'';
+  position:absolute;
+  top:13px;
+  bottom:13px;
+  left:0;
+  width:2px;
+  border-radius:0 4px 4px 0;
+  background:linear-gradient(#9f89ff,#6ac6ef);
+  opacity:.75;
+}
+.settings-page .lup-settings-list md-list-item.md-2-line:hover,
+.profile-settings-page md-list-item:hover {
+  transform:translateY(-1px);
+  border-color:rgba(166,179,255,.34) !important;
+  background:linear-gradient(128deg,rgba(127,111,221,.20),rgba(67,162,213,.09)) !important;
+}
+.settings-page .lup-settings-list .md-list-item-text h3,
+.profile-settings-page h5 { margin:0; color:#faf9ff !important; font-size:14px; font-weight:760; letter-spacing:.01em; }
+.settings-page .lup-settings-list md-select,
+.profile-settings-page md-select {
+  min-width:126px;
+  padding:7px 10px 4px;
+  border:1px solid rgba(190,202,255,.21);
+  border-radius:11px;
+  background:rgba(18,21,33,.64);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.settings-page .lup-settings-list .lup-setting-input input,
+.settings-page .lup-settings-list .lup-setting-input textarea,
+.profile-settings-page md-input-container input,
+.profile-settings-page md-input-container textarea {
+  border:1px solid rgba(190,202,255,.18) !important;
+  border-radius:11px;
+  background:rgba(15,18,29,.58) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.settings-page .lup-settings-list .lup-setting-input input { height:39px; padding:0 10px; }
+.settings-page .lup-settings-list .lup-setting-input textarea { padding:10px; }
+.settings-page .lup-settings-list .md-switch-thumb { background:#f5f3ff; }
+.settings-page .lup-settings-list .md-switch.md-checked .md-bar { background:rgba(125,103,237,.52); }
+.settings-page .lup-settings-list .md-switch.md-checked .md-thumb { background:#a995ff; box-shadow:0 0 12px rgba(170,147,255,.56); }
+
+.account-page section[layout-padding] { width:min(100%,760px); margin:0 auto; padding:22px 17px 34px !important; color:#e8e6f2; }
+.account-page section[layout-padding] > h4 { display:flex; align-items:center; gap:9px; margin:0; color:#f9f8ff; font-size:22px; }.account-page section[layout-padding] > h4::before { content:'manage_accounts'; font-family:'Material Icons'; display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(170,191,255,.32); border-radius:11px; background:linear-gradient(145deg,rgba(108,145,236,.44),rgba(112,83,180,.30)); color:#eaf2ff; font-size:20px; }.account-page section[layout-padding] > p:first-of-type { margin:9px 0 17px; color:#bdb8ce; font-size:12px; line-height:1.45; }
+.account-page .lup-account-overview { overflow:hidden; margin:0 0 16px; border:1px solid rgba(218,224,255,.12); border-radius:17px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 22px rgba(0,0,0,.14); }.account-page .lup-account-overview > div { position:relative; display:grid; gap:5px; padding:14px 16px 14px 20px; }.account-page .lup-account-overview > div + div { border-top:1px solid rgba(255,255,255,.08); }.account-page .lup-account-overview > div::before { content:''; position:absolute; top:15px; bottom:15px; left:0; width:2px; background:linear-gradient(#84c8ff,#9d8dff); }.account-page .lup-account-overview strong { color:#aaa8be; font-size:9px; font-weight:850; letter-spacing:.12em; text-transform:uppercase; }.account-page .lup-account-overview span { overflow:hidden; color:#faf9ff; font-size:15px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }.account-page .lup-account-backend-hint { margin:16px 3px 10px !important; color:#b8b2c9 !important; font-size:11px !important; }.account-page .md-raised.md-primary { min-height:42px; margin:0; border:1px solid rgba(169,156,255,.42); border-radius:13px; background:linear-gradient(135deg,#7862d2,#4f83c5) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 8px 18px rgba(73,92,179,.25); color:#fff; font-weight:800; letter-spacing:.02em; }
+
+@media (max-width:420px) { .settings-page .lup-settings-list md-list-item.md-2-line,.profile-settings-page md-list-item { padding-right:10px; padding-left:11px; }.settings-page .lup-settings-list md-select,.profile-settings-page md-select { min-width:104px; max-width:46vw; }.account-page section[layout-padding] { padding-right:12px !important; padding-left:12px !important; } }
+
 /* Visit chronicle: measured, calm and useful rather than a gamified list. */
 .course-page { width:min(100%,760px); margin:0 auto; padding:15px 14px 34px; color:var(--lup-text); background:radial-gradient(circle at 90% 0,rgba(101,137,235,.14),transparent 28%),transparent; }
 .course-hero { display:flex; align-items:center; gap:13px; padding:13px 3px 16px; }.course-hero-mark { display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; border:1px solid rgba(163,193,255,.30); border-radius:14px 14px 14px 6px; background:linear-gradient(145deg,rgba(103,148,235,.42),rgba(92,80,174,.28)); box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 17px rgba(0,0,0,.18); color:#ebf2ff; }.course-hero-mark .material-icons { font-size:24px; }.course-hero small,.course-stop-main small { color:#aeb8d6; font-size:8px; font-weight:850; letter-spacing:.12em; }.course-hero h2 { margin:3px 0; color:#f6f5fc; font-size:20px; line-height:1.05; }.course-hero p { margin:0; color:var(--lup-muted); font-size:11px; }
 .course-overview { display:grid; grid-template-columns:1fr 1fr 1.4fr; gap:1px; overflow:hidden; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.08); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }.course-overview > div { display:flex; flex-direction:column; justify-content:center; min-height:67px; padding:9px 11px; background:rgba(31,34,50,.84); }.course-overview strong { color:#f7f5ff; font-size:21px; line-height:1; }.course-overview span { margin-top:5px; color:#aaa6bd; font-size:9px; font-weight:700; }.course-overview .course-goal { flex-direction:row; align-items:center; gap:8px; background:linear-gradient(135deg,rgba(105,140,220,.20),rgba(88,78,155,.14)); }.course-goal .material-icons { color:#a9c8ff; font-size:21px; }.course-goal span { margin:0; color:#dfeaff; font-size:10px; line-height:1.25; }
 .course-timeline { position:relative; margin-top:18px; }.course-timeline::before { content:''; position:absolute; top:13px; bottom:13px; left:18px; width:1px; background:linear-gradient(rgba(145,180,255,.55),rgba(145,180,255,.08)); }.course-stop { position:relative; display:grid; grid-template-columns:38px 51px minmax(0,1fr) auto; align-items:center; gap:10px; min-height:88px; margin:9px 0; padding:10px 11px 10px 0; border:1px solid rgba(255,255,255,.09); border-radius:17px; background:linear-gradient(110deg,rgba(89,112,177,.14),rgba(255,255,255,.035)); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); cursor:pointer; transition:transform .18s ease,border-color .18s ease,background .18s ease; }.course-stop:hover { transform:translateY(-2px); border-color:rgba(165,191,255,.38); background:linear-gradient(110deg,rgba(103,136,220,.23),rgba(255,255,255,.055)); }.course-stop-pin { z-index:1; display:grid; place-items:center; width:38px; height:38px; border:1px solid rgba(173,201,255,.38); border-radius:50%; background:#282d43; color:#a9c9ff; }.course-stop-pin .material-icons { font-size:19px; }.course-stop-icon { display:grid; place-items:center; width:51px; height:51px; border:1px solid rgba(255,255,255,.16); border-radius:13px 13px 13px 6px; background:linear-gradient(145deg,#3c4360,#252a3d); box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 6px 14px rgba(0,0,0,.18); }.course-stop-icon .material-icons { color:#e8efff; font-size:26px; }.course-icon-city { background:linear-gradient(145deg,#386c9c,#33446b); }.course-icon-bar { background:linear-gradient(145deg,#a95b57,#563a59); }.course-icon-cafe { background:linear-gradient(145deg,#a67754,#60483f); }.course-icon-club { background:linear-gradient(145deg,#a25cae,#49305d); }.course-icon-culture { background:linear-gradient(145deg,#477eb5,#314d74); }.course-icon-sport,.course-icon-outdoors { background:linear-gradient(145deg,#4b9a79,#315a59); }.course-icon-food { background:linear-gradient(145deg,#bd724c,#72433d); }.course-icon-education { background:linear-gradient(145deg,#4f9aab,#344f71); }.course-icon-health { background:linear-gradient(145deg,#bd6682,#693a59); }.course-stop-main { min-width:0; }.course-stop-main h3 { display:-webkit-box; overflow:hidden; margin:3px 0 4px; color:#f3f1fa; font-size:14px; line-height:1.15; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.course-stop-main p { display:flex; align-items:center; gap:3px; overflow:hidden; margin:0; color:#b9b5ca; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }.course-stop-main p .material-icons { color:#98baf0; font-size:13px; }.course-stop-main p span { color:#8e8aa1; }.course-stop-count { display:grid; justify-items:center; min-width:43px; padding-left:6px; border-left:1px solid rgba(255,255,255,.09); }.course-stop-count strong { color:#e7efff; font-size:18px; line-height:1; }.course-stop-count span { margin-top:3px; color:#9ba7c5; font-size:7px; font-weight:850; letter-spacing:.06em; text-transform:uppercase; }.course-empty { display:grid; justify-items:center; gap:7px; margin-top:18px; padding:31px 22px; border:1px dashed rgba(171,185,231,.24); border-radius:18px; background:rgba(255,255,255,.025); color:#d9d6e6; text-align:center; }.course-empty .material-icons { color:#9fbef2; font-size:31px; }.course-empty span { color:#a8a3b8; font-size:11px; line-height:1.45; }
 @media (max-width:420px) { .course-page { padding-right:10px; padding-left:10px; }.course-overview { grid-template-columns:1fr 1fr; }.course-overview .course-goal { grid-column:1 / -1; min-height:43px; }.course-stop { grid-template-columns:32px 45px minmax(0,1fr) 42px; gap:7px; }.course-stop-pin { width:32px; height:32px; }.course-stop > img { width:45px; height:45px; }.course-stop-main h3 { font-size:12px; }.course-stop-main p span { display:none; } }
+
+/* Final responsive anchor: no later theme rule may move the two location
+   actions when device emulation changes the available height. */
+.nearby .roominfo .distrat {
+  position:absolute !important;
+  top:auto !important;
+  right:auto !important;
+  bottom:24px !important;
+  left:50% !important;
+  margin:0 !important;
+  transform:translateX(-50%) !important;
+}
+.nearby .roominfo .distrat .location-cuddles,
+.nearby .roominfo .distrat .distance {
+  top:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  transform:none !important;
+}
+
+/* Profile section navigation: a quiet background rail with a moving active
+   light. This uses Angular Material's own marker, so it follows the selected
+   section without changing tab behaviour or content layout. */
+.profile-page .information-tabs md-pagination-wrapper {
+  position:relative;
+  overflow:visible !important;
+}
+.profile-page .information-tabs md-pagination-wrapper::after {
+  content:'';
+  position:absolute;
+  z-index:0;
+  right:13%;
+  bottom:9px;
+  left:13%;
+  height:1px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(149,163,226,.18) 16%,rgba(149,163,226,.34) 50%,rgba(149,163,226,.18) 84%,transparent);
+  pointer-events:none;
+}
+.profile-page .information-tabs .md-ink-bar,
+.profile-page .information-tabs [class*="ink-bar"] {
+  display:block !important;
+  visibility:visible !important;
+  z-index:1;
+  height:3px !important;
+  margin-bottom:7px;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,#71b8ee,#9a7ff0 48%,#d0a7fa) !important;
+  box-shadow:0 0 7px rgba(127,155,244,.46),0 0 17px rgba(122,92,255,.18) !important;
+  opacity:.9;
+  transition:transform .28s cubic-bezier(.22,.78,.24,1),width .28s ease !important;
+}

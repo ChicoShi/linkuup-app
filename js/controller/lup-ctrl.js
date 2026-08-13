@@ -422,6 +422,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	});
 	$scope.$on('$locationChangeSuccess', function(event, url) {
 		$scope.data.navstack.push(url);
+		PositionSrvc.refresh();
 //		console.log('LUPCtrl.$on-$$locationChangeSuccess()', $scope.data.navstack);
 	});
 
@@ -429,6 +430,15 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	$scope.$on('$viewContentLoaded', function(event) {
 		console.log('LUPCtrl.$on-$viewContentLoaded()', event);
 //		$scope.doAuthCheck();
+	});
+	// Keep distance labels current while the user moves through the app. The
+	// service throttles this, so fast taps or a swipe never start GPS spam.
+	var refreshPositionAfterInteraction = function() {
+		PositionSrvc.refresh();
+	};
+	angular.element(document).on('pointerup.lupPosition touchend.lupPosition focus.lupPosition', refreshPositionAfterInteraction);
+	$scope.$on('$destroy', function() {
+		angular.element(document).off('.lupPosition');
 	});
 
 	var roomRefreshTimer = null;

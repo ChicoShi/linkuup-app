@@ -17,8 +17,10 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 
 	PositionSrvc.OPTIONS = {
 			enableHighAccuracy: PositionSrvc.HIGH_PRECISION,
-			maximumAge: 60000,
-			timeout: 57000
+			// A recent position gives the discovery rail an immediate distance after
+			// refresh. The watch below still replaces it with a fresh GPS fix.
+			maximumAge: 300000,
+			timeout: 12000
 	};
 
 	PositionSrvc.UNKNOWN = 1;
@@ -27,6 +29,9 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	
 	PositionSrvc.WATCH = null;
 	PositionSrvc.INTERVAL = null;
+	PositionSrvc.REFRESHING = false;
+	PositionSrvc.LAST_REFRESH = 0;
+	PositionSrvc.REFRESH_INTERVAL = 5000;
 	
 	window.GWF_POSITION = PositionSrvc.CURRENT = {
 			latlng: null,   // google maps
@@ -84,6 +89,33 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		}
 		return defer.promise;
 	};
+
+	// Refresh after navigation or interaction without another permission prompt.
+	// It is throttled so quick taps and swipes cannot queue GPS requests.
+	PositionSrvc.refresh = function(force) {
+		if (!navigator.geolocation || !PositionSrvc.PROBED || PositionSrvc.PROBING) {
+			return PositionSrvc.probe();
+		}
+		var now = Date.now();
+		if (PositionSrvc.REFRESHING || (!force && now - PositionSrvc.LAST_REFRESH < PositionSrvc.REFRESH_INTERVAL)) {
+			return;
+		}
+		PositionSrvc.REFRESHING = true;
+		PositionSrvc.LAST_REFRESH = now;
+		navigator.geolocation.getCurrentPosition(function(position) {
+			PositionSrvc.REFRESHING = false;
+			$rootScope.$evalAsync(function() {
+				PositionSrvc.setReal(position.coords.latitude, position.coords.longitude);
+			});
+		}, function(error) {
+			PositionSrvc.REFRESHING = false;
+			console.debug('LinkUUp: silent GPS refresh unavailable.', error);
+		}, {
+			enableHighAccuracy: true,
+			maximumAge: 0,
+			timeout: 6000
+		});
+	};
 	
 	PositionSrvc.sendProbe = function(defer) {
 		console.log('PositionSrvc.sendProbe()');
@@ -116,7 +148,11 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		}
 		else {
 			PositionSrvc.togglePrecision();
-			setTimeout(PositionSrvc.sendProbe.bind(this, defer), PositionSrvc.MAX_TRY_TIMEOUT);
+			// On desktop and on phones waking from standby, high precision can time
+			// out despite a usable network position being available. Try that normal
+			// fallback immediately once instead of leaving distances blank for 15s.
+			var retryDelay = PositionSrvc.MAX_TRY === 1 ? 0 : PositionSrvc.MAX_TRY_TIMEOUT;
+			setTimeout(PositionSrvc.sendProbe.bind(this, defer), retryDelay);
 		}
 	};
 	
