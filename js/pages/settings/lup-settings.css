@@ -63,6 +63,7 @@
 .lup-settings-list .lup-setting-input input,
 .lup-settings-list .lup-setting-input textarea {
 	color: #f5f6ff;
+	background: red;
 }
 
 .lup-settings-list .lup-setting-input input[type="color"] {

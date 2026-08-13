@@ -22,10 +22,59 @@ service('GDTRendererSrvc', function() {
 		if (/GDT_(Int|UInt|Float|Decimal)$/.test(type)) {
 			return {control: 'input', input_type: 'number'};
 		}
-		if (/GDT_(Date|DateTime|Birthdate)$/.test(type)) {
-			return {control: 'input', input_type: 'date'};
+		if (/GDT_Time$/.test(type)) {
+			return this.dateRenderer(setting, 'time');
+		}
+		if (/GDT_DateTime$/.test(type)) {
+			return this.dateRenderer(setting, 'datetime-local');
+		}
+		if (/GDT_(Date|Birthdate)$/.test(type)) {
+			return this.dateRenderer(setting, 'date');
+		}
+		if (/GDT_Timestamp$/.test(type)) {
+			var options = setting.options || {};
+			return this.dateRenderer(setting,
+				options.withDate && options.withTime ? 'datetime-local' :
+				options.withDate ? 'date' : 'time');
 		}
 		return {control: 'input', input_type: 'text'};
+	};
+
+	this.dateRenderer = function(setting, inputType) {
+		var options = setting.options || {};
+		return {
+			control: 'input',
+			input_type: inputType,
+			min: this.dateValue(options.minDate, inputType),
+			max: this.dateValue(options.maxDate, inputType),
+		};
+	};
+
+	this.valueForSetting = function(setting, value) {
+		if (!setting.renderer || setting.renderer.input_type === undefined) {
+			return value;
+		}
+		return this.dateValue(value, setting.renderer.input_type);
+	};
+
+	this.dateValue = function(value, inputType) {
+		if (value === null || value === undefined || value === '') {
+			return value;
+		}
+		var date = String(value).replace('T', ' ');
+		if (!/^\d{4}-\d{2}-\d{2}/.test(date)) {
+			return value;
+		}
+		if (inputType === 'date') {
+			return date.slice(0, 10);
+		}
+		if (inputType === 'time') {
+			return date.length >= 16 ? date.slice(11, 16) : date;
+		}
+		if (inputType === 'datetime-local') {
+			return date.slice(0, 16).replace(' ', 'T');
+		}
+		return value;
 	};
 
 	return this;

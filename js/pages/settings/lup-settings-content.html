@@ -18,6 +18,7 @@
 
        <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)"></md-switch>
        <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+         <md-option ng-if="!setting.options.notNull" value="0">{{'PLEASE_SELECT'|translate}}</md-option>
          <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
        </md-select>
        <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
@@ -27,7 +28,7 @@
          </md-option>
        </md-select>
        <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input">
-         <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" ng-model="setting.value" ng-blur="changeSetting(setting)">
+         <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-blur="changeSetting(setting)">
          <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
        </md-input-container>
 

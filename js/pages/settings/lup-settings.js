@@ -13,6 +13,9 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.title = 'TITLE_SETTINGS';
 	$scope.data.groups = [];
 	const ACLS = ['acl_all', 'acl_guests', 'acl_members', 'acl_friend_friends', 'acl_friends', 'acl_noone'];
+	const HIDDEN_SETTINGS = {
+		Friends: {friends_level: true},
+	};
 
 	$scope.moduleLabel = function(module) {
 		return 'module_' + (module === 'User' ? 'user' : module);
@@ -63,13 +66,17 @@ angular.module('LUP').config(function($routeProvider) {
 					if (module === 'user') { continue; }
 					for (var key in cache[module]) {
 						var setting = cache[module][key];
-						if (!setting.writeable) { continue; }
+						if (!setting.writeable || (HIDDEN_SETTINGS[module] && HIDDEN_SETTINGS[module][key])) { continue; }
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;
 						setting.options = setting.options || {};
 						setting.renderer = GDTRendererSrvc.forSetting(setting);
 						var selected = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
 						setting.value = selected && typeof selected === 'object' && selected.id !== undefined ? selected.id : selected;
+						setting.value = GDTRendererSrvc.valueForSetting(setting, setting.value);
+						if (setting.renderer.source === 'enum' && !setting.options.notNull && (setting.value === null || setting.value === '')) {
+							setting.value = '0';
+						}
 						setting.initialValue = setting.value;
 						setting.initialACL = setting.acl;
 						groups[module] = groups[module] || {

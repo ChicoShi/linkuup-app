@@ -13,7 +13,10 @@ service('CountrySrvc', function($q, RequestSrvc) {
 		}
 		return RequestSrvc.sendGWF('Country', 'AjaxList').then(function(response){
 			console.log('CountrySrvc.withCountries() response', response);
-			CountrySrvc.CACHE = response.data.data;
+			var countries = response.data.data || {};
+			CountrySrvc.CACHE = Array.isArray(countries) ? countries : Object.keys(countries).map(function(id) {
+				return countries[id];
+			});
 			CountrySrvc.CACHE.sort(function(a,b) {
 				return a.text.localeCompare(b.text);
 			});
