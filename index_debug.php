@@ -86,6 +86,7 @@ $min = LUPConfig::$MIN;
 
   <script src="js/util/gwf-debug.js<?=$v?>"></script>
   <script src="js/util/gwf-string-util.js<?=$v?>"></script>
+	<script src="js/util/lup-viewport.js<?=$v?>"></script>
 
   <script src="js/model/gdo-profile.js<?=$v?>"></script>
   <script src="js/model/lup-comment.js<?=$v?>"></script>
