@@ -167,7 +167,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
 .category-culture { background: linear-gradient(135deg, #17355b, #398cc6); }
 .category-sport { background: linear-gradient(135deg, #14634a, #52ac67); }
 .category-food { background: linear-gradient(135deg, #ac3b2f, #eb932c); }
-.category-outdoors { background: linear-gradient(135deg, #1d6b56, #8fcf6a); }
+.category-outdoors, .category-relaxation { background: linear-gradient(135deg, #1d6b56, #8fcf6a); }
 .category-community { background: linear-gradient(135deg, #31578e, #789ed2); }
 .category-business, .category-shop, .category-salon, .category-town, .category-hotel { background: linear-gradient(135deg, #35415f, #7887aa); }
 .category-religion { background: linear-gradient(135deg, #785d2d, #c9aa67); }

@@ -321,6 +321,7 @@ angular.module('LUP').config(function($routeProvider) {
 			'17': {icon: 'account_balance', class: 'category-university'},
 			'18': {icon: 'local_hospital', class: 'category-health'},
 			'19': {icon: 'hotel', class: 'category-hotel'},
+			'20': {icon: 'self_improvement', class: 'category-relaxation'},
 		};
 		return visuals[String(room.category())] || {icon: 'place', class: 'category-default'};
 	};
