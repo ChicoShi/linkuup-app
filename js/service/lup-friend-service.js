@@ -15,10 +15,24 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	
 	FriendSrvc.sentRequest = function(user) {
 		console.log('FriendSrvc.sentRequest()', user);
+		user.JSON.relation_pending = 1;
 		UserSrvc.withUser(user.id(), true);
 		ErrorSrvc.showMessage(
 				window.t('MSGP_SENT_FRIEND_REQUEST'),
 				window.t('MSGT_SENT_FRIEND_REQUEST'));
+	};
+
+	// A request belongs to its sender. While it is still unanswered, the
+	// location presence card lets that sender revoke it without treating it
+	// like an existing friendship.
+	FriendSrvc.cancelFriendRequest = function(user) {
+		console.log('FriendSrvc.cancelFriendRequest()', user);
+		var gwsMessage = new GWS_Message().cmd(0x1136).sync().write32(user.id());
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			user.JSON.relation_pending = 0;
+			UserSrvc.withUser(user.id(), true);
+			return response;
+		}, ErrorSrvc.websocketJSONError);
 	};
 	
 	FriendSrvc.cannnotAddFriend = function(response) {
@@ -56,6 +70,7 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	FriendSrvc.removedFriend = function(friend, defer, gwsMessage) {
 		console.log('FriendSrvc.removedFriend()', friend, gwsMessage);
 		friend.JSON.relationship = null; // unfriended
+		friend.JSON.relation_pending = 0;
 		return defer.resolve(gwsMessage);
 	};
 	

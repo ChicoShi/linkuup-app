@@ -3147,6 +3147,46 @@ md-list.usernavigation .presence-actions .usericon {
 .location-page md-list.usernavigation .presence-actions .usericon { border:1px solid rgba(255,255,255,.09); border-radius:10px; background-color:rgba(255,255,255,.055); }
 .location-page md-list.usernavigation .presence-actions .sendmessage { border-color:rgba(166,150,255,.28); background-color:rgba(132,107,234,.22); }
 
+/* Three clear, equally weighted actions for a person currently at the venue. */
+.location-page md-list.usernavigation .presence-actions {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-left:8px;
+}
+.location-page md-list.usernavigation .presence-actions .presence-action {
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  padding:0;
+  border:1px solid rgba(210,220,255,.16);
+  border-radius:11px;
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 6px 13px rgba(0,0,0,.16);
+  color:#e8edff;
+  cursor:pointer;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.location-page md-list.usernavigation .presence-actions .presence-action:hover,
+.location-page md-list.usernavigation .presence-actions .presence-action:focus {
+  transform:translateY(-2px);
+  outline:0;
+}
+.location-page md-list.usernavigation .presence-actions .presence-action:active { transform:translateY(0) scale(.94); }
+.location-page md-list.usernavigation .presence-actions .presence-action .material-icons { font-size:18px; }
+.location-page md-list.usernavigation .presence-actions .presence-message { border-color:rgba(164,147,255,.40); background:linear-gradient(145deg,rgba(144,111,234,.43),rgba(91,103,207,.25)); box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 15px rgba(119,103,232,.20); }
+.location-page md-list.usernavigation .presence-actions .presence-friend { border-color:rgba(119,220,188,.36); background:linear-gradient(145deg,rgba(69,181,146,.34),rgba(74,121,170,.22)); }
+.location-page md-list.usernavigation .presence-actions .presence-pending { border-color:rgba(244,192,112,.42); background:linear-gradient(145deg,rgba(209,147,72,.40),rgba(142,102,73,.24)); color:#fff0d3; }
+.location-page md-list.usernavigation .presence-actions .presence-connected { border-color:rgba(239,144,164,.36); background:linear-gradient(145deg,rgba(190,77,109,.35),rgba(117,72,105,.23)); color:#ffe4e9; }
+.location-page md-list.usernavigation .presence-actions .presence-up { border-color:rgba(255,209,115,.42); background:linear-gradient(145deg,rgba(220,165,61,.42),rgba(180,98,84,.22)); color:#fff5d4; }
+@media (max-width:390px) {
+  .location-page md-list.usernavigation .presence-actions { gap:4px; margin-left:4px; }
+  .location-page md-list.usernavigation .presence-actions .presence-action { width:30px; height:30px; min-width:30px; border-radius:10px; }
+  .location-page md-list.usernavigation .presence-actions .presence-action .material-icons { font-size:16px; }
+}
+
 /* Visit chronicle: measured, calm and useful rather than a gamified list. */
 .course-page { width:min(100%,760px); margin:0 auto; padding:15px 14px 34px; color:var(--lup-text); background:radial-gradient(circle at 90% 0,rgba(101,137,235,.14),transparent 28%),transparent; }
 .course-hero { display:flex; align-items:center; gap:13px; padding:13px 3px 16px; }.course-hero-mark { display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; border:1px solid rgba(163,193,255,.30); border-radius:14px 14px 14px 6px; background:linear-gradient(145deg,rgba(103,148,235,.42),rgba(92,80,174,.28)); box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 17px rgba(0,0,0,.18); color:#ebf2ff; }.course-hero-mark .material-icons { font-size:24px; }.course-hero small,.course-stop-main small { color:#aeb8d6; font-size:8px; font-weight:850; letter-spacing:.12em; }.course-hero h2 { margin:3px 0; color:#f6f5fc; font-size:20px; line-height:1.05; }.course-hero p { margin:0; color:var(--lup-muted); font-size:11px; }
