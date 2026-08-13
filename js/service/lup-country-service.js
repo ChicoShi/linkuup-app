@@ -36,7 +36,7 @@ service('CountrySrvc', function($q, RequestSrvc) {
 		var x = code.charCodeAt(0) - 65;
 		var y = code.charCodeAt(1) - 65;
 		return {
-			'background-image': 'url(images/country-sprite.png?v=' + window.LUP_BUILD + ')',
+			'background-image': 'url(' + window.LUP_CONFIG.server + 'GDO/Country/img/country-sprite.png?v=' + window.LUP_BUILD + ')',
 			'background-position': (-x * 32) + 'px ' + (-y * 24) + 'px',
 		};
 	};

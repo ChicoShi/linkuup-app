@@ -66,10 +66,13 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.init = function() {
-		if ($scope.data.authenticated && !$scope.data.settingsLoaded) {
+		// This controller is recreated on every route visit.  Keep its loaded
+		// state local: the shared data object survives a visit to the legacy
+		// profile-settings route, while this view still needs to rebuild itself.
+		if ($scope.data.authenticated && !$scope.settingsInitialized) {
 			console.log('SettingsCtrl.init()');
 			$scope.data.user = window.GWF_USER;
-			$scope.data.settingsLoaded = true;
+			$scope.settingsInitialized = true;
 			SettingsSrvc.withConfig().then(function(cache) {
 				var groups = {};
 				$scope.data.profileVisibility = cache.User && cache.User.profile_visibility;
@@ -122,7 +125,7 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.countries = results[0];
 				$scope.data.timezones = TimezoneSrvc.options();
 			})['catch'](function(error) {
-				$scope.data.settingsLoaded = false;
+				$scope.settingsInitialized = false;
 				ErrorSrvc.showError(error, 'Settings');
 			});
 		}

@@ -135,6 +135,7 @@
 
 "TITLE_ACCOUNT": "Ihr Konto",
 "INFO_ACCOUNT": "Zugangsdaten",
+"INFO_ACCOUNT_BACKEND": "Weitere Kontoeinstellungen und Hilfe bei Problemen findest Du im LinkUUp-Backend.",
 "MSGT_ACCOUNT": "Konto",
 "REALNAME": "Ihr echter Name",
 "EMAIL_FMT": "E-Mail Format",

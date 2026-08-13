@@ -25,6 +25,10 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	
 	SettingsSrvc.setting = function(setting) {
 		var cache = SettingsSrvc.CACHE;
+		if (!cache) {
+			console.warn("SettingsSrvc.setting() before settings were loaded", setting);
+			return null;
+		}
 		for (var module in cache) {
 			var settings = cache[module];
 			if (settings[setting]) {
