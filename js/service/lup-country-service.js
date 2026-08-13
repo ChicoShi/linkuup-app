@@ -27,6 +27,26 @@ service('CountrySrvc', function($q, RequestSrvc) {
 	CountrySrvc.countryURL = function(id) {
 		return window.LUP_CONFIG.server + "GDO/Country/img/" + id.toUpperCase() + ".png";
 	};
+
+	CountrySrvc.flagStyle = function(id) {
+		var code = String(id || '').toUpperCase();
+		if (!/^[A-Z]{2}$/.test(code)) {
+			return {};
+		}
+		var x = code.charCodeAt(0) - 65;
+		var y = code.charCodeAt(1) - 65;
+		return {
+			'background-image': 'url(images/country-sprite.png?v=' + window.LUP_BUILD + ')',
+			'background-position': (-x * 32) + 'px ' + (-y * 24) + 'px',
+		};
+	};
+
+	CountrySrvc.flagStyleAttribute = function(id) {
+		var style = CountrySrvc.flagStyle(id);
+		return Object.keys(style).map(function(key) {
+			return key + ':' + style[key];
+		}).join(';');
+	};
 	
 	return CountrySrvc;
 });

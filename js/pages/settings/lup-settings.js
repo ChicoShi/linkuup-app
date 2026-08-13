@@ -49,8 +49,8 @@ angular.module('LUP').config(function($routeProvider) {
 		return setting.renderer && setting.renderer.input_type || 'text';
 	};
 
-	$scope.countryURL = function(country) {
-		return CountrySrvc.countryURL(country.id);
+	$scope.countryStyle = function(country) {
+		return CountrySrvc.flagStyle(country.id);
 	};
 
 	$scope.aclChoices = function(setting) {

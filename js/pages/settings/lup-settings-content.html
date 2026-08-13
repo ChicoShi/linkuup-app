@@ -35,7 +35,7 @@
        <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
          <md-option value="0">{{'not_specified'|translate}}</md-option>
          <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}">
-           <img ng-src="{{countryURL(country)}}" alt=""> {{country.text}}
+           <span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span> {{country.text}}
          </md-option>
        </md-select>
        <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">

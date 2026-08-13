@@ -233,7 +233,9 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		}
 	};
 	
-	PositionSrvc.LAST = { lat: 0.0, lng: 0.0 };
+	// No coordinate has been sent yet. The first valid position must always
+	// refresh rooms, including an explicitly configured debug patch.
+	PositionSrvc.LAST = null;
 	PositionSrvc.EVENT_TOLERANCE_KM = 0.025;
 	PositionSrvc.setCoordinates = function(lat, lng) {
 		console.log('PositionSrvc.setCoordinates()', lat, lng);
@@ -249,15 +251,16 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 
 	PositionSrvc.hasPositionChangedSignificantly = function(current) {
 		
-		// On a patched debug position we randomly send an event
-		if (PositionSrvc.patching()) {
-			var result = Math.floor(Math.random() * 100) > 80;
-			console.log('PositionSrvc.hasPositionChangedSignificantly() PATCHED=', result);
-			return result;
-		}
-		
-		// Only notify the server after moving at least 25 metres.
+		// Always announce the first valid coordinate. Further updates need an
+		// actual 25 metre movement, whether they originate from GPS or a patch.
 		var last = PositionSrvc.LAST;
+		if (last === null) {
+			PositionSrvc.LAST = { lat: current.lat, lng: current.lng };
+			console.log('PositionSrvc.hasPositionChangedSignificantly() FIRST');
+			return true;
+		}
+
+		// Only notify the server after moving at least 25 metres.
 		var distance = PositionSrvc.distanceBetween(current.lat, current.lng, last.lat, last.lng);
 		if (distance >= PositionSrvc.EVENT_TOLERANCE_KM) {
 			console.log('PositionSrvc.hasPositionChangedSignificantly()', distance);

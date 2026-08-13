@@ -86,15 +86,18 @@ md-select {
 	top: -6px;
 }
 
-.country-input img,
-.country-option img,
+.country-flag,
 img.country-image {
 	display: inline-block;
 	width: 32px;
 	height: 24px;
 	border: 1px solid black;
+	background-repeat: no-repeat;
+	background-size: 832px 624px;
+	vertical-align: middle;
 }
 
 .profile-country {
-	height: 22px;
+	width: 32px;
+	height: 24px;
 }

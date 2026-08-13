@@ -45,11 +45,11 @@ angular.module('LUP').config(function($routeProvider) {
 	/////////////////////
 	// --- Country --- //
 	/////////////////////´
-	$scope.countryURL = function(country) {
-		return CountrySrvc.countryURL(country.id);
+	$scope.countryStyle = function(country) {
+		return CountrySrvc.flagStyle(country.id);
 	};
-	$scope.countryURLzz = function() {
-		return CountrySrvc.countryURL('zz');
+	$scope.countryStyleZZ = function() {
+		return CountrySrvc.flagStyle('zz');
 	};
 	
 	//////////////////////

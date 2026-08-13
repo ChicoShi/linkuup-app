@@ -27,7 +27,7 @@ service('RenderSrvc', function(TypeSrvc, SettingsSrvc, CountrySrvc, TimezoneSrvc
         switch (klass) {
             case 'GDO\\Country\\GDT_Country':
                 const title = t(`country_${value}`);
-                return value ? "<img class=\"profile-country\" src=\""  + CountrySrvc.countryURL(value) + "\" alt='"+title+"' /> " + title : '';
+                return value ? "<span class=\"country-flag profile-country\" style=\"" + CountrySrvc.flagStyleAttribute(value) + "\" aria-label='" + title + "'></span> " + title : '';
             case 'GDO\\Core\\GDT_Array':
             case 'GDO\\Core\\GDT_JSON':
                 return value;

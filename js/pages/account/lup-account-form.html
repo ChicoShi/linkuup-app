@@ -60,7 +60,7 @@
        value="null"
        aria-label="None">
         <span>
-          <img ng-src="{{countryURLzz()}}" alt="none" />
+          <span class="country-flag" ng-style="countryStyleZZ()" aria-hidden="true"></span>
           <b>{{"UNKNOWN"|translate}}</b>
         </span>
       </md-option>
@@ -71,7 +71,7 @@
        value="{{country.id}}"
        aria-label="{{country.text}}">
         <span>
-          <img ng-src="{{countryURL(country)}}" alt="flag" />
+          <span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span>
           <b>{{country.text}}</b>
         </span>
       </md-option>

@@ -186,7 +186,7 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		// or its retry timeout. A known position is used immediately; otherwise
 		// the server receives (0,0) and returns the public discovery list.
 		var position = PositionSrvc.CURRENT;
-		if (!includeAll && PositionSrvc.hasPosition(false)) {
+		if (!includeAll && PositionSrvc.hasPosition(true)) {
 			loadRooms(position);
 		}
 		else {
