@@ -7,7 +7,6 @@
 <md-list class="profile-information profile-about-single" ng-if="data.profile.canGloballySee()">
   <md-list-item class="md-2-line profile-story-card">
     <md-list-item-text>
-      <h5><i class="material-icons">auto_awesome</i>{{'SHD_PROFILE_ABOUT'|translate}}</h5>
       <p class="profile-about-me" ng-if="data.profile.displayAbout()">{{data.profile.displayAbout()}}</p>
       <p class="profile-about-empty" ng-if="!data.profile.displayAbout()">Hier ist Platz für deine Geschichte.</p>
     </md-list-item-text>
