@@ -206,6 +206,15 @@ angular.module('LUP').config(function($routeProvider) {
 				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
 					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
 				$scope.focusSlide(slick.$slides.eq(nextSlide));
+			}).on('edge.lupSlick', function(event, slick, direction) {
+				// Keep a continuous discovery journey without Slick's cloned slides.
+				// Clones make a dynamically filtered Angular carousel jump or stack.
+				var target = direction === 'left' ? 0 : slick.slideCount - 1;
+				$timeout(function() {
+					if (slick.slideCount > 1) {
+						window.jQuery('.slickit').slick('slickGoTo', target, true);
+					}
+				}, 0);
 			});
 		}
 		
@@ -218,10 +227,9 @@ angular.module('LUP').config(function($routeProvider) {
 			focusOnSelect: false,
 			mobileFirst: true,
 			variableWidth: false,
-			// Discovery should never appear to stop at the last city. A location
-			// catalogue is explored continuously; the active filter still limits
-			// the rail to its selected category.
-			infinite: true,
+			// Keep the physical slide list stable. Seamless end-to-start navigation
+			// is handled by the edge event above, not by Slick clone elements.
+			infinite: false,
 			swipe: true,
 			touchMove: true,
 			draggable: true,
