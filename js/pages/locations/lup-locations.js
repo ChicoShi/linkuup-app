@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc, $element) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
@@ -25,15 +25,21 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.currentRoomIndex = -1;
 
 	// A route transition can leave a previous ng-view in the document for one
-	// digest. Never initialise that stale carousel: every controller instance
-	// owns exactly the rail below its own view element.
+	// digest. The last rail belongs to the active view; never initialise the
+	// stale carousel still being removed by Angular.
 	var getSlick = function() {
-		return window.jQuery($element).find('.slickit').first();
+		return window.jQuery('ng-view .slickit').last();
+	};
+	// Never turn a recoverable carousel failure into a blank discovery page.
+	// The raw cards remain usable while a later navigation/resize can retry Slick.
+	var revealRailFallback = function() {
+		getSlick().addClass('slick-inited lup-slick-fallback');
+		LoadingSrvc.removeTask('slick_rooms');
 	};
 	var retrySlick = function(nofocus) {
 		if (slickStartAttempts++ >= 12) {
 			console.warn('LinkUUp: location rail did not receive slides in time.');
-			LoadingSrvc.removeTask('slick_rooms');
+			revealRailFallback();
 			return;
 		}
 		$timeout(function() { $scope.slick(nofocus); }, 50);
@@ -255,8 +261,8 @@ angular.module('LUP').config(function($routeProvider) {
 			return !$scope.data.category.length || $scope.data.category.indexOf(category) >= 0;
 		});
 		} catch (error) {
-			console.warn('LinkUUp carousel unavailable; keeping the place rail hidden.', error);
-			LoadingSrvc.removeTask('slick_rooms');
+			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
+			revealRailFallback();
 			return;
 		}
 		

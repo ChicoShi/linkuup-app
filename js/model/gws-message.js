@@ -51,7 +51,7 @@ function GWS_Message(buffer) {
 			back |= this.BUFFER.getUint8(index++);
 		}
 		this.INDEX = index;
-		console.log('GWS_Message.read'+(bytes*8)+" == " + back);
+		// console.log('GWS_Message.read'+(bytes*8)+" == " + back);
 		return back;
 	};
 	this.readString = function(index) {
