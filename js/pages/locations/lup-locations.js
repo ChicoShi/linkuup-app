@@ -131,6 +131,19 @@ angular.module('LUP').config(function($routeProvider) {
 			$slick.length && $slick.hasClass('slick-initialized')) {
 			return;
 		}
+		var roomSetChanged = $scope.data.rooms !== rooms;
+		// Slick only knows the slides that existed when it was initialised. When
+		// a category expands discovery from nearby rooms to the full catalogue,
+		// rebuild the rail once so distant results cannot be silently omitted.
+		if (roomSetChanged && $slick.length && $slick.hasClass('slick-initialized')) {
+			try {
+				$slick.slick('unslick');
+				slickedEvents = false;
+			}
+			catch (error) {
+				console.warn('LinkUUp: could not rebuild the location rail.', error);
+			}
+		}
 		$scope.data.rooms = rooms;
 		locationsRoomsRendered = true;
 		LoadingSrvc.addTask('slick_rooms');
@@ -331,6 +344,22 @@ angular.module('LUP').config(function($routeProvider) {
 		// Do not retain a focus object from the previously filtered carousel.
 		$scope.data.currentRoom = null;
 		$scope.data.currentRoomIndex = -1;
+		// The home screen deliberately starts local and fast. Selecting a
+		// category is an explicit discovery action, therefore fetch the complete
+		// public catalogue once; all cities, countries and distant venues remain
+		// browsable and are still ordered by distance.
+		if ($scope.data.category.length && !$scope.data.fullCatalogue) {
+			LoadingSrvc.addTask('ws_rooms');
+			RoomSrvc.withRooms(true).then(function(rooms) {
+				$scope.data.fullCatalogue = rooms;
+				$scope.gotRooms(rooms);
+			}, function(error) {
+				console.warn('LinkUUp: full location catalogue could not be loaded.', error);
+			}).finally(function() {
+				LoadingSrvc.removeTask('ws_rooms');
+			});
+			return;
+		}
 		// Let Angular update slide classes, then always use the same Slick path.
 		// Previously "Alle" and the other categories used competing recovery
 		// paths, which could leave the filter bar visually active but inert.
@@ -439,6 +468,10 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (!query && $scope.data.searchSource) {
 			$scope.data.searchSource = null;
+			if ($scope.data.category.length && $scope.data.fullCatalogue) {
+				$scope.gotRooms($scope.data.fullCatalogue);
+				return;
+			}
 			RoomSrvc.withRooms().then($scope.gotRooms, function(error) {
 				console.warn('LinkUUp: nearby location refresh failed.', error);
 			});
