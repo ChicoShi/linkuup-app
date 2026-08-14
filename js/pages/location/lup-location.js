@@ -244,10 +244,25 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.chatVisible = function() {
 		console.log('LocationCtrl.chatVisible()', $scope.data.room);
-		ChatSrvc.join($scope.data.room).then(function() {
+		if (!$scope.inChatRange() || $scope.data.room.isSelfInRoom() || $scope.data.chatJoining) {
+			return;
+		}
+		$scope.data.chatJoining = true;
+		return ChatSrvc.join($scope.data.room).then(function() {
 			$scope.joinedRoom();
 			$scope.scrollChatToBottom(true);
+		}).finally(function() {
+			$scope.data.chatJoining = false;
 		});
+	};
+
+	// The top "Chat" control is always a valid way to inspect a location's
+	// conversation. Joining remains protected by the same GPS radius check as
+	// the primary "Chat betreten" action.
+	$scope.openChatTab = function() {
+		if ($scope.inChatRange()) {
+			return $scope.chatVisible();
+		}
 	};
 	
 	$scope.joinedRoom = function() {

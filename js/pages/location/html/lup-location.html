@@ -9,11 +9,9 @@
     <md-tabs
      hide
      show-xs
-     style="background:#333;"
      md-selected="data.selectedTab"
      flex
      ccmd-dynamic-height
-     ccmd-border-bottom
      md-stretch-tabs="always"
      layout="column">
      
@@ -21,7 +19,7 @@
         <ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V"></ng-include>
       </md-tab>
     
-      <md-tab label="{{'TAB_CHAT'|translate}}" ng-disabled="!inChatRange()" md-on-select="chatVisible()">
+      <md-tab label="{{'TAB_CHAT'|translate}}" md-on-select="openChatTab()">
         <ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V"></ng-include>
       </md-tab>
 
@@ -34,11 +32,9 @@
     <md-tabs
      hide
      show-sm
-     style="background:#333;"
      md-selected="data.selectedTab2"
      flex
      ccmd-dynamic-height
-     ccmd-border-bottom
      md-stretch-tabs="always"
      layout="column">
      

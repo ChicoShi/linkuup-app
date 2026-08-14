@@ -26,12 +26,25 @@ function LUPRoom(json) {
 
 	this.isOpen = function() {
 		const hours = this.openTimes();
+		// A missing schedule is normal for community locations. Avoid parsing the
+		// empty value again on every Angular redraw.
+		if (!hours || !String(hours).trim()) {
+			return null;
+		}
+		if (this._openHoursValue === hours && this._openHoursAt && Date.now() - this._openHoursAt < 30000) {
+			return this._openHoursState;
+		}
 		try {
 			const parser = new opening_hours(hours);
-			return parser.getState(new Date());
+			this._openHoursValue = hours;
+			this._openHoursAt = Date.now();
+			this._openHoursState = parser.getState(new Date());
+			return this._openHoursState;
 		}
 		catch (e) {
-			console.error('Invalid opening hours:', hours, e);
+			this._openHoursValue = hours;
+			this._openHoursAt = Date.now();
+			this._openHoursState = null;
 			return null;
 		}
 	};

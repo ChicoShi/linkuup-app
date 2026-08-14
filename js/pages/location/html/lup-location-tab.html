@@ -104,16 +104,17 @@
       <span class="location-live-pill"><i class="material-icons">bolt</i> vor Ort erleben</span>
       <h1>{{data.room.name()}}</h1>
       <p ng-if="data.room.addressDisplay()">{{data.room.addressDisplay()}}</p>
+      <div class="location-identity" ng-if="data.room.categoryName()">
+        <i class="material-icons">{{locationVisual(data.room).icon}}</i>
+        <span>{{data.room.categoryName()}}</span><b></b><span>LinkUUp Ort</span>
+      </div>
     </div>
   </div>
 
-  <div class="location-action-row">
+  <div class="location-action-row" ng-class="{'has-phone': data.room.phone()}">
     <a class="location-action route" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener" ng-if="data.room.showDistance()">
       <i class="material-icons">near_me</i><span>Route</span>
     </a>
-    <button class="location-action" type="button" ng-click="onShowQRCode()">
-      <i class="material-icons">qr_code_2</i><span>Vor Ort</span>
-    </button>
     <button class="location-action" type="button" ng-if="data.room.phone()" ng-click="onOpenPhone()">
       <i class="material-icons">phone</i><span>Anrufen</span>
     </button>

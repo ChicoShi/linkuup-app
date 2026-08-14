@@ -49,7 +49,9 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedUser = function(user) {
 		console.log('ProfileCtrl.loadedUser()', user);
 		$scope.data.user = user;
-		$scope.showHelp();
+		// The legacy help-read websocket command can reject on newer backends and
+		// surface an unhelpful "undefined" dialog. Profile loading must not depend
+		// on this optional onboarding hint.
 		if ($scope.data.selectedTab === 0) {
 			$scope.loadInformation();
 		}
@@ -196,13 +198,21 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.showGallery = function() {
 		console.log('GalleryCtrl.showGallery()');
+		if ($scope.data.galleryLoading) {
+			return;
+		}
+		$scope.data.galleryLoading = true;
 		// Query websocket
 		$scope.data.galleryImages = [];
 		$scope.data.galleryError = undefined;
 		$scope.data.galleryReady = false;
-		$('#gallery-list *').remove();
-		GallerySrvc.withGalleryForUser($scope.data.user).
-			then($scope.withGallery, $scope.galleryError);
+		// Angular owns this grid. Removing its nodes manually created a visible
+		// empty flash while the gallery was being requested.
+		return GallerySrvc.withGalleryForUser($scope.data.user).
+			then($scope.withGallery, $scope.galleryError).
+			finally(function() {
+				$scope.data.galleryLoading = false;
+			});
 	};
 	
 	$scope.galleryError = function(response) {

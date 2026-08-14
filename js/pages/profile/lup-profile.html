@@ -63,6 +63,15 @@
 		</div>
 	
 	<div class="cb"></div>
+
+	  <div class="profile-section-nav" ng-if="data.user.isMember()" role="tablist" aria-label="Profilbereiche">
+		<button type="button" ng-class="{active: data.selectedTab === 0}" ng-click="data.selectedTab = 0" role="tab">
+		  <i class="material-icons">person_outline</i><span>Über mich</span>
+		</button>
+		<button type="button" ng-class="{active: data.selectedTab === 1}" ng-click="data.selectedTab = 1" role="tab">
+		  <i class="material-icons">photo_library</i><span>Galerie</span>
+		</button>
+	  </div>
 	
 	  <md-tabs
 	   ng-if="data.user.isMember()"
@@ -74,7 +83,7 @@
        layout="column">
 
 		  <md-tab
-		   label="{{'SHD_PROFILE_ABOUT'|translate}}"
+		   label="Über mich"
 		   flex layout="column"
 		   md-on-select="loadInformation()">
 			<ng-include src="'js/pages/profile/lup-profile-information.html?v='+V"></ng-include>
@@ -88,7 +97,7 @@
 		  </md-tab>  -->
 		  
 		  <md-tab
-		   label="{{'TAB_GALLERY'|translate}}"
+		   label="Galerie"
 		   md-on-select="showGallery()"
 		   flex layout="column">
 			<ng-include src="'js/pages/profile/lup-profile-gallery.html?v='+V"></ng-include>

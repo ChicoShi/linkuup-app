@@ -128,12 +128,14 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	
 	PositionSrvc.probeSuccess = function(defer, position) {
 		console.log('PositionSrvc.probeSuccess()', defer, position);
-		LoadingSrvc.stopTask('positioning');
-		PositionSrvc.PROBED = true;
-		var p = position.coords;
-		PositionSrvc.setReal(p.latitude, p.longitude);
-		PositionSrvc.start();
-		return defer.resolve(PositionSrvc.CURRENT);
+		$rootScope.$evalAsync(function() {
+			LoadingSrvc.stopTask('positioning');
+			PositionSrvc.PROBED = true;
+			var p = position.coords;
+			PositionSrvc.setReal(p.latitude, p.longitude);
+			PositionSrvc.start();
+			defer.resolve(PositionSrvc.CURRENT);
+		});
 	};
 
 	PositionSrvc.probeFailure = function(defer, error) {
@@ -198,8 +200,10 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	
 	PositionSrvc.watchSuccess = function(position) {
 		console.log('PositionSrvc.watchSuccess()', position);
-		var p = position.coords;
-		PositionSrvc.setReal(p.latitude, p.longitude);
+		$rootScope.$evalAsync(function() {
+			var p = position.coords;
+			PositionSrvc.setReal(p.latitude, p.longitude);
+		});
 	};
 	
 	PositionSrvc.watchFailure = function(error) {

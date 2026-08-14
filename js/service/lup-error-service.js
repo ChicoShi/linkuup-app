@@ -17,6 +17,10 @@ angular.module('LUP')
 	
 	ErrorSrvc.showError = function(text, title) {
 		console.log(title, text);
+		if (title === 'Protocol error' && (text === undefined || text === null || text === 'undefined' || text === 'ERR: undefined')) {
+			console.warn('Ignoring empty legacy protocol error.');
+			return $q.resolve();
+		}
 		return DialogSrvc.show(
 					$mdDialog.alert()
 					.clickOutsideToClose(false)
@@ -84,6 +88,11 @@ angular.module('LUP')
 	// --- Websocket error default --- //
 	ErrorSrvc.websocketError = function(gwsMessage) {
 		console.log('ErrorSrvc.websocketError()', gwsMessage);
+		// Older optional websocket calls sometimes reject without a payload. Do not
+		// turn that empty value into a modal literally saying "undefined".
+		if (gwsMessage === undefined || gwsMessage === null || gwsMessage === 'undefined') {
+			return $q.resolve();
+		}
 		return ErrorSrvc.showError(gwsMessage, "Fehler");
 	};
 	
@@ -146,7 +155,6 @@ angular.module('LUP')
 
 	ErrorSrvc.ajaxError = function(response) {
 		console.log('ErrorSrvc.ajaxError()', response);
-		debugger;
 		return ErrorSrvc.showError(response, response);
 	};
 	

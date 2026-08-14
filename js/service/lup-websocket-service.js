@@ -128,11 +128,18 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.onMessage = function(message) {
     	console.log('WebsocketSrvc.onMessage()', message.data);
     	if (message.data.indexOf('ERR:') === 0) {
+			// Some legacy optional profile fields answer with this empty textual
+			// marker although the actual binary profile response follows normally.
+			// Do not interrupt the profile with a meaningless modal in that case.
+			if (message.data === 'ERR: undefined' || message.data === 'ERR:' || message.data === 'ERR: null') {
+				console.warn('Ignoring empty legacy websocket error marker.', message.data);
+				return;
+			}
     		ErrorSrvc.showError(message.data, 'Protocol error');
     	}
     	else if (message.data.indexOf(':MID:') >= 0) {
     		if (!WebsocketSrvc.syncMessage(message.data)) {
-    			WebsocketSrvc.processMessage(mesage.data);
+				WebsocketSrvc.processMessage(message.data);
     		}
     	} else {
 			WebsocketSrvc.processMessage(message.data);

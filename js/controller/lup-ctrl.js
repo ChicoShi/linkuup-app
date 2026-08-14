@@ -135,8 +135,17 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 			});
 			var connection = WebsocketSrvc.connect();
 			connection['catch']($scope.failedConnection);
-//			var position = PositionSrvc.probe();
-//			position['catch']($scope.failedPosition);
+			// One shared startup probe makes the distance labels available as soon
+			// as the discovery view renders. PositionSrvc deduplicates this request,
+			// so navigating through the app cannot create additional prompts.
+			var position = PositionSrvc.probe();
+			// GPS is useful for nearby rooms, but a temporary browser timeout must
+			// never abort the whole application or throw the user back to login.
+			// PositionSrvc will retry through its normal refresh cycle.
+			position['catch'](function(error) {
+				console.warn('LinkUUp: initial GPS position unavailable; continuing.', error);
+				return null;
+			});
 			var types = TypeSrvc.withTypes();
 			types['catch']($scope.failedTypes);
 			var enums = EnumSrvc.withEnums();
