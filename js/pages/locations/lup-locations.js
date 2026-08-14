@@ -218,7 +218,10 @@ angular.module('LUP').config(function($routeProvider) {
 			focusOnSelect: false,
 			mobileFirst: true,
 			variableWidth: false,
-			infinite: false,
+			// Discovery should never appear to stop at the last city. A location
+			// catalogue is explored continuously; the active filter still limits
+			// the rail to its selected category.
+			infinite: true,
 			swipe: true,
 			touchMove: true,
 			draggable: true,
