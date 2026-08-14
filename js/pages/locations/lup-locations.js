@@ -261,9 +261,11 @@ angular.module('LUP').config(function($routeProvider) {
 			// enabled a normal phone gesture could skip several city cards, making
 			// much of the catalogue appear to be missing.
 			swipeToSlide: false,
-			waitForAnimate: false,
+			// Do not let a second gesture interrupt a running transition. Interrupts
+			// made the location cards jump and feel choppy on touch screens.
+			waitForAnimate: true,
 			edgeFriction: 0.22,
-			speed: 155,
+			speed: 210,
 			cssEase: 'cubic-bezier(.22,.78,.24,1)',
 			touchThreshold: 4,
 		}).slick('slickFilter', function() {

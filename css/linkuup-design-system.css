@@ -349,6 +349,32 @@ md-button.md-raised, .md-button.md-raised {
   .nearby .slick-current .room-category-hero { transition: none; animation: none; }
 }
 
+/* The rail itself supplies the movement. Re-animating every child card during
+   a swipe caused visible hitches on phones, especially in longer categories. */
+.nearby .slick-slide .roominfo,
+.nearby .slick-slide.slick-current .roominfo {
+  transform:none;
+  opacity:1;
+  filter:none;
+  transition:opacity .18s ease;
+}
+.nearby .slickit.lup-swipe-forward .slick-current .roominfo,
+.nearby .slickit.lup-swipe-backward .slick-current .roominfo,
+.nearby .slickit.lup-swipe-forward .slick-current .room-category-hero,
+.nearby .slickit.lup-swipe-backward .slick-current .room-category-hero,
+.nearby .slickit.lup-swipe-forward .slick-current .distrat,
+.nearby .slickit.lup-swipe-backward .slick-current .distrat,
+.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
+.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
+.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
+.nearby .slickit.lup-swipe-backward .slick-current .chatbutton,
+.nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
+.nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit,
+.nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
+.nearby .slickit.lup-swipe-backward .slick-current .room-presence-count,
+.nearby .slickit.lup-swipe-forward .slick-current .more-users,
+.nearby .slickit.lup-swipe-backward .slick-current .more-users { animation:none !important; }
+
 .nearby .roomhead,
 .nearby .distrat,
 .nearby .room-user-preview { position: relative; top: 16px; }
@@ -970,13 +996,10 @@ md-list .md-list-item-text .username,
 .profile-page .profile-information p { margin: 0; color: #f1eff9; font-size: 14px; font-weight: 550; line-height: 1.4; }
 @media (max-width: 380px) { .profile-page .avatar-bg { padding-top: 66px; padding-bottom: 76px; } .profile-page .user-top-information .countitems { gap: 5px; padding-left: 6px; padding-right: 6px; } .profile-page .user-top-information .countitem { min-height: 70px; } }
 
-/* Profile signal field: a slow, abstract movement behind the avatar gives the
-   profile a living identity without competing with the photograph or text. */
+/* One calm LinkUUp profile tone: the avatar is the only visual focus. */
 .profile-page .avatar-bg {
   overflow:hidden;
-  background:
-    radial-gradient(ellipse at 50% -28%, rgba(109,125,183,.19), transparent 58%),
-    linear-gradient(155deg, #1b1d2b 0%, #171a27 52%, #1d2030 100%);
+  background:#1b1d2b;
 }
 .profile-page .avatar-bg::before,
 .profile-page .avatar-bg::after {
@@ -986,21 +1009,10 @@ md-list .md-list-item-text .username,
   pointer-events:none;
 }
 .profile-page .avatar-bg::before {
-  inset:0;
-  background:
-    linear-gradient(142deg, transparent 0 31%, rgba(152,168,204,.055) 31.12% 31.35%, transparent 31.6% 64%, rgba(152,168,204,.045) 64.12% 64.35%, transparent 64.6%),
-    linear-gradient(54deg, transparent 0 42%, rgba(152,168,204,.040) 42.12% 42.35%, transparent 42.6% 72%, rgba(152,168,204,.035) 72.12% 72.35%, transparent 72.6%);
-  background-size:100% 100%;
-  filter:none;
-  opacity:.46;
-  animation:none;
+  display:none;
 }
 .profile-page .avatar-bg::after {
-  z-index:1;
-  inset:0;
-  background:linear-gradient(105deg, transparent 0 48.8%, rgba(191,213,255,.42) 50%, transparent 51.2%) 0 0 / 260% 100% no-repeat;
-  opacity:.20;
-  animation:lup-profile-sheen 22s ease-in-out infinite;
+  display:none;
 }
 .profile-page .avatar-bg .avatar { z-index:2; }
 .profile-page .avatar-bg .avatar::before { display:none; }
@@ -1015,11 +1027,9 @@ md-list .md-list-item-text .username,
   opacity:.58;
 }
 .profile-page .avatar-bg.profile-online .large-avatar::after { border-color:rgba(111,228,173,.55); box-shadow:0 0 0 6px rgba(83,204,145,.045),0 0 20px rgba(80,211,147,.28); animation:lup-profile-avatar-pulse 3.8s ease-in-out infinite; }
-.profile-page .large-avatar { animation:lup-profile-avatar-float 5.5s ease-in-out infinite; }
+.profile-page .large-avatar { animation:none; }
 .profile-page .profile-identity { z-index:3; }
-@keyframes lup-profile-sheen { 0%,42%,100% { background-position:100% 0; opacity:0; } 48% { opacity:.32; } 58% { background-position:0 0; opacity:.32; } 64% { opacity:0; } }
 @keyframes lup-profile-avatar-pulse { 0%,100% { transform:scale(1); opacity:.40; } 50% { transform:scale(1.016); opacity:.9; } }
-@keyframes lup-profile-avatar-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) { .profile-page .avatar-bg::before, .profile-page .avatar-bg::after, .profile-page .avatar-bg .large-avatar::after, .profile-page .large-avatar { animation:none; } }
 
 /* About becomes a small, readable personal story rather than a raw settings list. */
@@ -4526,3 +4536,28 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner { display:flex !important; align-items:center !important; gap:10px !important; min-height:62px !important; padding:11px 12px !important; box-sizing:border-box !important; overflow:hidden !important; border:1px solid rgba(255,255,255,.10) !important; border-radius:15px !important; background:linear-gradient(135deg,rgba(83,77,127,.42),rgba(29,33,50,.80)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 13px 27px rgba(0,0,0,.16) !important; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > .material-icons { display:grid !important; place-items:center !important; flex:0 0 38px !important; width:38px !important; height:38px !important; margin:0 !important; border:1px solid rgba(135,228,179,.32) !important; border-radius:12px !important; background:rgba(73,186,133,.12) !important; color:#9be4ba !important; font-size:21px !important; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div { min-width:0 !important; flex:1 1 auto !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner strong { display:block !important; overflow:hidden !important; color:#f5f3fb !important; font-size:13px !important; font-weight:720 !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner span { display:block !important; overflow:hidden !important; margin-top:3px !important; color:#aaa6b7 !important; font-size:10px !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+
+/* Keep long location rails smooth: Slick moves the card; its contents stay put. */
+.nearby .slick-slide .roominfo,
+.nearby .slick-slide.slick-current .roominfo {
+  transform:none !important;
+  opacity:1 !important;
+  filter:none !important;
+  transition:opacity .18s ease !important;
+}
+.nearby .slickit.lup-swipe-forward .slick-current .roominfo,
+.nearby .slickit.lup-swipe-backward .slick-current .roominfo,
+.nearby .slickit.lup-swipe-forward .slick-current .room-category-hero,
+.nearby .slickit.lup-swipe-backward .slick-current .room-category-hero,
+.nearby .slickit.lup-swipe-forward .slick-current .distrat,
+.nearby .slickit.lup-swipe-backward .slick-current .distrat,
+.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
+.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
+.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
+.nearby .slickit.lup-swipe-backward .slick-current .chatbutton,
+.nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
+.nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit,
+.nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
+.nearby .slickit.lup-swipe-backward .slick-current .room-presence-count,
+.nearby .slickit.lup-swipe-forward .slick-current .more-users,
+.nearby .slickit.lup-swipe-backward .slick-current .more-users { animation:none !important; }
