@@ -266,7 +266,6 @@ angular.module('LUP').config(function($routeProvider) {
 			if (room) {
 				$scope.data.currentRoom = room;
 				$scope.data.currentRoomIndex = roomIndex;
-				RoomSrvc.withUsers(room);
 			}
 		}
 	};
@@ -279,7 +278,9 @@ angular.module('LUP').config(function($routeProvider) {
 		if (room) {
 			$scope.data.currentRoom = room;
 			$scope.data.currentRoomIndex = $scope.data.rooms.indexOf(room);
-			RoomSrvc.withUsers(room);
+			// The initial room catalogue already carries its presence list and
+			// WebSocket join/part events keep it current. A round trip for every
+			// swipe made longer city rails visibly stutter after a few cards.
 		}
 	};
 
