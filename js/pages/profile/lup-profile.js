@@ -33,6 +33,10 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.data.profile = new GDO_Profile();
+	// Gallery data belongs to one profile. Keeping it while the user switches
+	// tabs prevents an empty-grid flash and needless websocket round trips.
+	$scope.data.galleryLoadedFor = null;
+	$scope.data.galleryImages = [];
 	$scope.init = function() {
 		console.log('ProfileCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
@@ -48,6 +52,11 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.loadedUser = function(user) {
 		console.log('ProfileCtrl.loadedUser()', user);
+		if ($scope.data.galleryLoadedFor !== user.id()) {
+			$scope.data.galleryLoadedFor = null;
+			$scope.data.galleryImages = [];
+			$scope.data.galleryReady = false;
+		}
 		$scope.data.user = user;
 		// The legacy help-read websocket command can reject on newer backends and
 		// surface an unhelpful "undefined" dialog. Profile loading must not depend
@@ -196,23 +205,26 @@ angular.module('LUP').config(function($routeProvider) {
 	/////////////////////
 	$scope.data.galleryAction = window.LUP_CONFIG.server + "index.php?_mo=Gallery&_me=Crud&_ajax=1&_fmt=json&_cors=" + encodeURIComponent(window.LUP_CONFIG.cors);
 	
-	$scope.showGallery = function() {
+	$scope.showGallery = function(forceReload) {
 		console.log('GalleryCtrl.showGallery()');
 		if ($scope.data.galleryLoading) {
-			return;
+			return $scope.data.galleryRequest;
+		}
+		if (!forceReload &&
+			$scope.data.galleryLoadedFor === $scope.data.user.id()) {
+			return $q.when($scope.data.galleryImages);
 		}
 		$scope.data.galleryLoading = true;
-		// Query websocket
-		$scope.data.galleryImages = [];
 		$scope.data.galleryError = undefined;
-		$scope.data.galleryReady = false;
-		// Angular owns this grid. Removing its nodes manually created a visible
-		// empty flash while the gallery was being requested.
-		return GallerySrvc.withGalleryForUser($scope.data.user).
+		// Keep the last rendered image grid visible until the replacement data is
+		// ready. Clearing it here made tab changes visibly stutter on phones.
+		$scope.data.galleryRequest = GallerySrvc.withGalleryForUser($scope.data.user).
 			then($scope.withGallery, $scope.galleryError).
 			finally(function() {
 				$scope.data.galleryLoading = false;
+				$scope.data.galleryRequest = null;
 			});
+		return $scope.data.galleryRequest;
 	};
 	
 	$scope.galleryError = function(response) {
@@ -232,6 +244,7 @@ angular.module('LUP').config(function($routeProvider) {
 			// Keep the gallery image objects intact. Besides their display URLs,
 			// they carry the file id required by the delete command.
 			$scope.data.galleryImages = gallery.IMAGES;
+			$scope.data.galleryLoadedFor = $scope.data.user.id();
 			// Native grid rendering is reliable on desktop and phone alike.
 		}
 	};
@@ -243,7 +256,7 @@ angular.module('LUP').config(function($routeProvider) {
 				// Allow selecting the very same file again after it was removed
 				// from the gallery; otherwise Flow treats it as a duplicate.
 				$flow.removeFile($file);
-				return $scope.showGallery();
+				return $scope.showGallery(true);
 			}, ErrorSrvc.websocketFormError);
 	};
 	
@@ -289,7 +302,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.reallyDeleteGalleryImage = function(image) {
 		console.log('GalleryCtrl.deleteGalleryImage()', image);
 		return GallerySrvc.deleteImage(image).then(
-				$scope.showGallery, 
+				$scope.showGallery.bind($scope, true),
 				ErrorSrvc.websocketFormError);
 	};
 	

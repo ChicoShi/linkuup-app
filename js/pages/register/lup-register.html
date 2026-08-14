@@ -1,33 +1,30 @@
-<section layout="row" flex class="login register-page">
+<section layout="row" flex class="login register-page auth-shell">
+  <md-content flex class="auth-canvas">
+    <section class="auth-hero" aria-label="LinkUUp">
+      <svg class="auth-route" viewBox="0 0 720 440" aria-hidden="true">
+        <path class="auth-route-base" d="M-50,352 C112,325 104,99 296,138 S432,389 617,255 S718,91 796,114" />
+        <path class="auth-route-light" d="M-50,352 C112,325 104,99 296,138 S432,389 617,255 S718,91 796,114" />
+        <circle cx="296" cy="138" r="7" class="auth-route-point" />
+        <circle cx="617" cy="255" r="7" class="auth-route-point auth-route-point-late" />
+      </svg>
+      <div class="auth-hero-copy">
+        <span class="auth-mark"><i class="material-icons">location_on</i></span>
+        <div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
+        <p class="login-brand-claim">Dein Profil. Deine Orte. Deine Begegnungen.</p>
+      </div>
+    </section>
 
-  <md-content flex>
+    <section class="auth-panel register-panel" aria-label="Registrieren">
+      <p class="auth-kicker">LINKUUP START</p>
+      <h1>Neu dabei</h1>
+      <p class="auth-intro">Erstelle dein Profil und entscheide selbst, was sichtbar ist.</p>
+      <ng-include src="'js/pages/register/lup-register-form.html?v='+V"></ng-include>
+    </section>
 
-	<section class="login-brand-stage register-brand-stage" layout="column" layout-padding flex>
-		<div class="login-emblem" aria-hidden="true"><span></span></div>
-		<div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
-		<p class="login-brand-claim">Dein Profil. Deine Orte. Deine Begegnungen.</p>
-	</section>
-		
-    <!-- CONTENT -->
-	<section class="register-panel" layout="column" layout-padding flex>
-		<ng-include src="'js/pages/register/lup-register-form.html?v='+V"></ng-include>
-	</section>
-	
-	<!-- END CONTENT -->
-	<section layout="column" layout-padding flex>
-		<div class="login-bottom login-page">
-		  <md-list-item class="md-1-line" ng-click="gotoImpressum()">
-			<p class="impressum">{{'IMPRESSUM'|translate}}</p>
-		  </md-list-item>
-<!--
-		  <md-list-item class="md-1-line" ng-click="gotoTOS()">
-			<p class="tos">{{'TOS'|translate}}</p>
-		  </md-list-item>
--->
-		  <md-list-item class="md-1-line" ng-click="gotoPrivacy()">
-			<p class="privacy">{{'PRIVACY'|translate}}</p>
-		  </md-list-item>
-		</div>
-	</section>
+    <nav class="auth-legal" aria-label="Rechtliches">
+      <button type="button" ng-click="gotoImpressum()">{{'IMPRESSUM'|translate}}</button>
+      <span aria-hidden="true"></span>
+      <button type="button" ng-click="gotoPrivacy()">{{'PRIVACY'|translate}}</button>
+    </nav>
   </md-content>
 </section>

@@ -20,7 +20,7 @@
       </button>
       <button type="button" class="gallery-tile" ng-repeat="image in data.galleryImages track by image.id()"
         ng-click="data.user.isSelf() && deleteGalleryImage(image)" aria-label="Galeriebild öffnen">
-        <img alt="{{::image.description()}}" ng-src="{{::image.thumbURL()}}" />
+        <img alt="{{::image.description()}}" ng-src="{{::image.thumbURL()}}" loading="lazy" decoding="async" />
       </button>
     </div>
   </div>
