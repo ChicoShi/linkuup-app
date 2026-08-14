@@ -119,7 +119,7 @@ md-input-container .md-input, input, textarea {
 .login .login-credentials md-input-container .md-input { position:relative; top:25px; line-height:24px; }
 
 /* Login refresh: a distinct LinkUUp arrival screen, not a generic form. */
-.login { min-height:100%; background:radial-gradient(circle at 50% -10%,rgba(142,111,255,.28),transparent 42%),linear-gradient(155deg,#10111d 0%,#191a2b 48%,#10131e 100%); }.login > md-content { width:min(100%,820px); max-width:none !important; min-height:100vh; background:transparent !important; box-shadow:none; }
+.login { min-height:100%; background:radial-gradient(circle at 50% -10%,rgba(142,111,255,.28),transparent 42%),linear-gradient(155deg,#10111d 0%,#191a2b 48%,#10131e 100%); }.login > md-content { width:min(100%,820px); max-width:none !important; min-height:var(--lup-viewport-height,100dvh); background:transparent !important; box-shadow:none; }
 .login .login-brand-stage { min-height:246px; padding:0 20px !important; isolation:isolate; overflow:hidden; background:radial-gradient(ellipse at 50% 8%,rgba(154,124,255,.36),transparent 46%),radial-gradient(circle at 82% 73%,rgba(55,167,244,.28),transparent 32%),linear-gradient(160deg,#252442 0%,#171a2c 61%,#12141f 100%); box-shadow:inset 0 -44px 58px rgba(8,10,22,.50); }
 .login .login-brand-stage::before { content:'LINKUUP'; position:absolute; z-index:-1; top:54px; left:50%; transform:translateX(-50%) scaleX(1.28); color:rgba(255,255,255,.035); font-size:clamp(56px,18vw,124px); font-weight:950; letter-spacing:-.095em; white-space:nowrap; }
 .login .login-brand-stage::after { width:310px; height:310px; right:-115px; top:-151px; border-color:rgba(219,210,255,.24); box-shadow:0 0 0 30px rgba(182,164,255,.055),0 0 0 64px rgba(107,179,255,.035); opacity:1; }
@@ -1936,7 +1936,7 @@ md-list.usernavigation .presence-actions .usericon {
 @media (max-width:600px) { .nearby .room-user-preview { margin-right:12px; margin-left:18px; padding:6px 8px; }.nearby .room-presence-count { font-size:8px; } }
 
 /* Registration is the same calm LinkUUp entry experience as login. */
-.register-page > md-content { min-height:100vh; background:linear-gradient(160deg,#1d1f31 0%,#151724 58%,#11121d 100%); }
+.register-page > md-content { min-height:var(--lup-viewport-height,100dvh); background:linear-gradient(160deg,#1d1f31 0%,#151724 58%,#11121d 100%); }
 .register-page .register-brand-stage { min-height:220px; }
 .register-page .register-panel { width:min(88%,410px); box-sizing:border-box; margin:0 auto; padding:22px 0 14px; }
 .register-page .register-title { margin:0 0 18px; color:#f7f5ff; font-size:25px; font-weight:750; letter-spacing:-.03em; text-align:center; }
@@ -3879,7 +3879,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   display:block !important;
   width:calc(100vw - 32px);
   max-width:430px;
-  max-height:calc(100vh - 32px);
+  max-height:calc(var(--lup-viewport-height,100dvh) - 32px);
   margin:0 auto;
 }
 .lup-comment-dialog .md-toolbar-tools h2 { color:#f7f4ff; font-size:18px; font-weight:700; }
