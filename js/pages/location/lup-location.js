@@ -155,15 +155,14 @@ angular.module('LUP').config(function($routeProvider) {
 	//////////////////
 	// --- Vote --- //
 	//////////////////
-	$scope.onVoteDialog = function() {
+	$scope.onVoteDialog = function(event) {
 		console.log('LocationCtrl.onVoteDialog()');
-		// Ugly wrap.
 		var room = $scope.data.room;
 		var oldRating = $scope.data.rating;
 		var oldComment = $scope.data.commentInput;
 		var scope = $scope;
 		
-		function DialogController($scope, $mdDialog) {
+		var DialogController = ['$scope', '$mdDialog', function($scope, $mdDialog) {
 			$scope.room = room;
 			$scope.data = {};
 			$scope.data.rating = oldRating;
@@ -176,16 +175,22 @@ angular.module('LUP').config(function($routeProvider) {
 				$mdDialog.cancel();
 				scope.onRoomVoteComment($scope.data.rating, $scope.data.comment);
 			};
-		};
+		}];
 		
 		// Return promise
 		return $mdDialog.show({
 			controller: DialogController,
 			templateUrl: 'js/dialogs/lup-room-vote-dialog.html?v='+window.LUP_BUILD,
 			parent: angular.element(document.body),
-			targetEvent: window.event,
+			targetEvent: event,
 			clickOutsideToClose:true,
 //			fullscreen: true, //$scope.customFullscreen // Only for -xs, -sm breakpoints.
+		}).catch(function(reason) {
+			// Angular Material resolves a normal close with an undefined reason.
+			// Do not turn that into a false console error.
+			if (reason) {
+				console.error('Location vote dialog could not open', reason);
+			}
 		});
 
 	};

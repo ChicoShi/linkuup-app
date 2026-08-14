@@ -96,51 +96,40 @@
 </div>
 </md-content>
  -->
-<md-content class="location-experience" layout="column" flex layout-fill>
-  <div class="location-hero" ng-class="locationVisual(data.room).class">
-    <div class="location-hero-art" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
-    <div class="location-hero-shade"></div>
-    <div class="location-hero-copy">
-      <span class="location-live-pill"><i class="material-icons">bolt</i> vor Ort erleben</span>
+<md-content class="location-experience venue-view" ng-class="locationVisual(data.room).class" layout="column" flex layout-fill>
+  <header class="venue-identity">
+    <div class="venue-category-mark" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
+    <div class="venue-title">
+      <span>{{data.room.categoryName() || 'LINKUUP ORT'}}</span>
       <h1>{{data.room.name()}}</h1>
-      <p ng-if="data.room.addressDisplay()">{{data.room.addressDisplay()}}</p>
-      <div class="location-identity" ng-if="data.room.categoryName()">
-        <i class="material-icons">{{locationVisual(data.room).icon}}</i>
-        <span>{{data.room.categoryName()}}</span><b></b><span>LinkUUp Ort</span>
-      </div>
+      <p>{{data.room.addressDisplay() || 'Ein Ort für echte Begegnungen.'}}</p>
     </div>
-  </div>
+    <button class="venue-hours" type="button" ng-click="showOpenTimes($event)" aria-label="Öffnungszeiten ansehen">
+      <i class="material-icons" ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}">schedule</i>
+    </button>
+  </header>
 
-  <div class="location-action-row" ng-class="{'has-phone': data.room.phone()}">
-    <a class="location-action route" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener" ng-if="data.room.showDistance()">
-      <i class="material-icons">near_me</i><span>Route</span>
+  <button class="venue-rating" type="button" ng-click="onVoteDialog($event)" aria-label="Ort bewerten">
+    <div class="venue-rating-number"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>von 5</span></div>
+    <div class="venue-stars" aria-hidden="true">
+      <i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'venue-star-on': data.room.rating() >= star}">star</i>
+    </div>
+    <div class="venue-rating-meta"><b>{{data.room.comments() || 0}}</b><span>Stimmen</span><i class="material-icons">arrow_forward</i></div>
+  </button>
+
+  <section class="venue-actions" aria-label="Ort-Aktionen">
+    <a class="venue-action" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
+      <i class="material-icons">near_me</i><span>Route</span><small>Weg zum Ort</small>
     </a>
-    <button class="location-action" type="button" ng-if="data.room.phone()" ng-click="onOpenPhone()">
-      <i class="material-icons">phone</i><span>Anrufen</span>
+    <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
+      <i class="material-icons">forum</i><span>Stimmen</span><small>Erfahrungen lesen</small>
     </button>
-    <button class="location-action" type="button" ng-click="showOpenTimes($event)">
-      <i class="material-icons" ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}">schedule</i><span>Zeiten</span>
+    <button class="venue-action venue-action-vote" type="button" ng-click="onVoteDialog($event)">
+      <i class="material-icons">grade</i><span>Bewerten</span><small>Deine 5 Sterne</small>
     </button>
-  </div>
-
-  <section class="location-rating-card" ng-click="onVoteDialog()" role="button" tabindex="0">
-    <div class="rating-copy">
-      <span>Wie war dein Besuch?</span>
-      <strong>Bewerte den Ort und teile deine Stimmung</strong>
-    </div>
-    <div class="rating-stars">
-      <jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true" on-rating="onVoteRoom(rating)" class="lup-location-rating"></jk-rating-stars>
-      <small>{{data.room.comments()}} Bewertungen</small>
-    </div>
-    <i class="material-icons rating-arrow">arrow_forward</i>
   </section>
 
-  <section class="location-comments" ng-click="gotoComments(data.room)">
-    <div class="location-section-title"><span>Stimmen aus dem Ort</span><button type="button">Alle ansehen <i class="material-icons">chevron_right</i></button></div>
-    <div class="location-comment" ng-repeat="comment in data.topComments" ng-if="!comment.isBlankComment()">
-      <lup-avatar ng-user="comment.user()"></lup-avatar>
-      <lup-comment-text ng-bind-html="comment.text()"></lup-comment-text>
-    </div>
-    <p class="location-comment-empty" ng-if="!data.topComments.length || data.topComments[0].isBlankComment()">Sei die erste Person, die diesen Ort bewertet.</p>
+  <section class="venue-note" ng-if="data.room.info()">
+    <i class="material-icons">tips_and_updates</i><p>{{data.room.info()}}</p>
   </section>
 </md-content>

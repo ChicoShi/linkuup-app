@@ -3,11 +3,18 @@
   
     <i class="material-icons" ng-click="openLeft()">menu</i>
   
-    <md-button class="md-icon-button" aria-label="Nearby" ng-click="gotoReferrer()">
+	<md-button class="md-icon-button" aria-label="Zurück zur Location" ng-click="gotoLocation()">
 		<i class="material-icons">arrow_back</i>
     </md-button>
 
-    <h2 flex md-truncate>{{'TITLE_COMMENTS'|translate}}</h2>
+
+    <div flex md-truncate class="location-top-identity review-top-identity">
+      <span class="location-top-icon"><i class="material-icons">rate_review</i></span>
+      <div class="location-top-copy">
+        <div class="room-name">Stimmen aus dem Ort</div>
+        <span>{{data.room.name()}}</span>
+      </div>
+    </div>
 
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
 

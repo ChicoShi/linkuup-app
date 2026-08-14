@@ -38,10 +38,10 @@
   </div>
   <div class="chatbottom">
 	<div class="chat-input">
-		<input type="text" ng-model="data.message" ng-enter="sendMessage()" />
+		<input type="text" ng-model="data.message" ng-enter="sendMessage()" placeholder="Nachricht schreiben …" aria-label="Nachricht schreiben" />
 	</div>
-	<div class="chat-button">
-		<button ng-click="sendMessage()" class="sendbutton"/>
+	<div class="chat-button chat-compose-send">
+		<button type="button" ng-click="sendMessage()" class="sendbutton" aria-label="Nachricht senden" title="Nachricht senden"><i class="material-icons">done</i></button>
 	</div>
   </div>
 </div>

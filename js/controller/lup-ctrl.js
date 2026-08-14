@@ -714,7 +714,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	 * Avatar upload
 	 * XXX: Move to profile
 	 */
-	$scope.data.avatarAction = window.LUP_CONFIG.server + "/index.php?_mo=Avatar&_me=Upload&_ajax=1&_fmt=json&_cors=" + encodeURIComponent(window.LUP_CONFIG.cors);
+	// LUP_CONFIG.server already ends in a slash. A second slash sends Flow to a
+	// different backend URL on the local reverse proxy, so the websocket cannot
+	// find the completed upload afterwards.
+	$scope.data.avatarAction = window.LUP_CONFIG.server + "index.php?_mo=Avatar&_me=Upload&_ajax=1&_fmt=json&_cors=" + encodeURIComponent(window.LUP_CONFIG.cors);
 
 	/**
 	 * Hook main ctrl into window.

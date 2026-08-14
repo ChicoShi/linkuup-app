@@ -14,10 +14,17 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('CommentsCtrl', function($scope, $controller, $routeParams, $translate,
+}).controller('CommentsCtrl', function($scope, $controller, $location, $routeParams, $translate,
 		RoomSrvc, UserSrvc, CommentSrvc, ErrorSrvc) {
 
 	$controller('LocationCtrl', {$scope: $scope});
+
+	// Reviews always have one unambiguous exit: back to the location itself.
+	// Browser history can otherwise land on an unrelated page after opening a
+	// comment room from a location preview.
+	$scope.gotoLocation = function() {
+		return $location.path('/location/' + $routeParams.id);
+	};
 	
 	$scope.data.comments = {
 		loading: null,
@@ -65,15 +72,28 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.afterLoadedRoom = function() {
 		console.log('CommentsCtrl.afterLoadedRoom()', $scope.data.room);
-//		CommentSrvc.withCommentsPage($scope.data.room, $routeParams.page||1).then($scope.loadedComments);
 		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
+		$scope.reloadComments();
+	};
+
+	// The virtual list only asks for data after it knows a total length.  After
+	// saving a vote that left the old list untouched, so a new comment looked as
+	// if it had vanished.  Refresh the first page explicitly instead.
+	$scope.reloadComments = function() {
+		var comments = $scope.data.comments;
+		comments.loading = false;
+		comments.items = [];
+		comments.pagination = new GWFPagination();
+		comments.loadNextPage();
 	};
 	
 	$scope.savedComment = function() {
 		console.log('CommentsCtrl.savedComment()');
-//		$scope.data.showInput = false;
 		ErrorSrvc.showMessage($translate.instant('MSG_THX_VOTE'), $translate.instant('MSGT_THX')).
-			then($scope.afterLoadedRoom);
+			then(function() {
+				CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
+				$scope.reloadComments();
+			});
 	};
 	
 	$scope.deleteComment = function(comment) {

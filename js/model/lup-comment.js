@@ -12,6 +12,7 @@ function LUPComment(json) {
 	this.user = function() { return LUPComment.UserSrvc.getOrCreate(this.userId()); };
 	this.text = function() { return this.JSON.rc_text; };
 	this.date = function() { return this.JSON.rc_created_at; };
+	this.rating = function() { return this.JSON.rc_rating || 0; };
 	
 	this.isOwn = function() { return this.user() === window.GWF_USER; };
 	

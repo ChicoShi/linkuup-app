@@ -1,35 +1,42 @@
-<section layout="row" flex class="comments-template">
+<section layout="row" flex class="comments-template location-reviews-page">
     <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
 	<md-content layout="column" flex>
 
 	    <ng-include src="'js/pages/comments/header-bar-comments.html?v='+V"></ng-include>
 
-		<md-list class="md-dense" ng-if="!data.commentText" >
-			<md-list-item ng-click="onVoteDialog()">
-				<lup-avatar ng-user="data.user"></lup-avatar>
-				<div class="md-list-item-text">
-				  <h4 class="lup-comment-text">{{ 'WRITE_OWN_COMMENT'|translate; }}</h4>
-				  <p class="lup-comment-date">{{ data.user.displayName(); }}</p>
-				</div>
-			</md-list-item>
-		</md-list>
+		<section class="reviews-hero">
+			<div class="reviews-hero-mark"><i class="material-icons">local_activity</i></div>
+			<div class="reviews-hero-copy">
+				<span>LINKUUP STIMMEN</span>
+				<h1>{{data.room.name()}}</h1>
+				<p>Teile deinen Eindruck. Jede ehrliche Stimme macht diesen Ort sichtbarer.</p>
+			</div>
+			<button type="button" class="reviews-rate-cta" ng-click="onVoteDialog($event)">
+				<i class="material-icons">grade</i><span>Ort bewerten</span><i class="material-icons">arrow_forward</i>
+			</button>
+		</section>
 
-		<md-list md-virtual-repeat-container flex class="md-dense">
+		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0">
+			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>von 5</span></div>
+			<div class="reviews-stars"><jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} Stimmen</small></div>
+			<i class="material-icons">chevron_right</i>
+		</section>
 
-			<md-subheader class="md-no-sticky">
-			  <div translate="SUBHEADER_COMMENTS"
-			   translate-value-room="{{data.room.name()}}"
-			   translate-value-count="{{data.comments.pagination.nItems}}"></div>
-			</md-subheader>
+		<md-list flex class="md-dense reviews-list">
+
+			<div class="reviews-list-heading reviews-list-heading--plain"><i class="material-icons">forum</i><span>Aktuelle Stimmen</span><b>{{data.comments.pagination.nItems || 0}}</b></div>
 
 			<md-list-item
 			 class="md-2-line no-right"
 			 ng-class="{'lup-comment-deleted':comment.deleted}"
-			 md-on-demand
-			 md-virtual-repeat="comment in data.comments">
+			 ng-repeat="comment in data.comments.items track by comment.id()">
 				<lup-avatar ng-user="comment.user()" ng-click="gotoProfile(comment.user());"></lup-avatar>
 				<div class="md-list-item-text">
 				  <h4 class="lup-comment-text" ng-bind-html="comment.text()"></h4>
+				  <div class="review-comment-rating" ng-if="comment.rating()">
+					<i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'is-rated': comment.rating() >= star}">star</i>
+					<span>{{comment.rating()}} / 5</span>
+				  </div>
 				  <p class="lup-comment-date"
 				   translate="COMMENTED_AT"
 				   translate-value-user="{{comment.user().displayName()}}"
@@ -40,6 +47,11 @@
 				   ng-if="hasPermission('staff') || comment.isOwn()"
 				   ng-click="deleteComment(comment)">delete</i>
 				</div>
+			</md-list-item>
+
+			<md-list-item class="reviews-empty" ng-if="!data.comments.loading && !data.comments.items.length">
+			  <i class="material-icons">forum</i>
+			  <span>Noch keine Stimme – sei die erste Person, die diesen Ort bewertet.</span>
 			</md-list-item>
 
 		</md-list>

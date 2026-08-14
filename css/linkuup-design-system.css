@@ -970,6 +970,58 @@ md-list .md-list-item-text .username,
 .profile-page .profile-information p { margin: 0; color: #f1eff9; font-size: 14px; font-weight: 550; line-height: 1.4; }
 @media (max-width: 380px) { .profile-page .avatar-bg { padding-top: 66px; padding-bottom: 76px; } .profile-page .user-top-information .countitems { gap: 5px; padding-left: 6px; padding-right: 6px; } .profile-page .user-top-information .countitem { min-height: 70px; } }
 
+/* Profile signal field: a slow, abstract movement behind the avatar gives the
+   profile a living identity without competing with the photograph or text. */
+.profile-page .avatar-bg {
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% -28%, rgba(109,125,183,.19), transparent 58%),
+    linear-gradient(155deg, #1b1d2b 0%, #171a27 52%, #1d2030 100%);
+}
+.profile-page .avatar-bg::before,
+.profile-page .avatar-bg::after {
+  content:'';
+  position:absolute;
+  z-index:0;
+  pointer-events:none;
+}
+.profile-page .avatar-bg::before {
+  inset:0;
+  background:
+    linear-gradient(142deg, transparent 0 31%, rgba(152,168,204,.055) 31.12% 31.35%, transparent 31.6% 64%, rgba(152,168,204,.045) 64.12% 64.35%, transparent 64.6%),
+    linear-gradient(54deg, transparent 0 42%, rgba(152,168,204,.040) 42.12% 42.35%, transparent 42.6% 72%, rgba(152,168,204,.035) 72.12% 72.35%, transparent 72.6%);
+  background-size:100% 100%;
+  filter:none;
+  opacity:.46;
+  animation:none;
+}
+.profile-page .avatar-bg::after {
+  z-index:1;
+  inset:0;
+  background:linear-gradient(105deg, transparent 0 48.8%, rgba(191,213,255,.42) 50%, transparent 51.2%) 0 0 / 260% 100% no-repeat;
+  opacity:.20;
+  animation:lup-profile-sheen 22s ease-in-out infinite;
+}
+.profile-page .avatar-bg .avatar { z-index:2; }
+.profile-page .avatar-bg .avatar::before { display:none; }
+.profile-page .avatar-bg .large-avatar::after {
+  content:'';
+  position:absolute;
+  inset:-8px;
+  pointer-events:none;
+  border:1px solid rgba(204,213,237,.24);
+  border-radius:50%;
+  box-shadow:0 0 0 6px rgba(132,151,194,.035), 0 0 18px rgba(108,132,196,.10);
+  opacity:.58;
+}
+.profile-page .avatar-bg.profile-online .large-avatar::after { border-color:rgba(111,228,173,.55); box-shadow:0 0 0 6px rgba(83,204,145,.045),0 0 20px rgba(80,211,147,.28); animation:lup-profile-avatar-pulse 3.8s ease-in-out infinite; }
+.profile-page .large-avatar { animation:lup-profile-avatar-float 5.5s ease-in-out infinite; }
+.profile-page .profile-identity { z-index:3; }
+@keyframes lup-profile-sheen { 0%,42%,100% { background-position:100% 0; opacity:0; } 48% { opacity:.32; } 58% { background-position:0 0; opacity:.32; } 64% { opacity:0; } }
+@keyframes lup-profile-avatar-pulse { 0%,100% { transform:scale(1); opacity:.40; } 50% { transform:scale(1.016); opacity:.9; } }
+@keyframes lup-profile-avatar-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .profile-page .avatar-bg::before, .profile-page .avatar-bg::after, .profile-page .avatar-bg .large-avatar::after, .profile-page .large-avatar { animation:none; } }
+
 /* About becomes a small, readable personal story rather than a raw settings list. */
 .profile-adventure { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; padding: 14px 12px 28px; }
 .profile-adventure md-list-item.profile-detail-card,
@@ -3709,9 +3761,9 @@ md-list.usernavigation .presence-actions .usericon {
 .profile-page .information-tabs > md-tabs-wrapper { display:none !important; }
 .profile-page .information-tabs { top:0 !important; margin:0 !important; }
 
-/* Let the profile sections meet cleanly: a single hairline separates the two
-   destinations; only the current one carries light. */
-.profile-page .profile-section-nav { position:relative; width:100%; margin:0 0 6px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:inset 0 -1px 0 rgba(205,197,238,.16); }
+/* Let the profile sections meet cleanly. The active section alone carries
+   light; there is deliberately no inactive rail beneath it. */
+.profile-page .profile-section-nav { position:relative; width:100%; margin:0 0 6px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
 .profile-page .profile-section-nav button { position:relative; height:48px; border-radius:0; color:#9c97ad; transition:background .24s ease,color .2s ease,filter .2s ease; }
 .profile-page .profile-section-nav button + button { border-left:0; }
 .profile-page .profile-section-nav button + button::before { content:''; position:absolute; z-index:2; top:12px; bottom:12px; left:0; width:1px; background:linear-gradient(180deg,transparent,rgba(205,197,238,.33),transparent); }
@@ -3752,3 +3804,725 @@ md-list.usernavigation .presence-actions .usericon {
 }
 .location-page md-tabs md-tab-item.md-active .md-tab-label::before { transform:none; background:rgba(185,171,255,.18); color:#f5f2ff; }
 .location-page md-tabs md-ink-bar { display:none !important; }
+
+/* One shared night-blue canvas. Navigation must feel like an extension of the
+   location and profile views, not like a separate blue application. */
+.profile-page,
+.profile-page md-content,
+.md-sidenav-left,
+.md-sidenav-left md-content {
+  background:
+    radial-gradient(ellipse 80% 38% at 8% -10%,rgba(85,116,205,.16),transparent 70%),
+    radial-gradient(ellipse 62% 34% at 94% 24%,rgba(143,91,214,.13),transparent 72%),
+    radial-gradient(circle at 22% 74%,rgba(63,144,191,.08),transparent 35%),
+    linear-gradient(155deg,#171a29 0%,#1b1d2d 48%,#151724 100%) !important;
+}
+
+/* “Alle” is a real category choice as well. Its active frame must use the
+   same complete, calm glow as city, café and club instead of lighting only
+   the tiny grid glyph. */
+.nearby .location-categories button:first-child.active {
+  border-color:color-mix(in srgb,var(--lup-category-ink) 52%,transparent) !important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--lup-category-ink) 12%,transparent),0 0 15px color-mix(in srgb,var(--lup-category-ink) 25%,transparent),inset 0 1px 0 rgba(255,255,255,.18) !important;
+  outline:1px solid color-mix(in srgb,var(--lup-category-ink) 26%,transparent);
+  outline-offset:3px;
+}
+.nearby .location-categories button:first-child.active .material-icons {
+  transform:translateY(-2px) !important;
+  border-color:color-mix(in srgb,var(--lup-category-ink) 68%,#fff) !important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-category-ink) 34%,#52566a),color-mix(in srgb,var(--lup-category-ink) 16%,#232637)) !important;
+  color:#fff !important;
+}
+
+/* Overview means two pieces of information at once: “Alle” remains selected
+   while the matching category of the visible card is lit beside it. A direct
+   category selection still uses Angular's one-filter state and turns All off. */
+.nearby md-content.greybg:has(.location-categories button:first-child.active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:first-child.active {
+  position:relative;
+  z-index:3;
+  border-color:color-mix(in srgb,var(--lup-category-ink) 52%,transparent) !important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-category-ink) 14%,rgba(255,255,255,.07)),rgba(255,255,255,.025)) !important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--lup-category-ink) 12%,transparent),0 0 15px color-mix(in srgb,var(--lup-category-ink) 25%,transparent),inset 0 1px 0 rgba(255,255,255,.18) !important;
+  color:#faf9ff !important;
+}
+
+/* The overview seal is now part of the same labelled category family. */
+.nearby .location-categories button:first-child span {
+  visibility:visible !important;
+  color:color-mix(in srgb,var(--lup-category-ink) 74%,#f4f2fa) !important;
+}
+.nearby .location-categories button:first-child.active span { color:#fff !important; }
+
+/* Location reviews are a destination of their own: a compact reputation
+   board, clear invitation and readable real voices—not an old generic list. */
+.location-reviews-page > md-content {
+  background:radial-gradient(circle at 86% -7%,rgba(127,104,237,.22),transparent 33%),radial-gradient(circle at 7% 36%,rgba(76,165,225,.10),transparent 31%),linear-gradient(155deg,#171a29 0%,#1b1d2d 48%,#151724 100%) !important;
+}
+.review-top-identity .location-top-icon { background:linear-gradient(145deg,rgba(163,137,242,.42),rgba(70,147,218,.25)); }
+.reviews-hero { position:relative; display:grid; grid-template-columns:58px minmax(0,1fr); gap:13px; margin:16px 14px 11px; padding:17px; overflow:hidden; border:1px solid rgba(210,201,246,.16); border-radius:20px; background:linear-gradient(145deg,rgba(64,59,105,.58),rgba(27,31,50,.86)); box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 14px 27px rgba(0,0,0,.17); }
+.reviews-hero::after { content:''; position:absolute; right:-34px; bottom:-58px; width:155px; height:155px; border:1px solid rgba(208,195,255,.16); border-radius:50%; box-shadow:0 0 0 18px rgba(151,124,241,.035),0 0 28px rgba(103,154,237,.16); pointer-events:none; }
+.reviews-hero-mark { display:grid; place-items:center; width:54px; height:54px; border:1px solid rgba(236,226,255,.28); border-radius:18px 18px 18px 7px; background:linear-gradient(145deg,#aa8bfa,#577fd2); box-shadow:0 8px 0 rgba(62,53,133,.28),0 13px 20px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.35); color:#fff; }
+.reviews-hero-mark .material-icons { font-size:29px; }
+.reviews-hero-copy { min-width:0; }.reviews-hero-copy > span { color:#bdb0ed; font-size:9px; font-weight:850; letter-spacing:.13em; }.reviews-hero-copy h1 { margin:3px 0 5px; overflow:hidden; color:#f8f6ff; font-size:18px; font-weight:790; line-height:1.13; text-overflow:ellipsis; white-space:nowrap; }.reviews-hero-copy p { margin:0; color:#c9c4d8; font-size:11px; line-height:1.4; }
+.reviews-rate-cta { position:relative; z-index:1; grid-column:1 / -1; display:flex; align-items:center; gap:7px; width:100%; min-height:43px; margin-top:3px; padding:0 12px; border:1px solid rgba(205,190,255,.28); border-radius:13px; background:linear-gradient(105deg,rgba(155,124,241,.34),rgba(71,136,207,.18)); box-shadow:inset 0 1px 0 rgba(255,255,255,.17); color:#f8f6ff; font:780 12px/1 Ubuntu,Roboto,Arial,sans-serif; cursor:pointer; }.reviews-rate-cta .material-icons:first-child { color:#ffe09a; font-size:20px; }.reviews-rate-cta .material-icons:last-child { margin-left:auto; color:#d9d1ff; font-size:18px; }
+.reviews-scoreboard { display:flex; align-items:center; gap:13px; margin:0 14px 16px; padding:12px 15px; border:1px solid rgba(255,255,255,.10); border-radius:17px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); cursor:pointer; }.reviews-score { display:flex; align-items:baseline; gap:4px; min-width:70px; padding-right:13px; border-right:1px solid rgba(255,255,255,.10); }.reviews-score strong { color:#fff5c8; font-size:27px; line-height:1; }.reviews-score span,.reviews-stars small { color:#aaa4bd; font-size:10px; font-weight:700; }.reviews-stars { display:grid; gap:4px; }.reviews-stars .jk-rating-stars-container .material-icons { color:#ffd36e; font-size:17px; }.reviews-scoreboard > .material-icons { margin-left:auto; color:#bcaeff; }
+.location-reviews-page md-list { padding:0 14px 28px !important; }.location-reviews-page md-subheader { margin:0 0 6px; padding:9px 1px; }.reviews-list-heading { display:flex; align-items:center; gap:7px; color:#c6bed8; font-size:10px; font-weight:850; letter-spacing:.11em; text-transform:uppercase; }.reviews-list-heading .material-icons { color:#b6a5f3; font-size:17px; }.reviews-list-heading b { display:grid; place-items:center; min-width:20px; height:20px; margin-left:auto; border-radius:999px; background:rgba(157,132,238,.18); color:#e9e2ff; font-size:10px; }
+.location-reviews-page md-list-item { min-height:70px; margin:8px 0; padding:9px 11px; border-color:rgba(208,199,239,.12); border-radius:17px; background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.022)); box-shadow:inset 0 1px 0 rgba(255,255,255,.065); }.location-reviews-page md-list-item .lup-avatar { width:36px; height:36px; margin-right:4px; }.location-reviews-page md-list-item .lup-comment-text { color:#f0edf7 !important; font-size:13px; line-height:1.48; }.location-reviews-page md-list-item .lup-comment-date { margin-top:4px; color:#aaa4bb !important; font-size:10px; }.location-reviews-page md-list-item .md-secondary .material-icons { color:#f1a1b3; }
+.lup-comment-dialog { overflow:hidden; border:1px solid rgba(210,199,255,.20); border-radius:22px !important; background:linear-gradient(155deg,#292744,#171927) !important; }.lup-comment-dialog md-toolbar,.lup-comment-dialog md-toolbar .md-toolbar-tools { background:transparent !important; border:0; }.lup-comment-dialog md-dialog-content,.lup-comment-dialog .md-dialog-content { background:transparent !important; }.vote-dialog-intro { display:flex; align-items:center; gap:10px; margin:0 0 15px; color:#d4cde8; font-size:12px; line-height:1.4; }.vote-dialog-intro .material-icons { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:rgba(163,136,244,.18); color:#d9ccff; }.vote-dialog-intro p { margin:0; }.lup-comment-dialog jk-rating-stars { display:flex; justify-content:center; margin:4px 0 18px; }.lup-comment-dialog jk-rating-stars .material-icons { color:#ffd36e; font-size:28px; }.lup-comment-dialog textarea { min-height:104px; padding:11px; box-sizing:border-box; border:1px solid rgba(213,204,243,.17); border-radius:13px; background:rgba(255,255,255,.055); color:#f7f4ff; resize:vertical; }.lup-comment-dialog md-dialog-actions { padding:10px 18px 16px; }.lup-comment-dialog .vote-save { border:1px solid rgba(214,202,255,.24); border-radius:11px; background:linear-gradient(135deg,#997eea,#668bd6) !important; color:#fff !important; }
+@media (max-width:420px) { .reviews-hero { margin-right:10px; margin-left:10px; padding:15px; }.reviews-scoreboard { margin-right:10px; margin-left:10px; }.location-reviews-page md-list { padding-right:10px !important; padding-left:10px !important; } }
+
+/* Writing surfaces belong to the review atmosphere as much as the cards do. */
+.lup-comment-dialog md-input-container { margin:0; padding:0; background:transparent; }
+.lup-comment-dialog textarea,
+.location-chat-surface .chatbottom input {
+  border-color:rgba(176,162,239,.28) !important;
+  background:linear-gradient(145deg,rgba(91,83,145,.28),rgba(32,37,60,.92)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 7px 16px rgba(0,0,0,.12) !important;
+  color:#f7f4ff !important;
+  -webkit-text-fill-color:#f7f4ff;
+}
+.lup-comment-dialog textarea::placeholder,
+.location-chat-surface .chatbottom input::placeholder { color:#b7b0cb; opacity:1; }
+.lup-comment-dialog textarea:focus,
+.location-chat-surface .chatbottom input:focus { border-color:#b9a8ff !important; box-shadow:0 0 0 3px rgba(162,139,247,.15),inset 0 1px 0 rgba(255,255,255,.09) !important; }
+
+/* The vote window must always sit above the location tabs and the sidenav.
+   This is intentionally explicit: earlier experiments left the Material
+   overlay below a few mobile layers, making a star tap appear to do nothing. */
+.md-dialog-container { z-index:10020 !important; }
+md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
+.md-dialog-container .lup-comment-dialog {
+  display:block !important;
+  width:calc(100vw - 32px);
+  max-width:430px;
+  max-height:calc(100vh - 32px);
+  margin:0 auto;
+}
+.lup-comment-dialog .md-toolbar-tools h2 { color:#f7f4ff; font-size:18px; font-weight:700; }
+.lup-comment-dialog md-dialog-actions .md-button { min-height:38px; border-radius:10px; color:#d9d3e8; }
+
+/* Final, deliberately quiet review surface.  The interaction is the focus:
+   place, score, voices, then one obvious action to leave a rating. */
+.location-reviews-page > md-content {
+  background:linear-gradient(160deg,#151824 0%,#10121d 100%) !important;
+}
+.reviews-hero {
+  grid-template-columns:42px minmax(0,1fr);
+  gap:11px;
+  margin:14px 14px 10px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:15px;
+  background:rgba(255,255,255,.035);
+  box-shadow:none;
+}
+.reviews-hero::after { display:none; }
+.reviews-hero-mark {
+  width:40px;
+  height:40px;
+  border:1px solid rgba(188,174,255,.30);
+  border-radius:12px;
+  background:rgba(138,112,237,.16);
+  box-shadow:none;
+  color:#cdbfff;
+}
+.reviews-hero-mark .material-icons { font-size:22px; }
+.reviews-hero-copy > span { color:#aaa4c7; font-size:8px; }
+.reviews-hero-copy h1 { font-size:16px; font-weight:700; }
+.reviews-hero-copy p { color:#b9b5c7; font-size:11px; }
+.reviews-rate-cta {
+  min-height:40px;
+  margin-top:1px;
+  border:1px solid rgba(184,169,247,.26);
+  border-radius:11px;
+  background:rgba(137,112,232,.14);
+  box-shadow:none;
+}
+.reviews-scoreboard {
+  margin:0 14px 12px;
+  padding:11px 13px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  background:rgba(255,255,255,.03);
+  box-shadow:none;
+}
+.reviews-score { min-width:62px; }
+.reviews-score strong { font-size:24px; }
+.location-reviews-page md-list { padding:0 14px 25px !important; }
+.location-reviews-page md-list-item {
+  margin:7px 0;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:rgba(255,255,255,.025);
+  box-shadow:none;
+}
+.location-reviews-page md-list-item .lup-comment-text { color:#f2f0f7 !important; }
+.location-reviews-page .review-comment-rating { display:flex; align-items:center; gap:1px; margin-top:5px; }.location-reviews-page .review-comment-rating .material-icons { color:rgba(255,255,255,.17); font-size:14px; }.location-reviews-page .review-comment-rating .material-icons.is-rated { color:#ffd36e; }.location-reviews-page .review-comment-rating span { margin-left:5px; color:#a9a4b8; font-size:9px; font-weight:700; }
+.location-reviews-page .reviews-empty { display:flex; align-items:center; gap:9px; min-height:64px; color:#aaa6b8; font-size:11px; line-height:1.4; }.location-reviews-page .reviews-empty .material-icons { color:#b7a8ef; }
+@media (max-width:420px) {
+  .reviews-hero,.reviews-scoreboard { margin-right:10px; margin-left:10px; }
+  .location-reviews-page md-list { padding-right:10px !important; padding-left:10px !important; }
+}
+
+/* Venue view: a clean, useful destination page.  The five stars are plain
+   Material icons on one fixed row, so they can never wrap into a 3+2 block. */
+.venue-view { --venue-accent:#bba8ff; --venue-glow:rgba(154,127,241,.24); background:radial-gradient(circle at 86% 0,var(--venue-glow),transparent 30%),linear-gradient(160deg,#171a29,#10121c) !important; }
+.venue-view.location-category-city { --venue-accent:#8ec9ff; --venue-glow:rgba(94,175,243,.26); }
+.venue-view.location-category-bar,.venue-view.location-category-food { --venue-accent:#f1a76e; --venue-glow:rgba(226,126,70,.26); }
+.venue-view.location-category-cafe { --venue-accent:#e2b47d; --venue-glow:rgba(198,143,93,.24); }
+.venue-view.location-category-club { --venue-accent:#e58bdb; --venue-glow:rgba(211,81,203,.24); }
+.venue-view.location-category-culture { --venue-accent:#86c6ed; --venue-glow:rgba(80,165,226,.22); }
+.venue-view.location-category-sport,.venue-view.location-category-outdoors { --venue-accent:#85d5a4; --venue-glow:rgba(71,188,128,.22); }
+.venue-view.location-category-education { --venue-accent:#89d4e5; --venue-glow:rgba(73,182,202,.22); }
+.venue-view.location-category-health { --venue-accent:#ef9ab3; --venue-glow:rgba(224,98,142,.22); }
+.venue-identity { display:grid; grid-template-columns:52px minmax(0,1fr) 36px; align-items:center; gap:12px; min-height:108px; padding:16px; border-bottom:1px solid color-mix(in srgb,var(--venue-accent) 20%,rgba(255,255,255,.08)); background:linear-gradient(115deg,color-mix(in srgb,var(--venue-accent) 13%,#24283a),rgba(19,21,33,.95) 72%); }
+.venue-category-mark { display:grid; place-items:center; width:50px; height:50px; border:1px solid color-mix(in srgb,var(--venue-accent) 55%,rgba(255,255,255,.18)); border-radius:15px 15px 15px 6px; background:linear-gradient(145deg,color-mix(in srgb,var(--venue-accent) 38%,#596074),#262a3b); box-shadow:0 10px 22px rgba(0,0,0,.22),0 0 20px var(--venue-glow),inset 0 1px rgba(255,255,255,.28); color:#fff; }.venue-category-mark .material-icons { font-size:28px; }
+.venue-title { min-width:0; }.venue-title > span { display:block; overflow:hidden; color:var(--venue-accent); font-size:9px; font-weight:800; letter-spacing:.1em; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }.venue-title h1 { display:-webkit-box; overflow:hidden; margin:3px 0 4px; color:#f8f6fc; font-size:20px; font-weight:720; line-height:1.08; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.venue-title p { overflow:hidden; margin:0; color:#b5b2c1; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.venue-hours { display:grid; place-items:center; width:36px; height:36px; padding:0; border:1px solid rgba(255,255,255,.10); border-radius:11px; background:rgba(255,255,255,.04); color:#c9c4d7; cursor:pointer; }.venue-hours .room-open { color:#82dda9; }.venue-hours .room-closed { color:#f19baa; }.venue-hours .room-unknown { color:var(--venue-accent); }
+.venue-rating { display:grid; grid-template-columns:58px minmax(0,1fr) auto; align-items:center; gap:10px; width:calc(100% - 28px); min-height:66px; margin:13px 14px 10px; padding:10px 12px; border:1px solid color-mix(in srgb,var(--venue-accent) 27%,rgba(255,255,255,.11)); border-radius:15px; background:rgba(255,255,255,.035); box-shadow:inset 0 1px rgba(255,255,255,.06); color:#f5f2fa; cursor:pointer; text-align:left; }
+.venue-rating-number { display:grid; gap:1px; }.venue-rating-number strong { color:#fff0ad; font-size:25px; line-height:.95; }.venue-rating-number span { color:#aaa5b8; font-size:9px; font-weight:700; }.venue-stars { display:flex; flex-wrap:nowrap; min-width:0; overflow:hidden; white-space:nowrap; }.venue-stars .material-icons { flex:0 0 auto; color:rgba(255,255,255,.18); font-size:20px; }.venue-stars .venue-star-on { color:#ffd46e; text-shadow:0 0 12px rgba(255,210,103,.18); }.venue-rating-meta { display:grid; grid-template-columns:auto auto; column-gap:3px; align-items:baseline; min-width:41px; color:#b7b2c6; }.venue-rating-meta b { color:#f1edf9; font-size:14px; }.venue-rating-meta span { font-size:8px; }.venue-rating-meta .material-icons { grid-column:1 / -1; justify-self:end; margin-top:2px; color:var(--venue-accent); font-size:16px; }
+.venue-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0 14px 14px; }.venue-action { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:84px; padding:8px 4px; border:1px solid rgba(255,255,255,.10); border-radius:14px; background:rgba(255,255,255,.03); box-shadow:inset 0 1px rgba(255,255,255,.06); color:#f1eef8; cursor:pointer; font:inherit; text-decoration:none; }.venue-action .material-icons { color:var(--venue-accent); font-size:24px; text-shadow:0 0 13px var(--venue-glow); }.venue-action span { font-size:11px; font-weight:760; }.venue-action small { overflow:hidden; max-width:100%; color:#aaa5b9; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }.venue-action-vote { border-color:color-mix(in srgb,var(--venue-accent) 31%,rgba(255,255,255,.12)); background:color-mix(in srgb,var(--venue-accent) 12%,rgba(255,255,255,.03)); }.venue-action-vote .material-icons { color:#ffe09a; }
+.venue-note { display:flex; gap:8px; margin:0 14px 26px; padding:11px 12px; border-left:2px solid var(--venue-accent); background:linear-gradient(90deg,color-mix(in srgb,var(--venue-accent) 10%,transparent),transparent); color:#b8b4c4; }.venue-note .material-icons { color:var(--venue-accent); font-size:17px; }.venue-note p { margin:0; font-size:11px; line-height:1.45; }
+@media (max-width:360px) { .venue-identity { grid-template-columns:45px minmax(0,1fr) 32px; gap:9px; padding:13px 10px; }.venue-category-mark { width:43px; height:43px; }.venue-title h1 { font-size:17px; }.venue-rating,.venue-actions,.venue-note { margin-right:10px; margin-left:10px; }.venue-rating { width:calc(100% - 20px); gap:7px; padding-right:9px; padding-left:9px; }.venue-stars .material-icons { font-size:17px; }.venue-action span { font-size:10px; } }
+
+/* The location page itself is a compact reputation stage, not a passive
+   directory entry. It gives a venue a reason to earn real visitor voices. */
+.location-experience { background:radial-gradient(circle at 88% 3%,rgba(116,97,224,.16),transparent 29%),linear-gradient(160deg,#191b2b,#141622) !important; }
+.location-reputation { position:relative; display:grid; grid-template-columns:46px minmax(0,1fr) auto; gap:11px; align-items:center; margin:14px 13px 12px; padding:13px; overflow:hidden; border:1px solid rgba(203,194,239,.15); border-radius:18px; background:linear-gradient(125deg,rgba(93,77,160,.33),rgba(33,44,70,.74) 57%,rgba(27,30,46,.92)); box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 13px 25px rgba(0,0,0,.16); cursor:pointer; }.location-reputation::before { content:''; position:absolute; top:-50px; right:-30px; width:128px; height:128px; border:1px solid rgba(212,201,255,.15); border-radius:50%; box-shadow:0 0 0 15px rgba(142,119,236,.035); pointer-events:none; }.location-reputation > * { position:relative; z-index:1; }
+.reputation-seal { display:grid; place-items:center; width:43px; height:43px; border:1px solid rgba(238,224,255,.29); border-radius:14px 14px 14px 6px; background:linear-gradient(145deg,#b095ff,#5e82d9); box-shadow:0 6px 0 rgba(62,52,131,.28),0 10px 17px rgba(0,0,0,.19),inset 0 1px 0 rgba(255,255,255,.36); color:#fff; }.reputation-seal .material-icons { font-size:25px; }
+.reputation-copy { min-width:0; }.reputation-copy > span { display:block; margin-bottom:3px; color:#c6b9f5; font-size:8px; font-weight:900; letter-spacing:.14em; }.reputation-copy strong { display:block; overflow:hidden; color:#fbf9ff; font-size:13px; line-height:1.2; text-overflow:ellipsis; white-space:nowrap; }.reputation-copy small { display:block; margin-top:4px; overflow:hidden; color:#c2bed1; font-size:10px; line-height:1.2; text-overflow:ellipsis; white-space:nowrap; }
+.reputation-score { display:grid; grid-template-columns:auto auto; column-gap:3px; align-items:baseline; min-width:47px; text-align:right; }.reputation-score b { color:#fff0af; font-size:20px; line-height:1; }.reputation-score > span { color:#bbb4c9; font-size:9px; font-weight:700; }.reputation-score jk-rating-stars { grid-column:1 / -1; margin-top:3px; white-space:nowrap; }.reputation-score .jk-rating-stars-container .material-icons { color:#ffd36e; font-size:10px; }
+.reputation-action { grid-column:2 / -1; display:flex; align-items:center; gap:5px; margin-top:1px; color:#e7dfff; font-size:10px; font-weight:800; }.reputation-action .material-icons { color:#ffe09a; font-size:15px; }
+.location-voices { margin-top:3px; padding-top:5px; }.location-voices .location-section-title > span { display:flex; align-items:center; gap:7px; color:#e9e5f3; }.location-voices .location-section-title > span .material-icons { color:#c2afff; font-size:18px; }.location-voices .location-section-title button { color:#c6b9fa; }
+.location-comment-compose { display:flex; align-items:center; gap:8px; width:100%; min-height:43px; margin:0 0 9px; padding:0 12px; border:1px dashed rgba(195,181,248,.28); border-radius:13px; background:linear-gradient(100deg,rgba(127,103,221,.15),rgba(255,255,255,.025)); color:#ddd7ed; font:750 11px/1 Ubuntu,Roboto,Arial,sans-serif; cursor:pointer; }.location-comment-compose .material-icons:first-child { display:grid; place-items:center; width:25px; height:25px; border-radius:8px; background:rgba(168,145,245,.16); color:#d8caff; font-size:15px; }.location-comment-compose .material-icons:last-child { margin-left:auto; color:#b9adf0; font-size:17px; }.location-comment-compose:hover { border-color:rgba(205,191,255,.52); background:linear-gradient(100deg,rgba(137,110,232,.25),rgba(255,255,255,.045)); }
+.location-voices .location-comment { border-color:rgba(209,201,239,.11); background:linear-gradient(125deg,rgba(255,255,255,.055),rgba(255,255,255,.025)); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); cursor:pointer; }.location-voices .location-comment-empty { border-color:rgba(188,174,237,.20); background:rgba(117,96,192,.075); color:#bcb4cd; cursor:pointer; }
+@media (max-width:380px) { .location-reputation { grid-template-columns:42px minmax(0,1fr) auto; gap:8px; margin-right:10px; margin-left:10px; padding:11px; }.reputation-seal { width:39px; height:39px; }.reputation-copy strong { font-size:12px; }.reputation-copy small { display:none; }.reputation-score b { font-size:18px; }.location-voices { margin-right:10px; margin-left:10px; } }
+
+/* One final route pin across every viewport. Older experimental rules used
+   different icon shapes before and after the mobile layout settled. */
+.nearby .roominfo .distrat .distance a > .material-icons {
+  display:grid !important;
+  place-items:center !important;
+  width:60px !important;
+  height:60px !important;
+  margin:0 !important;
+  border:1px solid rgba(183,232,248,.44) !important;
+  border-radius:50% 50% 50% 15px !important;
+  background:radial-gradient(circle at 30% 23%,rgba(238,254,255,.72) 0 7%,transparent 8% 100%),linear-gradient(145deg,#78cfe2,#4386c7 64%,#344d9b) !important;
+  box-shadow:0 6px 12px rgba(29,72,137,.31),0 15px 25px rgba(0,0,0,.26),0 0 20px rgba(95,205,238,.18),inset 0 2px 1px rgba(255,255,255,.44) !important;
+  color:#fff !important;
+  font-size:31px !important;
+  line-height:1 !important;
+  transition:transform .2s ease,filter .2s ease !important;
+}
+.nearby .roominfo .distrat .distance a:hover > .material-icons { transform:translateY(-2px) scale(1.03); filter:brightness(1.08); }
+
+/* Location Placeboard — one category-led place identity and exactly three
+   useful actions: find it, inspect real voices, leave a five-star vote. */
+.location-placeboard { --placeboard-accent:#b7a2ff; --placeboard-glow:rgba(148,118,239,.25); background:radial-gradient(circle at 83% 4%,var(--placeboard-glow),transparent 29%),linear-gradient(160deg,#171a29,#13151f) !important; }
+.location-placeboard.location-category-city { --placeboard-accent:#8fc8ff; --placeboard-glow:rgba(101,180,255,.28); }.location-placeboard.location-category-bar,.location-placeboard.location-category-food { --placeboard-accent:#f2aa72; --placeboard-glow:rgba(238,132,83,.26); }.location-placeboard.location-category-cafe { --placeboard-accent:#e2b87f; --placeboard-glow:rgba(207,151,95,.25); }.location-placeboard.location-category-club { --placeboard-accent:#ec8de3; --placeboard-glow:rgba(213,83,211,.28); }.location-placeboard.location-category-culture { --placeboard-accent:#8cc7ee; --placeboard-glow:rgba(90,172,229,.24); }.location-placeboard.location-category-sport,.location-placeboard.location-category-outdoors { --placeboard-accent:#83d2a2; --placeboard-glow:rgba(75,192,135,.24); }.location-placeboard.location-category-education { --placeboard-accent:#88d6e6; --placeboard-glow:rgba(85,189,209,.25); }.location-placeboard.location-category-health { --placeboard-accent:#f49ab2; --placeboard-glow:rgba(228,103,144,.25); }
+.placeboard-hero { position:relative; display:grid; grid-template-columns:63px minmax(0,1fr) 38px; gap:12px; align-items:center; min-height:122px; padding:19px 16px 17px; overflow:hidden; border-bottom:1px solid color-mix(in srgb,var(--placeboard-accent) 22%,rgba(255,255,255,.08)); background:linear-gradient(135deg,color-mix(in srgb,var(--placeboard-accent) 15%,rgba(43,45,70,.94)),rgba(23,26,40,.96) 70%); }.placeboard-hero::after { content:''; position:absolute; right:-49px; bottom:-64px; width:176px; height:176px; border:1px solid color-mix(in srgb,var(--placeboard-accent) 22%,transparent); border-radius:50%; box-shadow:0 0 0 19px color-mix(in srgb,var(--placeboard-accent) 4%,transparent),0 0 33px var(--placeboard-glow); pointer-events:none; }.placeboard-hero > * { position:relative; z-index:1; }
+.placeboard-orbit { display:grid; place-items:center; width:58px; height:58px; border:1px solid color-mix(in srgb,var(--placeboard-accent) 48%,rgba(255,255,255,.16)); border-radius:19px 19px 19px 7px; background:linear-gradient(145deg,color-mix(in srgb,var(--placeboard-accent) 41%,#626477),color-mix(in srgb,var(--placeboard-accent) 17%,#25283c)); box-shadow:0 8px 0 color-mix(in srgb,var(--placeboard-accent) 18%,rgba(23,25,43,.62)),0 14px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.35); color:#fff; }.placeboard-orbit .material-icons { font-size:32px; filter:drop-shadow(0 2px 0 rgba(0,0,0,.18)); }
+.placeboard-copy { min-width:0; }.placeboard-kicker { display:block; overflow:hidden; color:var(--placeboard-accent); font-size:9px; font-weight:900; letter-spacing:.13em; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }.placeboard-copy h1 { display:-webkit-box; overflow:hidden; margin:4px 0 5px; color:#f9f7ff; font-size:21px; font-weight:780; letter-spacing:-.025em; line-height:1.05; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.placeboard-copy p { overflow:hidden; margin:0; color:#bbb7c9; font-size:11px; line-height:1.3; text-overflow:ellipsis; white-space:nowrap; }
+.placeboard-hours { display:grid; place-items:center; width:36px; height:36px; padding:0; border:1px solid rgba(255,255,255,.10); border-radius:11px; background:rgba(255,255,255,.045); color:#c9c4d8; cursor:pointer; }.placeboard-hours .material-icons { font-size:19px; }.placeboard-hours .room-open { color:#7ce1ae; }.placeboard-hours .room-closed { color:#ffa1ae; }.placeboard-hours .room-unknown { color:var(--placeboard-accent); }
+.placeboard-score { display:grid; grid-template-columns:70px minmax(0,1fr); column-gap:11px; align-items:center; margin:14px 14px 10px; padding:12px 14px; border:1px solid color-mix(in srgb,var(--placeboard-accent) 22%,rgba(255,255,255,.10)); border-radius:16px; background:linear-gradient(105deg,color-mix(in srgb,var(--placeboard-accent) 13%,rgba(255,255,255,.045)),rgba(255,255,255,.025)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08); cursor:pointer; }.placeboard-score > div { display:grid; grid-template-columns:auto auto; gap:2px; align-items:baseline; }.placeboard-score > div span { grid-column:1/-1; color:#aaa4bb; font-size:8px; font-weight:850; letter-spacing:.1em; }.placeboard-score > div strong { color:#fff0ad; font-size:25px; line-height:1; }.placeboard-score > div small { color:#bdb6ca; font-size:9px; font-weight:700; }.placeboard-score jk-rating-stars { justify-self:start; }.placeboard-score .jk-rating-stars-container .material-icons { color:#ffd36e; font-size:17px; }.placeboard-score p { grid-column:2; margin:2px 0 0; color:#aaa5bc; font-size:10px; }
+.placeboard-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0 14px 13px; }.placeboard-action { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:91px; padding:9px 4px; overflow:hidden; border:1px solid rgba(255,255,255,.10); border-radius:16px; background:rgba(255,255,255,.035); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); color:#e9e6f2; font:inherit; text-decoration:none; cursor:pointer; }.placeboard-action::before { content:''; position:absolute; top:0; width:48%; height:1px; background:linear-gradient(90deg,transparent,var(--placeboard-accent),transparent); opacity:.72; }.placeboard-action .material-icons { color:var(--placeboard-accent); font-size:25px; text-shadow:0 0 12px var(--placeboard-glow); }.placeboard-action span { color:#f0edf6; font-size:11px; font-weight:800; }.placeboard-action small { overflow:hidden; max-width:100%; color:#aaa5b9; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }.placeboard-action:hover { border-color:color-mix(in srgb,var(--placeboard-accent) 43%,rgba(255,255,255,.14)); background:linear-gradient(145deg,color-mix(in srgb,var(--placeboard-accent) 17%,rgba(255,255,255,.06)),rgba(255,255,255,.04)); }.placeboard-vote { border-color:color-mix(in srgb,var(--placeboard-accent) 34%,rgba(255,255,255,.12)); background:linear-gradient(145deg,color-mix(in srgb,var(--placeboard-accent) 18%,rgba(255,255,255,.08)),rgba(255,255,255,.035)); }.placeboard-vote .material-icons { color:#ffe09a; }
+.placeboard-note { display:flex; align-items:flex-start; gap:8px; margin:0 14px 28px; padding:11px 12px; border-left:2px solid var(--placeboard-accent); background:linear-gradient(90deg,color-mix(in srgb,var(--placeboard-accent) 9%,transparent),transparent 88%); color:#bbb7c8; }.placeboard-note .material-icons { flex:0 0 auto; color:var(--placeboard-accent); font-size:16px; }.placeboard-note p { margin:0; font-size:11px; line-height:1.45; }
+@media (max-width:360px) { .placeboard-hero { grid-template-columns:52px minmax(0,1fr) 34px; gap:9px; padding-right:12px; padding-left:12px; }.placeboard-orbit { width:50px; height:50px; border-radius:16px 16px 16px 6px; }.placeboard-orbit .material-icons { font-size:28px; }.placeboard-copy h1 { font-size:18px; }.placeboard-score,.placeboard-actions,.placeboard-note { margin-right:10px; margin-left:10px; }.placeboard-score { padding-right:10px; padding-left:10px; }.placeboard-score .jk-rating-stars-container .material-icons { font-size:14px; }.placeboard-action span { font-size:10px; } }
+
+/* Discovery actions are a pair: QR check-in and route use the same compact
+   tile language.  Only their accent colour differs, never their depth or size. */
+.nearby .roominfo .distrat .location-cuddles,
+.nearby .roominfo .distrat .distance,
+.nearby .roominfo .distrat .distance p,
+.nearby .roominfo .distrat .distance a {
+  width:56px !important;
+  min-width:56px !important;
+  height:56px !important;
+  margin:0 !important;
+}
+.nearby .roominfo .distrat .location-cuddles,
+.nearby .roominfo .distrat .distance a > .material-icons {
+  display:grid !important;
+  place-items:center !important;
+  box-sizing:border-box !important;
+  width:56px !important;
+  height:56px !important;
+  border:1px solid rgba(205,197,244,.22) !important;
+  border-radius:14px !important;
+  background:linear-gradient(145deg,rgba(76,72,112,.92),rgba(28,31,48,.96)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 9px 18px rgba(0,0,0,.20) !important;
+}
+.nearby .roominfo .distrat .location-cuddles { color:#d6c5ff !important; }
+.nearby .roominfo .distrat .distance a { display:grid !important; place-items:center !important; border-radius:14px !important; color:#c8e6ff !important; text-decoration:none !important; }
+.nearby .roominfo .distrat .distance a > .material-icons { color:#9bd9ff !important; font-size:29px !important; line-height:1 !important; transform:none !important; filter:none !important; }
+.nearby .roominfo .distrat .location-cuddles > .material-icons { color:#d6c5ff !important; font-size:27px !important; line-height:1 !important; filter:none !important; }
+.nearby .roominfo .distrat .location-cuddles strong,
+.nearby .roominfo .distrat .distance a > span {
+  position:absolute !important;
+  right:-5px !important;
+  bottom:-5px !important;
+  display:grid !important;
+  place-items:center !important;
+  min-width:18px !important;
+  height:18px !important;
+  padding:0 4px !important;
+  border:1px solid rgba(205,197,244,.22) !important;
+  border-radius:999px !important;
+  background:#202334 !important;
+  box-shadow:0 3px 8px rgba(0,0,0,.26) !important;
+  color:#f7f5ff !important;
+  font-size:8px !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+}
+.nearby .roominfo .distrat .distance a::before,
+.nearby .roominfo .distrat .distance a::after { content:none !important; display:none !important; }
+.nearby .roominfo .distrat .location-cuddles::before,
+.nearby .roominfo .distrat .location-cuddles::after { content:none !important; display:none !important; }
+.nearby .roominfo .distrat .location-cuddles:hover,
+.nearby .roominfo .distrat .distance a:hover > .material-icons { transform:none !important; filter:brightness(1.12) !important; }
+
+/* The discovery screen needs a sense of place even between cards: one slow
+   night-map mesh and one quiet signal trail travel behind the interface. */
+.nearby md-content.greybg {
+  position:relative !important;
+  isolation:isolate;
+  overflow:hidden !important;
+  background:
+    radial-gradient(ellipse at 12% 28%,rgba(103,91,202,.18),transparent 30%),
+    radial-gradient(ellipse at 88% 72%,rgba(51,152,219,.14),transparent 34%),
+    linear-gradient(160deg,#131623 0%,#191b2c 52%,#11131d 100%) !important;
+}
+.nearby md-content.greybg::before {
+  content:'' !important;
+  position:absolute !important;
+  z-index:0 !important;
+  inset:56px -25% -15% !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(circle,rgba(203,195,255,.17) 1px,transparent 1.3px) 0 0 / 20px 20px,
+    radial-gradient(ellipse at 21% 32%,rgba(144,111,241,.18),transparent 24%),
+    radial-gradient(ellipse at 78% 64%,rgba(65,178,238,.14),transparent 29%);
+  opacity:.72 !important;
+  animation:lup-discovery-mesh 19s ease-in-out infinite alternate !important;
+}
+.nearby md-content.greybg::after {
+  content:'' !important;
+  position:absolute !important;
+  z-index:0 !important;
+  top:45% !important;
+  left:-55% !important;
+  width:76% !important;
+  height:2px !important;
+  pointer-events:none !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,transparent,rgba(125,196,255,.06) 8%,rgba(181,152,255,.76) 47%,rgba(111,211,255,.10) 78%,transparent) !important;
+  box-shadow:0 0 8px rgba(160,139,255,.22),0 0 22px rgba(69,177,239,.13) !important;
+  transform:rotate(-13deg) !important;
+  animation:lup-discovery-signal-trail 15s cubic-bezier(.38,.05,.56,.95) infinite !important;
+}
+.nearby md-content.greybg > * { position:relative; z-index:1; }
+@keyframes lup-discovery-mesh {
+  0% { transform:translate3d(-3%,-2%,0) scale(1); opacity:.46; }
+  55% { transform:translate3d(3%,2%,0) scale(1.05); opacity:.78; }
+  100% { transform:translate3d(1%,-3%,0) scale(1.02); opacity:.54; }
+}
+@keyframes lup-discovery-signal-trail {
+  0% { transform:translate3d(0,48px,0) rotate(-13deg); opacity:0; }
+  13% { opacity:.82; }
+  72% { opacity:.55; }
+  100% { transform:translate3d(255vw,-64px,0) rotate(-13deg); opacity:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .nearby md-content.greybg::before,.nearby md-content.greybg::after { animation:none !important; }
+}
+
+/* The visible part of the ambient signal lives inside the current venue card;
+   the card otherwise covers the page-level background on a phone. */
+.nearby .slick-current .roominfo { isolation:isolate; overflow:hidden; }
+.nearby .slick-current .roominfo > * { position:relative; z-index:1; }
+.nearby .slick-current .roominfo::after {
+  content:'';
+  position:absolute;
+  z-index:0;
+  bottom:-94px;
+  left:-34%;
+  width:168%;
+  height:158px;
+  pointer-events:none;
+  border:1px solid rgba(155,137,255,.22);
+  border-top-color:rgba(181,163,255,.60);
+  border-radius:50%;
+  background:radial-gradient(ellipse at 49% 16%,rgba(126,193,255,.13),transparent 34%);
+  box-shadow:0 -1px 15px rgba(162,139,255,.20),0 -6px 36px rgba(63,171,237,.10),inset 0 1px 12px rgba(159,136,245,.08);
+  transform-origin:50% 100%;
+  animation:lup-card-signal-arc 13s ease-in-out infinite alternate;
+}
+@keyframes lup-card-signal-arc {
+  0% { transform:translate3d(-2%,8px,0) scale(.96); opacity:.36; }
+  52% { transform:translate3d(2%,-5px,0) scale(1.035); opacity:.88; }
+  100% { transform:translate3d(-1%,-1px,0) scale(1); opacity:.52; }
+}
+@media (prefers-reduced-motion:reduce) { .nearby .slick-current .roominfo::after { animation:none; } }
+
+/* Responsive safety net: whether DevTools is wide or phone-sized, Slick owns
+   one horizontal viewport. It must never fall back to a vertical room list. */
+.nearby .slickit,
+.nearby .slickit .slick-list {
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+.nearby .slickit .slick-list { touch-action:pan-y !important; }
+.nearby .slickit .slick-track { min-width:100% !important; }
+.nearby .slickit .slick-slide { height:auto !important; }
+
+/* Location navigation and presence: calm premium surfaces, clear current
+   state, and people as the focus rather than decorative chrome. */
+.location-page md-tabs md-tabs-wrapper {
+  margin:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+  background:linear-gradient(100deg,#171a29,#20223a) !important;
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.22) !important;
+}
+.location-page md-tabs md-tabs-canvas,
+.location-page md-tabs md-pagination-wrapper { height:52px !important; }
+.location-page md-tabs md-tab-item {
+  position:relative;
+  height:52px !important;
+  min-height:52px !important;
+  color:#9d9aaf !important;
+  letter-spacing:.055em;
+}
+.location-page md-tabs md-tab-item .md-tab-label { font-size:10px; font-weight:760; }
+.location-page md-tabs md-tab-item .md-tab-label::before { width:26px; height:26px; border-radius:9px; background:rgba(255,255,255,.035); color:#a8a5b7; }
+.location-page md-tabs md-tab-item.md-active { background:rgba(255,255,255,.045) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.10) !important; color:#f7f5fd !important; }
+.location-page md-tabs md-tab-item.md-active::after { content:''; position:absolute; right:17%; bottom:0; left:17%; height:2px; border-radius:2px 2px 0 0; background:linear-gradient(90deg,transparent,#b8a6ff,#88cfff,transparent); box-shadow:0 0 12px rgba(156,135,255,.45); }
+.location-page md-tabs md-tab-item.md-active .md-tab-label::before { background:rgba(165,143,243,.18); color:#eeeaff; }
+
+.location-page md-list.usernavigation {
+  padding:16px 14px 28px !important;
+  background:radial-gradient(ellipse at 82% 2%,rgba(125,107,228,.16),transparent 29%),linear-gradient(160deg,#151825,#10121b) !important;
+}
+.location-page md-list.usernavigation .location-presence-heading {
+  display:grid !important;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  align-items:center;
+  gap:11px;
+  min-height:76px;
+  margin:0 0 13px;
+  padding:13px !important;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(83,77,127,.42),rgba(29,33,50,.80));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 13px 27px rgba(0,0,0,.16);
+}
+.location-page md-list.usernavigation .location-presence-heading::after { display:none; }
+.location-page md-list.usernavigation .presence-live-mark { position:relative; display:grid; place-items:center; width:40px; height:40px; border:1px solid rgba(135,228,179,.32); border-radius:13px; background:rgba(73,186,133,.12); color:#9be4ba; }.location-page md-list.usernavigation .presence-live-mark .material-icons { font-size:22px; }.location-page md-list.usernavigation .presence-live-mark b { position:absolute; top:7px; right:7px; width:6px; height:6px; border-radius:50%; background:#78dfa4; box-shadow:0 0 0 3px rgba(120,223,164,.13),0 0 10px rgba(120,223,164,.66); }
+.location-page md-list.usernavigation .location-presence-heading strong { overflow:hidden; color:#f5f3fb; font-size:14px; font-weight:720; letter-spacing:-.01em; text-overflow:ellipsis; white-space:nowrap; }.location-page md-list.usernavigation .location-presence-heading span:not(.presence-live-mark):not(.presence-total) { margin-top:3px; color:#aaa6b7; font-size:10px; }
+.location-page md-list.usernavigation .presence-total { display:grid; justify-items:end; gap:1px; min-width:35px; }.location-page md-list.usernavigation .presence-total b { color:#fff; font-size:19px; font-weight:720; line-height:1; }.location-page md-list.usernavigation .presence-total small { color:#8fe1b1; font-size:7px; font-weight:850; letter-spacing:.09em; }
+.location-page md-list.usernavigation .visitors-list { display:grid; gap:8px; padding:0 !important; }
+.location-page md-list.usernavigation .presence-person {
+  min-height:66px;
+  margin:0 !important;
+  padding:9px 10px !important;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:14px;
+  background:rgba(255,255,255,.03);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.location-page md-list.usernavigation .presence-person::before { top:11px; bottom:11px; width:2px; background:linear-gradient(#8fe0b1,#79a9e4); opacity:.82; }.location-page md-list.usernavigation .presence-person .presence-avatar { width:42px; height:42px; margin-right:10px; outline:1px solid rgba(164,222,191,.38); outline-offset:2px; }.location-page md-list.usernavigation .presence-person .presence-avatar img { width:42px; height:42px; }.location-page md-list.usernavigation .presence-person-copy .username { margin:0 0 3px !important; color:#f6f4fb !important; font-size:13px; font-weight:720; }.location-page md-list.usernavigation .presence-person-copy p:last-child { display:flex; align-items:center; gap:4px; margin:0; color:#aaa7b8 !important; font-size:10px; }.location-page md-list.usernavigation .presence-person-copy p:last-child .material-icons { color:#79dda7; font-size:9px; }
+.location-page md-list.usernavigation .presence-actions { gap:5px; margin-left:8px; }.location-page md-list.usernavigation .presence-actions .presence-action { width:32px; height:32px; min-width:32px; padding:0; border:1px solid rgba(255,255,255,.11); border-radius:10px; background:rgba(255,255,255,.05); box-shadow:inset 0 1px 0 rgba(255,255,255,.08); color:#d9d4ea; }.location-page md-list.usernavigation .presence-actions .presence-action .material-icons { font-size:17px; }.location-page md-list.usernavigation .presence-actions .presence-action:hover { transform:translateY(-1px); filter:brightness(1.11); }.location-page md-list.usernavigation .presence-actions .presence-message { color:#d7ccff; }.location-page md-list.usernavigation .presence-actions .presence-up { color:#ffdd83; }
+@media (max-width:360px) { .location-page md-list.usernavigation { padding-right:10px !important; padding-left:10px !important; }.location-page md-list.usernavigation .location-presence-heading { grid-template-columns:38px minmax(0,1fr) auto; gap:9px; padding:11px !important; }.location-page md-list.usernavigation .presence-live-mark { width:36px; height:36px; }.location-page md-list.usernavigation .presence-actions { gap:3px; margin-left:4px; }.location-page md-list.usernavigation .presence-actions .presence-action { width:29px; height:29px; min-width:29px; } }
+
+/* Keep the review list inside the dark location surface. Material's default
+   subheader otherwise flashes a white strip on the comments route. */
+.location-reviews-page md-subheader,
+.location-reviews-page md-subheader .md-subheader-inner,
+.location-reviews-page .reviews-list-heading {
+  background:transparent !important;
+  color:#c9c4d8 !important;
+}
+.location-reviews-page md-subheader {
+  min-height:36px !important;
+  margin:0 !important;
+  padding:8px 1px 4px !important;
+  border:0 !important;
+}
+.location-reviews-page .reviews-list-heading { min-height:24px; }
+.location-reviews-page .reviews-list-heading--plain {
+  min-height:38px;
+  margin:0;
+  padding:8px 3px 5px;
+  box-sizing:border-box;
+  background:transparent !important;
+}
+.location-reviews-page .lup-comment-text,
+.location-reviews-page .lup-comment-text *,
+.location-reviews-page .md-list-item-text h4,
+.location-reviews-page .md-list-item-text h4 * {
+  color:#f3f1fa !important;
+  -webkit-text-fill-color:#f3f1fa !important;
+}
+
+/* Angular Material can inject a wrapper with its light default background.
+   Give every layer of this one heading the review page's own dark surface. */
+.location-reviews-page .reviews-list > .md-subheader-wrapper,
+.location-reviews-page .reviews-list > .md-subheader-wrapper > md-subheader,
+.location-reviews-page .reviews-list > .md-subheader-wrapper .md-subheader-inner,
+.location-reviews-page .reviews-list > .md-subheader-wrapper .md-subheader-content,
+.location-reviews-page .reviews-list > md-subheader,
+.location-reviews-page .reviews-list > md-subheader .md-subheader-inner,
+.location-reviews-page .reviews-list > md-subheader .md-subheader-content {
+  background:#10121d !important;
+  background-image:none !important;
+  box-shadow:none !important;
+}
+
+/* Conversation: no borrowed paper-plane look. The composer is a calm writing
+   dock, while the action is an unmistakable LinkUUp conversation mark. */
+.location-chat-surface {
+  background:
+    radial-gradient(ellipse at 8% 105%,color-mix(in srgb,var(--chat-accent) 17%,transparent),transparent 42%),
+    radial-gradient(ellipse at 92% 5%,var(--chat-glow),transparent 36%),
+    linear-gradient(155deg,#171a2a,#0e101a 76%) !important;
+}
+.location-chat-surface .chat-msgs {
+  padding:16px 13px !important;
+  background:linear-gradient(180deg,rgba(17,19,30,.12),rgba(9,11,19,.64)) !important;
+}
+.location-chat-surface .lup-msg { margin-bottom:10px !important; }
+.location-chat-surface .lup-msg .msg {
+  margin:0 !important;
+  padding:10px 12px !important;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:15px 15px 15px 6px;
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.location-chat-surface .lup-own-msg .msg {
+  border-color:color-mix(in srgb,var(--chat-accent) 31%,rgba(255,255,255,.10));
+  border-radius:15px 15px 6px 15px;
+  background:color-mix(in srgb,var(--chat-accent) 13%,rgba(255,255,255,.04));
+}
+.location-chat-surface .chatbottom {
+  display:flex !important;
+  align-items:center;
+  gap:9px;
+  pointer-events:auto !important;
+  height:72px !important;
+  padding:11px 13px !important;
+  border:0 !important;
+  border-top:1px solid color-mix(in srgb,var(--chat-accent) 18%,rgba(255,255,255,.08)) !important;
+  background:linear-gradient(180deg,rgba(12,14,24,.74),rgba(17,19,31,.96)) !important;
+}
+.location-chat-surface .chatbottom .chat-input {
+  float:none !important;
+  flex:1 1 auto;
+  width:auto !important;
+  padding:0 !important;
+}
+.location-chat-surface .chatbottom input {
+  position:relative;
+  z-index:2;
+  pointer-events:auto !important;
+  width:100% !important;
+  height:46px !important;
+  padding:0 14px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:14px !important;
+  outline:none !important;
+  background:rgba(255,255,255,.055) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055) !important;
+  color:#f5f3fb !important;
+}
+.location-chat-surface .chatbottom input:focus {
+  border-color:color-mix(in srgb,var(--chat-accent) 52%,rgba(255,255,255,.17)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 0 0 2px color-mix(in srgb,var(--chat-accent) 13%,transparent) !important;
+}
+.location-chat-surface .chatbottom .chat-compose-send {
+  position:relative;
+  z-index:2;
+  float:none !important;
+  display:grid !important;
+  place-items:center;
+  flex:0 0 46px !important;
+  width:46px !important;
+  height:46px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:1px solid color-mix(in srgb,var(--chat-accent) 38%,rgba(255,255,255,.15));
+  border-radius:15px !important;
+  background:color-mix(in srgb,var(--chat-accent) 18%,rgba(255,255,255,.04)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 7px 17px rgba(0,0,0,.16) !important;
+}
+.location-chat-surface .chatbottom .chat-compose-send button,
+.location-chat-surface .chatbottom .chat-compose-send button.sendmessage {
+  display:grid !important;
+  place-items:center;
+  width:100% !important;
+  max-width:none !important;
+  height:100% !important;
+  min-width:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:inherit !important;
+  background:transparent !important;
+  -webkit-mask:none !important;
+  mask:none !important;
+  color:color-mix(in srgb,var(--chat-accent) 72%,#fff) !important;
+  cursor:pointer;
+}
+.location-chat-surface .chatbottom .chat-compose-send button.sendmessage { color:#fff !important; }
+.location-chat-surface .chatbottom .chat-compose-send .material-icons { font-size:21px; }
+
+/* A busy room needs a compact composer: one quiet dock, not a box inside a
+   second box. */
+.location-chat-surface .chatbottom {
+  height:54px !important;
+  gap:7px;
+  padding:8px 12px !important;
+  background:rgba(14,16,26,.94) !important;
+}
+.location-chat-surface .chatbottom input {
+  height:36px !important;
+  padding:0 9px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.14) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  font-size:12px !important;
+}
+.location-chat-surface .chatbottom input:focus {
+  border-bottom-color:color-mix(in srgb,var(--chat-accent) 65%,#fff) !important;
+  box-shadow:none !important;
+}
+.location-chat-surface .chatbottom .chat-compose-send {
+  flex-basis:36px !important;
+  width:36px !important;
+  height:36px !important;
+  border-radius:11px !important;
+  box-shadow:none !important;
+}
+.location-chat-surface .chatbottom .chat-compose-send .material-icons { font-size:18px; }
+
+/* Message identity is metadata, not a second card. Only the actual text gets
+   a speech bubble, which keeps dense conversations airy and readable. */
+.location-chat-surface .lup-msg .msg,
+.location-chat-surface .lup-own-msg .msg {
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.location-chat-surface .chat-msgs .msg .name,
+.location-chat-surface .chat-msgs .msg .time {
+  display:inline-block;
+  float:none;
+  width:auto;
+  padding:0 0 4px;
+  font-size:9px;
+  line-height:1;
+}
+.location-chat-surface .chat-msgs .msg .name { margin-right:7px; }
+.location-chat-surface .chat-msgs .msg .message {
+  display:block;
+  width:auto;
+  padding:9px 11px !important;
+  border-radius:14px 14px 14px 5px;
+  background:rgba(255,255,255,.055);
+  box-shadow:none !important;
+}
+.location-chat-surface .lup-own-msg .message {
+  border-radius:14px 14px 5px 14px !important;
+}
+
+/* Let every bubble grow naturally with its message. The text and avatar are
+   laid out together instead of relying on old floats with fixed widths. */
+.location-chat-surface .chat-msgs .msg .message {
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.location-chat-surface .chat-msgs .msg .messager-inner,
+.location-chat-surface .lup-own-msg .message .messager-inner,
+.location-chat-surface .lup-other-msg .message .messager-inner {
+  display:block;
+  float:none !important;
+  flex:1 1 auto;
+  min-width:0;
+  max-width:none !important;
+  padding:0 !important;
+  text-align:left;
+  white-space:normal;
+  word-break:break-word;
+}
+.location-chat-surface .chat-msgs .msg .message .lup-avatar {
+  float:none !important;
+  flex:0 0 30px;
+  width:30px;
+  height:30px;
+  margin:0 !important;
+}
+.location-chat-surface .lup-own-msg .msg .name,
+.location-chat-surface .lup-own-msg .msg .time { text-align:right; }
+
+/* The live counter must stay crisp in a crowded room: solid surfaces, sharp
+   type and a dedicated number chip from 0 through 99+. */
+.nearby .room-user-preview,
+.nearby .room-user-preview .lup-avatar,
+.nearby .room-user-preview .more-users,
+.nearby .room-presence-count {
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  opacity:1 !important;
+}
+.nearby .room-presence-count {
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  min-height:32px;
+  margin-top:7px;
+  padding:4px 8px 4px 5px;
+  border:1px solid rgba(132,224,178,.30);
+  border-radius:10px;
+  background:#1b2831 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 4px 12px rgba(0,0,0,.14) !important;
+  color:#dcefe5 !important;
+  font-size:9px;
+  font-weight:720;
+  letter-spacing:.01em;
+}
+.nearby .room-presence-count .material-icons { color:#7cdda5; font-size:16px; }
+.nearby .room-presence-count b {
+  display:grid;
+  place-items:center;
+  min-width:21px;
+  height:21px;
+  padding:0 3px;
+  border-radius:7px;
+  background:#315a4a;
+  color:#fff;
+  font-size:10px;
+  font-weight:850;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.nearby .room-presence-count.has-visitors b { background:#4a9b70; box-shadow:0 0 12px rgba(101,221,161,.25); }
+.nearby .room-presence-count span { white-space:nowrap; }
+
+/* Angular Material wraps subheader content in its own element. Keep that
+   wrapper as one resilient row on every viewport; never grid its text. */
+.location-page md-list.usernavigation .location-presence-heading { display:block !important; min-height:0 !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; overflow:visible !important; }
+.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner { display:flex !important; align-items:center !important; gap:10px !important; min-height:62px !important; padding:11px 12px !important; box-sizing:border-box !important; overflow:hidden !important; border:1px solid rgba(255,255,255,.10) !important; border-radius:15px !important; background:linear-gradient(135deg,rgba(83,77,127,.42),rgba(29,33,50,.80)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 13px 27px rgba(0,0,0,.16) !important; }
+.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > .material-icons { display:grid !important; place-items:center !important; flex:0 0 38px !important; width:38px !important; height:38px !important; margin:0 !important; border:1px solid rgba(135,228,179,.32) !important; border-radius:12px !important; background:rgba(73,186,133,.12) !important; color:#9be4ba !important; font-size:21px !important; }
+.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div { min-width:0 !important; flex:1 1 auto !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner strong { display:block !important; overflow:hidden !important; color:#f5f3fb !important; font-size:13px !important; font-weight:720 !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner span { display:block !important; overflow:hidden !important; margin-top:3px !important; color:#aaa6b7 !important; font-size:10px !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }

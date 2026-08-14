@@ -26,13 +26,19 @@ angular.module('LUP').config(function($routeProvider) {
 	// The discovery surface is a rail, never a vertically stacked feed.  Browser
 	// resizing (especially device emulation) can make Slick recalculate its track;
 	// explicitly restore the horizontal geometry instead of allowing a raw list.
-	var restoreHorizontalRail = function() {
+	var resizeRecovery = null;
+	var restoreHorizontalRail = function(rebuild) {
 		var $slick = window.jQuery('.slickit');
 		if (!$slick.length) {
 			return;
 		}
 		if ($slick.hasClass('slick-initialized')) {
 			try {
+				// DevTools device emulation changes the measured width in one jump.
+				// Slick keeps stale slide widths unless it is explicitly refreshed.
+				if (rebuild) {
+					$slick.slick('refresh');
+				}
 				$slick.slick('setPosition').addClass('slick-inited');
 			}
 			catch (error) {
@@ -51,9 +57,21 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 	};
 	angular.element(window).off('resize.lupLocations orientationchange.lupLocations').on('resize.lupLocations orientationchange.lupLocations', function() {
-		$timeout(restoreHorizontalRail, 80);
+		// Debounce the many intermediate width values emitted by F12 and phones
+		// rotating. Rebuilding once at the final width keeps the rail horizontal.
+		if (resizeRecovery) {
+			$timeout.cancel(resizeRecovery);
+		}
+		resizeRecovery = $timeout(function() {
+			resizeRecovery = null;
+			restoreHorizontalRail(true);
+			settleHorizontalRail();
+		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+		if (resizeRecovery) {
+			$timeout.cancel(resizeRecovery);
+		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
 

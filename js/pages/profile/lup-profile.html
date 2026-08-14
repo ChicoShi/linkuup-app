@@ -12,7 +12,7 @@
     <div ng-if="data.user.isVIP()" class="lup-profile-premium">premium</div>
     
     <!-- Other's avatar -->
-	<div class="avatar-bg">
+	<div class="avatar-bg" ng-class="{'profile-online': data.user && data.user.isSelf() && data.authenticated}">
 		<div class="avatar" ng-if="!canUploadProfile()">
 		  <lup-avatar
 		   class="large-avatar"

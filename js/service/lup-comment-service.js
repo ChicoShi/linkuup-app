@@ -42,6 +42,7 @@ service('CommentSrvc', function($q, $translate, WebsocketSrvc, UserSrvc, ConfigS
 //			rc_lang_id: gwsMessage.read32(),
 			rc_text: gwsMessage.readString(),
 			rc_created_at: moment.unix(gwsMessage.read32()),
+			rc_rating: gwsMessage.read8(),
 		};
 		var rcid = json.rc_id;
 //		var comment = CommentSrvc.CACHE[rcid] ? CommentSrvc.CACHE[rcid] : new LUPComment(json);
