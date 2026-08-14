@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc, $element) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
@@ -20,14 +20,30 @@ angular.module('LUP').config(function($routeProvider) {
 	var slickedEvents = false;
 	var locationsRoomsRendered = false;
 	var locationsInitialized = false;
+	var slickStartAttempts = 0;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
+
+	// A route transition can leave a previous ng-view in the document for one
+	// digest. Never initialise that stale carousel: every controller instance
+	// owns exactly the rail below its own view element.
+	var getSlick = function() {
+		return window.jQuery($element).find('.slickit').first();
+	};
+	var retrySlick = function(nofocus) {
+		if (slickStartAttempts++ >= 12) {
+			console.warn('LinkUUp: location rail did not receive slides in time.');
+			LoadingSrvc.removeTask('slick_rooms');
+			return;
+		}
+		$timeout(function() { $scope.slick(nofocus); }, 50);
+	};
 
 	// The discovery surface is a rail, never a vertically stacked feed.  Browser
 	// resizing (especially device emulation) can make Slick recalculate its track;
 	// explicitly restore the horizontal geometry instead of allowing a raw list.
 	var restoreHorizontalRail = function() {
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length) {
 			return;
 		}
@@ -126,13 +142,14 @@ angular.module('LUP').config(function($routeProvider) {
 		// Both the page and the background preload can observe the same promise.
 		// Render that result once; Slick otherwise performs needless work and can
 		// keep its visibility guard active longer than necessary.
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (locationsRoomsRendered && $scope.data.rooms === rooms &&
 			$slick.length && $slick.hasClass('slick-initialized')) {
 			return;
 		}
 		$scope.data.rooms = rooms;
 		locationsRoomsRendered = true;
+		slickStartAttempts = 0;
 		LoadingSrvc.addTask('slick_rooms');
 		// Angular renders the repeated rooms asynchronously. Never reveal the
 		// raw repeated cards as a vertical list while that render is catching up:
@@ -168,12 +185,13 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.slick = function(nofocus) {
 		console.log('LocationsCtrl.slick()');
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length) {
 			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
 		if (!$slick.children().length) {
+			retrySlick(nofocus);
 			return;
 		}
 		if ($slick.hasClass('slick-initialized')) {
@@ -194,10 +212,10 @@ angular.module('LUP').config(function($routeProvider) {
 				console.log('slickit.onInit()');
 				if ($scope.data.currentRoomIndex >= 0) {
 					setTimeout(function(){
-						window.jQuery('.slickit').slick('slickGoTo', $scope.data.currentRoomIndex, true);
+						getSlick().slick('slickGoTo', $scope.data.currentRoomIndex, true);
 					}, 10);
 				}
-				window.jQuery('.slickit').addClass('slick-inited');
+				getSlick().addClass('slick-inited');
 				LoadingSrvc.removeTask('slick_rooms');
 			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
 				// Give every change of place a clear direction. The CSS uses this
@@ -328,7 +346,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.refreshCategoryFilter = function() {
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
 		}
