@@ -239,7 +239,10 @@ angular.module('LUP').config(function($routeProvider) {
 			draggable: true,
 			vertical: false,
 			verticalSwiping: false,
-			swipeToSlide: true,
+			// One deliberate swipe means exactly one location. With swipeToSlide
+			// enabled a normal phone gesture could skip several city cards, making
+			// much of the catalogue appear to be missing.
+			swipeToSlide: false,
 			waitForAnimate: false,
 			edgeFriction: 0.22,
 			speed: 155,
