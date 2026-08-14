@@ -1,9 +1,9 @@
 {
   "name": "lupapp",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "LinkUUp App",
   "main": "index.php",
-  "repository": "ssh://git@busch-peine.de:19198/linkuup-app",
+  "repository": "ssh://git@github.com/gizmore/linkuup-app",
   "author": "gizmore",
   "license": "UNLICENSED",
   "dependencies": {
@@ -12,7 +12,7 @@
     "angular-animate": "^1.7.8",
     "angular-aria": "^1.7.8",
     "angular-inview": "^3.1.0",
-    "angular-jk-rating-stars": "github:LiyinZ/angular-jk-rating-stars",
+    "angular-jk-rating-stars": "git+https://github.com/LiyinZ/angular-jk-rating-stars",
     "angular-material": "^1.1.18",
     "angular-messages": "^1.7.8",
     "angular-route": "^1.7.8",
