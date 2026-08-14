@@ -349,32 +349,6 @@ md-button.md-raised, .md-button.md-raised {
   .nearby .slick-current .room-category-hero { transition: none; animation: none; }
 }
 
-/* The rail itself supplies the movement. Re-animating every child card during
-   a swipe caused visible hitches on phones, especially in longer categories. */
-.nearby .slick-slide .roominfo,
-.nearby .slick-slide.slick-current .roominfo {
-  transform:none;
-  opacity:1;
-  filter:none;
-  transition:opacity .18s ease;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .roominfo,
-.nearby .slickit.lup-swipe-backward .slick-current .roominfo,
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-hero,
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-hero,
-.nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat,
-.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit,
-.nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
-.nearby .slickit.lup-swipe-backward .slick-current .room-presence-count,
-.nearby .slickit.lup-swipe-forward .slick-current .more-users,
-.nearby .slickit.lup-swipe-backward .slick-current .more-users { animation:none !important; }
-
 .nearby .roomhead,
 .nearby .distrat,
 .nearby .room-user-preview { position: relative; top: 16px; }
