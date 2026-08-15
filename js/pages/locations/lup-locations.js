@@ -186,7 +186,11 @@ angular.module('LUP').config(function($routeProvider) {
 		if (event) {
 			event.stopPropagation();
 		}
-		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room});
+		// The QR itself is issued by the server for this user and room.  The
+		// scanner only receives a short-lived signed bearer token; user IDs and
+		// the signing secret never leave the server.
+		var url = window.LUP_CONFIG.server + 'index.php?_mo=LinkUUp&_me=QRForCuddle&room=' + encodeURIComponent(room.id());
+		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room, url: url});
 	};
 	
 	$scope.slick = function(nofocus) {
