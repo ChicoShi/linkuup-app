@@ -3645,6 +3645,176 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* === Online view final cascade: retained at EOF so legacy experiments above
+ * cannot alter the live visitor page. === */
+@media (max-width:480px) {
+  .lup-top-bar .md-toolbar-tools { min-width:0 !important; padding-right:5px !important; padding-left:5px !important; }
+  .lup-top-bar .location-top-identity,.lup-top-bar .location-top-copy { width:auto !important; min-width:0 !important; }
+  .lup-top-bar .location-top-copy .room-name { display:block !important; width:100% !important; min-width:0 !important; overflow:hidden !important; font-size:12px !important; line-height:15px !important; letter-spacing:0 !important; text-overflow:ellipsis !important; white-space:nowrap !important; word-break:normal !important; }
+  .lup-top-bar .location-top-icon { flex-basis:29px !important; width:29px !important; height:29px !important; margin-right:6px !important; }
+  .lup-top-bar .location-top-icon .material-icons { font-size:16px !important; }
+  .lup-top-bar .location-top-copy > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header { display:grid !important; grid-template-columns:37px minmax(0,1fr) auto !important; align-items:center !important; gap:10px !important; min-height:59px !important; margin:0 0 13px !important; padding:0 2px 12px !important; border:0 !important; border-bottom:1px solid rgba(183,216,248,.16) !important; background:transparent !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { position:static !important; display:grid !important; place-items:center !important; width:37px !important; height:37px !important; margin:0 !important; border:1px solid rgba(127,212,255,.45) !important; border-radius:13px 13px 13px 5px !important; background:linear-gradient(145deg,rgba(70,163,225,.32),rgba(83,79,181,.20)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 0 18px rgba(77,177,248,.18) !important; color:#d4f1ff !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:20px !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy { min-width:0 !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy strong { display:block !important; overflow:hidden !important; color:#f2f7ff !important; font-size:14px !important; font-weight:760 !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy span { display:block !important; overflow:hidden !important; margin-top:3px !important; color:#9daec4 !important; font-size:10px !important; line-height:1.25 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total { position:static !important; display:grid !important; min-width:44px !important; min-height:38px !important; padding:4px 5px !important; border:1px solid rgba(130,223,178,.26) !important; border-radius:12px !important; background:rgba(76,179,137,.09) !important; text-align:right !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total strong { color:#f5fffa !important; font-size:18px !important; line-height:1 !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total small { margin-top:3px !important; color:#8ce5b5 !important; font-size:7px !important; font-weight:850 !important; letter-spacing:.09em !important; }
+@media (max-width:360px) { .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto !important; gap:7px !important; min-height:53px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; } }
+
+/* iPhone 14 Pro Max (430 CSS px): the toolbar has four fixed controls.
+ * Let the place title use only the remaining space and truncate as one
+ * deliberate line instead of letting individual letters collide. */
+@media (max-width:480px) {
+  .lup-top-bar .md-toolbar-tools { min-width:0 !important; padding-right:5px !important; padding-left:5px !important; }
+  .lup-top-bar .location-top-identity { min-width:0 !important; margin-left:0 !important; }
+  .lup-top-bar .location-top-copy { min-width:0 !important; width:100% !important; }
+  .lup-top-bar .location-top-copy .room-name {
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+    font-size:12px !important;
+    line-height:15px !important;
+    letter-spacing:0 !important;
+    text-overflow:ellipsis !important;
+    white-space:nowrap !important;
+    word-break:normal !important;
+  }
+  .lup-top-bar .location-top-icon { flex-basis:29px !important; width:29px !important; height:29px !important; margin-right:6px !important; }
+  .lup-top-bar .location-top-icon .material-icons { font-size:16px !important; }
+  .lup-top-bar .location-top-copy > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+
+/* Independent online header.  It no longer inherits the older Material
+ * subheader experiments, so Online has one stable appearance on each screen. */
+.location-page md-list.usernavigation.location-online-view .online-room-header {
+  display:grid !important;
+  grid-template-columns:37px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  min-height:59px;
+  margin:0 0 13px;
+  padding:0 2px 12px;
+  border:0;
+  border-bottom:1px solid rgba(183,216,248,.16);
+  background:transparent;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark {
+  position:static !important;
+  display:grid !important;
+  place-items:center;
+  width:37px !important;
+  height:37px !important;
+  margin:0 !important;
+  border:1px solid rgba(127,212,255,.45) !important;
+  border-radius:13px 13px 13px 5px !important;
+  background:linear-gradient(145deg,rgba(70,163,225,.32),rgba(83,79,181,.20)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 0 18px rgba(77,177,248,.18) !important;
+  color:#d4f1ff !important;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:20px !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy { min-width:0; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy strong {
+  display:block;
+  overflow:hidden;
+  color:#f2f7ff !important;
+  font-size:14px !important;
+  font-weight:760 !important;
+  line-height:1.2;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy span {
+  display:block;
+  overflow:hidden;
+  margin-top:3px;
+  color:#9daec4 !important;
+  font-size:10px !important;
+  line-height:1.25;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total {
+  position:static !important;
+  display:grid !important;
+  min-width:44px !important;
+  min-height:38px !important;
+  padding:4px 5px !important;
+  border:1px solid rgba(130,223,178,.26) !important;
+  border-radius:12px !important;
+  background:rgba(76,179,137,.09) !important;
+  text-align:right;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total strong { color:#f5fffa !important; font-size:18px !important; line-height:1; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total small { margin-top:3px; color:#8ce5b5 !important; font-size:7px !important; font-weight:850; letter-spacing:.09em; }
+@media (max-width:360px) {
+  .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto; gap:7px; min-height:53px; }
+  .location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }
+  .location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; }
+}
+
+/* Online view: a stable, compact room roster.  This is intentionally scoped
+ * to the visitor tab so the desktop side panel and the chat remain untouched. */
+.location-page md-list.usernavigation.location-online-view {
+  min-height:0 !important;
+  padding:16px 14px 18px !important;
+}
+.location-page md-list.usernavigation.location-online-view .location-presence-heading {
+  margin:0 0 12px !important;
+}
+.location-page md-list.usernavigation.location-online-view .location-presence-heading .md-subheader-inner {
+  min-height:56px !important;
+  padding:0 2px 11px !important;
+  border-bottom-color:rgba(178,211,248,.14) !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-live-mark {
+  flex:0 0 35px !important;
+  width:35px !important;
+  height:35px !important;
+  border-radius:12px 12px 12px 5px !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-total {
+  flex-basis:44px !important;
+  min-width:44px !important;
+  min-height:38px !important;
+}
+.location-page md-list.usernavigation.location-online-view .visitors-list {
+  max-height:calc(100dvh - 202px) !important;
+  padding:1px 0 12px !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person {
+  min-height:68px !important;
+  margin:7px 0 !important;
+  padding:9px 9px 9px 11px !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar,
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar img {
+  width:42px !important;
+  height:42px !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-actions {
+  flex:0 0 auto;
+  margin-left:7px !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-actions .presence-action {
+  width:30px !important;
+  min-width:30px !important;
+  height:30px !important;
+}
+@media (max-width:360px) {
+  .location-page md-list.usernavigation.location-online-view { padding:12px 10px 16px !important; }
+  .location-page md-list.usernavigation.location-online-view .presence-person { padding-right:6px !important; padding-left:8px !important; }
+  .location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar,
+  .location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar img { width:38px !important; height:38px !important; }
+  .location-page md-list.usernavigation.location-online-view .presence-actions { gap:2px !important; margin-left:4px !important; }
+  .location-page md-list.usernavigation.location-online-view .presence-actions .presence-action { width:27px !important; min-width:27px !important; height:27px !important; }
+}
+
 /* Venue stage final cascade. It is intentionally at EOF: older venue styles
    below the first draft used to repaint this view once the full stylesheet
    finished loading. */

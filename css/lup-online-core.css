@@ -1,0 +1,104 @@
+/* Last-loaded Online repair: isolated from the historic design cascade. */
+.location-page md-list.usernavigation.location-online-view {
+  --online-accent:#8fc8ff;
+  --online-accent-glow:rgba(101,180,255,.18);
+  min-height:100% !important;
+  padding:16px 14px 18px !important;
+  background:
+    radial-gradient(ellipse 86% 40% at 13% 0%,rgba(71,151,223,.14),transparent 70%),
+    radial-gradient(ellipse 56% 42% at 92% 26%,rgba(123,83,207,.11),transparent 74%),
+    linear-gradient(155deg,#121b2d 0%,#0c1220 76%) !important;
+}
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-country { --online-accent:#a897e8; --online-accent-glow:rgba(168,151,232,.18); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-city { --online-accent:#8fc8ff; --online-accent-glow:rgba(101,180,255,.19); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-bar { --online-accent:#f2aa72; --online-accent-glow:rgba(238,132,83,.20); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-cafe { --online-accent:#e2b87f; --online-accent-glow:rgba(207,151,95,.19); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-club { --online-accent:#ec8de3; --online-accent-glow:rgba(213,83,211,.20); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-culture { --online-accent:#8cc7ee; --online-accent-glow:rgba(90,172,229,.19); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-sport,.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-outdoors { --online-accent:#83d2a2; --online-accent-glow:rgba(75,192,135,.19); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-education { --online-accent:#88d6e6; --online-accent-glow:rgba(85,189,209,.19); }
+.location-page md-list.usernavigation.location-online-view .online-room-header.location-category-health { --online-accent:#f49ab2; --online-accent-glow:rgba(228,103,144,.19); }
+@media (max-width:480px) {
+  .lup-top-bar .md-toolbar-tools { min-width:0 !important; padding-right:5px !important; padding-left:5px !important; }
+  .lup-top-bar .location-top-identity,.lup-top-bar .location-top-copy { width:auto !important; min-width:0 !important; }
+  .lup-top-bar .location-top-copy .room-name { display:block !important; width:100% !important; min-width:0 !important; overflow:hidden !important; font-size:12px !important; line-height:15px !important; letter-spacing:0 !important; text-overflow:ellipsis !important; white-space:nowrap !important; word-break:normal !important; }
+  .lup-top-bar .location-top-icon { flex-basis:29px !important; width:29px !important; height:29px !important; margin-right:6px !important; }
+  .lup-top-bar .location-top-icon .material-icons { font-size:16px !important; }
+  .lup-top-bar .location-top-copy > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+
+.location-page md-list.usernavigation.location-online-view .online-room-header { display:grid !important; grid-template-columns:37px minmax(0,1fr) auto !important; align-items:center !important; gap:10px !important; min-height:59px !important; margin:0 0 13px !important; padding:0 2px 12px !important; border:0 !important; border-bottom:1px solid rgba(183,216,248,.16) !important; background:transparent !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { position:static !important; display:grid !important; place-items:center !important; width:37px !important; height:37px !important; margin:0 !important; border:1px solid color-mix(in srgb,var(--online-accent) 60%,rgba(255,255,255,.32)) !important; border-radius:13px 13px 13px 5px !important; background:linear-gradient(145deg,color-mix(in srgb,var(--online-accent) 28%,rgba(70,80,150,.28)),rgba(83,79,181,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 0 18px var(--online-accent-glow) !important; color:color-mix(in srgb,var(--online-accent) 58%,#fff) !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:20px !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy { min-width:0 !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy strong { display:block !important; overflow:hidden !important; color:#f2f7ff !important; font-size:14px !important; font-weight:760 !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-header-copy span { display:block !important; overflow:hidden !important; margin-top:3px !important; color:#9daec4 !important; font-size:10px !important; line-height:1.25 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total { position:static !important; display:grid !important; min-width:44px !important; min-height:38px !important; padding:4px 5px !important; border:1px solid rgba(130,223,178,.26) !important; border-radius:12px !important; background:rgba(76,179,137,.09) !important; text-align:right !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total strong { color:#f5fffa !important; font-size:18px !important; line-height:1 !important; }
+.location-page md-list.usernavigation.location-online-view .online-room-header .presence-total small { margin-top:3px !important; color:#8ce5b5 !important; font-size:7px !important; font-weight:850 !important; letter-spacing:.09em !important; }
+.location-page md-list.usernavigation.location-online-view .visitors-list {
+  max-height:calc(100dvh - 202px) !important;
+  padding:1px 0 12px !important;
+  overflow-y:auto !important;
+  background:transparent !important;
+  scrollbar-color:rgba(141,197,255,.32) transparent;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person {
+  background:linear-gradient(105deg,rgba(87,104,158,.17),rgba(24,29,45,.34) 70%) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 7px 16px rgba(0,0,0,.07) !important;
+}
+@media (max-width:360px) { .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto !important; gap:7px !important; min-height:53px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; } }
+
+/* Chat and Online are one room: the message stream lives on the same quiet
+ * surface, while text and the composer supply the hierarchy. */
+.location-page .location-chat-surface {
+  min-height:100% !important;
+  background:
+    radial-gradient(ellipse 86% 40% at 13% 0%,var(--chat-glow),transparent 70%),
+    radial-gradient(ellipse 56% 42% at 92% 26%,rgba(123,83,207,.11),transparent 74%),
+    linear-gradient(155deg,#121b2d 0%,#0c1220 76%) !important;
+}
+.location-page .location-chat-surface .chat-msgs {
+  padding:16px 14px !important;
+  background:transparent !important;
+}
+.location-page .location-chat-surface .lup-msg { margin-bottom:11px !important; }
+.location-page .location-chat-surface .lup-msg .msg { max-width:min(84%,460px) !important; }
+.location-page .location-chat-surface .chat-msgs .msg .message {
+  border:1px solid rgba(190,214,246,.10) !important;
+  background:rgba(255,255,255,.048) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.location-page .location-chat-surface .lup-own-msg .message {
+  border-color:color-mix(in srgb,var(--chat-accent) 32%,rgba(255,255,255,.12)) !important;
+  background:color-mix(in srgb,var(--chat-accent) 14%,rgba(255,255,255,.042)) !important;
+}
+.location-page .location-chat-surface .chatbottom {
+  min-height:58px !important;
+  height:auto !important;
+  padding:9px 12px !important;
+  border-top:1px solid color-mix(in srgb,var(--chat-accent) 18%,rgba(183,216,248,.16)) !important;
+  background:rgba(12,18,31,.54) !important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.location-page .location-chat-surface .chatbottom input {
+  height:38px !important;
+  border:1px solid rgba(190,214,246,.12) !important;
+  border-radius:12px !important;
+  background:rgba(255,255,255,.045) !important;
+  color:#f4f7ff !important;
+}
+.location-page .location-chat-surface .chatbottom input:focus {
+  border-color:color-mix(in srgb,var(--chat-accent) 56%,rgba(255,255,255,.25)) !important;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--chat-accent) 12%,transparent) !important;
+}
+.location-page .location-chat-surface .chatbottom .chat-compose-send {
+  flex-basis:38px !important;
+  width:38px !important;
+  height:38px !important;
+  border-radius:12px !important;
+  background:color-mix(in srgb,var(--chat-accent) 19%,rgba(255,255,255,.05)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 5px 13px var(--chat-glow) !important;
+}
+.location-page .location-chat-surface .chatbottom .chat-compose-send button { color:color-mix(in srgb,var(--chat-accent) 74%,#fff) !important; }

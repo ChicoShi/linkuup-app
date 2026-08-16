@@ -48,23 +48,3 @@
 	</div>
   </div>
 </div>
-
-
-<script type="text/javascript">
-	jQuery(document).ready(function(){
-		jQuery('.chatbottom input').keyup(function(){
-			console.log('KEYUP');
-			if(!jQuery.trim(this.value).length) {
-				jQuery('.chatbottom button').removeClass('sendmessage');
-			}else{
-				jQuery('.chatbottom button').addClass('sendmessage');	
-			}
-		});	
-		
-		jQuery('.chat-msgs').bind('DOMNodeInserted DOMNodeRemoved', function() {
-			jQuery('.chat-msgs').scrollTop(1000000); // Desktop fix
-// 			jQuery('.chat-msgs').scrollTop(jQuery('.chat-msgs').prop('scrollHeight'));
-		});
-		
-	});
-</script>

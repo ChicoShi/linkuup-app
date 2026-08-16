@@ -6,7 +6,10 @@ require "config/lup-php-config.php";
 header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 header('Expires: 0');
-$v = sprintf("?v=%s", LUPConfig::$VERSION);
+/* Keep a deployable cache marker in tracked code.  The local PHP config is
+ * intentionally ignored by git, so a view repair must not depend on a local
+ * version bump to reach browsers after a pull request is deployed. */
+$v = sprintf("?v=%s-online-core5", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 ?>
 <!DOCTYPE html>
@@ -39,6 +42,7 @@ $min = LUPConfig::$MIN;
   <link rel="stylesheet" href="js/pages/sidenav/lup-sidenav.css<?=$v?>">
   <link rel="stylesheet" href="css/linkuup-design-system.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-venue-final.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-online-core.css<?=$v?>">
 
 </head>
 
@@ -51,7 +55,7 @@ $min = LUPConfig::$MIN;
   </div>
 
   <script type="text/javascript">
-  window.LUP_BUILD = <?=LUPConfig::$VERSION?>;
+  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-online-core5')?>;
   </script>
 
   <script src="node_modules/jquery/dist/jquery.js<?=$v?>"></script>

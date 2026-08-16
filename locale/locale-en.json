@@ -108,6 +108,20 @@
 "TAB_ONLINE": "Online",
 "VISITORS_ATM": "Visitors ( {{count}} )",
 "ROOM_VOTE": "Rate",
+"LUP_VENUE_CUDDLE_LABEL": "CUDDLE ON SITE",
+"LUP_VENUE_CUDDLE_HEAD": "Mark the encounter",
+"LUP_VENUE_CUDDLE_COPY": "Scan the location QR code",
+"LUP_VENUE_CUDDLE_COUNT_COPY": "confirmed encounters",
+"LUP_VENUE_ROUTE_LABEL": "PLACE CONNECTION",
+"LUP_VENUE_ROUTE_HEAD": "Open directions to the place",
+"LUP_VENUE_ROUTE": "Route",
+"LUP_VENUE_ROUTE_COPY": "Open directions",
+"LUP_VENUE_VOICES": "Experiences",
+"LUP_VENUE_VOICES_COPY": "Read from the place",
+"LUP_VENUE_VOICES_LABEL": "FROM THE PLACE",
+"LUP_VENUE_VOICES_HEAD": "What guests share",
+"LUP_VENUE_VIEW_ALL": "All",
+"LUP_VENUE_NO_VOICES": "No experience shared yet — your impression starts the conversation.",
 "BTN_JOIN": "Enter chatroom",
 "MSG_JOIN_TOO_FAR": "You are {{current_distance}}km away from the center. A minimum distance of {{needed_distance}}km is required to be able to join {{room_name}}.",
 "OPEN_TIMES": "Open times",
@@ -332,5 +346,9 @@
 "country_of_origin": "Country of origin",
 
 "COPYRIGHT": "(c) 2019 linkuup.de",
-"Legal": "Legal"
+"Legal": "Legal",
+"ONLINE_LIVE_TITLE": "Here right now",
+"ONLINE_LIVE_SUBTITLE": "People currently at this location",
+"ONLINE_EMPTY_SUBTITLE": "You are the first visible guest here.",
+"ONLINE_VISITOR_HERE": "Currently at this location"
 }

@@ -1,30 +1,29 @@
 <md-list
- class="usernavigation"
- style="height:100%;"
- XXin-view="$inview&&visitorsVisible()"
- XXin-view-options="{considerPageVisibility:true}"
+ class="usernavigation location-online-view"
+ in-view="$inview&&visitorsVisible()"
+ in-view-options="{considerPageVisibility:true}"
  flex>
   
-  <md-subheader class="md-no-sticky location-presence-heading">
-    <span class="presence-live-mark" aria-hidden="true"><i class="material-icons">location_on</i></span>
+  <section class="online-room-header" ng-class="locationVisual(data.room).class" aria-live="polite">
+    <span class="presence-live-mark" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></span>
     <div class="presence-header-copy">
-      <strong>Live im Raum</strong>
-      <span>Menschen, die gerade wirklich hier sind</span>
+      <strong>{{ 'ONLINE_LIVE_TITLE' | translate }}</strong>
+      <span>{{ 'ONLINE_LIVE_SUBTITLE' | translate }}</span>
     </div>
-    <span class="presence-total" aria-label="{{data.room.USERS.length}} Personen online"><strong>{{data.room.USERS.length}}</strong><small>ONLINE</small></span>
-  </md-subheader>
+    <span class="presence-total" aria-label="{{visitorCount()}} Personen online"><strong>{{visitorCount()}}</strong><small>ONLINE</small></span>
+  </section>
 
   <div class="visitors-list">
-	  <section class="presence-empty" ng-if="!data.room.USERS.length">
+	  <section class="presence-empty" ng-if="!visitorCount()">
 		<i class="material-icons" aria-hidden="true">location_searching</i>
 		<strong>Noch ruhig hier.</strong>
-		<span>Du bist gerade der erste sichtbare Gast.</span>
+      <span>{{ 'ONLINE_EMPTY_SUBTITLE' | translate }}</span>
 	  </section>
-	  <md-list-item class="md-2-line presence-person" ng-repeat="user in sortedVisitors()" class="no-right">
+	  <md-list-item class="md-2-line presence-person no-right" ng-repeat="user in sortedVisitors() track by user.id()">
 		<lup-avatar class="presence-avatar" ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
 		<div ng-click="gotoProfile(user)" class="md-list-item-text presence-person-copy" layout="column">
 		  <p class="username">{{ user.displayName(); }}</p>
-		  <p><i class="material-icons">location_on</i>{{ user.status() || 'Gerade in dieser Location' }}</p>
+		  <p><i class="material-icons">location_on</i>{{ user.status() || ('ONLINE_VISITOR_HERE' | translate) }}</p>
 		</div>
 		<div class="presence-actions">
 		  <button type="button" class="presence-action presence-message" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()">

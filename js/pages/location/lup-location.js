@@ -42,6 +42,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
 	$scope.data.selectedTable = null;
+	var visitorCache = {source: null, signature: '', users: []};
 
 	/* The table lounge deliberately keeps selection locally for its first visual
 	 * release.  A later server-backed table membership will replace this small
@@ -210,6 +211,25 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.gotoComments = function(room) {
 		console.log('LocationCtrl.gotoComments()', room);
 		$location.path("/location/"+room.id()+"/comments");
+	};
+
+	/* A location cuddle is intentionally verified at the physical place.  The
+	 * dialog explains the QR step; it does not pretend that a local click has
+	 * already produced a counted cuddle. */
+	$scope.showLocationCuddle = function(event) {
+		if (event) {
+			event.stopPropagation();
+		}
+		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {
+			room: $scope.data.room,
+		});
+	};
+
+	/* The field is optional until QR-confirmed venue cuddles are stored by the
+	 * backend. Returning zero is intentional: a missing server value must never
+	 * be replaced with visitor counts or a decorative number. */
+	$scope.roomCuddles = function(room) {
+		return Math.max(0, Number(room && room.JSON && room.JSON.room_cuddles) || 0);
 	};
 
 	//////////////////
@@ -482,7 +502,28 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.sortedVisitors = function() {
-		return UserSrvc.sortedUsers($scope.data.room.USERS);
+		/* The server refreshes the room object in place. Returning an empty list
+		 * during that very short hand-over avoids a render error.  More
+		 * importantly, do not sort the same live array during every Angular digest:
+		 * with a busy room that caused visibly jerky visitor cards. */
+		var users = ($scope.data.room && $scope.data.room.USERS) || [];
+		var signature = users.map(function(user) {
+			return user.id() + ':' + user.likes() + ':' + (user.isFriend() ? '1' : '0');
+		}).join('|');
+		if (visitorCache.source === users && visitorCache.signature === signature) {
+			return visitorCache.users;
+		}
+		visitorCache = {
+			source: users,
+			signature: signature,
+			users: UserSrvc.sortedUsers(users.slice()),
+		};
+		return visitorCache.users;
+	};
+
+	$scope.visitorCount = function() {
+		var users = ($scope.data.room && $scope.data.room.USERS) || [];
+		return users.length;
 	};
 
 });

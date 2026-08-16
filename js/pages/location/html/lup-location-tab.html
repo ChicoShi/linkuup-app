@@ -111,40 +111,21 @@
     </button>
   </header>
 
-  <button class="venue-rating" type="button" ng-click="onVoteDialog($event)" aria-label="Ort bewerten">
-    <div class="venue-rating-number"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>Gesamtwertung</span></div>
-    <div class="venue-stars" aria-hidden="true">
-      <i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'venue-star-on': data.room.rating() >= star}">star</i>
-    </div>
-    <div class="venue-rating-meta"><b>{{data.room.votes() || 0}}</b><span>Stimmen</span><i class="material-icons">arrow_forward</i></div>
-  </button>
+  <a class="venue-map-portal" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
+    <span class="venue-map-orbit" aria-hidden="true"><b></b><em></em><i class="material-icons">location_on</i></span>
+    <span class="venue-map-copy"><small>{{'LUP_VENUE_ROUTE_LABEL'|translate}}</small><strong>{{'LUP_VENUE_ROUTE_HEAD'|translate}}</strong><span>{{data.room.addressDisplay() || ('LUP_VENUE_ROUTE_COPY'|translate)}}</span></span>
+    <i class="material-icons venue-map-arrow" aria-hidden="true">north_east</i>
+  </a>
 
-  <section class="venue-actions" aria-label="Ort-Aktionen">
-    <a class="venue-action" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
-      <i class="material-icons">near_me</i><span>Route</span><small>Weg zum Ort öffnen</small>
-    </a>
-    <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
-      <i class="material-icons">forum</i><span>Stimmen</span><small>Erlebnisse lesen</small>
-    </button>
-    <button class="venue-action venue-action-vote" type="button" ng-click="onVoteDialog($event)">
-      <i class="material-icons">grade</i><span>Bewerten</span><small>Deinen Eindruck teilen</small>
-    </button>
+  <section class="venue-cuddle-hub" aria-label="{{'LUP_VENUE_CUDDLE_LABEL'|translate}}">
+    <div class="venue-cuddle-count"><span>{{'LUP_VENUE_CUDDLE_LABEL'|translate}}</span><strong>{{roomCuddles(data.room)}}</strong><small>{{'LUP_VENUE_CUDDLE_COUNT_COPY'|translate}}</small></div>
+    <button class="venue-cuddle-claim" type="button" ng-click="showLocationCuddle($event)"><i class="material-icons">qr_code_2</i><span>{{'LUP_VENUE_CUDDLE_HEAD'|translate}}</span><small>{{'LUP_VENUE_CUDDLE_COPY'|translate}}</small></button>
   </section>
 
-  <section class="venue-voices" aria-label="Aktuelle Stimmen zum Ort">
-    <header class="venue-voices-head">
-      <div><span>STIMMEN AUS DEM ORT</span><h2>Was Gäste gerade sagen</h2></div>
-      <button type="button" ng-click="gotoComments(data.room)">Alle <i class="material-icons">arrow_forward</i></button>
-    </header>
-    <article class="venue-voice" ng-repeat="comment in data.topComments track by comment.id()" ng-if="!comment.isBlankComment()">
-      <lup-avatar ng-user="comment.user()" ng-click="gotoProfile(comment.user())"></lup-avatar>
-      <div class="venue-voice-main">
-        <div class="venue-voice-meta"><strong>{{comment.user().displayName()}}</strong><span>{{comment.displayDate()}}</span></div>
-        <p ng-bind-html="comment.text()"></p>
-        <div class="venue-voice-stars" ng-if="comment.rating()"><i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'is-rated': comment.rating() >= star}">star</i><small>{{comment.rating()}} / 5</small></div>
-      </div>
-    </article>
-    <div class="venue-voices-empty" ng-if="data.topComments[0].isBlankComment()"><i class="material-icons">forum</i><span>Noch keine Stimme – dein Eindruck eröffnet die Unterhaltung.</span></div>
+  <section class="venue-actions" aria-label="Ort-Aktionen">
+    <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
+      <i class="material-icons">forum</i><span>{{'LUP_VENUE_VOICES'|translate}}</span><small>{{'LUP_VENUE_VOICES_COPY'|translate}}</small>
+    </button>
   </section>
 
   <section class="venue-note" ng-if="data.room.info()">
