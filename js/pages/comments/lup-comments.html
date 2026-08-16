@@ -11,12 +11,10 @@
 				<h1>{{data.room.name()}}</h1>
 				<p>Teile deinen Eindruck. Jede ehrliche Stimme macht diesen Ort sichtbarer.</p>
 			</div>
-			<button type="button" class="reviews-rate-cta" ng-click="onVoteDialog($event)">
-				<i class="material-icons">grade</i><span>Ort bewerten</span><i class="material-icons">arrow_forward</i>
-			</button>
 		</section>
 
-		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0">
+		<!-- One clear action: the star card opens the rating and comment dialog. -->
+		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="Ort bewerten">
 			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>von 5</span></div>
 			<div class="reviews-stars"><jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} Stimmen</small></div>
 			<i class="material-icons">chevron_right</i>

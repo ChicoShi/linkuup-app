@@ -20,6 +20,10 @@ angular.module('LUP').config(function($routeProvider) {
 	var slickedEvents = false;
 	var locationsRoomsRendered = false;
 	var locationsInitialized = false;
+	var initialRoomsTimer = null;
+	var initialRoomsRequested = false;
+	var initialRoomsPromise = null;
+	var fullCataloguePromise = null;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
 
@@ -27,6 +31,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// resizing (especially device emulation) can make Slick recalculate its track;
 	// explicitly restore the horizontal geometry instead of allowing a raw list.
 	var resizeRecovery = null;
+	var railSettleTimer = null;
 	var restoreHorizontalRail = function(rebuild) {
 		var $slick = window.jQuery('.slickit');
 		if (!$slick.length) {
@@ -52,9 +57,16 @@ angular.module('LUP').config(function($routeProvider) {
 	// A sidenav and route change briefly render the new page at its old width.
 	// Let that transition settle, then make Slick measure the real viewport again.
 	var settleHorizontalRail = function() {
-		[0, 80, 180, 360, 650].forEach(function(delay) {
-			$timeout(restoreHorizontalRail, delay);
-		});
+		// Several old delayed relayouts used to fire after each category tap.
+		// That repeatedly interrupted Slick while the user was swiping. Keep one
+		// final measurement after Angular has painted the changed card set.
+		if (railSettleTimer) {
+			$timeout.cancel(railSettleTimer);
+		}
+		railSettleTimer = $timeout(function() {
+			railSettleTimer = null;
+			restoreHorizontalRail();
+		}, 120);
 	};
 	angular.element(window).off('resize.lupLocations orientationchange.lupLocations').on('resize.lupLocations orientationchange.lupLocations', function() {
 		// Debounce the many intermediate width values emitted by F12 and phones
@@ -72,8 +84,41 @@ angular.module('LUP').config(function($routeProvider) {
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
 		}
+		if (railSettleTimer) {
+			$timeout.cancel(railSettleTimer);
+		}
+		if (initialRoomsTimer) {
+			$timeout.cancel(initialRoomsTimer);
+		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
+
+	var loadInitialRooms = function() {
+		if (initialRoomsRequested) {
+			return;
+		}
+		initialRoomsRequested = true;
+		var load = function() {
+			if (initialRoomsPromise) {
+				return initialRoomsPromise;
+			}
+			if (initialRoomsTimer) {
+				$timeout.cancel(initialRoomsTimer);
+				initialRoomsTimer = null;
+			}
+			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms);
+			return initialRoomsPromise;
+		};
+		if (PositionSrvc.hasPosition(true)) {
+			return load();
+		}
+		// Give a just-started GPS request a short head start. Rendering a large
+		// fallback catalogue and immediately replacing it with nearby rooms was
+		// the visible first-load hitch. The fallback still guarantees discovery
+		// when a browser has no usable position.
+		initialRoomsTimer = $timeout(load, 900);
+		return PositionSrvc.withPosition(true).then(load, angular.noop);
+	};
 
 	$scope.init = function(event) {
 		console.log('LocationsCtrl.init()', event);
@@ -95,7 +140,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!$scope.data.rooms.length) {
 			$scope.data.user = window.GWF_USER;
 			LoadingSrvc.addTask('ws_rooms');
-			var promise = RoomSrvc.withRooms().then($scope.gotRooms);
+			var promise = loadInitialRooms();
 			promise['finally'](function(){
 				LoadingSrvc.removeTask('ws_rooms');
 			});
@@ -354,6 +399,10 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.selectCategory = function(categories) {
+		var categoryKey = categories.join(',');
+		if ($scope.isCategoryActive(categories) && !$scope.data.searchvalue) {
+			return;
+		}
 		$scope.data.category = categories.slice(0);
 		// Do not retain a focus object from the previously filtered carousel.
 		$scope.data.currentRoom = null;
@@ -363,14 +412,28 @@ angular.module('LUP').config(function($routeProvider) {
 		// public catalogue once; all cities, countries and distant venues remain
 		// browsable and are still ordered by distance.
 		if ($scope.data.category.length && !$scope.data.fullCatalogue) {
-			LoadingSrvc.addTask('ws_rooms');
-			RoomSrvc.withRooms(true).then(function(rooms) {
-				$scope.data.fullCatalogue = rooms;
-				$scope.gotRooms(rooms);
+			// A voluntary category expansion must not put a full-screen loading
+			// curtain over the current card. One shared request fills the cache;
+			// rapid category taps merely choose which finished result is displayed.
+			$scope.data.categoryLoading = true;
+			if (!fullCataloguePromise) {
+				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
+					$scope.data.fullCatalogue = rooms;
+					return rooms;
+				}).finally(function() {
+					fullCataloguePromise = null;
+				});
+			}
+			fullCataloguePromise.then(function(rooms) {
+				if ($scope.data.category.join(',') === categoryKey) {
+					$scope.gotRooms(rooms);
+				}
 			}, function(error) {
 				console.warn('LinkUUp: full location catalogue could not be loaded.', error);
 			}).finally(function() {
-				LoadingSrvc.removeTask('ws_rooms');
+				if ($scope.data.category.join(',') === categoryKey) {
+					$scope.data.categoryLoading = false;
+				}
 			});
 			return;
 		}

@@ -14,6 +14,7 @@
       <div class="md-dialog-content" layout="column">
 
 		<div class="vote-dialog-intro"><i class="material-icons">local_activity</i><p>Wie war dein Besuch? Gib dem Ort deine ehrliche Bewertung.</p></div>
+		<p class="vote-dialog-note" ng-if="data.comment">Du kannst deine bisherige Stimme jederzeit aktualisieren. Pro Ort bleibt ein Kommentar von dir sichtbar.</p>
         <jk-rating-stars max-rating="5" rating="data.rating" reset-allowed="false"></jk-rating-stars>
       
         <md-input-container flex>

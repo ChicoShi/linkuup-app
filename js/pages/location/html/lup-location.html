@@ -19,11 +19,11 @@
         <ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V"></ng-include>
       </md-tab>
     
-      <md-tab label="{{'TAB_CHAT'|translate}}" md-on-select="openChatTab()">
+      <md-tab label="{{'TAB_CHAT'|translate}}" ng-disabled="!inChatRange()" md-on-select="openChatTab()">
         <ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V"></ng-include>
       </md-tab>
 
-      <md-tab label="{{'TAB_ONLINE'|translate}}" ng-disabled="!inChatRange()" md-on-select="visitorsVisible()">
+      <md-tab label="{{'TAB_ONLINE'|translate}}" ng-click="openVisitorsTab()" md-on-select="visitorsVisible()">
         <ng-include src="'js/pages/location/html/lup-location-visitors.html?v='+V"></ng-include>
       </md-tab>
 
@@ -54,12 +54,22 @@
 	<div
      hide
      show-gt-sm
+     ng-if="inChatRange()"
      style="background:#333;"
      flex
      layout="row">
 	    <ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V" layout-fill flex=25></ng-include>
         <ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V" layout-fill flex=45></ng-include>
         <ng-include src="'js/pages/location/html/lup-location-visitors.html?v='+V" layout-fill flex=30></ng-include>
+	</div>
+
+	<div
+     hide
+     show-gt-sm
+     ng-if="!inChatRange()"
+     flex
+     layout="row">
+	    <ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V" layout-fill flex=100></ng-include>
 	</div>
 
   </md-content>

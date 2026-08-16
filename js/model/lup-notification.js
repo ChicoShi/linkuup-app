@@ -59,10 +59,12 @@ function LUPNotification() {
 		var that = this;
 		var Quser = this.us().withUser(this.data().user);
 		var Qroom = this.rs().withRoom(this.data().room);
-		this.q().all([Quser, Qroom]).then(function(values){
+		this.resolved = this.q().all([Quser, Qroom]).then(function(values){
 			that.friend = values[0];
 			that.room = values[1];
+			return that;
 		});
+		return this.resolved;
 	};
 	
 	this.resolveRoomCommented = function() {

@@ -14,7 +14,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.courseUser = GWF_User.ghost();
 	$scope.data.course = [];
-	$scope.data.courseStats = {places: 0, visits: 0, next: 5, remaining: 5};
+	$scope.data.courseStats = {places: 0, visits: 0, points: 0, next: 20, remaining: 20, rank: 'Start'};
 	$scope.now = Date.now();
 
 	$scope.visitVisual = function(visit) {
@@ -76,12 +76,20 @@ angular.module('LUP').config(function($routeProvider) {
 		var total = visits.reduce(function(sum, visit) {
 			return sum + Math.max(0, Number(visit.visit_count) || 0);
 		}, 0);
-		var next = Math.max(5, (Math.floor(total / 5) + 1) * 5);
+		var milestones = [20, 50, 100, 250];
+		var rank = 'Start';
+		if (total >= 250) { rank = 'LinkUUp Legende'; }
+		else if (total >= 100) { rank = 'Stadtkenner'; }
+		else if (total >= 50) { rank = 'Nachtfinder'; }
+		else if (total >= 20) { rank = 'Stammgast'; }
+		var next = milestones.find(function(goal) { return goal > total; }) || 500;
 		$scope.data.courseStats = {
 			places: visits.length,
 			visits: total,
+			points: total,
 			next: next,
 			remaining: next - total,
+			rank: rank,
 		};
 	};
 

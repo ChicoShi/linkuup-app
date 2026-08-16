@@ -6,35 +6,46 @@
  flex>
   
   <md-subheader class="md-no-sticky location-presence-heading">
-    <i class="material-icons">wifi_tethering</i>
-    <div>
-      <strong translate="VISITORS_ATM" translate-value-count="{{data.room.USERS.length}}"></strong>
+    <span class="presence-live-mark" aria-hidden="true"><i class="material-icons">location_on</i></span>
+    <div class="presence-header-copy">
+      <strong>Live im Raum</strong>
       <span>Menschen, die gerade wirklich hier sind</span>
     </div>
+    <span class="presence-total" aria-label="{{data.room.USERS.length}} Personen online"><strong>{{data.room.USERS.length}}</strong><small>ONLINE</small></span>
   </md-subheader>
 
   <div class="visitors-list">
+	  <section class="presence-empty" ng-if="!data.room.USERS.length">
+		<i class="material-icons" aria-hidden="true">location_searching</i>
+		<strong>Noch ruhig hier.</strong>
+		<span>Du bist gerade der erste sichtbare Gast.</span>
+	  </section>
 	  <md-list-item class="md-2-line presence-person" ng-repeat="user in sortedVisitors()" class="no-right">
 		<lup-avatar class="presence-avatar" ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
 		<div ng-click="gotoProfile(user)" class="md-list-item-text presence-person-copy" layout="column">
 		  <p class="username">{{ user.displayName(); }}</p>
-		  <p>{{ user.status() || 'Gerade in dieser Location' }}</p>
+		  <p><i class="material-icons">location_on</i>{{ user.status() || 'Gerade in dieser Location' }}</p>
 		</div>
 		<div class="presence-actions">
 		  <button type="button" class="presence-action presence-message" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()">
-			<i class="material-icons">send</i>
+			<i class="material-icons">chat_bubble</i>
+			<span>Chat</span>
 		  </button>
 		  <button type="button" class="presence-action presence-friend" aria-label="Freundschaftsanfrage senden" title="Freundschaftsanfrage senden" ng-click="FriendSrvc.addFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && !user.JSON.relation_pending">
-			<i class="material-icons">person_add</i>
+			<i class="material-icons">person_add_alt_1</i>
+			<span>Freund</span>
 		  </button>
 		  <button type="button" class="presence-action presence-friend presence-pending" aria-label="Freundschaftsanfrage zurücknehmen" title="Anfrage zurücknehmen" ng-click="FriendSrvc.cancelFriendRequest(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && user.JSON.relation_pending">
-			<i class="material-icons">person_remove</i>
+			<i class="material-icons">hourglass_top</i>
+			<span>Offen</span>
 		  </button>
 		  <button type="button" class="presence-action presence-friend presence-connected" aria-label="Freundschaft entfernen" title="Freundschaft entfernen" ng-click="FriendSrvc.removeFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && user.isFriend()">
-			<i class="material-icons">person_remove</i>
+			<i class="material-icons">group</i>
+			<span>Freund</span>
 		  </button>
 		  <button type="button" class="presence-action presence-up" aria-label="Up senden" title="Up senden" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()">
 			<i class="material-icons">bolt</i>
+			<span>Up</span>
 		  </button>
 		</div>
 	  </md-list-item>

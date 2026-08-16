@@ -411,11 +411,12 @@ section.login md-content {
 	width:min(100%,500px);
 	margin:0 auto;
 	padding:52px clamp(28px,5vw,62px) 39px;
-	border:1px solid rgba(185,210,255,.14);
-	border-radius:22px;
-	background:rgba(20,28,46,.78);
-	box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 26px 65px rgba(0,0,0,.26);
-	backdrop-filter:blur(18px);
+	/* The inputs form their own clear surface; no second panel sits behind them. */
+	border:0;
+	border-radius:0;
+	background:transparent;
+	box-shadow:none;
+	backdrop-filter:none;
 }
 .auth-kicker { margin:0 0 11px; color:#98c9ee; font-size:9px; font-weight:850; letter-spacing:.19em; }
 .auth-panel > h1 { margin:0; color:#f5f8ff; font-size:31px; font-weight:650; letter-spacing:-.045em; line-height:1.1; }
@@ -423,12 +424,16 @@ section.login md-content {
 .auth-panel .register-title { display:none; }
 .auth-panel .error { color:#ffb7c4; font-size:12px; }
 .auth-panel md-input-container { width:100%; margin:0 0 17px; }
+.auth-panel md-input-container::after { display:none !important; }
+.auth-panel md-input-container { border-bottom:0 !important; }
 .auth-panel md-input-container > label { padding-left:0 !important; color:#aebbd0 !important; font-size:11px; font-weight:700; letter-spacing:.035em; }
 .auth-panel md-input-container.md-input-focused > label { color:#a9ddff !important; }
 .auth-panel md-input-container .md-input,
 .auth-panel input[type=text],
 .auth-panel input[type=email],
 .auth-panel input[type=password] {
+	width:100%;
+	box-sizing:border-box;
 	min-height:46px;
 	border:1px solid rgba(187,211,255,.16) !important;
 	border-radius:11px;
@@ -445,17 +450,20 @@ section.login md-content {
 .auth-panel md-input-container .md-input::placeholder,
 .auth-panel input::placeholder { color:#75839b; }
 .auth-panel .md-input-focused .md-input { border-bottom-color:rgba(137,204,246,.68) !important; }
-.auth-panel .login-credentials { padding:0 !important; }
+.auth-panel .login-credentials { width:100% !important; margin:0 !important; padding:0 !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
 .auth-panel .guest-credentials { padding:0 !important; }
 .auth-panel .login-links { display:flex; gap:12px; margin:0 0 9px; padding:0 !important; }
 .auth-panel .signup,.auth-panel .pwforgot { width:auto; margin:0; color:#9facbf; font-size:11px; line-height:1.45; }
 .auth-panel .pwforgot { margin-left:auto; text-align:right; }
 .auth-panel .signup span { width:auto; float:none; }
 .auth-panel .signup a,.auth-panel .pwforgot a { color:#a8d9f8; font-weight:700; text-decoration:none; }
-.auth-panel .login-submit,.auth-panel .login-social,.auth-panel .login-guest { padding:0 !important; }
-.auth-panel .guest-submit,.auth-panel .guest-back { padding:0 !important; }
+.auth-panel .login-submit,.auth-panel .login-social,.auth-panel .login-guest,.auth-panel .guest-submit,.auth-panel .guest-back { display:block; width:100%; box-sizing:border-box; padding:0 !important; }
 .auth-panel .login-button,.auth-panel .backtologin {
+	display:block;
 	width:100%;
+	min-width:0;
+	min-height:50px;
+	box-sizing:border-box;
 	height:50px;
 	margin:12px 0 0;
 	border:1px solid rgba(204,228,255,.30) !important;
@@ -470,6 +478,10 @@ section.login md-content {
 }
 .auth-panel .login-social { display:none; }
 .auth-panel .guest-button {
+	display:block;
+	width:100%;
+	min-width:0;
+	box-sizing:border-box;
 	height:42px;
 	margin:10px 0 0;
 	border:1px solid rgba(187,211,255,.16) !important;

@@ -97,10 +97,12 @@
 </md-content>
  -->
 <md-content class="location-experience venue-view" ng-class="locationVisual(data.room).class" layout="column" flex layout-fill>
+  <div class="venue-atmosphere" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i><span></span><b></b></div>
+  <div class="venue-signal-route" aria-hidden="true"><i></i><i></i><i></i></div>
   <header class="venue-identity">
     <div class="venue-category-mark" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
     <div class="venue-title">
-      <span>{{data.room.categoryName() || 'LINKUUP ORT'}}</span>
+      <span><i class="material-icons">explore</i> {{data.room.categoryName() || 'LINKUUP ORT'}}</span>
       <h1>{{data.room.name()}}</h1>
       <p>{{data.room.addressDisplay() || 'Ein Ort für echte Begegnungen.'}}</p>
     </div>
@@ -110,23 +112,39 @@
   </header>
 
   <button class="venue-rating" type="button" ng-click="onVoteDialog($event)" aria-label="Ort bewerten">
-    <div class="venue-rating-number"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>von 5</span></div>
+    <div class="venue-rating-number"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>Gesamtwertung</span></div>
     <div class="venue-stars" aria-hidden="true">
       <i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'venue-star-on': data.room.rating() >= star}">star</i>
     </div>
-    <div class="venue-rating-meta"><b>{{data.room.comments() || 0}}</b><span>Stimmen</span><i class="material-icons">arrow_forward</i></div>
+    <div class="venue-rating-meta"><b>{{data.room.votes() || 0}}</b><span>Stimmen</span><i class="material-icons">arrow_forward</i></div>
   </button>
 
   <section class="venue-actions" aria-label="Ort-Aktionen">
     <a class="venue-action" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
-      <i class="material-icons">near_me</i><span>Route</span><small>Weg zum Ort</small>
+      <i class="material-icons">near_me</i><span>Route</span><small>Weg zum Ort öffnen</small>
     </a>
     <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
-      <i class="material-icons">forum</i><span>Stimmen</span><small>Erfahrungen lesen</small>
+      <i class="material-icons">forum</i><span>Stimmen</span><small>Erlebnisse lesen</small>
     </button>
     <button class="venue-action venue-action-vote" type="button" ng-click="onVoteDialog($event)">
-      <i class="material-icons">grade</i><span>Bewerten</span><small>Deine 5 Sterne</small>
+      <i class="material-icons">grade</i><span>Bewerten</span><small>Deinen Eindruck teilen</small>
     </button>
+  </section>
+
+  <section class="venue-voices" aria-label="Aktuelle Stimmen zum Ort">
+    <header class="venue-voices-head">
+      <div><span>STIMMEN AUS DEM ORT</span><h2>Was Gäste gerade sagen</h2></div>
+      <button type="button" ng-click="gotoComments(data.room)">Alle <i class="material-icons">arrow_forward</i></button>
+    </header>
+    <article class="venue-voice" ng-repeat="comment in data.topComments track by comment.id()" ng-if="!comment.isBlankComment()">
+      <lup-avatar ng-user="comment.user()" ng-click="gotoProfile(comment.user())"></lup-avatar>
+      <div class="venue-voice-main">
+        <div class="venue-voice-meta"><strong>{{comment.user().displayName()}}</strong><span>{{comment.displayDate()}}</span></div>
+        <p ng-bind-html="comment.text()"></p>
+        <div class="venue-voice-stars" ng-if="comment.rating()"><i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'is-rated': comment.rating() >= star}">star</i><small>{{comment.rating()}} / 5</small></div>
+      </div>
+    </article>
+    <div class="venue-voices-empty" ng-if="data.topComments[0].isBlankComment()"><i class="material-icons">forum</i><span>Noch keine Stimme – dein Eindruck eröffnet die Unterhaltung.</span></div>
   </section>
 
   <section class="venue-note" ng-if="data.room.info()">

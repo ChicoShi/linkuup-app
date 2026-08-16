@@ -36,10 +36,39 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.topComments = $scope.data.topComments || [];
 	$scope.data.selectedTab = $scope.data.selectedTab || 0;
 	$scope.data.selectedTab2 = $scope.data.selectedTab2 || 0;
+	$scope.data.manualLocationTab = false;
 	$scope.data.rating = 3;
 	$scope.data.commentText = '';
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
+	$scope.data.selectedTable = null;
+
+	/* The table lounge deliberately keeps selection locally for its first visual
+	 * release.  A later server-backed table membership will replace this small
+	 * state object; until then no UI can accidentally promise a private chat
+	 * that the server has not secured yet. */
+	$scope.tableSlots = function() { return [1, 2, 3, 4, 5, 6]; };
+	$scope.selectTable = function(table) {
+		$scope.data.selectedTable = table;
+	};
+	$scope.openTableLounge = function(event) {
+		var parentScope = $scope;
+		return $mdDialog.show({
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose: true,
+			templateUrl: 'js/dialogs/lup-table-lounge-dialog.html?v=' + window.LUP_BUILD,
+			controller: ['$scope', '$mdDialog', function(dialogScope, $mdDialog) {
+				dialogScope.tables = parentScope.tableSlots();
+				dialogScope.data = {selectedTable: parentScope.data.selectedTable};
+				dialogScope.select = function(table) {
+					dialogScope.data.selectedTable = table;
+					parentScope.selectTable(table);
+				};
+				dialogScope.cancel = function() { $mdDialog.cancel(); };
+			}],
+		});
+	};
 	
 	$scope.init = function() {
 		console.log('LocationCtrl.init()', $routeParams.id);
@@ -95,20 +124,41 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.afterLoadedRoom = function() {
 		console.log('LocationCtrl.afterLoadedRoom()', $scope.data.room.id());
-		var params = $route.current.$$route.params;
-		var tab = params.gotoTab;
-		switch (params.gotoTab) {
-		case 0: break; // all fine
-		case 1: case 2:
-			// Fixed to location tab if not in range
-			if (!$scope.inChatRange()) {
+		/* Do not read the tab from Angular's internal route object.  That object
+		 * is rebuilt while a room payload arrives and can lose our custom
+		 * `gotoTab` value.  Reading the actual route keeps Chat/Online selected
+		 * after the asynchronous room request has completed. */
+		var currentPath = $location.path();
+		var requestedTab = /\/chat$/.test(currentPath) ? 1 :
+			(/\/visitors$/.test(currentPath) ? 2 : 0);
+		var applyTab = function() {
+			/* A person can select Online while the room request is still in flight.
+			 * In that case the route is still /location/:id (gotoTab 0), so never
+			 * overwrite their deliberate selection with the route's default tab. */
+			if (requestedTab === 0 && $scope.data.manualLocationTab) {
+				return;
+			}
+			var tab = requestedTab;
+			/* Reading who is visibly present is an information view. Only Chat is
+			 * access-controlled by the physical radius; otherwise Online visibly
+			 * opens and then gets reset to Location after the room payload arrives. */
+			if (tab === 1 && !$scope.inChatRange()) {
 				tab = 0;
 			}
-			break;
-		}
+			$scope.data.selectedTab = tab;
+			$scope.data.selectedTab2 = tab;
+		};
 
-		$scope.data.selectedTab = tab;
-		$scope.data.selectedTab2 = tab;
+		/* Do not briefly render Online and then kick the person back to Location
+		 * while the browser is still resolving GPS.  A requested chat/online tab
+		 * now waits for that one decisive position result; range protection stays
+		 * exactly as strict once a position is known or denied. */
+		if (requestedTab === 1 && !PositionSrvc.hasPosition(true)) {
+			PositionSrvc.probe().then(applyTab, applyTab);
+		}
+		else {
+			applyTab();
+		}
 
 		$scope.loadTopComments();
 		CommentSrvc.withOwnComment($scope.data.room).
@@ -138,8 +188,18 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.savedComment = function() {
 		console.log('LocationCtrl.savedComment()');
 		$scope.data.showInput = false;
-		ErrorSrvc.showMessage("Vielen Dank für Ihre Bewertung.", "Vielen Dank").
-			then($scope.loadTopComments);
+		// Refresh comments and the aggregate rating immediately after saving.
+		// The vote response updates the server immediately. Force a fresh room
+		// payload here instead of reusing the previous card from the local cache,
+		// otherwise the visible vote counter can remain at its old value.
+		return RoomSrvc.withRoom($scope.data.room.id(), true).then(function(room) {
+			$scope.data.room = room;
+			return $scope.loadTopComments();
+		}).then(function() {
+			return CommentSrvc.withOwnComment($scope.data.room);
+		}).then($scope.loadedOwnComment).then(function() {
+			return ErrorSrvc.showMessage("Deine Stimme wurde aktualisiert.", "Danke");
+		});
 	};
 
 	$scope.loadedTopComments = function(topComments) {
@@ -199,9 +259,9 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.onRoomVoteComment()', rating, commentText);
 		$scope.data.rating = rating;
 		$scope.data.commentInput = commentText;
-		$scope.onVoteRoom(rating);
-		CommentSrvc.saveComment($scope.data.room, commentText).
-			then($scope.savedComment, ErrorSrvc.websocketError);
+		return $scope.onVoteRoom(rating).then(function() {
+			return CommentSrvc.saveComment($scope.data.room, commentText);
+		}).then($scope.savedComment, ErrorSrvc.websocketError);
 	};
 	
 
@@ -209,7 +269,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.onVoteRoom()', rating);
 		var roomId = $scope.data.room.id();
 		var gwsMessage = new GWS_Message().cmd(0x1120).sync().write32(roomId).write8(rating);
-		WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError);
+		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError);
 	};
 	
 	$scope.onVoted = function(gwsMessage) {
@@ -412,6 +472,13 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.visitorsVisible = function() {
 		console.log('LocationCtrl.visitorsVisible()');
 		HelpSrvc.showHelp('help_visitors', $translate.instant('HELP_VISITORS'));
+	};
+
+	$scope.openVisitorsTab = function() {
+		$scope.data.manualLocationTab = true;
+		$scope.data.selectedTab = 2;
+		$scope.data.selectedTab2 = 2;
+		return $scope.visitorsVisible();
 	};
 	
 	$scope.sortedVisitors = function() {

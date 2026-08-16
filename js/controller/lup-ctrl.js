@@ -2,7 +2,7 @@
  * Base controller that catches some nav/auth/connection events.
  */
 angular.module('LUP').
-controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdMedia, $mdSidenav, $translate,
+controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdMedia, $mdSidenav, $mdToast, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
 		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc,
@@ -50,6 +50,33 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		navstack: [],
 		initialUrl: null,
 	};
+	// A notification id is unique. Remembering it prevents duplicate arrival
+	// pop-ups if the WebSocket reconnects while the same payload is replayed.
+	$scope.friendArrivalShown = {};
+	$scope.showFriendArrival = function(notification) {
+		if (!notification || notification.type() !== 'join' ||
+			$scope.friendArrivalShown[notification.id()]) {
+			return;
+		}
+		var friend = notification.friend;
+		var room = notification.room;
+		if (!friend || !room || friend.isSelf()) {
+			return;
+		}
+		$scope.friendArrivalShown[notification.id()] = true;
+		var toast = $mdToast.simple()
+			.toastClass('lup-friend-arrival-toast')
+			.textContent(friend.displayName() + ' ist jetzt bei ' + room.name())
+			.action('Ansehen')
+			.highlightAction(true)
+			.hideDelay(6500)
+			.position('top right');
+		$mdToast.show(toast).then(function(response) {
+			if (response === 'ok') {
+				$scope.gotoRoom(room);
+			}
+		});
+	};
 	
 	/////////////////
 	// Alert Badge //
@@ -75,24 +102,35 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	/**
 	 * 1. Check server for cookie.
 	 */
-	$scope.initConnection = function(count) {
+	$scope.initConnection = function(count, attempt) {
 		console.log('LUPCtrl.initConnection()');
 		$scope.data.initialUrl = window.location.hash.substr(2);
 		$scope.data.inited = false;
 		console.log('LUPCtrl.initConnection()', count, $scope.data.initialUrl);
-		return RequestSrvc.sendGWF('Websocket', 'GetSecret&count='+(count||0)).
-			then($scope.gotCookie, $scope.fatalError);
+		attempt = attempt || 0;
+		return RequestSrvc.sendGWF('Websocket', 'GetSecret&count='+(count||0)).then(
+			$scope.gotCookie,
+			function(error) {
+				// A fresh page can briefly race Apache/session setup or a just restarted
+				// WebSocket service. Do not strand the user on failure.html for that.
+				if (attempt < 2) {
+					console.warn('LinkUUp: startup request failed, retrying.', error);
+					return $timeout(function() {
+						return $scope.initConnection(count, attempt + 1);
+					}, 700 * (attempt + 1));
+				}
+				return $scope.fatalError();
+			});
 	};
 	
 	$scope.fatalError = function() {
 		console.log('LUPCtrl.fatalError()');
 		console.trace();
-		if (!window.LUP_CONFIG.debug) {
-			window.location.replace(window.LUP_CONFIG.error_url);
-		}
-		else {
-			$scope.gotoLogin();
-		}
+		/* A momentary service or session race must never strand somebody on the
+		 * static failure page. The next normal screen is the login route, where
+		 * the connection can be established again without losing the application
+		 * shell or requiring a browser restart. */
+		$scope.gotoLogin();
 		return $q.resolve();
 	};
 	
@@ -677,6 +715,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		console.log('LUPCtrl.notificationArrived()', gwsMessage.dump());
 		// Get parsed instance
 		var notification = NotificationSrvc.parseNotification(gwsMessage, true);
+		if (notification && notification.type() === 'join') {
+			var ready = notification.resolved;
+			if (ready && angular.isFunction(ready.then)) {
+				ready.then($scope.showFriendArrival);
+			}
+		}
 		// Update cache
 		NotificationSrvc.resort();
 		// Announce via FX module
