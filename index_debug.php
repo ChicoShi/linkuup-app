@@ -9,16 +9,16 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-online-core5", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-icons2", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de" translate="no">
 <head>
   <meta charset="utf-8" />
+	<meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <link rel="stylesheet" href="node_modules/angular-material/angular-material<?=$min?>.css<?=$v?>">
   <link rel="stylesheet" href="node_modules/md-color-picker/dist/mdColorPicker<?=$min?>.css<?=$v?>">
@@ -55,7 +55,7 @@ $min = LUPConfig::$MIN;
   </div>
 
   <script type="text/javascript">
-  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-online-core5')?>;
+  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-icons2')?>;
   </script>
 
   <script src="node_modules/jquery/dist/jquery.js<?=$v?>"></script>
