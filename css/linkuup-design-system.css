@@ -3338,6 +3338,11 @@ md-list.usernavigation .presence-actions .usericon {
 .location-chat-surface .chat-location-atmosphere { position:absolute; z-index:0; top:-34px; right:-26px; display:grid; place-items:center; width:178px; height:178px; border:1px solid color-mix(in srgb,var(--chat-accent) 23%,transparent); border-radius:50%; box-shadow:0 0 0 25px color-mix(in srgb,var(--chat-accent) 5%,transparent),0 0 42px var(--chat-glow); color:color-mix(in srgb,var(--chat-accent) 34%,#fff); opacity:.28; pointer-events:none; transform:rotate(-14deg); }
 .location-chat-surface .chat-location-atmosphere .material-icons { font-size:96px; text-shadow:0 0 22px var(--chat-glow); }
 .location-chat-surface .chat-msgs { position:relative; z-index:1; background:linear-gradient(180deg,rgba(16,18,29,.25),rgba(16,18,29,.60)) !important; }
+
+/* Quiet parks and similar places deliberately share the calm outdoor palette. */
+.nearby .room-category-hero.category-relaxation { --lup-place-accent:#8fcb8a; --lup-place-glow:rgba(143,203,138,.18); }
+.location-hero.location-category-relaxation { --location-accent:#83d2a2; --location-glow:rgba(75,192,135,.28); }
+.location-chat-surface.location-category-relaxation { --chat-accent:#88d4a5; --chat-glow:rgba(70,182,127,.18); }
 .location-chat-surface .chatbottom { position:relative; z-index:2; height:64px; padding:9px 11px; background:rgba(18,20,31,.82) !important; border-top-color:color-mix(in srgb,var(--chat-accent) 22%,rgba(255,255,255,.08)) !important; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
 .location-chat-surface .chatbottom input { height:42px; padding:0 13px; border-radius:13px; border-color:color-mix(in srgb,var(--chat-accent) 27%,rgba(255,255,255,.15)) !important; background:rgba(38,40,59,.78) !important; font-size:13px; }
 .location-chat-surface .chatbottom .chat-button { flex:0 0 44px; width:44px; height:44px; margin-left:8px; border:1px solid color-mix(in srgb,var(--chat-accent) 48%,rgba(255,255,255,.20)); border-radius:14px; background:linear-gradient(135deg,color-mix(in srgb,var(--chat-accent) 66%,#8f77ef),color-mix(in srgb,var(--chat-accent) 40%,#4e7fc9)) !important; box-shadow:0 6px 14px var(--chat-glow),inset 0 1px 0 rgba(255,255,255,.28); }

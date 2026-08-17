@@ -25,6 +25,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var slickedEvents = false;
 	var locationsRoomsRendered = false;
 	var locationsInitialized = false;
+	var slickStartAttempts = 0;
 	var initialRoomsTimer = null;
 	var initialRoomsRequested = false;
 	var initialRoomsPromise = null;
@@ -33,13 +34,31 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
 
+	// During a route transition Angular can keep a retiring view in the DOM for
+	// one digest. Always operate on the newest rail, never a stale one.
+	var getSlick = function() {
+		return window.jQuery('ng-view .slickit').last();
+	};
+	var revealRailFallback = function() {
+		getSlick().addClass('slick-inited lup-slick-fallback');
+		LoadingSrvc.removeTask('slick_rooms');
+	};
+	var retrySlick = function(nofocus) {
+		if (slickStartAttempts++ >= 12) {
+			console.warn('LinkUUp: location rail did not receive slides in time.');
+			revealRailFallback();
+			return;
+		}
+		$timeout(function() { $scope.slick(nofocus); }, 50);
+	};
+
 	// The discovery surface is a rail, never a vertically stacked feed.  Browser
 	// resizing (especially device emulation) can make Slick recalculate its track;
 	// explicitly restore the horizontal geometry instead of allowing a raw list.
 	var resizeRecovery = null;
 	var railSettleTimer = null;
 	var restoreHorizontalRail = function(rebuild) {
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length) {
 			return;
 		}
@@ -200,7 +219,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Both the page and the background preload can observe the same promise.
 		// Render that result once; Slick otherwise performs needless work and can
 		// keep its visibility guard active longer than necessary.
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (locationsRoomsRendered && $scope.data.rooms === rooms &&
 			$slick.length && $slick.hasClass('slick-initialized')) {
 			return;
@@ -221,6 +240,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		locationsRoomsRendered = true;
+		slickStartAttempts = 0;
 		LoadingSrvc.addTask('slick_rooms');
 		// Angular renders the repeated rooms asynchronously. Never reveal the
 		// raw repeated cards as a vertical list while that render is catching up:
@@ -251,17 +271,19 @@ angular.module('LUP').config(function($routeProvider) {
 		if (event) {
 			event.stopPropagation();
 		}
-		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room});
+		var url = window.LUP_CONFIG.server + 'index.php?_mo=LinkUUp&_me=QRForCuddle&room=' + encodeURIComponent(room.id());
+		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room, url: url});
 	};
 	
 	$scope.slick = function(nofocus) {
 		console.log('LocationsCtrl.slick()');
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length) {
 			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
 		if (!$slick.children().length) {
+			retrySlick(nofocus);
 			return;
 		}
 		if ($slick.hasClass('slick-initialized')) {
@@ -282,10 +304,10 @@ angular.module('LUP').config(function($routeProvider) {
 				console.log('slickit.onInit()');
 				if ($scope.data.currentRoomIndex >= 0) {
 					setTimeout(function(){
-						window.jQuery('.slickit').slick('slickGoTo', $scope.data.currentRoomIndex, true);
+						getSlick().slick('slickGoTo', $scope.data.currentRoomIndex, true);
 					}, 10);
 				}
-				window.jQuery('.slickit').addClass('slick-inited');
+				getSlick().addClass('slick-inited');
 				LoadingSrvc.removeTask('slick_rooms');
 			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
 				// Give every change of place a clear direction. The CSS uses this
@@ -327,8 +349,8 @@ angular.module('LUP').config(function($routeProvider) {
 			touchThreshold: 4,
 		});
 		} catch (error) {
-			console.warn('LinkUUp carousel unavailable; keeping the place rail hidden.', error);
-			LoadingSrvc.removeTask('slick_rooms');
+			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
+			revealRailFallback();
 			return;
 		}
 		
@@ -471,7 +493,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.refreshCategoryFilter = function() {
-		var $slick = window.jQuery('.slickit');
+		var $slick = getSlick();
 		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
 		}
