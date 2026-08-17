@@ -1,0 +1,204 @@
+/*
+ * LinkUUp discovery calibration
+ * Loaded after the historical design system on purpose.  This is the small,
+ * isolated contract for the main mobile place card; it avoids re-opening the
+ * older positioning experiments in linkuup-design-system.css.
+ */
+
+.nearby .placeboard .room-user-preview {
+  position:absolute !important;
+  top:auto !important;
+  right:22px !important;
+  bottom:101px !important;
+  left:22px !important;
+  display:flex !important;
+  align-items:center !important;
+  min-height:34px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-top:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+/* Long names with descenders (for example Braunschweig) must never be clipped
+   by the compact hero's old line-height. */
+.nearby .placeboard .room-hero-name {
+  padding-bottom:3px !important;
+  line-height:1.08 !important;
+}
+.nearby .placeboard .room-category-orbit { width:70px !important; height:70px !important; margin-bottom:12px !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 12px 27px color-mix(in srgb,var(--lup-place-glow,#559fff) 33%,transparent) !important; }
+.nearby .placeboard .room-category-orbit .material-icons { font-size:36px !important; }
+.nearby .placeboard .room-hero-name.room-hero-name--compact { font-size:clamp(19px,5.35vw,24px) !important; line-height:1.04 !important; letter-spacing:-.035em !important; }
+.nearby .placeboard .room-hero-name.room-hero-name--long { font-size:clamp(17px,4.6vw,20px) !important; line-height:1.08 !important; letter-spacing:-.022em !important; }
+.nearby .placeboard .room-hero-name.room-hero-name--longword { font-size:clamp(16px,4.25vw,19px) !important; line-height:1.08 !important; letter-spacing:-.028em !important; overflow-wrap:anywhere !important; word-break:break-word !important; }
+.nearby .placeboard .room-hero-meta { padding-bottom:2px !important; line-height:1.25 !important; }
+
+.nearby .placeboard .room-user-preview::before,
+.nearby .placeboard .room-user-preview::after { display:none !important; content:none !important; }
+
+.nearby .placeboard .room-presence-count {
+  display:inline-flex !important;
+  flex:0 0 auto !important;
+  align-items:center !important;
+  gap:5px !important;
+  min-height:27px !important;
+  margin:0 0 0 12px !important;
+  padding:3px 7px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:rgba(46,103,82,.18) !important;
+  box-shadow:none !important;
+  color:#dff8eb !important;
+}
+
+/* Up to five real faces remain recognisable.  From the sixth visitor onward
+   the existing +N chip takes over, so the live count can grow to 99+ without
+   squeezing the location card. */
+.nearby .placeboard .room-user-preview .lup-avatar { flex:0 0 36px !important; }
+.nearby .placeboard .room-user-preview .lup-avatar:first-child { margin-left:auto !important; }
+.nearby .placeboard .room-user-preview .more-users { flex:0 0 34px !important; width:34px !important; height:34px !important; }
+
+/* Shared discovery atmosphere: one slow field behind the places, never a
+   second interactive layer.  The cards stay completely readable above it. */
+.nearby { position:relative !important; isolation:isolate; overflow:hidden; background:radial-gradient(ellipse 78% 34% at 82% 3%,rgba(83,148,222,.18),transparent 70%),radial-gradient(circle at 8% 87%,rgba(116,100,220,.13),transparent 33%),linear-gradient(160deg,#121a2c 0%,#0d1423 62%,#0a101c 100%) !important; }
+.nearby::before { content:''; position:absolute; z-index:-1; top:-21%; left:-27%; width:154%; height:148%; pointer-events:none; opacity:.68; background:radial-gradient(circle at 17% 22%,rgba(178,225,255,.52) 0 1px,transparent 1.8px),radial-gradient(circle at 71% 17%,rgba(145,202,255,.40) 0 1px,transparent 1.7px),radial-gradient(circle at 47% 63%,rgba(211,226,255,.25) 0 .8px,transparent 1.5px),radial-gradient(ellipse at 24% 44%,rgba(94,170,244,.11),transparent 18%),radial-gradient(ellipse at 79% 70%,rgba(127,102,231,.10),transparent 20%),linear-gradient(128deg,transparent 0 34%,rgba(147,205,255,.10) 34.1% 34.25%,transparent 34.4% 100%),linear-gradient(128deg,transparent 0 63%,rgba(153,183,255,.07) 63.1% 63.22%,transparent 63.4% 100%); background-size:218px 186px,271px 237px,163px 149px,100% 100%,100% 100%,100% 100%,100% 100%; transform:translate3d(-1.3%,-.8%,0); animation:lup-discovery-ambient 22s ease-in-out infinite alternate; }
+@keyframes lup-discovery-ambient { from { transform:translate3d(-1.3%,-.8%,0) scale(1); opacity:.52; } to { transform:translate3d(1.4%,1.2%,0) scale(1.025); opacity:.82; } }
+@media (prefers-reduced-motion:reduce) { .nearby::before { animation:none; } }
+
+.nearby .placeboard .room-presence-count .material-icons { display:none !important; }
+.nearby .placeboard .room-presence-count::before {
+  content:'' !important;
+  width:6px !important;
+  height:6px !important;
+  border-radius:50% !important;
+  background:#7de4aa !important;
+  box-shadow:0 0 0 3px rgba(125,228,170,.10),0 0 10px rgba(125,228,170,.42) !important;
+}
+.nearby .placeboard .room-presence-count b { min-width:16px !important; height:16px !important; background:rgba(109,203,157,.22) !important; color:#f3fff8 !important; }
+
+/* Calibration stage: exactly two 60px controls, anchored to the card edges.
+   No badges yet: only after visual approval do distance and Cuddle numbers
+   return as equal overlay chips. */
+.nearby .placeboard .distrat {
+  position:absolute !important;
+  right:auto !important;
+  bottom:22px !important;
+  left:50% !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:152px !important;
+  height:60px !important;
+  margin:0 !important;
+  padding:0 !important;
+  gap:32px !important;
+  transform:translateX(-50%) !important;
+}
+
+.nearby .placeboard .distrat > .location-cuddles,
+.nearby .placeboard .distrat > .distance {
+  position:relative !important;
+  flex:0 0 60px !important;
+  width:60px !important;
+  min-width:60px !important;
+  height:60px !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:none !important;
+}
+
+.nearby .placeboard .distrat .location-cuddles,
+.nearby .placeboard .distrat .distance p,
+.nearby .placeboard .distrat .distance a,
+.nearby .placeboard .distrat .distance a > .material-icons {
+  box-sizing:border-box !important;
+  width:60px !important;
+  min-width:60px !important;
+  height:60px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:15px !important;
+  transform:none !important;
+}
+
+.nearby .placeboard .distrat .location-cuddles,
+.nearby .placeboard .distrat .distance a > .material-icons {
+  display:grid !important;
+  place-items:center !important;
+  border:1px solid rgba(186,215,255,.24) !important;
+  background:linear-gradient(145deg,rgba(116,137,209,.23),rgba(29,38,66,.82)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 17px rgba(0,0,0,.18) !important;
+}
+
+.nearby .placeboard .distrat .distance a { display:block !important; background:transparent !important; box-shadow:none !important; }
+.nearby .placeboard .distrat .location-cuddles strong,
+.nearby .placeboard .distrat .distance a > span {
+  position:absolute !important;
+  z-index:2 !important;
+  right:-8px !important;
+  bottom:-7px !important;
+  display:grid !important;
+  place-items:center !important;
+  min-width:20px !important;
+  height:20px !important;
+  margin:0 !important;
+  padding:0 5px !important;
+  border:1px solid rgba(205,224,255,.32) !important;
+  border-radius:999px !important;
+  background:rgba(18,28,50,.96) !important;
+  box-shadow:0 3px 9px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.09) !important;
+  color:#f5f8ff !important;
+  font-size:8px !important;
+  font-weight:850 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+@media (max-width:420px) {
+  .nearby .placeboard .room-user-preview { right:18px !important; bottom:94px !important; left:18px !important; }
+  .nearby .placeboard .distrat { right:auto !important; bottom:18px !important; left:50% !important; }
+}
+
+/* A city is a shared area, not a venue door.  This compact local-room block
+   replaces venue-only navigation and QR mechanics for city/country chats. */
+.venue-city-hub {
+  margin:18px 14px 22px;
+  padding:21px 17px 16px;
+  border:1px solid color-mix(in srgb,var(--venue-accent) 28%,rgba(196,217,255,.12));
+  border-radius:20px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--venue-accent) 17%,rgba(28,39,66,.92)),rgba(13,20,37,.93));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 15px 31px rgba(0,0,0,.16);
+}
+.venue-city-hub > span { color:var(--venue-accent); font-size:8px; font-weight:850; letter-spacing:.13em; }
+.venue-city-hub h2 { margin:5px 0 6px; color:#f5f8ff; font-size:23px; letter-spacing:-.04em; line-height:1.05; }
+.venue-city-hub > p { margin:0; color:#bdc8da; font-size:11px; line-height:1.45; }
+.venue-city-primary { display:flex; align-items:center; gap:8px; width:100%; min-height:62px; margin:16px 0 0; padding:0 13px; border:1px solid color-mix(in srgb,var(--venue-accent) 48%,rgba(210,231,255,.26)); border-radius:16px; background:linear-gradient(115deg,color-mix(in srgb,var(--venue-accent) 47%,#586d9e),color-mix(in srgb,var(--venue-accent) 23%,#273451)); box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 20px color-mix(in srgb,var(--venue-glow) 44%,transparent); color:#f7faff; font:inherit; font-size:12px; font-weight:820; cursor:pointer; text-align:left; }.venue-city-primary .material-icons:first-child { font-size:25px; }.venue-city-primary .material-icons:last-child { margin-left:auto; font-size:19px; }
+.venue-city-actions { display:flex; align-items:center; gap:8px; margin-top:18px; }
+.venue-city-actions button { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:39px; padding:0 11px; border:1px solid rgba(194,219,255,.17); border-radius:12px; background:rgba(255,255,255,.055); color:#eef5ff; font:inherit; font-size:10px; font-weight:760; cursor:pointer; }
+.venue-city-actions button .material-icons { color:var(--venue-accent); font-size:17px; }
+.venue-city-local { display:inline-flex; align-items:center; gap:4px; margin-left:auto; color:#aab8d0; font-size:9px; line-height:1.2; text-align:right; }.venue-city-local .material-icons { color:var(--venue-accent); font-size:15px; }
+@media (max-width:360px) { .venue-city-hub { margin-right:10px; margin-left:10px; padding:17px 13px 14px; }.venue-city-hub h2 { font-size:20px; }.venue-city-actions { gap:6px; }.venue-city-actions button { min-height:36px; padding:0 8px; font-size:9px; }.venue-city-local { font-size:8px; } }
+
+/* City stage: deliberately unlike a venue profile. It describes an area and
+   invites exploration, rather than pretending the city has one QR doorstep. */
+.city-stage { position:relative; isolation:isolate; overflow:hidden; min-height:355px; margin:0; padding:28px 18px 22px; background:radial-gradient(ellipse 78% 42% at 50% 2%,rgba(91,171,246,.27),transparent 70%),linear-gradient(160deg,#13223c,#10192d 57%,#11162a); }
+.city-stage::before { content:''; position:absolute; z-index:-1; top:83px; right:-78px; width:236px; height:236px; border:1px solid rgba(145,208,255,.16); border-radius:50%; box-shadow:0 0 0 30px rgba(125,182,255,.035),0 0 0 64px rgba(125,182,255,.018); }
+.city-stage-grid { position:absolute; z-index:-1; inset:0; overflow:hidden; opacity:.72; pointer-events:none; }.city-stage-grid i { position:absolute; width:1px; height:190%; background:linear-gradient(transparent,rgba(146,205,255,.11),transparent); transform:rotate(42deg); }.city-stage-grid i:nth-child(1) { top:-50%; left:18%; }.city-stage-grid i:nth-child(2) { top:-58%; left:48%; }.city-stage-grid i:nth-child(3) { top:-49%; left:78%; }.city-stage-grid b { position:absolute; top:59px; left:20%; width:6px; height:6px; border-radius:50%; background:#a9ddff; box-shadow:0 0 0 5px rgba(128,202,255,.09),0 0 19px rgba(128,202,255,.58); }
+.city-stage-head { max-width:270px; }.city-stage-head > span { color:#b7e2ff; font-size:8px; font-weight:850; letter-spacing:.15em; }.city-stage-head h2 { margin:5px 0 7px; color:#f5f9ff; font-size:31px; font-weight:790; letter-spacing:-.06em; line-height:1; }.city-stage-head p { margin:0; color:#c3cede; font-size:11px; line-height:1.45; }
+.city-stage-signal { display:inline-flex; align-items:center; gap:6px; margin-top:18px; padding:5px 8px 5px 6px; border:1px solid rgba(137,213,255,.17); border-radius:999px; background:rgba(22,59,90,.25); color:#cde9ff; font-size:9px; }.city-stage-signal .material-icons { display:grid; place-items:center; width:18px; height:18px; border-radius:7px; background:rgba(104,181,235,.18); color:#9cddff; font-size:13px; }
+.city-stage-choices { display:grid; grid-template-columns:1.2fr .9fr; gap:9px; margin-top:19px; }.city-stage-choice { position:relative; display:grid; align-content:start; min-height:112px; padding:13px; overflow:hidden; border:1px solid rgba(194,222,255,.14); border-radius:18px; background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.025)); box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 10px 22px rgba(0,0,0,.12); color:#f3f7ff; font:inherit; text-align:left; cursor:pointer; }.city-stage-choice > .material-icons { margin-bottom:8px; color:#a5ddff; font-size:23px; text-shadow:0 0 14px rgba(116,200,255,.35); }.city-stage-choice strong { font-size:11px; line-height:1.15; }.city-stage-choice small { margin-top:5px; color:#b2c1d5; font-size:8px; line-height:1.3; }.city-stage-explore { border-color:rgba(137,207,255,.33); background:linear-gradient(135deg,rgba(92,166,223,.33),rgba(57,84,157,.26)); }.city-stage-explore em { position:absolute; right:11px; bottom:10px; color:#d6efff; font-size:18px; font-style:normal; }.city-stage-voices .material-icons { color:#c8beff; }
+.city-stage-chat { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; min-height:42px; margin-top:11px; border:1px solid rgba(143,214,178,.30); border-radius:13px; background:rgba(72,175,130,.14); color:#dcfae9; font:inherit; font-size:11px; font-weight:800; cursor:pointer; }.city-stage-chat .material-icons { color:#91e2b3; font-size:18px; }
+@media (max-width:360px) { .city-stage { min-height:338px; padding:23px 13px 18px; }.city-stage-head h2 { font-size:27px; }.city-stage-choices { gap:7px; }.city-stage-choice { min-height:105px; padding:11px; }.city-stage-choice strong { font-size:10px; }.city-stage-choice small { font-size:7px; } }
+
+/* Regional rooms share the venue page's large landmark hierarchy.  Their
+   landmark says "shared city" rather than pretending to be a route/QR door. */
+.city-stage { min-height:0; padding:17px 14px 22px; background:transparent; }
+.city-stage::before { top:18px; right:-54px; width:202px; height:202px; border-color:rgba(145,208,255,.13); box-shadow:0 0 0 27px rgba(125,182,255,.025),0 0 0 56px rgba(125,182,255,.012); }
+.city-stage-grid { opacity:.42; }
+.city-stage-hero { position:relative; display:grid; grid-template-columns:72px minmax(0,1fr) 23px; gap:13px; align-items:center; min-height:124px; padding:15px; overflow:hidden; border:1px solid rgba(137,207,255,.31); border-radius:24px 24px 24px 9px; background:linear-gradient(125deg,rgba(66,129,191,.30),rgba(11,20,37,.94) 67%); box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 20px 39px rgba(0,0,0,.18),0 0 34px rgba(94,175,243,.13); }
+.city-stage-hero::after { content:''; position:absolute; right:14px; bottom:0; left:95px; height:1px; background:linear-gradient(90deg,#8ec9ff,transparent); opacity:.58; }.city-stage-mark { position:relative; display:grid; place-items:center; width:68px; height:68px; border:1px solid rgba(188,226,255,.43); border-radius:50% 50% 50% 15px; background:radial-gradient(circle at 35% 24%,rgba(255,255,255,.28),transparent 31%),linear-gradient(145deg,#719fce,#293b5a 68%); box-shadow:inset 0 1px 0 rgba(255,255,255,.36),0 14px 27px rgba(0,0,0,.23),0 0 30px rgba(94,175,243,.28); transform:rotate(-8deg); }.city-stage-mark .material-icons { color:#fff; font-size:37px; transform:rotate(8deg); text-shadow:0 3px 7px rgba(8,17,38,.46); }.city-stage-mark b { position:absolute; right:6px; bottom:5px; width:8px; height:8px; border:2px solid #edf8ff; border-radius:50%; background:#8ec9ff; box-shadow:0 0 0 4px rgba(142,201,255,.15),0 0 14px rgba(142,201,255,.53); }.city-stage-copy { min-width:0; }.city-stage-copy small { display:block; color:#b7e2ff; font-size:8px; font-weight:850; letter-spacing:.15em; }.city-stage-copy strong { display:block; overflow:hidden; margin:4px 0 5px; color:#f5f9ff; font-size:22px; font-weight:760; letter-spacing:-.045em; line-height:1.04; text-overflow:ellipsis; white-space:nowrap; }.city-stage-copy > span { display:-webkit-box; overflow:hidden; color:#c3cede; font-size:10px; line-height:1.35; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.city-stage-hero-arrow { color:#8ec9ff; font-size:20px; text-shadow:0 0 15px rgba(142,201,255,.35); }
+.city-stage-signal { margin-top:11px; }.city-stage-choices { margin-top:12px; }
+@media (max-width:360px) { .city-stage { padding-right:10px; padding-left:10px; }.city-stage-hero { grid-template-columns:57px minmax(0,1fr) 18px; gap:10px; min-height:108px; padding:12px; border-radius:20px 20px 20px 8px; }.city-stage-hero::after { left:78px; }.city-stage-mark { width:54px; height:54px; }.city-stage-mark .material-icons { font-size:31px; }.city-stage-copy strong { font-size:18px; } }

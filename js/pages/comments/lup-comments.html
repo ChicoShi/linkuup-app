@@ -7,22 +7,22 @@
 		<section class="reviews-hero">
 			<div class="reviews-hero-mark"><i class="material-icons">local_activity</i></div>
 			<div class="reviews-hero-copy">
-				<span>LINKUUP STIMMEN</span>
-				<h1>{{data.room.name()}}</h1>
-				<p>Teile deinen Eindruck. Jede ehrliche Stimme macht diesen Ort sichtbarer.</p>
+			<span>{{'LUP_REVIEWS_TITLE'|translate}}</span>
+			<h1>{{data.room.name()}}</h1>
+			<p>{{'LUP_REVIEWS_COPY'|translate}}</p>
 			</div>
 		</section>
 
 		<!-- One clear action: the star card opens the rating and comment dialog. -->
-		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="Ort bewerten">
-			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>von 5</span></div>
-			<div class="reviews-stars"><jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} Stimmen</small></div>
+		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="{{'LUP_REVIEWS_RATE_ARIA'|translate}}">
+			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>{{'LUP_REVIEWS_OUT_OF_FIVE'|translate}}</span></div>
+			<div class="reviews-stars"><jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} {{'LUP_REVIEWS_VOTES'|translate}}</small></div>
 			<i class="material-icons">chevron_right</i>
 		</section>
 
 		<md-list flex class="md-dense reviews-list">
 
-			<div class="reviews-list-heading reviews-list-heading--plain"><i class="material-icons">forum</i><span>Aktuelle Stimmen</span><b>{{data.comments.pagination.nItems || 0}}</b></div>
+			<div class="reviews-list-heading reviews-list-heading--plain"><i class="material-icons">forum</i><span>{{'LUP_REVIEWS_CURRENT'|translate}}</span><b>{{data.comments.pagination.nItems || 0}}</b></div>
 
 			<md-list-item
 			 class="md-2-line no-right"
@@ -49,7 +49,7 @@
 
 			<md-list-item class="reviews-empty" ng-if="!data.comments.loading && !data.comments.items.length">
 			  <i class="material-icons">forum</i>
-			  <span>Noch keine Stimme – sei die erste Person, die diesen Ort bewertet.</span>
+			  <span>{{'LUP_REVIEWS_EMPTY'|translate}}</span>
 			</md-list-item>
 
 		</md-list>

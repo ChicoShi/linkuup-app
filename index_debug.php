@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-icons2", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-ui6", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 ?>
 <!DOCTYPE html>
@@ -41,6 +41,7 @@ $min = LUPConfig::$MIN;
   <link rel="stylesheet" href="js/pages/settings/lup-settings.css<?=$v?>">
   <link rel="stylesheet" href="js/pages/sidenav/lup-sidenav.css<?=$v?>">
   <link rel="stylesheet" href="css/linkuup-design-system.css<?=$v?>">
+  <link rel="stylesheet" href="css/linkuup-discovery-v2.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-venue-final.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-online-core.css<?=$v?>">
 
@@ -55,7 +56,7 @@ $min = LUPConfig::$MIN;
   </div>
 
   <script type="text/javascript">
-  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-icons2')?>;
+  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui6')?>;
   </script>
 
   <script src="node_modules/jquery/dist/jquery.js<?=$v?>"></script>

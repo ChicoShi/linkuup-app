@@ -122,6 +122,17 @@ angular.module('LUP').config(function($routeProvider) {
 		};
 		return visuals[String(room.category())] || {icon:'place', class:'location-category-default'};
 	};
+
+	// City and country rooms are regional conversations, not a single physical
+	// doorstep. Venue-only QR Cuddles and directions stay reserved for places.
+	$scope.isRegionalRoom = function(room) {
+		var category = Number(room && room.category && room.category());
+		return category === 1 || category === 2;
+	};
+
+	$scope.showNearbyLocations = function() {
+		return $location.path('/locations');
+	};
 	
 	$scope.afterLoadedRoom = function() {
 		console.log('LocationCtrl.afterLoadedRoom()', $scope.data.room.id());

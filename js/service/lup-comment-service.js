@@ -42,6 +42,10 @@ service('CommentSrvc', function($q, $translate, WebsocketSrvc, UserSrvc, ConfigS
 //			rc_lang_id: gwsMessage.read32(),
 			rc_text: gwsMessage.readString(),
 			rc_created_at: moment.unix(gwsMessage.read32()),
+			// The room-comment WebSocket DTO ends with the author's 1–5 vote.
+			// It must be consumed here so the next comment starts at the correct
+			// byte and individual review stars can be rendered reliably.
+			rc_rating: gwsMessage.read8(),
 		};
 		var rcid = json.rc_id;
 //		var comment = CommentSrvc.CACHE[rcid] ? CommentSrvc.CACHE[rcid] : new LUPComment(json);

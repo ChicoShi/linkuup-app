@@ -22,12 +22,11 @@
 		</div>
 
 		<div class="slickit">
-			<div ng-repeat="room in data.rooms" class="lup-room-slide-outer" ng-init="$last && slick(true)"
-				 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}"
-				 ng-class="{'lup-hidden-slide':!filteredRoom(room)}">
+			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer" ng-init="$last && slick(true)"
+					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
 	
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
-					<div class="roominfo">
+					<div class="roominfo placeboard">
 						<div ng-click="maybeGotoRoom(room)">
 							<div class="room-category-hero" ng-class="categoryVisual(room).class">
 								<div class="room-category-orbit"><i class="material-icons">{{categoryVisual(room).icon}}</i></div>
@@ -37,14 +36,10 @@
 							</div>
 						</div>
 						
-						<!--<span class="categoryicon" ng-bind-html="room.categoryIcon()"></span>-->
-						<div class="roomhead">
-							<div class="room-category-label">{{room.categoryName()}}</div>
-							<div class="roomname">
-								<span>{{room.name()}}</span>
-							</div>
-						</div>
-			<div class="info room-user-preview">
+						<!-- The hero above is the single place identity.  Keeping the old
+						     duplicate room heading out of the card makes the swipe view
+						     readable on phones with long location names. -->
+						<div class="info room-user-preview" aria-label="Gäste an diesem Ort">
 							<lup-avatar
 							 ng-repeat="user in sortedVisitors(room) | limitTo: 5"
 							 ng-click="gotoProfile(user)"
