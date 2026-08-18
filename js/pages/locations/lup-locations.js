@@ -31,6 +31,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var initialRoomsPromise = null;
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
+	var categoryRailDetached = false;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
 
@@ -293,7 +294,7 @@ angular.module('LUP').config(function($routeProvider) {
 			catch (error) {
 				console.warn('LinkUUp: could not relayout the location rail.', error);
 			}
-			$slick.addClass('slick-inited');
+			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
 			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
@@ -307,7 +308,7 @@ angular.module('LUP').config(function($routeProvider) {
 						getSlick().slick('slickGoTo', $scope.data.currentRoomIndex, true);
 					}, 10);
 				}
-				getSlick().addClass('slick-inited');
+				getSlick().addClass('slick-inited').removeClass('lup-category-refreshing');
 				LoadingSrvc.removeTask('slick_rooms');
 			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
 				// Give every change of place a clear direction. The CSS uses this
@@ -443,7 +444,25 @@ angular.module('LUP').config(function($routeProvider) {
 		categoryRefreshTimer = $timeout(function() {
 			categoryRefreshTimer = null;
 			$scope.refreshCategoryFilter();
-		}, 90);
+		}, 0);
+	};
+
+	var detachCategoryRail = function() {
+		var $slick = getSlick();
+		if (!$slick.length || !$slick.hasClass('slick-initialized')) {
+			return;
+		}
+		try {
+			// Detach before Angular replaces ng-repeat cards.  Replacing children
+			// inside a live Slick track was the source of the brief wrong-card flash
+			// and the sluggish category taps.
+			$slick.slick('unslick');
+			slickedEvents = false;
+			categoryRailDetached = true;
+		}
+		catch (error) {
+			console.warn('LinkUUp: could not prepare the category rail.', error);
+		}
 	};
 
 	$scope.selectCategory = function(categories) {
@@ -451,11 +470,26 @@ angular.module('LUP').config(function($routeProvider) {
 		if ($scope.isCategoryActive(categories) && !$scope.data.searchvalue) {
 			return;
 		}
+		// Once the complete catalogue is active, every category change is a
+		// local filter. Detach Slick first, then let Angular replace the cards.
+		if ($scope.data.fullCatalogue && $scope.data.rooms === $scope.data.fullCatalogue) {
+			detachCategoryRail();
+		}
 		$scope.data.category = categories.slice(0);
 		$scope.updateVisibleRooms();
 		// Do not retain a focus object from the previously filtered carousel.
 		$scope.data.currentRoom = null;
 		$scope.data.currentRoomIndex = -1;
+		// The first explicit category loads the full catalogue once.  If the
+		// visitor changed tabs while that request was in flight, the catalogue is
+		// already cached but the old nearby room list may still be on screen.
+		// Promote the cached list before filtering it; otherwise a category can
+		// appear to have missing cards or briefly select the wrong chip.
+		if ($scope.data.category.length && $scope.data.fullCatalogue &&
+			$scope.data.rooms !== $scope.data.fullCatalogue) {
+			$scope.gotRooms($scope.data.fullCatalogue);
+			return;
+		}
 		// The home screen deliberately starts local and fast. Selecting a
 		// category is an explicit discovery action, therefore fetch the complete
 		// public catalogue once; all cities, countries and distant venues remain
@@ -497,6 +531,10 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
 		}
+		if (categoryRailDetached) {
+			categoryRailDetached = false;
+			return $scope.slick(true);
+		}
 		if (!$slick.hasClass('slick-initialized')) {
 			return $scope.slick();
 		}
@@ -512,7 +550,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		catch (error) {
 			console.warn('LinkUUp: category filter could not refresh the carousel.', error);
-			$slick.addClass('slick-inited');
+			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
 		}
 	};
 

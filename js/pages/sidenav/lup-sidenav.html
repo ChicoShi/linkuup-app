@@ -8,7 +8,7 @@
 
   <md-toolbar class="sidenav-brand">
    <div class="md-toolbar-tools">
-    <i class="material-icons nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')">close</i>
+    <i class="material-icons nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')" aria-label="Menü schließen">menu</i>
     <div><h1>LinkUUp</h1><span>Zusammen unterwegs</span></div>
    </div>
   </md-toolbar>
@@ -57,8 +57,9 @@
 
       <!-- Debug -->
       <div ng-if="LUP_CONFIG.debug">
-		  <md-subheader class="md-no-sticky">{{'DEBUG'|translate}}</md-subheader>
+		  <md-subheader class="md-no-sticky sidebar-section-title">{{'DEBUG'|translate}}</md-subheader>
 		  <md-list-item class="md-1-line" ng-click="gotoDebug()">
+			<i class="material-icons nav-icon">bug_report</i>
 			<p>{{'TITLE_DEBUG'|translate}}</p>
 		  </md-list-item>
 	  </div>
@@ -66,6 +67,7 @@
       <!-- Admin -->
       <div ng-if="hasPermission('staff', 'owner')">
 		  <md-list-item class="md-1-line" ng-click="gotoBackend()">
+			<i class="material-icons nav-icon">dashboard</i>
 			<p>{{'BTN_BACKEND'|translate}}</p>
 		  </md-list-item>
 	  </div>
@@ -73,12 +75,15 @@
       <!-- Fineprint -->
 	  <md-subheader class="md-no-sticky sidebar-section-title sidebar-legal-title">{{'Legal'|translate}}</md-subheader>
 	  <md-list-item class="md-1-line" ng-click="DialogSrvc.openImpressum()">
+		<i class="material-icons nav-icon">gavel</i>
 		<p class="impressum">{{'IMPRESSUM'|translate}}</p>
 	  </md-list-item>
       <md-list-item class="md-1-line" ng-click="DialogSrvc.openTermsOfService()">
+		<i class="material-icons nav-icon">description</i>
 		<p class="tos">{{'TOS'|translate}}</p>
 	  </md-list-item>
 	  <md-list-item class="md-1-line" ng-click="DialogSrvc.openPrivacyInformation()">
+		<i class="material-icons nav-icon">privacy_tip</i>
 		<p class="privacy">{{'PRIVACY'|translate}}</p>
 	  </md-list-item>
 

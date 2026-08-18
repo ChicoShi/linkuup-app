@@ -22,7 +22,7 @@
 		</div>
 
 		<div class="slickit">
-			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer" ng-init="$last && slick(true)"
+			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer"
 					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
 	
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">

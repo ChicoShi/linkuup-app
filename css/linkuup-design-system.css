@@ -3650,6 +3650,53 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* Sidebar finishing pass — this is the final cascade in the app stylesheet.
+   The header uses LinkUUp night-blue rather than the old metallic black, and
+   icons deliberately have no individual square containers. */
+.md-sidenav-left,.md-sidenav-left md-content { background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important; }
+.md-sidenav-left md-toolbar.sidenav-brand,.md-sidenav-left .sidenav-brand { min-height:82px !important; background:radial-gradient(circle at 88% 24%,rgba(99,189,247,.32),transparent 29%),linear-gradient(115deg,#32295d 0%,#1a3158 56%,#121d33 100%) !important; border-bottom:1px solid rgba(184,219,255,.17) !important; box-shadow:inset 0 -1px 0 rgba(255,255,255,.055),0 8px 19px rgba(4,9,22,.22) !important; }
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:82px !important; background:transparent !important; }.md-sidenav-left .sidenav-brand h1 { color:#f7fbff !important; font-weight:760 !important; letter-spacing:-.035em !important; }.md-sidenav-left .sidenav-brand span { color:#b7d6f0 !important; }
+.md-sidenav-left md-list-item .nav-icon,.md-sidenav-left md-list-item.nav-discover .nav-icon,.md-sidenav-left md-list-item.nav-profile .nav-icon,.md-sidenav-left md-list-item.nav-friends .nav-icon,.md-sidenav-left md-list-item.nav-settings .nav-icon,.md-sidenav-left md-list-item.nav-account .nav-icon,.md-sidenav-left md-list-item.nav-profile-settings .nav-icon,.md-sidenav-left md-list-item.nav-logout .nav-icon { width:24px !important; height:24px !important; margin-right:14px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; font-size:19px !important; }
+.md-sidenav-left md-list-item:hover .nav-icon { transform:translateX(1px) !important; background:transparent !important; box-shadow:none !important; }.md-sidenav-left md-list-item::before { background:transparent; }.md-sidenav-left md-list-item:hover { border-color:transparent !important; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent) !important; }.md-sidenav-left md-list-item:hover::before { background:#9fddff !important; box-shadow:0 0 11px rgba(129,208,255,.62) !important; }
+
+/* Sidebar finishing pass — placed at the physical end to win against legacy
+   Material toolbar styles.  The navigation uses colour, not boxed icons. */
+.md-sidenav-left,
+.md-sidenav-left md-content {
+  background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important;
+}
+.md-sidenav-left md-toolbar.sidenav-brand,
+.md-sidenav-left .sidenav-brand {
+  min-height:82px !important;
+  background:radial-gradient(circle at 88% 24%,rgba(99,189,247,.32),transparent 29%),linear-gradient(115deg,#32295d 0%,#1a3158 56%,#121d33 100%) !important;
+  border-bottom:1px solid rgba(184,219,255,.17) !important;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.055),0 8px 19px rgba(4,9,22,.22) !important;
+}
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:82px !important; }
+.md-sidenav-left .sidenav-brand h1 { color:#f7fbff !important; font-weight:760 !important; letter-spacing:-.035em !important; }
+.md-sidenav-left .sidenav-brand span { color:#b7d6f0 !important; }
+.md-sidenav-left md-list-item .nav-icon,
+.md-sidenav-left md-list-item.nav-discover .nav-icon,
+.md-sidenav-left md-list-item.nav-profile .nav-icon,
+.md-sidenav-left md-list-item.nav-friends .nav-icon,
+.md-sidenav-left md-list-item.nav-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-account .nav-icon,
+.md-sidenav-left md-list-item.nav-profile-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-logout .nav-icon {
+  width:24px !important;
+  height:24px !important;
+  margin-right:14px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  font-size:19px !important;
+}
+.md-sidenav-left md-list-item:hover .nav-icon { transform:translateX(1px) !important; background:transparent !important; box-shadow:none !important; }
+.md-sidenav-left md-list-item::before { background:transparent; }
+.md-sidenav-left md-list-item:hover { border-color:transparent !important; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent) !important; }
+.md-sidenav-left md-list-item:hover::before { background:#9fddff !important; box-shadow:0 0 11px rgba(129,208,255,.62) !important; }
+
 /* Final discovery controls: both bottom actions have the same touch target
    and weight; live presence is a small status rail, not a competing icon. */
 .nearby .placeboard .distrat {
@@ -3700,6 +3747,14 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .nearby .placeboard .room-presence-count .material-icons { display:none !important; }
 .nearby .placeboard .room-presence-count::before { content:''; width:7px; height:7px; border-radius:50%; background:#7de4aa; box-shadow:0 0 0 3px rgba(125,228,170,.11),0 0 11px rgba(125,228,170,.44); }
 .nearby .placeboard .room-presence-count b { min-width:17px !important; height:17px !important; background:rgba(109,203,157,.24) !important; color:#f3fff8 !important; }
+
+/* Sidebar finishing pass — final cascade. The header is LinkUUp night-blue,
+   and navigation icons stay free of individual boxes. */
+.md-sidenav-left,.md-sidenav-left md-content { background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important; }
+.md-sidenav-left md-toolbar.sidenav-brand,.md-sidenav-left .sidenav-brand { min-height:82px !important; background:radial-gradient(circle at 88% 24%,rgba(99,189,247,.32),transparent 29%),linear-gradient(115deg,#32295d 0%,#1a3158 56%,#121d33 100%) !important; border-bottom:1px solid rgba(184,219,255,.17) !important; box-shadow:inset 0 -1px 0 rgba(255,255,255,.055),0 8px 19px rgba(4,9,22,.22) !important; }
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:82px !important; }.md-sidenav-left .sidenav-brand h1 { color:#f7fbff !important; font-weight:760 !important; letter-spacing:-.035em !important; }.md-sidenav-left .sidenav-brand span { color:#b7d6f0 !important; }
+.md-sidenav-left md-list-item .nav-icon,.md-sidenav-left md-list-item.nav-discover .nav-icon,.md-sidenav-left md-list-item.nav-profile .nav-icon,.md-sidenav-left md-list-item.nav-friends .nav-icon,.md-sidenav-left md-list-item.nav-settings .nav-icon,.md-sidenav-left md-list-item.nav-account .nav-icon,.md-sidenav-left md-list-item.nav-profile-settings .nav-icon,.md-sidenav-left md-list-item.nav-logout .nav-icon { width:24px !important; height:24px !important; margin-right:14px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; font-size:19px !important; }
+.md-sidenav-left md-list-item:hover .nav-icon { transform:translateX(1px) !important; background:transparent !important; box-shadow:none !important; }.md-sidenav-left md-list-item::before { background:transparent; }.md-sidenav-left md-list-item:hover { border-color:transparent !important; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent) !important; }.md-sidenav-left md-list-item:hover::before { background:#9fddff !important; box-shadow:0 0 11px rgba(129,208,255,.62) !important; }
 
 /* Calibration pass: remove the two variable counters before comparing the
    pure QR and route controls.  Their shared badge returns only once both
@@ -4030,13 +4085,8 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 .settings-page .lup-settings-list::before,
 .profile-settings-page md-list::before {
-  content:'';
-  display:block;
-  height:3px;
-  margin:0 5px 16px;
-  border-radius:99px;
-  background:linear-gradient(90deg,#76bfff,rgba(173,128,255,.8),rgba(126,221,185,.72));
-  box-shadow:0 0 16px rgba(132,132,255,.35);
+  content:none;
+  display:none;
 }
 .settings-page .lup-settings-list .md-subheader,
 .profile-settings-page .md-subheader {
@@ -4063,15 +4113,8 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 .settings-page .lup-settings-list md-list-item.md-2-line::before,
 .profile-settings-page md-list-item::before {
-  content:'';
-  position:absolute;
-  top:13px;
-  bottom:13px;
-  left:0;
-  width:2px;
-  border-radius:0 4px 4px 0;
-  background:linear-gradient(#9f89ff,#6ac6ef);
-  opacity:.75;
+  content:none;
+  display:none;
 }
 .settings-page .lup-settings-list md-list-item.md-2-line:hover,
 .profile-settings-page md-list-item:hover {
@@ -4540,6 +4583,44 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   background:linear-gradient(145deg,color-mix(in srgb,var(--lup-category-ink) 34%,#52566a),color-mix(in srgb,var(--lup-category-ink) 16%,#232637)) !important;
   color:#fff !important;
 }
+
+/* Final sidebar surface: this intentionally comes last because older Material
+ * toolbar rules otherwise repaint the LinkUUp header as a metallic black bar. */
+.md-sidenav-left,
+.md-sidenav-left md-content {
+  background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important;
+}
+.md-sidenav-left md-toolbar.sidenav-brand,
+.md-sidenav-left .sidenav-brand {
+  min-height:82px !important;
+  background:radial-gradient(circle at 88% 24%,rgba(99,189,247,.32),transparent 29%),linear-gradient(115deg,#32295d 0%,#1a3158 56%,#121d33 100%) !important;
+  border-bottom:1px solid rgba(184,219,255,.17) !important;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.055),0 8px 19px rgba(4,9,22,.22) !important;
+}
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:82px !important; }
+.md-sidenav-left .sidenav-brand h1 { color:#f7fbff !important; font-weight:760 !important; letter-spacing:-.035em !important; }
+.md-sidenav-left .sidenav-brand span { color:#b7d6f0 !important; }
+.md-sidenav-left md-list-item .nav-icon,
+.md-sidenav-left md-list-item.nav-discover .nav-icon,
+.md-sidenav-left md-list-item.nav-profile .nav-icon,
+.md-sidenav-left md-list-item.nav-friends .nav-icon,
+.md-sidenav-left md-list-item.nav-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-account .nav-icon,
+.md-sidenav-left md-list-item.nav-profile-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-logout .nav-icon {
+  width:24px !important;
+  height:24px !important;
+  margin-right:14px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  font-size:19px !important;
+}
+.md-sidenav-left md-list-item:hover .nav-icon { transform:translateX(1px) !important; background:transparent !important; box-shadow:none !important; }
+.md-sidenav-left md-list-item::before { background:transparent; }
+.md-sidenav-left md-list-item:hover { border-color:transparent !important; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent) !important; }
+.md-sidenav-left md-list-item:hover::before { background:#9fddff !important; box-shadow:0 0 11px rgba(129,208,255,.62) !important; }
 
 /* Overview means two pieces of information at once: “Alle” remains selected
    while the matching category of the visible card is lit beside it. A direct
@@ -5393,6 +5474,49 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .nearby .placeboard .distrat .location-cuddles,
 .nearby .placeboard .distrat .distance a,
 .nearby .placeboard .distrat .distance a > .material-icons { width:60px !important; min-width:60px !important; height:60px !important; border-radius:15px !important; box-sizing:border-box !important; }
+
+/* Sidebar rendering endpoint.  Older global Material rules produced a black
+   metallic header and boxed icons; this restores the single LinkUUp surface. */
+.md-sidenav-left,.md-sidenav-left md-content { background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important; }
+.md-sidenav-left md-toolbar.sidenav-brand,.md-sidenav-left .sidenav-brand { min-height:82px !important; background:radial-gradient(circle at 88% 24%,rgba(99,189,247,.32),transparent 29%),linear-gradient(115deg,#32295d 0%,#1a3158 56%,#121d33 100%) !important; border-bottom:1px solid rgba(184,219,255,.17) !important; box-shadow:inset 0 -1px 0 rgba(255,255,255,.055),0 8px 19px rgba(4,9,22,.22) !important; }
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:82px !important; }.md-sidenav-left .sidenav-brand h1 { color:#f7fbff !important; font-weight:760 !important; letter-spacing:-.035em !important; }.md-sidenav-left .sidenav-brand span { color:#b7d6f0 !important; }
+.md-sidenav-left md-list-item .nav-icon,.md-sidenav-left md-list-item.nav-discover .nav-icon,.md-sidenav-left md-list-item.nav-profile .nav-icon,.md-sidenav-left md-list-item.nav-friends .nav-icon,.md-sidenav-left md-list-item.nav-settings .nav-icon,.md-sidenav-left md-list-item.nav-account .nav-icon,.md-sidenav-left md-list-item.nav-profile-settings .nav-icon,.md-sidenav-left md-list-item.nav-logout .nav-icon { width:24px !important; height:24px !important; margin-right:14px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; font-size:19px !important; }
+.md-sidenav-left md-list-item:hover .nav-icon { transform:translateX(1px) !important; background:transparent !important; box-shadow:none !important; }.md-sidenav-left md-list-item::before { background:transparent; }.md-sidenav-left md-list-item:hover { border-color:transparent !important; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent) !important; }.md-sidenav-left md-list-item:hover::before { background:#9fddff !important; box-shadow:0 0 11px rgba(129,208,255,.62) !important; }
+
+/* The Angular Material tools element must remain transparent; otherwise it
+   paints a separate black strip inside the blue LinkUUp header. */
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { background:transparent !important; }
+
+/* Location Cuddle: the code stays completely legible; the surrounding frame
+   makes the real-world encounter feel deliberate instead of generic. */
+.lup-location-cuddle-dialog { width:min(91vw,368px) !important; border:1px solid rgba(173,210,255,.22) !important; border-radius:27px !important; background:radial-gradient(circle at 50% -8%,rgba(105,172,255,.27),transparent 41%),radial-gradient(circle at 87% 50%,rgba(205,104,192,.16),transparent 34%),linear-gradient(154deg,#182a49,#14182b 62%,#101624) !important; box-shadow:0 24px 64px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.09) !important; }
+.lup-location-cuddle-content { padding:28px 23px 22px !important; }.lup-location-cuddle-close { border:1px solid rgba(193,223,255,.18) !important; background:rgba(8,17,36,.38) !important; color:#dceeff !important; }.lup-location-cuddle-seal { position:relative; width:58px !important; height:58px !important; margin-bottom:10px !important; border:1px solid rgba(194,231,255,.46) !important; border-radius:50% !important; background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.40),transparent 24%),linear-gradient(145deg,#5bbde9,#6e69d5 64%,#ac609b) !important; box-shadow:0 0 0 7px rgba(130,205,255,.07),0 13px 28px rgba(8,22,54,.40),inset 0 1px 0 rgba(255,255,255,.43) !important; }.lup-location-cuddle-seal > .material-icons:first-child { font-size:29px !important; text-shadow:0 2px 5px rgba(48,38,112,.38); }.lup-location-cuddle-seal .cuddle-seal-qr { position:absolute; right:-4px; bottom:-4px; display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(232,249,255,.58); border-radius:8px; background:#172747; color:#dff5ff; font-size:14px !important; box-shadow:0 5px 13px rgba(5,13,35,.38); }
+.lup-location-cuddle-eyebrow { color:#a9dcff !important; }.lup-location-cuddle-content h2 { margin-bottom:7px !important; font-size:20px !important; }.lup-location-cuddle-content > p:not(.lup-location-cuddle-note) { max-width:278px; color:#c4d3e8 !important; font-size:12px !important; }
+.lup-location-cuddle-frame { position:relative; display:grid; place-items:center; width:min(67vw,222px); margin:17px auto 10px; padding:9px; border:1px solid rgba(154,211,255,.28); border-radius:22px; background:linear-gradient(135deg,rgba(93,182,239,.12),rgba(158,105,215,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 13px 30px rgba(2,10,30,.26); }.lup-location-cuddle-frame::before { content:''; position:absolute; inset:5px; border:1px solid rgba(241,217,255,.12); border-radius:17px; pointer-events:none; }.lup-location-cuddle-frame .lup-cuddles-qr { position:relative; z-index:1; padding:8px !important; border:0 !important; border-radius:14px !important; box-shadow:0 7px 18px rgba(0,0,0,.28) !important; }.lup-location-cuddle-frame .lup-cuddles-qr img { width:min(59vw,190px) !important; }.lup-location-cuddle-frame-corner { position:absolute; z-index:2; width:13px; height:13px; border-color:#b9e8ff; border-style:solid; pointer-events:none; }.corner-a { top:5px; left:5px; border-width:2px 0 0 2px; border-radius:5px 0 0; }.corner-b { top:5px; right:5px; border-width:2px 2px 0 0; border-radius:0 5px 0 0; }.corner-c { bottom:5px; left:5px; border-width:0 0 2px 2px; border-radius:0 0 0 5px; }.corner-d { right:5px; bottom:5px; border-width:0 2px 2px 0; border-radius:0 0 5px 0; }
+.lup-location-cuddle-scan { display:inline-flex; align-items:center; gap:5px; color:#bce8ff; font-size:10px; font-weight:800; letter-spacing:.055em; text-transform:uppercase; }.lup-location-cuddle-scan .material-icons { font-size:15px; color:#ffd1e3; }.lup-location-cuddle-rule { margin-top:15px !important; border-color:rgba(162,209,255,.16) !important; background:rgba(96,133,207,.12) !important; color:#d7e5f6 !important; }.lup-location-cuddle-done { border-color:rgba(189,224,255,.25) !important; background:linear-gradient(112deg,#477fbb,#695bb3) !important; box-shadow:0 6px 0 rgba(28,42,99,.45),0 14px 23px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.30) !important; }
+
+/* Category changes rebuild a filtered Slick rail. Keep that short interval on
+   the compositor: there is no visual compromise, just no competing ornament. */
+.nearby .location-categories { isolation:isolate; -webkit-tap-highlight-color:transparent; }
+.nearby .location-categories button { touch-action:manipulation; transform:translateZ(0); backface-visibility:hidden; will-change:transform; }
+.nearby .location-categories button:active { transform:translateZ(0) scale(.965); transition:transform 70ms linear !important; }
+.nearby .location-categories button:not(.active) { transition:color 150ms ease,background-color 150ms ease,border-color 150ms ease,opacity 150ms ease !important; }
+.nearby .location-categories button.active { transition:color 150ms ease,background-color 150ms ease,border-color 150ms ease,opacity 150ms ease,transform 120ms ease !important; }
+.nearby .slickit,.nearby .slickit .slick-list { transform:translateZ(0); backface-visibility:hidden; }
+.nearby .slickit .slick-track { will-change:transform; backface-visibility:hidden; }
+.nearby .slickit.lup-category-refreshing .roominfo::after,
+.nearby .slickit.lup-category-refreshing .room-category-orbit,
+.nearby .slickit.lup-category-refreshing .room-presence-count::before { animation:none !important; }
+@media (prefers-reduced-motion:reduce) { .nearby .slickit .slick-track,.nearby .location-categories button { will-change:auto; } }
+
+/* Small cleanup pass: settings have no decorative colour rail, and the
+   profile statistics sit directly on the page rather than in a second frame. */
+.profile-page .user-top-information { border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
+.profile-page .user-top-information::before { display:none !important; }
+/* Browsers must not draw a white native focus rectangle around “Alle”.
+   Keyboard users still receive the same quiet LinkUUp focus signal. */
+.nearby .location-categories button:focus { outline:0 !important; }
+.nearby .location-categories button:focus-visible { outline:1px solid rgba(156,211,255,.72) !important; outline-offset:3px !important; }
 
 /* Current-guest marker: count first, then a restrained live signal. */
 .nearby .placeboard .room-presence-count { gap:5px !important; min-height:29px !important; padding:4px 8px !important; border:1px solid rgba(116,222,175,.20) !important; border-radius:999px !important; background:rgba(38,87,73,.25) !important; color:#dff8eb !important; box-shadow:none !important; }
