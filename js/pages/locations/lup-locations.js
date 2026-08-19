@@ -32,6 +32,10 @@ angular.module('LUP').config(function($routeProvider) {
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
 	var categoryRailDetached = false;
+	// Mobile browsers may emit a click on the card immediately after Slick has
+	// completed a horizontal drag. Keep taps working, but discard that trailing
+	// synthetic click so a swipe cannot accidentally enter the location.
+	var suppressRoomOpenUntil = 0;
 	$scope.data.currentRoom = null;
 	$scope.data.currentRoomIndex = -1;
 
@@ -252,7 +256,14 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 0);
 	};
 	
-	$scope.maybeGotoRoom = function(room) {
+	$scope.maybeGotoRoom = function(room, event) {
+		if (Date.now() < suppressRoomOpenUntil) {
+			if (event) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			return;
+		}
 		console.log('LocationsCtrl.maybeGotoRoom()', room);
 		// Slick indexes its filtered slides, while data.rooms keeps the complete
 		// list. Comparing a visible room with currentRoom can therefore reject a
@@ -317,6 +328,10 @@ angular.module('LUP').config(function($routeProvider) {
 				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
 					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
 				$scope.focusSlide(slick.$slides.eq(nextSlide));
+			}).on('swipe.lupSlick', function() {
+				// Slick only emits this after it has accepted a horizontal gesture.
+				// The short guard catches the browser click that can follow the drag.
+				suppressRoomOpenUntil = Date.now() + 350;
 			});
 		}
 		
