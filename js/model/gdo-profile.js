@@ -5,6 +5,7 @@ function GDO_Profile(json) {
 
 	this.JSON = json;
 	this.ERRORS = {};
+	this.EMPTY = {};
 	this.user = null;
 	this.relation = 0;
 

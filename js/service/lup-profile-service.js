@@ -36,12 +36,16 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 			for (let key in moduleSettings) {
 				console.log('Trying to parse ' + moduleName + "." + key);
 				let setting = moduleSettings[key];
-				if (gwsMessage.read8() > 0) {
+				var status = gwsMessage.read8();
+				if (status === 0) {
 					profile.JSON[key] = TypeSrvc.parseBinaryTypeHierarchy(gwsMessage, setting);
 					console.log(`Parsed ${setting.module}.${setting.name} to ${profile.JSON[key]}`);
-				}
-				else {
+				} else if (status === 1) {
 					profile.ERRORS[key] = gwsMessage.readString();
+				} else if (status === 2) {
+					profile.EMPTY[key] = true;
+				} else {
+					console.warn('Unknown profile field status', status, moduleName, key);
 				}
 			}
 		}
