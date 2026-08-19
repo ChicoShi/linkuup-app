@@ -32,6 +32,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
 	var categoryRailDetached = false;
+	var searchBaseRooms = null;
 	// Mobile browsers may emit a click on the card immediately after Slick has
 	// completed a horizontal drag. Keep taps working, but discard that trailing
 	// synthetic click so a swipe cannot accidentally enter the location.
@@ -227,7 +228,8 @@ angular.module('LUP').config(function($routeProvider) {
 		var $slick = getSlick();
 		if (locationsRoomsRendered && $scope.data.rooms === rooms &&
 			$slick.length && $slick.hasClass('slick-initialized')) {
-			return;
+			$scope.updateVisibleRooms();
+			return $scope.refreshCategoryFilter();
 		}
 		var roomSetChanged = $scope.data.rooms !== rooms;
 		// Slick only knows the slides that existed when it was initialised. When
@@ -441,8 +443,15 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.updateVisibleRooms = function() {
 		var categories = $scope.data.category;
+		var query = ($scope.data.searchvalue || '').trim().toLocaleLowerCase();
 		$scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
-			return !categories.length || categories.indexOf(String(room.category())) >= 0;
+			var categoryMatches = !categories.length || categories.indexOf(String(room.category())) >= 0;
+			if (!categoryMatches || !query) {
+				return categoryMatches;
+			}
+			var haystack = [room.name(), room.city(), room.street(), room.zip(), room.categoryName()]
+				.filter(Boolean).join(' ').toLocaleLowerCase();
+			return haystack.indexOf(query) >= 0;
 		});
 	};
 
@@ -614,45 +623,52 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'room-hero-name--regular';
 	};
 	
-	/**
-	 * This one was tricky!
-	 * on a keyup we restore slick slide by calling unfilter.
-	 * Then we untouch slick and reset it by calling slick again.
-	 */
 	$scope.searchLocation = function(query) {
 		console.log("LocationCtrl.searchLocation()", query);
 		query = (query || '').trim();
-		// Nearby discovery stays within the 6 km visibility radius. Searches go
-		// to the server and return only matching rooms, never the full catalogue.
-		if (query && $scope.data.searchSource !== query) {
-			$scope.data.searchSource = query;
-			RoomSrvc.searchRooms(query).then(function(rooms) {
-				// Requests for earlier keystrokes can resolve after the user has
-				// already typed more. Never let an old answer replace the current one.
-				if (($scope.data.searchvalue || '').trim() !== query) {
-					return;
-				}
-				$scope.gotRooms(rooms);
-			}, function(error) {
-				if (($scope.data.searchvalue || '').trim() === query) {
-					$scope.data.searchSource = null;
-				}
-				console.warn('LinkUUp: location search failed.', error);
-			});
-			return;
-		}
-		if (!query && $scope.data.searchSource) {
-			$scope.data.searchSource = null;
-			if ($scope.data.category.length && $scope.data.fullCatalogue) {
-				$scope.gotRooms($scope.data.fullCatalogue);
-				return;
+		var render = function(rooms) {
+			if ($scope.data.rooms === rooms) {
+				$scope.updateVisibleRooms();
+				return $scope.refreshCategoryFilter();
 			}
-			RoomSrvc.withRooms().then($scope.gotRooms, function(error) {
-				console.warn('LinkUUp: nearby location refresh failed.', error);
+			return $scope.gotRooms(rooms);
+		};
+		// Searching is an explicit discovery action. Load the public catalogue
+		// once, then filter it locally for every keystroke. This keeps category
+		// state intact and avoids a WebSocket request/Slick rebuild per character.
+		if (query) {
+			if (!searchBaseRooms) {
+				searchBaseRooms = $scope.data.rooms;
+			}
+			if ($scope.data.fullCatalogue) {
+				return render($scope.data.fullCatalogue);
+			}
+			if (!fullCataloguePromise) {
+				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
+					$scope.data.fullCatalogue = rooms;
+					return rooms;
+				}).finally(function() {
+					fullCataloguePromise = null;
+				});
+			}
+			return fullCataloguePromise.then(function(rooms) {
+				// Several keystrokes can share the same loading promise. Only the
+				// final query may render when that one catalogue request completes.
+				if (($scope.data.searchvalue || '').trim() === query) {
+					render(rooms);
+				}
+			}, function(error) {
+				console.warn('LinkUUp: full location catalogue could not be loaded for search.', error);
 			});
-			return;
 		}
-		$scope.refreshCategoryFilter();
+		if (searchBaseRooms) {
+			var restoreRooms = $scope.data.category.length && $scope.data.fullCatalogue ?
+				$scope.data.fullCatalogue : searchBaseRooms;
+			searchBaseRooms = null;
+			return render(restoreRooms);
+		}
+		$scope.updateVisibleRooms();
+		return $scope.refreshCategoryFilter();
 	};
 
 	//////////
