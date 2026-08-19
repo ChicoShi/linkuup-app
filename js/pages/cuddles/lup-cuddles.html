@@ -13,9 +13,8 @@
         <lup-avatar ng-user="cuddle.partner" ng-click="gotoProfile(cuddle.partner)"></lup-avatar>
         <div class="md-list-item-text" layout="column">
           <p>{{cuddle.partner.displayName()}}</p>
-          <p>{{cuddle.room.name()}} · {{cuddle.day | date:'mediumDate'}}</p>
+          <p>{{cuddle.day | date:'mediumDate'}}</p>
         </div>
-        <i class="md-secondary material-icons" ng-click="gotoRoom(cuddle.room)">place</i>
       </md-list-item>
       <p class="lup-empty-list" ng-if="!data.cuddles.length">{{'CUDDLES_EMPTY'|translate}}</p>
     </md-list>

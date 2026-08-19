@@ -9,7 +9,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 }).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q,
 	UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
-	ConfigSrvc, ProfileSrvc, WebsocketSrvc, RoomSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
+	ConfigSrvc, ProfileSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
 	$scope.data.title = 'TITLE_PROFILE';
 	
@@ -128,16 +128,10 @@ angular.module('LUP').config(function($routeProvider) {
 	// --- QRCode --- //
 	////////////////////
 	$scope.showQRCode = function() {
-		// A Cuddle belongs to the currently active room. The profile is the
-		// deliberate place where its owner shows the code; we never create one for
-		// somebody else's profile or without a real room context.
-		var rooms = RoomSrvc.getRoomsForUser($scope.data.ownUser);
-		var room = rooms.length ? rooms[0] : null;
-		if (!room) {
-			return ErrorSrvc.showError($translate.instant('err_lup_cuddle_room'), $translate.instant('CUDDLES'));
-		}
-		var url = LUP_CONFIG.server + 'index.php?_mo=LinkUUp&_me=QRForCuddle&room=' + encodeURIComponent(room.id());
-		return DialogSrvc.confirm('js/pages/profile/lup-profile-cuddles-dialog.html', {url: url, room: room});
+		// A Cuddle is bound to two users and the UTC day, not to a room. The profile
+		// is the deliberate place where its owner chooses to show the short-lived QR.
+		var url = LUP_CONFIG.server + 'index.php?_mo=LinkUUp&_me=QRForCuddle';
+		return DialogSrvc.confirm('js/pages/profile/lup-profile-cuddles-dialog.html', {url: url});
 	}
 
 	/////////////////////////

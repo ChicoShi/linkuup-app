@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('CuddlesCtrl', function($scope, $routeParams,
-		UserSrvc, RoomSrvc, CuddleSrvc, ErrorSrvc) {
+		UserSrvc, CuddleSrvc, ErrorSrvc) {
 
 	$scope.data.title = 'TITLE_CUDDLES';
 	$scope.data.cuddleUser = GWF_User.ghost();
@@ -31,7 +31,6 @@ angular.module('LUP').config(function($routeProvider) {
 		while (gwsMessage.hasMore()) {
 			$scope.data.cuddles.push({
 				partner: UserSrvc.getOrCreate(gwsMessage.read32()),
-				room: RoomSrvc.getOrCreate(gwsMessage.read32()),
 				day: gwsMessage.read32() * 1000,
 			});
 		}
