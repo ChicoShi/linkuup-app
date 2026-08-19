@@ -28,6 +28,7 @@
     "ng-flow": "^2.1.4",
     "opening_hours": "^3.13.0",
     "slick-carousel": "^1.8.1",
+    "tinycolor2": "^1.6.0",
     "unitegallery": "^1.7.28"
   },
   "private": true
