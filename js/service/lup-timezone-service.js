@@ -34,7 +34,12 @@ service('TimezoneSrvc', function($q, RequestSrvc, ErrorSrvc) {
 	};
 
 	TimezoneSrvc.renderTimezone = function(tzId) {
-		const tz = TimezoneSrvc.CACHE[tzId];
+		const cache = TimezoneSrvc.CACHE || {};
+		// The catalogue endpoint is a JSON list; retain support for the old
+		// ID-keyed map while resolving current list entries by tz_id.
+		const tz = Array.isArray(cache) ? cache.find(function(entry) {
+			return String(entry.tz_id) === String(tzId);
+		}) : cache[tzId];
 		if (!tz) {
 			return '---';
 		}
