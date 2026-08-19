@@ -449,6 +449,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		console.log('LUPCtrl.clearCache()');
 		UserSrvc.CACHE = {};
 		RoomSrvc.CACHE = {};
+		// The discovery catalogue contains room models from the previous session.
+		// Do not retain it across logout or a newly authenticated account.
+		RoomSrvc.ALL_ROOMS = null;
+		RoomSrvc.ALL_ROOMS_LOADING = null;
+		$scope.data.fullCatalogue = null;
 		SettingsSrvc.CACHE = null;
 		$rootScope.$broadcast('lup-clear-cache');
 	};
