@@ -339,9 +339,16 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.gotoUserCuddles = function(user) {
 		console.log('ProfileCtrl.gotoUserCuddles()', user);
-		if (user && user.isSelf()) {
-			$scope.showQRCode();
+		if (!user) {
+			return;
 		}
+		if (user.isSelf()) {
+			return DialogSrvc.confirm('js/pages/profile/lup-profile-cuddle-menu-dialog.html', {
+				showQRCode: $scope.showQRCode,
+				showCuddles: $scope.gotoCuddles.bind($scope, user),
+			});
+		}
+		return $scope.gotoCuddles(user);
 	};
 
 	////////////////////

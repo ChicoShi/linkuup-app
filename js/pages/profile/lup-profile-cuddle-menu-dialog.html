@@ -1,0 +1,11 @@
+<md-dialog class="lup-cuddles-dialog" aria-label="{{'CUDDLES'|translate}}">
+  <md-dialog-content>
+    <div class="lup-cuddles-dialog-content">
+      <button class="lup-cuddles-close" type="button" ng-click="cancel()" aria-label="{{'CLOSE'|translate}}"><i class="material-icons">close</i></button>
+      <div class="lup-cuddles-heart"><i class="material-icons">favorite</i></div>
+      <h2>{{'CUDDLES'|translate}}</h2>
+      <button class="md-raised md-primary" type="button" ng-click="data.showQRCode(); ok()"><i class="material-icons">qr_code_2</i> {{'CUDDLES_SHOW_QR'|translate}}</button>
+      <button class="md-raised" type="button" ng-click="data.showCuddles(); ok()"><i class="material-icons">favorite</i> {{'CUDDLES_SHOW_MINE'|translate}}</button>
+    </div>
+  </md-dialog-content>
+</md-dialog>

@@ -411,6 +411,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	$scope.gotoSearch = function() { return $scope.goto('/search'); };
 	$scope.gotoNotification = function() { return $scope.goto('/notifications'); };
 	$scope.gotoCourse = function(user) { return $scope.goto('/course/'+user.id()); };
+	$scope.gotoCuddles = function(user) { return $scope.goto('/cuddles/'+user.id()); };
 	$scope.goto = function(url) {
 		console.log('LUPCtrl.goto()', url);
 		$scope.closeLeft();

@@ -128,6 +128,7 @@ $min = LUPConfig::$MIN;
   <script src="js/service/lup-country-service.js<?=$v?>"></script>
   <script src="js/service/lup-course-service.js<?=$v?>"></script>
   <script src="js/service/lup-comment-service.js<?=$v?>"></script>
+  <script src="js/service/lup-cuddle-service.js<?=$v?>"></script>
   <script src="js/service/lup-dialog-service.js<?=$v?>"></script>
   <script src="js/service/lup-enum-service.js<?=$v?>"></script>
   <script src="js/service/lup-error-service.js<?=$v?>"></script>
@@ -164,6 +165,7 @@ $min = LUPConfig::$MIN;
   <script src="js/pages/recovery/lup-recovery.js<?=$v?>"></script>
   <script src="js/pages/comments/lup-comments.js<?=$v?>"></script>
   <script src="js/pages/course/lup-course.js<?=$v?>"></script>
+  <script src="js/pages/cuddles/lup-cuddles.js<?=$v?>"></script>
   <script src="js/pages/location/lup-location.js<?=$v?>"></script>
   <script src="js/pages/location/lup-room-vote-ctrl.js<?=$v?>"></script>
   <script src="js/pages/location/lup-new-location.js<?=$v?>"></script>
