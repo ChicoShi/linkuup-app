@@ -54,9 +54,6 @@
 						
 						</div>
 						<div class="distrat">
-							<div class="location-cuddles" ng-click="showRoomCuddleQRCode(room, $event)" title="QR-Code dieser Location öffnen">
-								<i class="material-icons">qr_code_2</i><strong>{{roomCuddles(room)}}</strong>
-							</div>
 							<div class="distance" ng-if="room.showDistance()"><p><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><span>{{room.displayDistance()}}</span></a></p></div>
 						</div>
 					</div>

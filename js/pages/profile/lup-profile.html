@@ -48,7 +48,7 @@
 				<p class="countitem stat-locations" ng-click="gotoUserCourse(data.user)"><i class="material-icons">place</i><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
 				<p class="countitem stat-ups" ng-click="gotoLikes(data.user)"><i class="material-icons">bolt</i><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
 				<p class="countitem stat-friends" ng-click="gotoUserFriends(data.user)"><i class="material-icons">groups</i><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
-				<p class="countitem stat-cuddles" ng-click="showQRCode()" title="Knuddel-QR anzeigen"><i class="material-icons qr-cuddle-main">qr_code_2</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
+				<p class="countitem stat-cuddles" ng-click="gotoUserCuddles(data.user)" title="Knuddel-QR anzeigen"><i class="material-icons qr-cuddle-main">qr_code_2</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
 			</div>
 		</div>
 	 

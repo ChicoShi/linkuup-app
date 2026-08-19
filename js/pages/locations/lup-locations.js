@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
@@ -275,20 +275,6 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.gotoRoom(room);
 	};
 
-	// Room cuddles will be supplied by the QR check-in protocol.  Until then the
-	// counter remains an honest zero instead of borrowing unrelated visitor data.
-	$scope.roomCuddles = function(room) {
-		return Math.max(0, Number(room && room.JSON && room.JSON.room_cuddles) || 0);
-	};
-
-	$scope.showRoomCuddleQRCode = function(room, event) {
-		if (event) {
-			event.stopPropagation();
-		}
-		var url = window.LUP_CONFIG.server + 'index.php?_mo=LinkUUp&_me=QRForCuddle&room=' + encodeURIComponent(room.id());
-		return DialogSrvc.confirm('js/pages/locations/lup-location-cuddle-dialog.html', {room: room, url: url});
-	};
-	
 	$scope.slick = function(nofocus) {
 		console.log('LocationsCtrl.slick()');
 		var $slick = getSlick();
