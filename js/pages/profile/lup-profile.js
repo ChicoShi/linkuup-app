@@ -9,7 +9,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 }).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q,
 	UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
-	ConfigSrvc, ProfileSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
+	ConfigSrvc, ProfileSrvc, SettingsSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
 	$scope.data.title = 'TITLE_PROFILE';
 	
@@ -33,6 +33,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.data.profile = new GDO_Profile();
+	$scope.data.profileGroups = [];
 	// Gallery data belongs to one profile. Keeping it while the user switches
 	// tabs prevents an empty-grid flash and needless websocket round trips.
 	$scope.data.galleryLoadedFor = null;
@@ -58,6 +59,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.galleryReady = false;
 		}
 		$scope.data.user = user;
+		$scope.data.profileGroups = [];
 		// The legacy help-read websocket command can reject on newer backends and
 		// surface an unhelpful "undefined" dialog. Profile loading must not depend
 		// on this optional onboarding hint.
@@ -145,6 +147,51 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
 		$scope.data.profile = profile;
+		$scope.data.profileGroups = $scope.buildProfileGroups(profile);
+	};
+
+	$scope.moduleLabel = function(module) {
+		return 'module_' + String(module).toLowerCase();
+	};
+
+	$scope.buildProfileGroups = function(profile) {
+		var groups = {};
+		var cache = SettingsSrvc.CACHE || {};
+		for (var module in cache) {
+			for (var key in cache[module]) {
+				var setting = cache[module][key];
+				var hasValue = Object.prototype.hasOwnProperty.call(profile.JSON, key);
+				var error = profile.ERRORS[key];
+				// Do not render an empty ACL error as a mysterious blank row. Values,
+				// including deliberately empty settings, remain visible to make the
+				// profile a truthful rendering of the available metadata.
+				if (!hasValue && !error) {
+					continue;
+				}
+				groups[module] = groups[module] || {
+					module: module,
+					sort: Number(setting.module_sort) || 1000,
+					fields: [],
+				};
+				groups[module].fields.push({
+					key: key,
+					setting: setting,
+					value: profile.JSON[key],
+					error: error,
+				});
+			}
+		}
+		var result = Object.keys(groups).map(function(module) { return groups[module]; }).sort(function(a, b) {
+			return a.sort - b.sort || a.module.localeCompare(b.module);
+		});
+		result.forEach(function(group) {
+			group.fields.sort(function(a, b) { return a.key.localeCompare(b.key); });
+		});
+		return result;
+	};
+
+	$scope.renderProfileSetting = function(field) {
+		return RenderSrvc.renderClass(field.setting, field.value);
 	};
 
 	$scope.countryURL = function(user) {
