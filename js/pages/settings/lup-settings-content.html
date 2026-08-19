@@ -49,6 +49,7 @@
          </md-option>
        </md-select>
        <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
+		 <md-option value="0">{{'PLEASE_SELECT'|translate}}</md-option>
          <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
        </md-select>
        <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input">

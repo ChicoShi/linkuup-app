@@ -160,11 +160,16 @@ angular.module('LUP').config(function($routeProvider) {
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
+				// Legacy display helpers initialise a few optional enums with "0".
+				// The profile frame still knows that they were actually absent, and
+				// an absent field must not turn into a visible "not specified" row.
+				if (profile.EMPTY[key]) {
+					continue;
+				}
 				var hasValue = Object.prototype.hasOwnProperty.call(profile.JSON, key);
 				var error = profile.ERRORS[key];
-				// Do not render an empty ACL error as a mysterious blank row. Values,
-				// including deliberately empty settings, remain visible to make the
-				// profile a truthful rendering of the available metadata.
+				// Only values and meaningful ACL errors deserve a row. Empty settings
+				// are intentionally omitted from the public profile.
 				if (!hasValue && !error) {
 					continue;
 				}

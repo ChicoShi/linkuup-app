@@ -57,6 +57,11 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.aclChoices = function(setting) {
+		// profile_visibility is itself an ACL enum. It has no *separate*
+		// field-visibility relation, so its own enum values are the choices.
+		if (setting.name === 'profile_visibility') {
+			return setting.options.enumValues || ACLS;
+		}
 		return setting.acl === null ? [] : ACLS;
 	};
 
@@ -104,6 +109,9 @@ angular.module('LUP').config(function($routeProvider) {
 						setting.value = selected && typeof selected === 'object' && selected.id !== undefined ? selected.id : selected;
 						setting.value = GDTRendererSrvc.valueForSetting(setting, setting.value);
 						if (setting.renderer.source === 'enum' && !setting.options.notNull && (setting.value === null || setting.value === '')) {
+							setting.value = '0';
+						}
+						if (setting.renderer.source === 'timezones' && (setting.value === null || setting.value === '')) {
 							setting.value = '0';
 						}
 						setting.initialValue = setting.value;
