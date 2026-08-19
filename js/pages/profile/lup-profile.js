@@ -183,6 +183,9 @@ angular.module('LUP').config(function($routeProvider) {
 					setting: setting,
 					value: profile.JSON[key],
 					error: error,
+					// This is the target user's stored ACL relation from GWS_Profile,
+					// not the module default carried by SettingsSrvc.CACHE.
+					acl: profile.ACL[key],
 				});
 			}
 		}

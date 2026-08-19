@@ -79,6 +79,10 @@ service('EnumSrvc', function(RequestSrvc) {
 		 return EnumSrvc.toInt(_enum, 'GDO\\Gallery\\GDO_Gallery.gallery_acl');
 	};
 
+	EnumSrvc.aclToEnum = function(integer) {
+		return integer === 0 ? null : EnumSrvc.toEnum(integer, 'GDO\\User\\GDO_UserSetting.uset_relation');
+	};
+
 	/////////////
 	// Convert //
 	/////////////

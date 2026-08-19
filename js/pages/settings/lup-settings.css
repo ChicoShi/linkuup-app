@@ -65,6 +65,28 @@
 	color: #f5f6ff;
 }
 
+/* Keep a setting value and its field visibility as one explicit control
+ * group.  Direct sibling selects were clipped by the list item's overflow on
+ * narrow screens, making the visibility selector look like the value select. */
+.lup-settings-list .lup-setting-controls {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+	min-width: 0;
+	margin-left: 10px;
+}
+
+.lup-settings-list .lup-setting-controls > md-select,
+.lup-settings-list .lup-setting-controls > .lup-setting-input {
+	min-width: 0;
+	max-width: 42vw;
+}
+
+.lup-settings-list .lup-setting-controls .lup-setting-acl {
+	min-width: 96px;
+}
+
 .lup-settings-list .lup-setting-input {
 	min-width: 160px;
 	margin: 0;

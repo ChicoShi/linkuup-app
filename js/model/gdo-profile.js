@@ -4,6 +4,7 @@ function GDO_Profile(json) {
 	json = json||{};
 
 	this.JSON = json;
+	this.ACL = {};
 	this.ERRORS = {};
 	this.EMPTY = {};
 	this.user = null;

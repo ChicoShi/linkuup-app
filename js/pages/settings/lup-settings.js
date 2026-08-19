@@ -31,6 +31,15 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.data.countries = CountrySrvc.CACHE || [];
 	$scope.data.timezones = TimezoneSrvc.options();
+	// LinkUUp deliberately ships these five UI languages. Language ISO codes do
+	// not always map to a country, hence the explicit flag mapping for English.
+	$scope.data.languages = [
+		{id: 'en', text: 'English', flag: 'gb'},
+		{id: 'de', text: 'Deutsch', flag: 'de'},
+		{id: 'it', text: 'Italiano', flag: 'it'},
+		{id: 'fr', text: 'Français', flag: 'fr'},
+		{id: 'es', text: 'Español', flag: 'es'},
+	];
 
 	$scope.controlIs = function(setting, control) {
 		return setting.renderer.control === control;
@@ -42,6 +51,10 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.isTimezone = function(setting) {
 		return $scope.controlIs(setting, 'select') && setting.renderer.source === 'timezones';
+	};
+
+	$scope.isLanguage = function(setting) {
+		return $scope.controlIs(setting, 'select') && setting.renderer.source === 'languages';
 	};
 
 	$scope.displayTimezone = function(timezone) {
@@ -56,11 +69,19 @@ angular.module('LUP').config(function($routeProvider) {
 		return CountrySrvc.flagStyle(country.id);
 	};
 
+	$scope.languageStyle = function(language) {
+		return CountrySrvc.flagStyle(language.flag);
+	};
+
 	$scope.aclChoices = function(setting) {
 		// profile_visibility is itself an ACL enum. It has no *separate*
 		// field-visibility relation, so its own enum values are the choices.
 		if (setting.name === 'profile_visibility') {
-			return setting.options.enumValues || ACLS;
+			// acl_hidden is an internal backend marker, not a user-facing
+			// visibility choice. acl_noone is the explicit "nobody" option.
+			return (setting.options.enumValues || ACLS).filter(function(relation) {
+				return relation !== 'acl_hidden';
+			});
 		}
 		return setting.acl === null ? [] : ACLS;
 	};

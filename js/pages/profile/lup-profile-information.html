@@ -18,7 +18,11 @@
     <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
     <md-list-item class="md-2-line" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-setting-denied': field.error}">
       <div class="md-list-item-text" layout="column">
-        <h3>{{field.setting.label|translate}}</h3>
+        <h3>
+          {{field.setting.label|translate}}
+          <i ng-if="field.acl" class="material-icons profile-setting-acl"
+             title="{{field.acl|translate}}" aria-label="{{field.acl|translate}}">visibility</i>
+        </h3>
         <p ng-if="field.error"><i class="material-icons" aria-hidden="true">visibility_off</i> {{field.error}}</p>
         <p ng-if="!field.error" ng-bind-html="renderProfileSetting(field)"></p>
       </div>

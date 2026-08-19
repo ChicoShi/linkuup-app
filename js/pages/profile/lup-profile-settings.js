@@ -1,8 +1,10 @@
 "use strict";
 angular.module('LUP').config(function($routeProvider) {
 	$routeProvider.when('/profilesettings', {
-		templateUrl: 'js/pages/profile/lup-profile-settings.html?v='+window.LUP_BUILD,
-		controller: 'ProfileSettingsCtrl',
+		// The former hand-maintained profile editor knew only a few legacy
+		// fields and their old profile-visible flag.  SettingsSrvc is now the
+		// single source for values and per-field ACL relations.
+		redirectTo: '/settings',
 		params: {
 			authCheck: true,
 		},

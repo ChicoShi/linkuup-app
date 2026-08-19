@@ -3,7 +3,7 @@ angular.module('LUP').
 /**
  * Profile loader service.
  */
-service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc) {
+service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc, EnumSrvc) {
 
 	const ProfileSrvc = this;
 
@@ -37,6 +37,10 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc)
 				console.log('Trying to parse ' + moduleName + "." + key);
 				let setting = moduleSettings[key];
 				var status = gwsMessage.read8();
+				// GWS_Profile frames every field as status, stored target ACL enum, payload.
+				// Keep the ACL even for empty/denied fields so the view can explain the
+				// profile contract without guessing module defaults.
+				profile.ACL[key] = EnumSrvc.aclToEnum(gwsMessage.read8());
 				if (status === 0) {
 					profile.JSON[key] = TypeSrvc.parseBinaryTypeHierarchy(gwsMessage, setting);
 					console.log(`Parsed ${setting.module}.${setting.name} to ${profile.JSON[key]}`);
