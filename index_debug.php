@@ -171,7 +171,6 @@ $min = LUPConfig::$MIN;
   <script src="js/pages/location/lup-new-location.js<?=$v?>"></script>
   <script src="js/pages/locations/lup-locations.js<?=$v?>"></script>
   <script src="js/pages/profile/lup-profile.js<?=$v?>"></script>
-  <script src="js/pages/profile/lup-profile-settings.js<?=$v?>"></script>
   <script src="js/pages/settings/lup-settings.js<?=$v?>"></script>
   <script src="js/pages/query/lup-query.js<?=$v?>"></script>
   <script src="js/pages/notifications/lup-notification.js<?=$v?>"></script>

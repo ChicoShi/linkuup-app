@@ -1,5 +1,10 @@
 "use strict";
 angular.module('LUP').config(function($routeProvider) {
+	// The former profile settings editor was superseded by this generic page.
+	// Keep old bookmarks working without retaining a second controller.
+	$routeProvider.when('/profilesettings', {
+		redirectTo: '/settings',
+	});
 	$routeProvider.when('/settings', {
 		templateUrl: 'js/pages/settings/lup-settings.html?v='+window.LUP_BUILD,
 		controller: 'SettingsCtrl',

@@ -406,7 +406,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	$scope.gotoFriends = function(user) { return $scope.goto("/friends/"+user.id()); };
 	$scope.gotoLikes = function(user) { return $scope.goto("/likes/"+user.id()); };
 	$scope.gotoOwnProfile = function() { return $scope.gotoProfile(window.GWF_USER); };
-	$scope.gotoProfileSettings = function() { return $scope.goto('/profilesettings'); };
+	$scope.gotoProfileSettings = function() { return $scope.goto('/settings'); };
 	$scope.gotoSettings = function() { return $scope.goto('/settings'); };
 	$scope.gotoSearch = function() { return $scope.goto('/search'); };
 	$scope.gotoNotification = function() { return $scope.goto('/notifications'); };
