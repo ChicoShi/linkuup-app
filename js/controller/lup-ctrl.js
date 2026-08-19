@@ -276,6 +276,15 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 				// The discovery page may already be open while this background
 				// request resolves. Tell it to initialise its carousel immediately.
 				$rootScope.$broadcast('lup-rooms-ready', rooms);
+				// Keep the first category tap instant.  This deliberately starts only
+				// after the nearby start view is ready, so it never delays the app.
+				$timeout(function() {
+					RoomSrvc.withRooms(true).then(function(allRooms) {
+						$scope.data.fullCatalogue = allRooms;
+					}, function(error) {
+						console.warn('LinkUUp: discovery catalogue preload failed.', error);
+					});
+				}, 900, false);
 			}, function(error) {
 				console.warn('LinkUUp: location preload failed; it will retry on opening the view.', error);
 			});

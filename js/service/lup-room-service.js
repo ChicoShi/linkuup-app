@@ -29,6 +29,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	// One shared request prevents the initial screen and a background preload
 	// from asking the WebSocket for the same location catalogue twice.
 	RoomSrvc.ROOMS_LOADING = null;
+	// The nearby list and the complete discovery catalogue serve different UI
+	// moments. Cache the latter as well: category changes must be local filters,
+	// never a second visible network wait.
+	RoomSrvc.ALL_ROOMS = null;
+	RoomSrvc.ALL_ROOMS_LOADING = null;
 	RoomSrvc.BLANK_ROOM = RoomSrvc.NEW_BLANK_ROOM(0);
 
 	///////////////////////////
@@ -163,6 +168,12 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {
+		if (includeAll && RoomSrvc.ALL_ROOMS) {
+			return $q.when(RoomSrvc.ALL_ROOMS);
+		}
+		if (includeAll && RoomSrvc.ALL_ROOMS_LOADING) {
+			return RoomSrvc.ALL_ROOMS_LOADING;
+		}
 		if (!includeAll && RoomSrvc.ROOMS_LOADING) {
 			return RoomSrvc.ROOMS_LOADING;
 		}
@@ -171,6 +182,15 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 			RoomSrvc.ROOMS_LOADING = defer.promise;
 			defer.promise['finally'](function() {
 				RoomSrvc.ROOMS_LOADING = null;
+			});
+		}
+		else {
+			RoomSrvc.ALL_ROOMS_LOADING = defer.promise;
+			defer.promise.then(function(rooms) {
+				RoomSrvc.ALL_ROOMS = rooms;
+				return rooms;
+			})['finally'](function() {
+				RoomSrvc.ALL_ROOMS_LOADING = null;
 			});
 		}
 		var loadRooms = function(p) {
