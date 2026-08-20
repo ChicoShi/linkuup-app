@@ -32,6 +32,9 @@ angular.module('LUP').config(function($routeProvider) {
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
 	var categoryRailDetached = false;
+	// A category choice may start the one-time full-catalogue request. Keep a
+	// serial so an older response cannot repaint the rail after a newer choice.
+	var categorySelectionSerial = 0;
 	var searchBaseRooms = null;
 	// Every usable GPS fix turns the current discovery order into a local one.
 	// Only the first fix selects the nearest room automatically; later updates
@@ -413,7 +416,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.focusRoom = function(roomIndex) {
 		console.log('LocationsCtrl.focusRoom()', roomIndex);
 		if ($scope.data.currentRoomIndex != roomIndex) {
-			var room = $scope.data.rooms[roomIndex];
+			var room = $scope.data.visibleRooms[roomIndex];
 			if (room) {
 				$scope.data.currentRoom = room;
 				$scope.data.currentRoomIndex = roomIndex;
@@ -553,34 +556,13 @@ angular.module('LUP').config(function($routeProvider) {
 		if ($scope.isCategoryActive(categories) && !$scope.data.searchvalue) {
 			return;
 		}
-		// Once the complete catalogue is active, every category change is a
-		// local filter. Detach Slick first, then let Angular replace the cards.
-		if ($scope.data.fullCatalogue && $scope.data.rooms === $scope.data.fullCatalogue) {
-			detachCategoryRail();
-		}
+		var selectionSerial = ++categorySelectionSerial;
+		var needsFullCatalogue = categories.length && !$scope.data.fullCatalogue;
+		// The chip reacts immediately, but the old rail keeps its DOM until the
+		// complete catalogue is ready. Updating ng-repeat inside a live Slick
+		// track was the source of the short wrong-location flash on category taps.
 		$scope.data.category = categories.slice(0);
-		$scope.updateVisibleRooms();
-		// Do not retain a focus object from the previously filtered carousel.
-		$scope.data.currentRoom = null;
-		$scope.data.currentRoomIndex = -1;
-		// The first explicit category loads the full catalogue once.  If the
-		// visitor changed tabs while that request was in flight, the catalogue is
-		// already cached but the old nearby room list may still be on screen.
-		// Promote the cached list before filtering it; otherwise a category can
-		// appear to have missing cards or briefly select the wrong chip.
-		if ($scope.data.category.length && $scope.data.fullCatalogue &&
-			$scope.data.rooms !== $scope.data.fullCatalogue) {
-			$scope.gotRooms($scope.data.fullCatalogue);
-			return;
-		}
-		// The home screen deliberately starts local and fast. Selecting a
-		// category is an explicit discovery action, therefore fetch the complete
-		// public catalogue once; all cities, countries and distant venues remain
-		// browsable and are still ordered by distance.
-		if ($scope.data.category.length && !$scope.data.fullCatalogue) {
-			// A voluntary category expansion must not put a full-screen loading
-			// curtain over the current card. One shared request fills the cache;
-			// rapid category taps merely choose which finished result is displayed.
+		if (needsFullCatalogue) {
 			$scope.data.categoryLoading = true;
 			if (!fullCataloguePromise) {
 				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
@@ -591,16 +573,46 @@ angular.module('LUP').config(function($routeProvider) {
 				});
 			}
 			fullCataloguePromise.then(function(rooms) {
-				if ($scope.data.category.join(',') === categoryKey) {
+				if (selectionSerial === categorySelectionSerial &&
+					$scope.data.category.join(',') === categoryKey) {
+					$scope.data.currentRoom = null;
+					$scope.data.currentRoomIndex = -1;
 					$scope.gotRooms(rooms);
 				}
 			}, function(error) {
 				console.warn('LinkUUp: full location catalogue could not be loaded.', error);
+				if (selectionSerial === categorySelectionSerial) {
+					$scope.updateVisibleRooms();
+					$scope.refreshCategoryFilter();
+				}
 			}).finally(function() {
-				if ($scope.data.category.join(',') === categoryKey) {
+				if (selectionSerial === categorySelectionSerial) {
 					$scope.data.categoryLoading = false;
 				}
 			});
+			return;
+		}
+		// If "Alle" is selected while that optional request is still pending,
+		// the existing local rail already is the desired view. Leave it alone.
+		if (!categories.length && fullCataloguePromise && !$scope.data.fullCatalogue) {
+			return;
+		}
+		// Once the complete catalogue is active, every category change is a local
+		// filter. Detach Slick first, then let Angular replace its card elements.
+		if ($scope.data.fullCatalogue && $scope.data.rooms === $scope.data.fullCatalogue) {
+			detachCategoryRail();
+		}
+		$scope.updateVisibleRooms();
+		$scope.data.currentRoom = null;
+		$scope.data.currentRoomIndex = -1;
+		// The first explicit category loads the full catalogue once.  If the
+		// visitor changed tabs while that request was in flight, the catalogue is
+		// already cached but the old nearby room list may still be on screen.
+		// Promote the cached list before filtering it; otherwise a category can
+		// appear to have missing cards or briefly select the wrong chip.
+		if ($scope.data.category.length && $scope.data.fullCatalogue &&
+			$scope.data.rooms !== $scope.data.fullCatalogue) {
+			$scope.gotRooms($scope.data.fullCatalogue);
 			return;
 		}
 		// Let Angular update slide classes, then always use the same Slick path.
