@@ -4859,9 +4859,13 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   flex:0 0 42px !important;
   width:42px !important;
   height:42px !important;
+  margin-left:4px !important;
   margin-top:0 !important;
   margin-bottom:0 !important;
   align-self:center !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person::before {
+  display:none !important;
 }
 .location-page md-list.usernavigation.location-online-view .presence-person-copy p:last-child {
   display:block !important;
@@ -5819,6 +5823,14 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   border-radius:999px; pointer-events:none; opacity:.98;
   background:linear-gradient(90deg,transparent 0%,var(--profile-signal) 20%,rgba(255,255,255,.94) 50%,var(--profile-signal) 80%,transparent 100%);
   box-shadow:0 0 5px var(--profile-signal),0 0 13px color-mix(in srgb,var(--profile-signal) 58%,transparent);
+}
+.profile-page .user-top-information .profile-stat-pull .profile-stat-pull-lever {
+  position:relative !important;
+  z-index:2 !important;
+}
+.profile-page .user-top-information .profile-stat-pull .profile-stat-signal {
+  z-index:20 !important;
+  top:4px;
 }
 .profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
 .profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
