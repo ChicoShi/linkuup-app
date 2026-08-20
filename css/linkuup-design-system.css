@@ -7304,7 +7304,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container {
   position:absolute !important;
   top:50% !important;
-  right:-7px !important;
+  right:-10px !important;
   left:auto !important;
   margin:0 !important;
   transform:translateY(-50%) !important;
