@@ -5287,7 +5287,8 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 
 /* Empty inbox is guidance, not another heavy framed card. */
 .notification .inbox-empty { min-height:76px; margin-top:22px; border:0; border-radius:0; background:transparent; box-shadow:none; }
-.notification .inbox-empty .inbox-empty-mark { border-color:rgba(169,200,255,.13); background:rgba(93,146,214,.09); box-shadow:none; }
+.notification .inbox-empty .inbox-empty-mark { border:0; border-radius:0; background:transparent; box-shadow:none; color:#b8dcff; }
+.notification .inbox-empty .md-list-item-inner,.notification .inbox-empty .md-list-item-text { border:0 !important; background:transparent !important; box-shadow:none !important; }
 
 /* A private conversation must not inherit any of Material's paper surfaces.
    The message area and composer stay legible on the same night-blue base. */
