@@ -48,8 +48,35 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		inited: false,
 		notificationcount: 0,
 		pmCount: 0,
+		friendsCount: 0,
 		navstack: [],
 		initialUrl: null,
+	};
+	// Friend totals belong to the application state, not to a repeated sidebar
+	// expression.  That makes the label cheap to render and lets a pushed
+	// friendship event update it immediately.
+	$scope.friendCountNotifications = {};
+	$rootScope.updateFriendsCount = function() {
+		$scope.data.friendsCount = Number(window.GWF_USER.friends()) || 0;
+		return $scope.data.friendsCount;
+	};
+	$scope.applyFriendCountNotification = function(notification) {
+		if (!notification || $scope.friendCountNotifications[notification.id()]) {
+			return;
+		}
+		var data = notification.data();
+		var ownId = Number(window.GWF_USER.id());
+		if (!data || (Number(data.user) !== ownId && Number(data.friend) !== ownId)) {
+			return;
+		}
+		var delta = notification.type() === 'friends' ? 1 :
+			notification.type() === 'nofriends' ? -1 : 0;
+		if (!delta) {
+			return;
+		}
+		$scope.friendCountNotifications[notification.id()] = true;
+		$scope.data.friendsCount = Math.max(0, $scope.data.friendsCount + delta);
+		window.GWF_USER.JSON.lup_friends = $scope.data.friendsCount;
 	};
 	// A notification id is unique. Remembering it prevents duplicate arrival
 	// pop-ups if the WebSocket reconnects while the same payload is replayed.
@@ -653,6 +680,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		NotificationSrvc.queryUnreadNotificationCount().then(
 				$scope.updateNotificationCount);
 		if (window.GWF_USER.isAuthed()) {
+			$rootScope.updateFriendsCount();
 			ChatSrvc.loadChats(window.GWF_USER.id()).then(
 					$scope.updateNotificationCount);
 		}
@@ -776,6 +804,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.notificationArrived()', gwsMessage.dump());
 		// Get parsed instance
 		var notification = NotificationSrvc.parseNotification(gwsMessage, true);
+		$scope.applyFriendCountNotification(notification);
 		if (notification && notification.type() === 'join') {
 			var ready = notification.resolved;
 			if (ready && angular.isFunction(ready.then)) {

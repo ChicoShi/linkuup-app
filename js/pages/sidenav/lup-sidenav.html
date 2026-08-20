@@ -52,7 +52,7 @@
 
 	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">groups</i>
-		<p>{{'TITLE_FRIENDS'|translate}}</p>
+		<p>{{data.friendsCount}} {{'TITLE_FRIENDS'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-private-messages" ng-click="gotoMessages()" ng-if="data.ownUser.isAuthed()">
