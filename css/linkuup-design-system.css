@@ -5909,7 +5909,7 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 
 /* Header actions share one physical size. Material's default icon-button
    clipping used to cut the notification seal at the lower-right corner. */
-.lup-top-bar .md-toolbar-tools > .md-icon-button:has(.navnotification) {
+.lup-top-bar .md-toolbar-tools > .md-icon-button.lup-top-notification {
   position:relative !important;
   display:grid !important;
   place-items:center !important;
@@ -5934,9 +5934,9 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .lup-top-bar .md-toolbar-tools .navnotification-count {
   position:absolute !important;
   z-index:3 !important;
-  top:auto !important;
-  right:1px !important;
-  bottom:1px !important;
+  top:3px !important;
+  right:3px !important;
+  bottom:auto !important;
   left:auto !important;
   box-sizing:border-box !important;
   margin:0 !important;
