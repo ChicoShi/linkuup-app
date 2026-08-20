@@ -54,11 +54,11 @@
 	 
 	  <div class="profile-actions" ng-if="!data.user.isSelf()">
 		  <div class="content-center">
-			<button ng-if="!data.user.isSelf()" class="profile-up-action" type="button" ng-click="LikeSrvc.likeUser(data.user)"><i class="material-icons">bolt</i><span>Up geben</span></button>
-            <i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (data.user.JSON.relation_pending)" class="md-secondary usericon addfriend pendingfriend"></i>
-			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (!data.user.isFriend()) && (!data.user.JSON.relation_pending)" class="md-secondary usericon addfriend" ng-click="FriendSrvc.addFriend(data.user)"></i>
-			<i ng-if="(!data.user.isSelf()) && data.user.isMember() && data.ownUser.isMember() && (data.user.isFriend())" class="md-secondary usericon removefriend" ng-click="FriendSrvc.removeFriend(data.user)"></i>
-			<i ng-if="!data.user.isSelf()" class="md-secondary usericon sendmessage" ng-click="openQuery(data.user)"></i>
+			<button class="profile-social-action profile-social-up" type="button" aria-label="Up geben" title="Up geben" ng-click="LikeSrvc.likeUser(data.user)"><i class="material-icons">bolt</i></button>
+			<button ng-if="(!data.user.isFriend()) && (!data.user.JSON.relation_pending) && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-friend" type="button" aria-label="Freundschaftsanfrage senden" title="Freundschaft hinzufügen" ng-click="FriendSrvc.addFriend(data.user)"><i class="material-icons">person_add_alt_1</i></button>
+			<button ng-if="(!data.user.isFriend()) && data.user.JSON.relation_pending && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-pending" type="button" aria-label="Freundschaftsanfrage zurücknehmen" title="Anfrage offen – zurücknehmen" ng-click="FriendSrvc.cancelFriendRequest(data.user)"><i class="material-icons">schedule</i></button>
+			<button ng-if="data.user.isFriend() && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-remove" type="button" aria-label="Freundschaft entfernen" title="Freund entfernen" ng-click="FriendSrvc.removeFriend(data.user)"><i class="material-icons">person_remove_alt_1</i></button>
+			<button class="profile-social-action profile-social-message" type="button" aria-label="Nachricht senden" title="Nachricht senden" ng-click="openQuery(data.user)"><i class="material-icons">chat_bubble</i></button>
 		</div>
 		</div>
 	
