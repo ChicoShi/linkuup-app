@@ -320,7 +320,15 @@ angular.module('LUP').config(function($routeProvider) {
 			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
-		if (!$slick.children().length) {
+		if (!$slick.children('.lup-room-slide-outer').length) {
+			// An empty category/search result is a valid state, not a failed
+			// Angular render.  Retrying it produced a misleading timeout warning
+			// after every empty result and left the loading task visible.
+			if (!$scope.data.visibleRooms.length) {
+				$slick.addClass('slick-inited lup-slick-fallback');
+				LoadingSrvc.removeTask('slick_rooms');
+				return;
+			}
 			retrySlick(nofocus);
 			return;
 		}
