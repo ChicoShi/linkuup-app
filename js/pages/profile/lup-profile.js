@@ -215,11 +215,32 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.buildProfileGroups = function(profile) {
+		/* “About me” is a public profile, not a mirror of account settings.
+		 * Privacy rules, activity preferences and friendship policies belong in
+		 * Settings.  Only voluntary, person-facing facts are useful to a visitor. */
+		var profileSections = {
+			User: {label: 'PROFILE_SECTION_BASICS', sort: 10, fields: ['gender']},
+			LinkUUp: {label: 'PROFILE_SECTION_LOCAL', sort: 20, fields: ['lup_status', 'lup_state', 'lup_city']},
+			About: {label: 'PROFILE_SECTION_ABOUT', sort: 30, fields: [
+				'lup_eyecolor', 'lup_height', 'lup_interest', 'lup_sexo',
+				'lup_has_pet', 'lup_drinks', 'lup_smokes', 'lup_sporty', 'lup_religion'
+			]},
+		};
+		var fieldOrder = {};
+		Object.keys(profileSections).forEach(function(section) {
+			profileSections[section].fields.forEach(function(key, index) {
+				fieldOrder[key] = {section: section, sort: index};
+			});
+		});
 		var groups = {};
 		var cache = SettingsSrvc.CACHE || {};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
+				var placement = fieldOrder[key];
+				if (!placement) {
+					continue;
+				}
 				// Legacy display helpers initialise a few optional enums with "0".
 				// The profile frame still knows that they were actually absent, and
 				// an absent field must not turn into a visible "not specified" row.
@@ -233,13 +254,16 @@ angular.module('LUP').config(function($routeProvider) {
 				if (!hasValue && !error) {
 					continue;
 				}
-				groups[module] = groups[module] || {
-					module: module,
-					sort: Number(setting.module_sort) || 1000,
+				var section = profileSections[placement.section];
+				groups[placement.section] = groups[placement.section] || {
+					module: placement.section,
+					label: section.label,
+					sort: section.sort,
 					fields: [],
 				};
-				groups[module].fields.push({
+				groups[placement.section].fields.push({
 					key: key,
+					sort: placement.sort,
 					setting: setting,
 					value: profile.JSON[key],
 					error: error,
@@ -253,7 +277,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return a.sort - b.sort || a.module.localeCompare(b.module);
 		});
 		result.forEach(function(group) {
-			group.fields.sort(function(a, b) { return a.key.localeCompare(b.key); });
+			group.fields.sort(function(a, b) { return a.sort - b.sort; });
 		});
 		return result;
 	};

@@ -352,6 +352,9 @@
 "module_birthday": "Birthdays",
 "module_contact": "Contact",
 "module_gallery": "Gallery",
+"PROFILE_SECTION_BASICS": "Profile",
+"PROFILE_SECTION_LOCAL": "Place & proximity",
+"PROFILE_SECTION_ABOUT": "About you",
 
 "gender": "Gender",
 "profile_visibility": "Minimum profile visibility",

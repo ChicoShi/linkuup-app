@@ -4237,6 +4237,14 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   .profile-page .profile-information.profile-settings-view .profile-detail-card { min-height:76px; }
 }
 
+/* Keep the profile's ambient field continuous behind the final fact groups. */
+.profile-page .user-profile-page {
+  background:
+    radial-gradient(ellipse 75% 30% at 110% 68%,rgba(108,170,235,.09),transparent 72%),
+    radial-gradient(ellipse 64% 24% at -9% 88%,rgba(140,105,207,.08),transparent 72%),
+    var(--lup-bg) !important;
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */

@@ -371,6 +371,9 @@
 "module_birthday": "Geburtstage",
 "module_contact": "Kontakt",
 "module_gallery": "Galerie",
+"PROFILE_SECTION_BASICS": "Profil",
+"PROFILE_SECTION_LOCAL": "Ort & Nähe",
+"PROFILE_SECTION_ABOUT": "Über dich",
 
 "gender": "Geschlecht",
 "profile_visibility": "Mindestprofilanzeige",
