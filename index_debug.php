@@ -11,6 +11,8 @@ header('Expires: 0');
  * version bump to reach browsers after a pull request is deployed. */
 $v = sprintf("?v=%s-local-ui22", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
+$publicBase = 'https://app.www.linkuup.de';
+$shareImage = "{$publicBase}/images/lup-wapp-icon.png";
 ?>
 <!DOCTYPE html>
 <html lang="de" translate="no">
@@ -18,6 +20,48 @@ $min = LUPConfig::$MIN;
   <meta charset="utf-8" />
 	<meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+  <title>LinkUUp – Zusammen unterwegs</title>
+  <meta name="description" content="LinkUUp bringt Menschen, Orte und gemeinsame Erlebnisse zusammen." />
+  <meta name="application-name" content="LinkUUp" />
+  <meta name="theme-color" content="#171a2d" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="LinkUUp" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="msapplication-TileColor" content="#171a2d" />
+  <meta name="msapplication-TileImage" content="images/icon-192.png" />
+  <meta name="msapplication-config" content="browserconfig.xml" />
+  <meta itemprop="name" content="LinkUUp – Zusammen unterwegs" />
+  <meta itemprop="description" content="Entdecke Orte, triff Menschen und erlebe gemeinsam mehr." />
+  <meta itemprop="image" content="<?=$shareImage?>" />
+
+  <link rel="canonical" href="<?=$publicBase?>/" />
+  <link rel="manifest" href="manifest.webmanifest<?=$v?>" />
+  <link rel="shortcut icon" href="favicon.ico<?=$v?>" />
+  <link rel="icon" href="favicon.ico<?=$v?>" sizes="any" />
+  <link rel="icon" type="image/png" href="images/favicon-16.png<?=$v?>" sizes="16x16" />
+  <link rel="icon" type="image/png" href="images/favicon.png<?=$v?>" sizes="32x32" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png<?=$v?>" sizes="180x180" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="LinkUUp" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:url" content="<?=$publicBase?>/" />
+  <meta property="og:title" content="LinkUUp – Zusammen unterwegs" />
+  <meta property="og:description" content="Entdecke Orte, triff Menschen und erlebe gemeinsam mehr." />
+  <meta property="og:image" content="<?=$shareImage?>" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="879" />
+  <meta property="og:image:height" content="773" />
+  <meta property="og:image:alt" content="LinkUUp App-Icon" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LinkUUp – Zusammen unterwegs" />
+  <meta name="twitter:description" content="Entdecke Orte, triff Menschen und erlebe gemeinsam mehr." />
+  <meta name="twitter:image" content="<?=$shareImage?>" />
+  <meta name="twitter:image:alt" content="LinkUUp App-Icon" />
 
 
   <link rel="stylesheet" href="node_modules/angular-material/angular-material<?=$min?>.css<?=$v?>">

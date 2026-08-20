@@ -18,14 +18,16 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 	};
 	
 	CategorySrvc.nameForId = function(id) {
-		return CategorySrvc.CACHE[id].cat_name;
+		var category = CategorySrvc.CACHE && CategorySrvc.CACHE[id];
+		return category ? category.cat_name : '';
 	};
 	
 	CategorySrvc.displayName = function(id) {
 		return CategorySrvc.nameForId(id);
 	};
 	CategorySrvc.displayColor = function(id) {
-		return CategorySrvc.CACHE[id].cat_color;
+		var category = CategorySrvc.CACHE && CategorySrvc.CACHE[id];
+		return category ? category.cat_color : '';
 	};
 	
 	CategorySrvc.displayIcon = function(id) {

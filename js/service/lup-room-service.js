@@ -18,10 +18,18 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		return new LUPRoom({
 			room_id: roomId,
 			room_creator_id: 0,
+			room_name: '',
+			room_info: '',
+			room_hours: '',
+			room_phone: '',
+			room_www: '',
 			room_pos_lat: null,
 			room_pos_lng: null,
 			room_color: '000000',
 			room_category: null,
+			address_zip: '',
+			address_street: '',
+			address_city: '',
 		});
 	};
 	

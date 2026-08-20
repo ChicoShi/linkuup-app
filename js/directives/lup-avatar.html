@@ -1,6 +1,6 @@
 <div
  class="lup-avatar md-avatar"
- ng-class="{'lup-male':ngUser.isMale(),'lup-female':ngUser.isFemale()}">
+ ng-class="{'lup-male':ngUser && ngUser.isMale(),'lup-female':ngUser && ngUser.isFemale()}">
   <span></span>
-	<div class="img" style="background-image:url({{ngUser.avatarURI()}})"></div>
+	<div class="img" ng-if="ngUser" ng-style="{'background-image': 'url(' + ngUser.avatarURI() + ')'}"></div>
 </div>

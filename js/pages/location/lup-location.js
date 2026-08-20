@@ -88,15 +88,14 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.inChatRange = function() {
-//		try {
-			return $scope.data.room.inChatRange();
-//		} catch (e) {
-//			return false;
-//		}
+		return !!($scope.data.room && $scope.data.room.inChatRange && $scope.data.room.inChatRange());
 	};
 
 	$scope.headerRoomName = function() {
-		var name = $scope.data.room.name();
+		var name = $scope.data.room && $scope.data.room.name ? $scope.data.room.name() : '';
+		if (!name) {
+			return '';
+		}
 		// Test rooms such as "Braunschweig Chat" are named for the chat, but
 		// an out-of-range visitor is only viewing the place and its comments.
 		return $scope.inChatRange() ? name : name.replace(/\s+Chat$/i, '');
@@ -120,7 +119,8 @@ angular.module('LUP').config(function($routeProvider) {
 			'17': {icon:'account_balance', class:'location-category-education'},
 			'18': {icon:'local_hospital', class:'location-category-health'},
 		};
-		return visuals[String(room.category())] || {icon:'place', class:'location-category-default'};
+		var category = room && room.category ? room.category() : null;
+		return visuals[String(category)] || {icon:'place', class:'location-category-default'};
 	};
 
 	// City and country rooms are regional conversations, not a single physical
