@@ -4245,6 +4245,23 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
     var(--lup-bg) !important;
 }
 
+/* Keep the public facts directly connected to the story instead of leaving a
+   dead band between both parts of “About me”. */
+.profile-page .profile-information.profile-about-single { padding-bottom:5px !important; }
+.profile-page .profile-information.profile-settings-view { margin-top:0; padding-top:0; }
+.profile-page .profile-information.profile-settings-view .profile-settings-group:first-child { margin-top:0; }
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  min-width:0;
+  padding-right:2px;
+}
+.profile-page .profile-information.profile-settings-view .profile-setting-acl {
+  position:static;
+  flex:0 0 auto;
+  margin-left:auto;
+  transform:none !important;
+  vertical-align:middle;
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
