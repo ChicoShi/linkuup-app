@@ -165,6 +165,8 @@
 "MSGP_SENT_FRIEND_REQUEST": "Ihre Freundschaftsanfrage wurde versendet.",
 
 "TITLE_ACCOUNT": "Ihr Konto",
+"TITLE_ADD_ROOM": "Raum hinzufügen",
+"ERR_VIP_ONLY": "Das ist nur für VIP Nutzer",
 "INFO_ACCOUNT": "Zugangsdaten",
 "INFO_ACCOUNT_BACKEND": "Weitere Kontoeinstellungen und Hilfe bei Problemen findest Du im LinkUUp-Backend.",
 "MSGT_ACCOUNT": "Konto",

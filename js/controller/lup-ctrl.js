@@ -382,6 +382,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	$scope.gotoHome = function() { $scope.goto('/home'); };
 	$scope.gotoDebug = function() { $scope.goto('/debug'); };
 	$scope.gotoBackend = function() { window.location.href = window.LUP_CONFIG.server; };
+	$scope.gotoAddRoom = function() {
+		if (!window.GWF_USER.isVIP()) {
+			return ErrorSrvc.showError($translate.instant('ERR_VIP_ONLY'), $translate.instant('TITLE_ADD_ROOM'));
+		}
+		window.location.href = window.LUP_CONFIG.server + '/index.php?mo=LinkUUp&me=AddRoom';
+	};
 	$scope.gotoNavpage = function() { $scope.goto('/navigate'); };
 	$scope.gotoCityMap = function() { $scope.goto("/citymap"); };
 

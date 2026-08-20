@@ -4500,6 +4500,10 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-actions .content-center { display:inline-flex; align-items:center; justify-content:center; }
 .profile-page .profile-section-nav { clear:both; }
 
+/* Keep the VIP room action discoverable, but do not disable its click: the
+ * handler explains the requirement to non-VIP users. */
+.lup-vip-locked { opacity: .42; }
+
 /* About can be completely editorial: no separate card, simply the person's
    words on the same calm profile surface. */
 .profile-page .profile-information.profile-about-single .profile-story-card { min-height:0; padding:12px 4px 16px; border:0; border-radius:0; background:transparent !important; box-shadow:none; overflow:visible; }

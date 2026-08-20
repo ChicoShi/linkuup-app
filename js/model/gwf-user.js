@@ -17,6 +17,7 @@ var GWF_User = function(json) {
 	};
 
 	this.likes = function() { return this.JSON.lup_likes||0; };
+	this.isVIP = function() { return Number(this.JSON.lup_vip || 0) > 0; };
 	this.friends = function() { return this.JSON.lup_friends||0; };
 	this.visits = function() { return this.JSON.lup_visits||0; };
 	this.avatarVersion = function() { return this.JSON.avatar_version||0; };
