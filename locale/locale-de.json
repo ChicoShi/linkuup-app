@@ -157,6 +157,10 @@
 
 "TITLE_FRIENDS": "Freunde",
 "TITLE_PRIVATE_MESSAGES": "Privatnachrichten",
+"PROFILE_ACTION_MESSAGE": "Nachricht",
+"PROFILE_ACTION_ADD_FRIEND": "Freund hinzufügen",
+"PROFILE_ACTION_PENDING": "Anfrage offen",
+"PROFILE_ACTION_REMOVE_FRIEND": "Freund entfernen",
 "MSG_NO_PRIVATE_MESSAGES": "Du hast noch keine privaten Nachrichten ausgetauscht.",
 "SUBHEADER_FRIENDS": "{{user}} hat {{count}} Freund(e)",
 "SUBHEADER_YOUR_FRIENDS": "Du hat {{count}} Freund(e)",

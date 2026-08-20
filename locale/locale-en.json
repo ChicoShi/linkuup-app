@@ -156,6 +156,10 @@
 
 "TITLE_FRIENDS": "Friends",
 "TITLE_PRIVATE_MESSAGES": "Private messages",
+"PROFILE_ACTION_MESSAGE": "Message",
+"PROFILE_ACTION_ADD_FRIEND": "Add friend",
+"PROFILE_ACTION_PENDING": "Request pending",
+"PROFILE_ACTION_REMOVE_FRIEND": "Remove friend",
 "MSG_NO_PRIVATE_MESSAGES": "You have not exchanged any private messages yet.",
 "SUBHEADER_FRIENDS": "{{user}} got {{count}} friend(s)",
 "SUBHEADER_YOUR_FRIENDS": "you got {{count}} friend(s)",
