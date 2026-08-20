@@ -25,3 +25,26 @@ md-sidenav {
 		transform: none;
 	}
 }
+
+/* A wide page must never push the permanent header actions off-screen.
+ * Let only the flexible title shrink; notification and profile controls keep
+ * their natural size at the right edge. */
+.lup-top-bar .md-toolbar-tools {
+	min-width: 0;
+}
+
+.lup-top-bar .md-toolbar-tools > h2[flex] {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.lup-top-bar .md-toolbar-tools > .md-button,
+.lup-top-bar .md-toolbar-tools > lup-avatar {
+	flex: 0 0 auto;
+}
+
+/* Flex children otherwise keep their intrinsic width and can widen the whole
+ * desktop view beyond the viewport. */
+.nearby > md-content {
+	min-width: 0;
+}
