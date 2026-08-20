@@ -6303,6 +6303,32 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
    profile statistics sit directly on the page rather than in a second frame. */
 .profile-page .user-top-information { border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
 .profile-page .user-top-information::before { display:none !important; }
+
+/* One continuous profile field: the route stays behind avatar, about and
+   gallery alike.  It never receives pointer events or affects document flow. */
+.profile-page .user-profile-page {
+  position:relative;
+  isolation:isolate;
+  overflow-x:hidden;
+  background:
+    radial-gradient(ellipse 90% 24% at 9% 7%,rgba(88,147,220,.13),transparent 66%),
+    radial-gradient(ellipse 74% 28% at 92% 53%,rgba(121,87,205,.12),transparent 68%),
+    linear-gradient(160deg,#111a2d 0%,#12182b 49%,#101522 100%) !important;
+}
+.profile-page .user-profile-page > :not(.profile-ambient-map) { position:relative; z-index:1; }
+.profile-page .profile-ambient-map { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.profile-page .profile-ambient-route { position:absolute; display:block; border:1px solid rgba(147,198,255,.09); border-radius:50%; }
+.profile-page .profile-ambient-route-one { top:5%; right:-43%; width:112%; height:31%; transform:rotate(-24deg); }
+.profile-page .profile-ambient-route-two { top:42%; left:-47%; width:107%; height:25%; border-color:rgba(182,147,255,.075); transform:rotate(19deg); }
+.profile-page .profile-ambient-route-three { bottom:4%; right:-44%; width:102%; height:30%; border-color:rgba(128,194,245,.065); transform:rotate(-17deg); }
+.profile-page .profile-ambient-node { position:absolute; display:block; width:4px; height:4px; border-radius:50%; background:rgba(198,226,255,.58); box-shadow:0 0 12px rgba(104,193,255,.42); }
+.profile-page .profile-ambient-node-one { top:15%; right:21%; opacity:.42; }
+.profile-page .profile-ambient-node-two { top:54%; left:14%; background:rgba(205,177,255,.54); box-shadow:0 0 12px rgba(173,126,255,.35); opacity:.31; }
+.profile-page .profile-ambient-node-three { bottom:17%; right:29%; opacity:.25; }
+.profile-page .profile-ambient-signal { position:absolute; top:23%; right:12%; display:block; width:7px; height:7px; border-radius:50%; background:#c0eaff; box-shadow:0 0 0 4px rgba(99,183,246,.06),0 0 16px rgba(95,195,255,.70); animation:lup-profile-route-signal 20s ease-in-out infinite; }
+@keyframes lup-profile-route-signal { 0%,100% { transform:translate3d(0,0,0); opacity:.22; } 22% { opacity:.66; } 47% { transform:translate3d(-106px,58px,0); opacity:.76; } 62% { opacity:.28; } 80% { transform:translate3d(-38px,126px,0); opacity:.45; } }
+@media (max-width:480px) { .profile-page .profile-ambient-route-one { right:-58%; width:132%; height:27%; } .profile-page .profile-ambient-route-two { left:-62%; width:132%; } .profile-page .profile-ambient-route-three { right:-61%; width:130%; } .profile-page .profile-ambient-signal { top:20%; right:8%; } }
+@media (prefers-reduced-motion:reduce) { .profile-page .profile-ambient-signal { animation:none; } }
 /* Browsers must not draw a white native focus rectangle around “Alle”.
    Keyboard users still receive the same quiet LinkUUp focus signal. */
 .nearby .location-categories button:focus { outline:0 !important; }
