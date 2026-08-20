@@ -6323,6 +6323,50 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .information-tabs,.profile-page .information-tabs md-content,.profile-page .information-tabs .md-tab-content { background:transparent !important; }
 .profile-page .profile-information.profile-about-single .profile-story-card { background:rgba(19,24,41,.18) !important; }
 .profile-page .profile-gallery,.profile-page .gallery-container { background:transparent !important; }
+
+/* The profile switch is lit, not boxed.  One narrow cone makes the chosen
+   section legible without adding another visible container to the profile. */
+.profile-page .profile-section-nav {
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+.profile-page .profile-section-nav button,
+.profile-page .profile-section-nav button.active,
+.profile-page .profile-section-nav button:hover {
+  overflow:hidden;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-section-nav button + button::before { display:none !important; content:none !important; }
+.profile-page .profile-section-nav button::before { display:none; content:none; }
+.profile-page .profile-section-nav button.active::before {
+  display:block;
+  content:'';
+  position:absolute;
+  z-index:0;
+  top:-12px;
+  left:13%;
+  width:74%;
+  height:57px;
+  background:linear-gradient(180deg,rgba(190,181,255,.33),rgba(157,142,245,.11) 47%,rgba(118,181,238,0) 100%);
+  clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);
+  filter:blur(.1px);
+  opacity:.85;
+}
+.profile-page .profile-section-nav button.active::after {
+  height:1px;
+  background:linear-gradient(90deg,transparent 4%,rgba(164,151,255,.66) 27%,#d8d2ff 50%,rgba(135,197,245,.62) 73%,transparent 96%) !important;
+  box-shadow:0 0 9px rgba(178,164,255,.52) !important;
+}
+.profile-page .profile-section-nav button > * { position:relative; z-index:1; }
+.profile-page .profile-section-nav button.active .material-icons { color:#fbf9ff; text-shadow:0 0 13px rgba(194,181,255,.72); }
+.profile-page .profile-section-nav button.active span { color:#fbfaff; text-shadow:0 0 10px rgba(184,171,255,.42); }
 .profile-page .profile-ambient-route { position:absolute; display:block; border:1px solid rgba(147,198,255,.09); border-radius:50%; }
 .profile-page .profile-ambient-route-one { top:5%; right:-43%; width:112%; height:31%; transform:rotate(-24deg); }
 .profile-page .profile-ambient-route-two { top:42%; left:-47%; width:107%; height:25%; border-color:rgba(182,147,255,.075); transform:rotate(19deg); }
