@@ -3,6 +3,16 @@
     <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
 
 	<md-content layout="column" flex>
+		<!-- One shared, non-interactive place signal keeps the friends area connected
+		     to the rest of LinkUUp without competing with the people controls. -->
+		<div class="friends-ambient-map" aria-hidden="true">
+			<span class="friends-route friends-route-one"></span>
+			<span class="friends-route friends-route-two"></span>
+			<span class="friends-route-light"></span>
+			<span class="friends-map-node friends-map-node-one"></span>
+			<span class="friends-map-node friends-map-node-two"></span>
+			<span class="friends-map-pin"><i class="material-icons">location_on</i></span>
+		</div>
 
 		<ng-include src="'js/pages/friends/lup-friends-header.html?v='+V"></ng-include>
 
