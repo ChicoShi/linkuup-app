@@ -4086,6 +4086,42 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   .settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; padding-right:9px; padding-left:9px; }
 }
 
+/* Native Material controls are appended late by Angular.  Keep every variant
+   inside the same transparent LinkUUp surface instead of falling back to the
+   browser's white form styling. */
+.settings-page .lup-settings-list md-select,
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-input-container,
+.settings-page .lup-settings-list md-input-container .md-input,
+.settings-page .lup-settings-list .lup-setting-input input,
+.settings-page .lup-settings-list .lup-setting-input textarea {
+  background:rgba(8,14,25,.30) !important;
+  color:#edf4ff !important;
+  -webkit-text-fill-color:#edf4ff !important;
+}
+.settings-page .lup-settings-list .lup-setting-input input[type="color"] {
+  appearance:none;
+  -webkit-appearance:none;
+  padding:3px !important;
+  border:1px solid rgba(188,211,240,.20) !important;
+  background:rgba(8,14,25,.30) !important;
+}
+.settings-page .lup-settings-list .lup-setting-input input[type="color"]::-webkit-color-swatch-wrapper { padding:0; }
+.settings-page .lup-settings-list .lup-setting-input input[type="color"]::-webkit-color-swatch { border:0; border-radius:7px; }
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-select .md-select-value span {
+  border-bottom-color:rgba(188,211,240,.24) !important;
+  background:transparent !important;
+}
+.settings-page .lup-settings-list .md-select-icon { color:#9fc9e8 !important; }
+.md-select-menu-container,
+.md-select-menu-container .md-select-menu,
+.md-select-menu-container md-content,
+.md-select-menu-container .md-select-menu md-content {
+  background:#111a29 !important;
+  box-shadow:0 14px 32px rgba(0,0,0,.36) !important;
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
