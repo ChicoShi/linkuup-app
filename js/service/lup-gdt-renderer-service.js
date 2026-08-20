@@ -25,7 +25,10 @@ service('GDTRendererSrvc', function() {
 		if (type === 'GDO\\UI\\GDT_Color') {
 			return {control: 'input', input_type: 'color'};
 		}
-		if (/GDT_(Int|UInt|Float|Decimal)$/.test(type)) {
+		if (type === 'GDO\\Contact\\GDT_WhatsApp') {
+			return {control: 'input', input_type: 'tel'};
+		}
+		if (/GDT_(Int|UInt|Float|Decimal|Level|PersonHeight)$/.test(type)) {
 			return {control: 'input', input_type: 'number'};
 		}
 		if (/GDT_Time$/.test(type)) {
