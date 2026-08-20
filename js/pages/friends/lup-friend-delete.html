@@ -1,8 +1,9 @@
-<md-dialog aria-label="Delete Image">
+<md-dialog class="lup-friend-delete-dialog" aria-label="Freund entfernen">
   <form ng-cloak>
 
     <md-toolbar>
       <div class="md-toolbar-tools">
+        <span class="friend-delete-mark" aria-hidden="true"><i class="material-icons">group_remove</i></span>
         <h2 translate="DLGT_DELETE_FRIEND"></h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
@@ -12,16 +13,22 @@
     </md-toolbar>
 
     <md-dialog-content>
-      <div class="md-dialog-content">
+      <div class="md-dialog-content friend-delete-content">
+        <div class="friend-delete-person">
+          <lup-avatar ng-user="data.friend"></lup-avatar>
+          <div>
+            <strong>{{data.friend.displayName()}}</strong>
+            <span>Deine Freundesliste bleibt jederzeit unter deiner Kontrolle.</span>
+          </div>
+        </div>
         <p translate="DLGP_DELETE_FRIEND" translate-value-friend="{{data.friend.displayName()}}"></p>
-        <lup-avatar ng-user="data.friend"></lup-avatar>
       </div>
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-      <md-button ng-click="cancel()" translate="BTN_CANCEL"></md-button>
+      <md-button class="friend-delete-cancel" ng-click="cancel()" translate="BTN_CANCEL"></md-button>
       <span flex></span>
-      <md-button ng-click="ok()" translate="BTN_DELETE"></md-button>
+      <md-button class="friend-delete-confirm" ng-click="ok()"><i class="material-icons">person_remove_alt_1</i><span translate="BTN_DELETE"></span></md-button>
     </md-dialog-actions>
     
   </form>

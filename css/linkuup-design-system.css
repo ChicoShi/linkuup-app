@@ -5211,6 +5211,58 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .lup-comment-dialog .md-toolbar-tools h2 { color:#f7f4ff; font-size:18px; font-weight:700; }
 .lup-comment-dialog md-dialog-actions .md-button { min-height:38px; border-radius:10px; color:#d9d3e8; }
 
+/* Removing a friend is a considered relationship action, not an alarm. */
+.lup-friend-delete-dialog { width:min(91vw,390px); overflow:hidden; border:1px solid rgba(212,202,245,.19); border-radius:22px !important; background:linear-gradient(155deg,#292b43,#171925) !important; box-shadow:0 24px 52px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.10); }
+.lup-friend-delete-dialog md-toolbar,.lup-friend-delete-dialog md-toolbar .md-toolbar-tools { min-height:61px; padding:0 14px; background:transparent !important; border:0; }
+.lup-friend-delete-dialog .friend-delete-mark { display:grid; place-items:center; width:31px; height:31px; margin-right:9px; border:1px solid rgba(223,198,235,.26); border-radius:11px; background:linear-gradient(145deg,rgba(189,139,186,.35),rgba(101,94,166,.24)); color:#f0d2e9; box-shadow:inset 0 1px 0 rgba(255,255,255,.18); }
+.lup-friend-delete-dialog .friend-delete-mark .material-icons { font-size:18px; }
+.lup-friend-delete-dialog .md-toolbar-tools h2 { overflow:hidden; margin:0; color:#fbf9ff; font-size:18px; font-weight:760; text-overflow:ellipsis; white-space:nowrap; }
+.lup-friend-delete-dialog .md-icon-button { width:35px; height:35px; min-height:35px; margin:0; border:1px solid rgba(255,255,255,.10); border-radius:11px; background:rgba(255,255,255,.045); color:#d9d5e8; }
+.lup-friend-delete-dialog md-dialog-content,.lup-friend-delete-dialog .md-dialog-content { background:transparent !important; }
+.lup-friend-delete-dialog .friend-delete-content { padding:4px 20px 12px; }
+.lup-friend-delete-dialog .friend-delete-person { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); }
+.lup-friend-delete-dialog .friend-delete-person .lup-avatar { flex:0 0 auto; width:42px; height:42px; margin:0; }
+.lup-friend-delete-dialog .friend-delete-person div { display:grid; min-width:0; gap:3px; }
+.lup-friend-delete-dialog .friend-delete-person strong { overflow:hidden; color:#fff; font-size:14px; text-overflow:ellipsis; white-space:nowrap; }
+.lup-friend-delete-dialog .friend-delete-person span { color:#bcb5cd; font-size:11px; line-height:1.35; }
+.lup-friend-delete-dialog .friend-delete-content > p { margin:13px 2px 3px; color:#d7d1e1; font-size:12px; line-height:1.46; }
+.lup-friend-delete-dialog md-dialog-actions { min-height:64px; padding:11px 18px 16px; border-top:1px solid rgba(255,255,255,.065); }
+.lup-friend-delete-dialog md-dialog-actions .md-button { min-height:39px; margin:0; padding:0 13px; border-radius:11px; font-size:12px; font-weight:750; letter-spacing:.01em; }
+.lup-friend-delete-dialog .friend-delete-cancel { border:1px solid rgba(211,205,235,.19); background:rgba(255,255,255,.035); color:#e4dfef; }
+.lup-friend-delete-dialog .friend-delete-confirm { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(245,171,193,.27); background:rgba(184,83,117,.15); color:#ffd8e5; }
+.lup-friend-delete-dialog .friend-delete-confirm .material-icons { font-size:17px; }
+.lup-friend-delete-dialog .friend-delete-cancel:hover { background:rgba(255,255,255,.09); }
+.lup-friend-delete-dialog .friend-delete-confirm:hover { border-color:rgba(255,190,211,.48); background:rgba(203,96,133,.24); }
+@media (prefers-reduced-motion:reduce) { .lup-friend-delete-dialog * { transition:none !important; } }
+
+/* Friends is a contact space: search, recognise, then choose one calm action. */
+.friends-page > md-content { background:radial-gradient(circle at 84% 5%,rgba(128,100,230,.14),transparent 29%),radial-gradient(circle at 9% 76%,rgba(76,158,226,.10),transparent 31%),#10121d; }
+.friends-page .search-input-wrap { position:relative; display:flex; align-items:center; gap:8px; width:min(92%,680px); margin:15px auto 5px; padding:8px 11px; border:1px solid rgba(204,194,245,.15); border-radius:17px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 10px 23px rgba(0,0,0,.12); }
+.friends-page .search-input-wrap .qrcode-dummy { order:3; display:grid; place-items:center; width:34px; height:34px; margin:0; border:1px solid rgba(201,181,255,.22); border-radius:11px; background:rgba(134,104,232,.16); color:#d9ccff; transition:transform .16s ease,background .16s ease; }
+.friends-page .search-input-wrap .qrcode-dummy:hover { transform:translateY(-1px); background:rgba(143,112,237,.28); }
+.friends-page .search-input-wrap .friend-search-mark { display:grid; place-items:center; width:28px; height:28px; color:#b7a8eb; font-size:19px; }
+.friends-page .search-input-wrap .search-input { min-height:34px; font-size:13px; font-weight:620; }
+.friends-shell { display:block; width:min(92%,680px); margin:8px auto 31px; }
+.friends-page .friends-overview { display:flex; align-items:center; gap:10px; margin:15px 2px 9px; padding:0 2px; }
+.friends-page .friends-overview-mark { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(176,210,255,.20); border-radius:12px; background:linear-gradient(145deg,rgba(91,165,229,.24),rgba(112,88,195,.18)); color:#d4ecff; box-shadow:inset 0 1px 0 rgba(255,255,255,.13); }
+.friends-page .friends-overview-mark .material-icons { font-size:19px; }
+.friends-page .friends-overview div { display:grid; gap:1px; min-width:0; }.friends-page .friends-overview strong { overflow:hidden; color:#f4f1ff; font-size:14px; font-weight:780; text-overflow:ellipsis; white-space:nowrap; }.friends-page .friends-overview span { color:#aaa5bd; font-size:10px; font-weight:730; letter-spacing:.045em; text-transform:uppercase; }
+.friends-page .friends-list { width:100%; margin:0; }
+.friends-page .friends-list .md-subheader { display:none; }
+.friends-page .lup-user-list { display:grid; gap:8px; }
+.friends-page .lup-user-list md-list-item.friend-card { min-height:76px; margin:0; padding:10px 12px; border:1px solid rgba(210,203,239,.11); border-radius:17px; background:linear-gradient(135deg,rgba(255,255,255,.058),rgba(115,95,180,.055)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075); }
+.friends-page .lup-user-list md-list-item.friend-card:hover { transform:translateY(-1px); border-color:rgba(186,169,242,.33); background:linear-gradient(135deg,rgba(129,105,220,.16),rgba(61,129,196,.08)); }
+.friends-page .lup-user-list md-list-item.friend-card .lup-avatar { width:43px; height:43px; margin-right:10px; border:1px solid rgba(213,204,250,.20); box-shadow:0 5px 13px rgba(0,0,0,.18); }
+.friends-page .lup-user-list md-list-item.friend-card .username { font-size:14px; font-weight:780; }.friends-page .lup-user-list md-list-item.friend-card .lup-user-status { font-size:11px; }
+.friends-page .lup-user-actions { gap:6px; margin-left:9px; padding-left:9px; border-left:1px solid rgba(255,255,255,.08); }
+.friends-page .lup-user-action { width:35px; height:35px; border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.11); }
+.friends-page .lup-user-action .material-icons { font-size:18px; }
+.friends-page .lup-user-action-message { border-color:rgba(166,185,255,.30); background:linear-gradient(145deg,rgba(129,106,227,.24),rgba(70,129,203,.16)); color:#e2dcff; }
+.friends-page .lup-user-action-remove { border-color:rgba(241,180,203,.18); background:rgba(192,105,137,.08); color:#e4b6c8; }
+.friends-page .lup-user-action-remove:hover { border-color:rgba(250,192,214,.38); background:rgba(202,109,142,.17); }
+.friends-page .friends-empty { display:grid; justify-items:center; gap:7px; padding:42px 20px; border:1px dashed rgba(197,184,242,.20); border-radius:20px; background:rgba(255,255,255,.025); color:#c8c1d9; text-align:center; }.friends-page .friends-empty .material-icons { display:grid; place-items:center; width:42px; height:42px; border-radius:15px; background:rgba(126,99,219,.15); color:#cbbdff; font-size:23px; }.friends-page .friends-empty strong { color:#eeeaff; font-size:14px; }.friends-page .friends-empty span { max-width:250px; color:#aaa4bd; font-size:12px; line-height:1.45; }
+@media (max-width:380px) { .friends-page .search-input-wrap,.friends-shell { width:94%; }.friends-page .lup-user-list md-list-item.friend-card { padding-right:9px; padding-left:9px; }.friends-page .lup-user-actions { gap:4px; margin-left:5px; padding-left:6px; }.friends-page .lup-user-action { width:32px; height:32px; }.friends-page .lup-user-action .material-icons { font-size:16px; } }
+
 /* Final, deliberately quiet review surface.  The interaction is the focus:
    place, score, voices, then one obvious action to leave a rating. */
 .location-reviews-page > md-content {
