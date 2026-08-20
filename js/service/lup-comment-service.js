@@ -25,6 +25,9 @@ service('CommentSrvc', function($q, $translate, WebsocketSrvc, UserSrvc, ConfigS
 		var comments = [];
 		while (gwsMessage.hasMore()) {
 			var comment = CommentSrvc.parseCommentMessage(gwsMessage);
+			if (!comment) {
+				break;
+			}
 //			CommentSrvc.CACHE[comment.id()] = comment;
 			comments.push(comment);
 		}
@@ -33,20 +36,30 @@ service('CommentSrvc', function($q, $translate, WebsocketSrvc, UserSrvc, ConfigS
 	
 	CommentSrvc.parseCommentMessage = function(gwsMessage) {
 		console.log('CommentSrvc.parseCommentMessage()', gwsMessage);
+		// The current server can legitimately send an empty or legacy comment
+		// payload. Never let one incomplete item abort the entire location view.
+		if (gwsMessage.LENGTH - gwsMessage.INDEX < 9) {
+			gwsMessage.index(gwsMessage.LENGTH);
+			return null;
+		}
 //		if (!gwsMessage.hasMore()) {
 //			return CommentSrvc.BLANK_COMMENT;
 //		}
-		var json = {
-			rc_id: gwsMessage.read32(),
-			rc_user_id: gwsMessage.read32(),
-//			rc_lang_id: gwsMessage.read32(),
-			rc_text: gwsMessage.readString(),
-			rc_created_at: moment.unix(gwsMessage.read32()),
-			// The room-comment WebSocket DTO ends with the author's 1–5 vote.
-			// It must be consumed here so the next comment starts at the correct
-			// byte and individual review stars can be rendered reliably.
-			rc_rating: gwsMessage.read8(),
-		};
+		var json;
+		try {
+			json = {
+				rc_id: gwsMessage.read32(),
+				rc_user_id: gwsMessage.read32(),
+//				rc_lang_id: gwsMessage.read32(),
+				rc_text: gwsMessage.readString(),
+				rc_created_at: moment.unix(gwsMessage.read32()),
+			};
+		}
+		catch (error) {
+			console.warn('Ignoring incomplete room-comment payload.', error);
+			gwsMessage.index(gwsMessage.LENGTH);
+			return null;
+		}
 		var rcid = json.rc_id;
 //		var comment = CommentSrvc.CACHE[rcid] ? CommentSrvc.CACHE[rcid] : new LUPComment(json);
 		var comment = new LUPComment(json);
@@ -97,9 +110,46 @@ service('CommentSrvc', function($q, $translate, WebsocketSrvc, UserSrvc, ConfigS
 		console.log('CommentSrvc.parseTopComments()', gwsMessage.dump());
 		var comments = [];
 		while (gwsMessage.hasMore()) {
-			comments.push(CommentSrvc.parseCommentMessage(gwsMessage));
+			var comment = CommentSrvc.parseCommentMessage(gwsMessage);
+			if (!comment) {
+				break;
+			}
+			comments.push(comment);
 		}
 		return comments;
+	};
+
+	CommentSrvc.parseOwnCommentMessage = function(gwsMessage) {
+		/* The optional own-comment reply differs between server revisions: old
+		 * instances omit trailing empty strings and the likes counter. Parse only
+		 * fields that are actually present, so opening a location stays safe. */
+		if (gwsMessage.LENGTH - gwsMessage.INDEX < 9) {
+			return null;
+		}
+		try {
+			var ownComment = {
+				roomId: gwsMessage.read32(),
+				userId: gwsMessage.read32(),
+				rating: gwsMessage.read8(),
+				commentText: '',
+				commentInput: '',
+				likes: 0,
+			};
+			if (gwsMessage.hasMore()) {
+				ownComment.commentText = gwsMessage.readString();
+			}
+			if (gwsMessage.hasMore()) {
+				ownComment.commentInput = gwsMessage.readString();
+			}
+			if (gwsMessage.LENGTH - gwsMessage.INDEX >= 4) {
+				ownComment.likes = gwsMessage.read32();
+			}
+			return ownComment;
+		}
+		catch (error) {
+			console.warn('Ignoring incomplete own-comment payload.', error);
+			return null;
+		}
 	};
 
 	CommentSrvc.withOwnComment = function(room) {
