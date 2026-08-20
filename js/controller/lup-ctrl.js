@@ -505,12 +505,6 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.$on-$viewContentLoaded()', event);
 //		$scope.doAuthCheck();
 	});
-	// Keep distance labels current while the user moves through the app. The
-	// service throttles this, so fast taps or a swipe never start GPS spam.
-	var refreshPositionAfterInteraction = function() {
-		PositionSrvc.refresh();
-	};
-	angular.element(document).on('pointerup.lupPosition touchend.lupPosition focus.lupPosition', refreshPositionAfterInteraction);
 	// GPS distance is calculated by the room model, so periodically re-sort the
 	// existing lists without asking the server for the same room catalogue again.
 	// This keeps an open discovery screen honest even when the browser's movement
@@ -529,7 +523,6 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		$rootScope.$broadcast('lup-rooms-resorted', selectedRoomId);
 	}, 5 * 60 * 1000);
 	$scope.$on('$destroy', function() {
-		angular.element(document).off('.lupPosition');
 		$interval.cancel(roomResortInterval);
 	});
 
