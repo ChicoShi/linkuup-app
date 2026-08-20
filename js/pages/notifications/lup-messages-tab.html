@@ -22,11 +22,13 @@
       
     </md-list-item>
     
-    <md-list-item class="md-1-line" ng-if="!sortedQueries().length">
-      <div class="md-list-item-text">
+    <div class="inbox-empty" ng-if="!sortedQueries().length">
+      <div class="inbox-empty-mark" aria-hidden="true"><i class="material-icons">forum</i></div>
+      <div class="inbox-empty-copy">
+        <strong>Deine privaten Nachrichten</strong>
         <p>{{'MSG_NO_PRIVATE_MESSAGES'|translate}}</p>
       </div>
-    </md-list-item>
+    </div>
     
   </md-list>
 </md-content>

@@ -2151,6 +2151,219 @@ md-list.usernavigation .presence-actions .usericon {
 .comments-template .lup-comment-date { color:#aaa3bb !important; font-size:11px; }
 .comments-template .md-secondary .material-icons { color:#ff9cad; }
 
+/* Inbox — private messages and events are two destinations, not a colourful
+ * carousel. The selected destination gets one quiet surface; the old moving
+ * gradient ink bar made the switch feel noisy and unrelated to the content. */
+.notification .notification-tabs {
+  padding: 8px 12px 0;
+  background: linear-gradient(180deg, rgba(23, 30, 52, .92), rgba(17, 23, 42, .72));
+}
+.notification .notification-tabs md-tabs-canvas,
+.notification .notification-tabs .md-tab-bar {
+  height: 48px;
+  border: 0;
+  background: transparent;
+}
+.notification .notification-tabs md-pagination-wrapper {
+  display: flex;
+  gap: 7px;
+  width: 100% !important;
+  transform: none !important;
+}
+.notification .notification-tabs md-tab-item {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 40px;
+  margin: 0 !important;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 12px 12px 5px 5px;
+  color: rgba(208, 213, 234, .7) !important;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .025em;
+  text-transform: none;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.notification .notification-tabs md-tab-item:first-child::before,
+.notification .notification-tabs md-tab-item:nth-child(2)::before {
+  margin-right: 7px;
+  color: currentColor;
+  font-family: 'Material Icons';
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1;
+}
+.notification .notification-tabs md-tab-item:first-child::before { content: 'forum'; }
+.notification .notification-tabs md-tab-item:nth-child(2)::before { content: 'notifications_none'; }
+.notification .notification-tabs md-tab-item:hover {
+  color: #f1f4ff !important;
+  background: rgba(139, 161, 224, .08);
+}
+.notification .notification-tabs md-tab-item.md-active {
+  border-color: rgba(139, 177, 255, .22);
+  background: linear-gradient(145deg, rgba(74, 116, 193, .32), rgba(73, 57, 131, .22));
+  box-shadow: inset 0 1px 0 rgba(224, 235, 255, .1);
+  color: #f8faff !important;
+}
+.notification .notification-tabs .md-ink-bar {
+  display: none !important;
+}
+.notification .notification-tabs md-tabs-content-wrapper {
+  margin-top: 7px;
+  border-top: 1px solid rgba(176, 194, 241, .09);
+}
+.notification .notification-tabs .md-tab-content > div,
+.notification .notification-tabs md-content,
+.notification .notification-tabs .scroll-notifications {
+  background: transparent !important;
+}
+.notification .notification-tabs md-list {
+  padding: 8px 13px 26px;
+}
+.notification .notification-tabs md-list > md-list-item {
+  position: relative;
+  overflow: hidden;
+  min-height: 70px;
+  margin: 8px 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(179, 195, 238, .1);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(255,255,255,.055), rgba(104,124,186,.035));
+  box-shadow: none;
+}
+.notification .notification-tabs md-list > md-list-item::before {
+  position: absolute;
+  top: 17px;
+  bottom: 17px;
+  left: 0;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(151, 181, 255, .55);
+  content: '';
+  opacity: 0;
+}
+.notification .notification-tabs md-list > md-list-item.lup-notification-unread::before {
+  opacity: 1;
+}
+.notification .notification-tabs md-list > md-list-item.lup-notification-unread {
+  border-color: rgba(145, 174, 255, .25);
+  background: linear-gradient(135deg, rgba(77, 110, 185, .2), rgba(100, 74, 161, .13));
+}
+
+/* Private conversation — the legacy room composer inherited a white paper
+ * surface. Keep it in the same night-blue material as the location chat. */
+.query-page > md-content {
+  color: var(--lup-text);
+  background:
+    radial-gradient(ellipse at 90% 0, rgba(107, 139, 224, .15), transparent 34%),
+    linear-gradient(155deg, #171a2a, #0e101a 76%) !important;
+}
+.query-page .chat-msgs {
+  padding: 16px 13px !important;
+  background: linear-gradient(180deg, rgba(17,19,30,.12), rgba(9,11,19,.64)) !important;
+}
+.query-page .lup-msg { margin-bottom: 10px !important; }
+.query-page .chat-msgs .msg .message {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  border-radius: 15px 15px 15px 6px !important;
+  background: rgba(255,255,255,.045) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055) !important;
+  color: #f4f5fb !important;
+}
+.query-page .lup-own-msg .msg .message {
+  border-color: rgba(149, 171, 255, .28) !important;
+  border-radius: 15px 15px 6px 15px !important;
+  background: linear-gradient(135deg, rgba(84,112,191,.24), rgba(96,67,164,.16)) !important;
+}
+.query-page .chat-msgs .msg .name,
+.query-page .chat-msgs .msg .time { color: #aeb7d0 !important; }
+.query-page .chatbottom {
+  display: flex !important;
+  align-items: center;
+  gap: 7px;
+  height: 54px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(172, 191, 241, .14) !important;
+  background: rgba(14,16,26,.96) !important;
+}
+.query-page .chatbottom .chat-input {
+  float: none !important;
+  flex: 1 1 auto;
+  width: auto !important;
+  padding: 0 !important;
+}
+.query-page .chatbottom input {
+  width: 100% !important;
+  height: 36px !important;
+  padding: 0 9px !important;
+  box-sizing: border-box;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #f5f7ff !important;
+  font-size: 12px !important;
+}
+.query-page .chatbottom input::placeholder { color: #93a0bc; opacity: 1; }
+.query-page .chatbottom input:focus {
+  border-bottom-color: #a9c8ff !important;
+  box-shadow: none !important;
+}
+.query-page .chatbottom .chat-button {
+  float: none !important;
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px !important;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(158, 185, 255, .3);
+  border-radius: 11px;
+  background: rgba(95, 129, 214, .16);
+}
+.query-page .chatbottom .chat-button button,
+.query-page .chatbottom .chat-button button.sendmessage {
+  width: 19px !important;
+  min-width: 19px !important;
+  max-width: 19px !important;
+  height: 19px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background-color: #bcd7ff !important;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.query-page .chatbottom .chat-button:has(button.sendmessage) {
+  border-color: rgba(193, 213, 255, .55);
+  background: linear-gradient(135deg, #759aeb, #775fc2);
+}
+.query-page .chatbottom .chat-button:has(button.sendmessage) button { background-color: #fff !important; }
+@media (max-width: 420px) {
+  .notification .notification-tabs { padding-right: 9px; padding-left: 9px; }
+  .notification .notification-tabs md-tab-item { padding: 0 6px; font-size: 10px; }
+  .notification .notification-tabs md-tab-item:first-child::before,
+  .notification .notification-tabs md-tab-item:nth-child(2)::before { margin-right: 5px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notification .notification-tabs md-tab-item { transition: none; }
+}
+
 /* Discovery pass — entry and filters use one restrained LinkUUp language. */
 .nearby .chatbutton:not(.chatbutton--locked) {
   width:min(86%,330px);
@@ -3745,6 +3958,90 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .nearby .placeboard .room-presence-count::before { content:''; width:7px; height:7px; border-radius:50%; background:#7de4aa; box-shadow:0 0 0 3px rgba(125,228,170,.11),0 0 11px rgba(125,228,170,.44); }
 .nearby .placeboard .room-presence-count b { min-width:17px !important; height:17px !important; background:rgba(109,203,157,.24) !important; color:#f3fff8 !important; }
 
+/* The guest counter owns the right edge of every discovery card.  Whether a
+ * room is empty or somebody just joins must never move it across the rail. */
+.nearby .placeboard .room-user-preview::after {
+  order: 1;
+  margin-left: 8px !important;
+}
+.nearby .placeboard .room-user-preview .room-presence-count {
+  order: 2;
+  flex: 0 0 auto;
+  margin-left: auto !important;
+}
+
+/* Inbox switch: no underline, route or separator. The active destination is
+   recognised solely by its quiet surface and legible label. */
+.notification .notification-tabs md-tabs-canvas,
+.notification .notification-tabs .md-tab-bar,
+.notification .notification-tabs md-tabs-content-wrapper {
+  margin-top: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.notification .notification-tabs .md-ink-bar,
+.notification .notification-tabs [class*="ink-bar"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+.notification .notification-tabs md-tab-item.md-active {
+  background: rgba(124, 145, 208, .13) !important;
+  box-shadow: none !important;
+}
+
+/* Direct inbox switch. This intentionally does not use md-tabs: the two
+ * destinations need an uncomplicated choice, without a travelling ink bar. */
+.notification > md-content { display:flex; flex-direction:column; min-height:0; }
+.notification-switch {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:3px;
+  margin:0;
+  padding:7px 12px 6px;
+  background:rgba(19,25,43,.7);
+}
+.notification-switch button {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:0;
+  height:38px;
+  padding:0 9px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  box-shadow:none;
+  color:#a9afc1;
+  font:760 11px/1 Ubuntu,Roboto,Arial,sans-serif;
+  letter-spacing:.015em;
+  cursor:pointer;
+  transition:background-color 180ms ease,color 180ms ease;
+}
+.notification-switch button .material-icons { color:currentColor; font-size:17px; }
+.notification-switch button:hover { background:rgba(255,255,255,.045); color:#e6eaf5; }
+.notification-switch button.active { background:rgba(120,145,206,.14); color:#f4f6ff; }
+.notification-switch button b {
+  position:absolute;
+  top:8px;
+  right:11px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#9ee6c0;
+  box-shadow:0 0 8px rgba(108,224,163,.6);
+}
+.notification-panel { display:flex; flex:1 1 auto; min-height:0; }
+.notification-panel > md-content { width:100%; min-height:0; }
+@media (max-width:360px) {
+  .notification-switch { padding-right:9px; padding-left:9px; }
+  .notification-switch button { gap:5px; padding:0 5px; font-size:10px; }
+  .notification-switch button .material-icons { font-size:15px; }
+}
+
+
 /* Sidebar finishing pass — final cascade. The header is LinkUUp night-blue,
    and navigation icons stay free of individual boxes. */
 .md-sidenav-left,.md-sidenav-left md-content { background:radial-gradient(ellipse 92% 30% at 12% 0,rgba(66,157,229,.16),transparent 70%),radial-gradient(ellipse 68% 34% at 94% 37%,rgba(126,86,211,.14),transparent 72%),linear-gradient(162deg,#111c30 0%,#151a2d 51%,#0f1422 100%) !important; }
@@ -4521,6 +4818,221 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .information-tabs > md-tabs-wrapper { display:none !important; }
 .profile-page .information-tabs { top:0 !important; margin:0 !important; }
 
+/* Profile actions use the same compact control language as the online list:
+   a person is contacted, added or removed through one unmistakable symbol.
+   The action state changes, the position does not. */
+.profile-page .profile-actions {
+  margin:14px auto 10px;
+}
+.profile-page .profile-actions .content-center {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:5px;
+  border:1px solid rgba(185,197,235,.11);
+  border-radius:16px;
+  background:rgba(16,19,32,.58);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.profile-page .profile-social-action {
+  display:grid;
+  place-items:center;
+  width:39px;
+  height:39px;
+  margin:0;
+  padding:0;
+  border:1px solid rgba(185,197,235,.14);
+  border-radius:12px;
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075);
+  color:#dce4fb;
+  cursor:pointer;
+  transition:transform 160ms ease,background-color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;
+}
+.profile-page .profile-social-action .material-icons { font-size:19px; color:currentColor; }
+.profile-page .profile-social-action:hover,
+.profile-page .profile-social-action:focus-visible {
+  transform:translateY(-2px);
+  outline:0;
+}
+.profile-page .profile-social-action:focus-visible { box-shadow:0 0 0 3px rgba(155,181,255,.2); }
+.profile-page .profile-social-up { color:#ffe09a; border-color:rgba(248,201,100,.27); background:rgba(239,177,73,.12); }
+.profile-page .profile-social-friend { color:#d8ceff; border-color:rgba(172,151,255,.3); background:rgba(130,104,224,.15); }
+.profile-page .profile-social-pending { color:#ffe0a5; border-color:rgba(242,190,94,.28); background:rgba(213,151,58,.13); }
+.profile-page .profile-social-remove { color:#ffbdca; border-color:rgba(255,139,162,.25); background:rgba(211,83,112,.12); }
+.profile-page .profile-social-message { color:#c3ddff; border-color:rgba(118,174,239,.29); background:rgba(68,132,212,.14); }
+.profile-page .profile-social-action:hover { border-color:rgba(232,239,255,.52); background:rgba(159,181,237,.19); }
+@media (prefers-reduced-motion: reduce) { .profile-page .profile-social-action { transition:none; } }
+
+/* Friends and received Ups use the same small action grammar as a profile:
+   violet opens a conversation, rose is reserved for a deliberate removal. */
+.lup-user-actions {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-left:8px;
+}
+.lup-user-action {
+  display:grid;
+  place-items:center;
+  width:33px;
+  height:33px;
+  padding:0;
+  border:1px solid rgba(185,197,235,.14);
+  border-radius:10px;
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  color:#dce4fb;
+  cursor:pointer;
+  transition:transform 160ms ease,filter 160ms ease,border-color 160ms ease;
+}
+.lup-user-action .material-icons { font-size:17px; color:currentColor; }
+.lup-user-action:hover,
+.lup-user-action:focus-visible { transform:translateY(-1px); filter:brightness(1.15); outline:0; }
+.lup-user-action:focus-visible { box-shadow:0 0 0 3px rgba(155,181,255,.2); }
+.lup-user-action-message { color:#c8dfff; border-color:rgba(118,174,239,.29); background:rgba(68,132,212,.14); }
+.lup-user-action-remove { color:#ffbdca; border-color:rgba(255,139,162,.25); background:rgba(211,83,112,.12); }
+@media (prefers-reduced-motion: reduce) { .lup-user-action { transition:none; } }
+
+/* The yellow Up marker is a small pull mechanism, not a third button below
+   the profile. Dragging its visible bolt down gives one intentional Up and it
+   returns to its normal resting position after the server request settles. */
+.profile-page .user-top-information .profile-up-pull {
+  appearance:none;
+  -webkit-appearance:none;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:ns-resize;
+  border-color:rgba(246,198,90,.34);
+  outline:0;
+}
+.profile-page .user-top-information .profile-up-pull:hover { transform:none; }
+.profile-page .profile-up-pull .profile-up-pull-lever {
+	position:relative;
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  margin:0 0 6px;
+  border:1px solid rgba(255,236,174,.38);
+  border-radius:15px;
+  background:linear-gradient(145deg,#f3c65d,#cf8351);
+  box-shadow:0 8px 0 rgba(133,76,38,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34);
+  color:#fff5c5;
+  transform:translate3d(0,var(--lup-up-pull,0px),0);
+  transition:transform 180ms cubic-bezier(.2,.8,.25,1),box-shadow 180ms ease,filter 180ms ease;
+}
+.profile-page .profile-up-pull .profile-up-pull-lever::after {
+  content:'';
+  position:absolute;
+  width:3px;
+  height:15px;
+  margin-top:-31px;
+  border-radius:3px;
+  background:rgba(255,223,135,.46);
+  box-shadow:0 0 8px rgba(255,208,93,.34);
+  opacity:.45;
+}
+.profile-page .profile-up-pull .profile-up-pull-lever .material-icons { margin:0; color:inherit; font-size:24px; text-shadow:0 1px 0 rgba(101,53,22,.25); }
+.profile-page .profile-up-pull.is-pulling .profile-up-pull-lever { box-shadow:0 3px 0 rgba(133,76,38,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.34); filter:brightness(1.06); }
+.profile-page .profile-up-pull.is-released .profile-up-pull-lever { animation:lup-up-lever-lock 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-up-pull.is-working .profile-up-pull-lever { filter:saturate(1.08) brightness(1.08); }
+@keyframes lup-up-lever-lock {
+  0% { transform:translate3d(0,33px,0); }
+  24% { transform:translate3d(0,39px,0); }
+  49% { transform:translate3d(0,22px,0); }
+  72% { transform:translate3d(0,4px,0); }
+  100% { transform:translate3d(0,0,0); }
+}
+@media (max-width:380px) {
+  .profile-page .profile-up-pull .profile-up-pull-lever { width:38px; height:38px; border-radius:13px; }
+  .profile-page .profile-up-pull .profile-up-pull-lever .material-icons { font-size:21px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-up-pull .profile-up-pull-lever { transition:none; }
+  .profile-page .profile-up-pull.is-released .profile-up-pull-lever { animation:none; }
+}
+
+/* All four profile values now share the same deliberate pull language. Their
+   colour still describes the destination; the physical motion stays familiar. */
+.profile-page .user-top-information .profile-stat-pull {
+  appearance:none;
+  -webkit-appearance:none;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:ns-resize;
+  outline:0;
+  font:inherit;
+}
+.profile-page .user-top-information .profile-stat-pull:hover { transform:none; }
+.profile-page .user-top-information .profile-stat-pull::before {
+  top:8px;
+  right:auto;
+  left:50%;
+  width:2px;
+  height:calc(15px + var(--lup-up-pull,0px));
+  transform:translateX(-50%);
+  border-radius:3px;
+  background:linear-gradient(to bottom,rgba(227,232,255,.78),rgba(164,180,235,.30));
+  box-shadow:0 0 7px rgba(161,190,255,.24);
+  color:transparent;
+  opacity:.9;
+  transition:height 120ms linear,box-shadow 160ms ease,background 160ms ease;
+}
+.profile-page .user-top-information .profile-stat-pull::after { opacity:.075; }
+.profile-page .profile-stat-pull.is-pulling::before { box-shadow:0 0 11px rgba(194,213,255,.48); }
+.profile-page .profile-stat-pull.is-released::before { animation:lup-profile-cord-return 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-stat-pull .profile-stat-pull-lever {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  margin:0 0 6px;
+  border:1px solid rgba(255,255,255,.26);
+  border-radius:15px;
+  background:linear-gradient(145deg,#8b70ef,#5275cc);
+  box-shadow:0 8px 0 rgba(49,40,106,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.3);
+  color:#fff;
+  transform:translate3d(0,var(--lup-up-pull,0px),0);
+  transition:transform 180ms cubic-bezier(.2,.8,.25,1),box-shadow 180ms ease,filter 180ms ease;
+}
+.profile-page .profile-stat-pull .profile-stat-pull-lever::after {
+  display:none;
+}
+.profile-page .profile-stat-pull .profile-stat-pull-lever .material-icons { margin:0; color:inherit; font-size:24px; text-shadow:0 1px 0 rgba(0,0,0,.18); }
+.profile-page .profile-stat-pull.stat-locations .profile-stat-pull-lever { background:linear-gradient(145deg,#9c7bff,#635fc7); }
+.profile-page .profile-stat-pull.stat-ups .profile-stat-pull-lever { background:linear-gradient(145deg,#f3c65d,#cf8351); color:#fff5c5; box-shadow:0 8px 0 rgba(133,76,38,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34); }
+.profile-page .profile-stat-pull.stat-friends .profile-stat-pull-lever { background:linear-gradient(145deg,#62c6f7,#4676cf); }
+.profile-page .profile-stat-pull.stat-cuddles .profile-stat-pull-lever { background:linear-gradient(145deg,#ff9bb4,#cd5f93); }
+.profile-page .profile-stat-pull.is-pulling .profile-stat-pull-lever { box-shadow:0 3px 0 rgba(38,39,83,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.30); filter:brightness(1.06); }
+.profile-page .profile-stat-pull.stat-ups.is-pulling .profile-stat-pull-lever { box-shadow:0 3px 0 rgba(133,76,38,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.34); }
+.profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:lup-profile-stat-lock 460ms cubic-bezier(.2,.92,.26,1); }
+@keyframes lup-profile-stat-lock {
+  0% { transform:translate3d(0,33px,0); }
+  24% { transform:translate3d(0,39px,0); }
+  49% { transform:translate3d(0,22px,0); }
+  72% { transform:translate3d(0,4px,0); }
+  100% { transform:translate3d(0,0,0); }
+}
+@keyframes lup-profile-cord-return {
+  0% { height:57px; opacity:1; }
+  24% { height:62px; opacity:1; }
+  55% { height:35px; opacity:.92; }
+  100% { height:15px; opacity:.9; }
+}
+@media (max-width:380px) {
+  .profile-page .profile-stat-pull .profile-stat-pull-lever { width:38px; height:38px; border-radius:13px; }
+  .profile-page .profile-stat-pull .profile-stat-pull-lever .material-icons { font-size:21px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-stat-pull .profile-stat-pull-lever { transition:none; }
+  .profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:none; }
+}
+
 /* Let the profile sections meet cleanly. The active section alone carries
    light; there is deliberately no inactive rail beneath it. */
 .profile-page .profile-section-nav { position:relative; width:100%; margin:0 0 6px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
@@ -4698,6 +5210,116 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 }
 .lup-comment-dialog .md-toolbar-tools h2 { color:#f7f4ff; font-size:18px; font-weight:700; }
 .lup-comment-dialog md-dialog-actions .md-button { min-height:38px; border-radius:10px; color:#d9d3e8; }
+
+/* Removing a friend is a considered relationship action, not an alarm. */
+.lup-friend-delete-dialog { width:min(91vw,390px); overflow:hidden; border:1px solid rgba(212,202,245,.19); border-radius:22px !important; background:linear-gradient(155deg,#292b43,#171925) !important; box-shadow:0 24px 52px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.10); }
+.lup-friend-delete-dialog md-toolbar,.lup-friend-delete-dialog md-toolbar .md-toolbar-tools { min-height:61px; padding:0 14px; background:transparent !important; border:0; }
+.lup-friend-delete-dialog .friend-delete-mark { display:grid; place-items:center; width:31px; height:31px; margin-right:9px; border:1px solid rgba(223,198,235,.26); border-radius:11px; background:linear-gradient(145deg,rgba(189,139,186,.35),rgba(101,94,166,.24)); color:#f0d2e9; box-shadow:inset 0 1px 0 rgba(255,255,255,.18); }
+.lup-friend-delete-dialog .friend-delete-mark .material-icons { font-size:18px; }
+.lup-friend-delete-dialog .md-toolbar-tools h2 { overflow:hidden; margin:0; color:#fbf9ff; font-size:18px; font-weight:760; text-overflow:ellipsis; white-space:nowrap; }
+.lup-friend-delete-dialog .md-icon-button { width:35px; height:35px; min-height:35px; margin:0; border:1px solid rgba(255,255,255,.10); border-radius:11px; background:rgba(255,255,255,.045); color:#d9d5e8; }
+.lup-friend-delete-dialog md-dialog-content,.lup-friend-delete-dialog .md-dialog-content { background:transparent !important; }
+.lup-friend-delete-dialog .friend-delete-content { padding:4px 20px 12px; }
+.lup-friend-delete-dialog .friend-delete-person { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); }
+.lup-friend-delete-dialog .friend-delete-person .lup-avatar { flex:0 0 auto; width:42px; height:42px; margin:0; }
+.lup-friend-delete-dialog .friend-delete-person div { display:grid; min-width:0; gap:3px; }
+.lup-friend-delete-dialog .friend-delete-person strong { overflow:hidden; color:#fff; font-size:14px; text-overflow:ellipsis; white-space:nowrap; }
+.lup-friend-delete-dialog .friend-delete-person span { color:#bcb5cd; font-size:11px; line-height:1.35; }
+.lup-friend-delete-dialog .friend-delete-content > p { margin:13px 2px 3px; color:#d7d1e1; font-size:12px; line-height:1.46; }
+.lup-friend-delete-dialog md-dialog-actions { min-height:64px; padding:11px 18px 16px; border-top:1px solid rgba(255,255,255,.065); }
+.lup-friend-delete-dialog md-dialog-actions .md-button { min-height:39px; margin:0; padding:0 13px; border-radius:11px; font-size:12px; font-weight:750; letter-spacing:.01em; }
+.lup-friend-delete-dialog .friend-delete-cancel { border:1px solid rgba(211,205,235,.19); background:rgba(255,255,255,.035); color:#e4dfef; }
+.lup-friend-delete-dialog .friend-delete-confirm { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(245,171,193,.27); background:rgba(184,83,117,.15); color:#ffd8e5; }
+.lup-friend-delete-dialog .friend-delete-confirm .material-icons { font-size:17px; }
+.lup-friend-delete-dialog .friend-delete-cancel:hover { background:rgba(255,255,255,.09); }
+.lup-friend-delete-dialog .friend-delete-confirm:hover { border-color:rgba(255,190,211,.48); background:rgba(203,96,133,.24); }
+@media (prefers-reduced-motion:reduce) { .lup-friend-delete-dialog * { transition:none !important; } }
+
+/* Friends is a contact space: search, recognise, then choose one calm action. */
+.friends-page > md-content { background:radial-gradient(circle at 84% 5%,rgba(128,100,230,.14),transparent 29%),radial-gradient(circle at 9% 76%,rgba(76,158,226,.10),transparent 31%),#10121d; }
+.friends-page .search-input-wrap { position:relative; display:flex; align-items:center; gap:8px; width:min(92%,680px); margin:15px auto 5px; padding:8px 11px; border:1px solid rgba(204,194,245,.15); border-radius:17px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 10px 23px rgba(0,0,0,.12); }
+.friends-page .search-input-wrap .qrcode-dummy { order:3; display:grid; place-items:center; width:34px; height:34px; margin:0; border:1px solid rgba(201,181,255,.22); border-radius:11px; background:rgba(134,104,232,.16); color:#d9ccff; transition:transform .16s ease,background .16s ease; }
+.friends-page .search-input-wrap .qrcode-dummy:hover { transform:translateY(-1px); background:rgba(143,112,237,.28); }
+.friends-page .search-input-wrap .friend-search-mark { display:grid; place-items:center; width:28px; height:28px; color:#b7a8eb; font-size:19px; }
+.friends-page .search-input-wrap .search-input { min-height:34px; font-size:13px; font-weight:620; }
+.friends-shell { display:block; width:min(92%,680px); margin:8px auto 31px; }
+.friends-page .friends-overview { display:flex; align-items:center; gap:10px; margin:15px 2px 9px; padding:0 2px; }
+.friends-page .friends-overview-mark { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(176,210,255,.20); border-radius:12px; background:linear-gradient(145deg,rgba(91,165,229,.24),rgba(112,88,195,.18)); color:#d4ecff; box-shadow:inset 0 1px 0 rgba(255,255,255,.13); }
+.friends-page .friends-overview-mark .material-icons { font-size:19px; }
+.friends-page .friends-overview div { display:grid; gap:1px; min-width:0; }.friends-page .friends-overview strong { overflow:hidden; color:#f4f1ff; font-size:14px; font-weight:780; text-overflow:ellipsis; white-space:nowrap; }.friends-page .friends-overview span { color:#aaa5bd; font-size:10px; font-weight:730; letter-spacing:.045em; text-transform:uppercase; }
+.friends-page .friends-list { width:100%; margin:0; }
+.friends-page .friends-list .md-subheader { display:none; }
+.friends-page .lup-user-list { display:grid; gap:8px; }
+.friends-page .lup-user-list md-list-item.friend-card { min-height:76px; margin:0; padding:10px 12px; border:1px solid rgba(210,203,239,.11); border-radius:17px; background:linear-gradient(135deg,rgba(255,255,255,.058),rgba(115,95,180,.055)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075); }
+.friends-page .lup-user-list md-list-item.friend-card:hover { transform:translateY(-1px); border-color:rgba(186,169,242,.33); background:linear-gradient(135deg,rgba(129,105,220,.16),rgba(61,129,196,.08)); }
+.friends-page .lup-user-list md-list-item.friend-card .lup-avatar { width:43px; height:43px; margin-right:10px; border:1px solid rgba(213,204,250,.20); box-shadow:0 5px 13px rgba(0,0,0,.18); }
+.friends-page .lup-user-list md-list-item.friend-card .username { font-size:14px; font-weight:780; }.friends-page .lup-user-list md-list-item.friend-card .lup-user-status { font-size:11px; }
+.friends-page .lup-user-actions { gap:6px; margin-left:9px; padding-left:9px; border-left:1px solid rgba(255,255,255,.08); }
+.friends-page .lup-user-action { width:35px; height:35px; border-radius:11px; box-shadow:inset 0 1px 0 rgba(255,255,255,.11); }
+.friends-page .lup-user-action .material-icons { font-size:18px; }
+.friends-page .lup-user-action-message { border-color:rgba(166,185,255,.30); background:linear-gradient(145deg,rgba(129,106,227,.24),rgba(70,129,203,.16)); color:#e2dcff; }
+.friends-page .lup-user-action-remove { border-color:rgba(241,180,203,.18); background:rgba(192,105,137,.08); color:#e4b6c8; }
+.friends-page .lup-user-action-remove:hover { border-color:rgba(250,192,214,.38); background:rgba(202,109,142,.17); }
+.friends-page .friends-empty { display:grid; justify-items:center; gap:7px; padding:42px 20px; border:1px dashed rgba(197,184,242,.20); border-radius:20px; background:rgba(255,255,255,.025); color:#c8c1d9; text-align:center; }.friends-page .friends-empty .material-icons { display:grid; place-items:center; width:42px; height:42px; border-radius:15px; background:rgba(126,99,219,.15); color:#cbbdff; font-size:23px; }.friends-page .friends-empty strong { color:#eeeaff; font-size:14px; }.friends-page .friends-empty span { max-width:250px; color:#aaa4bd; font-size:12px; line-height:1.45; }
+@media (max-width:380px) { .friends-page .search-input-wrap,.friends-shell { width:94%; }.friends-page .lup-user-list md-list-item.friend-card { padding-right:9px; padding-left:9px; }.friends-page .lup-user-actions { gap:4px; margin-left:5px; padding-left:6px; }.friends-page .lup-user-action { width:32px; height:32px; }.friends-page .lup-user-action .material-icons { font-size:16px; } }
+
+/* Inbox uses the same quiet place field as Friends: a single landmark helps
+   orientation while conversations and events remain the visual priority. */
+.notification > md-content { position:relative; isolation:isolate; overflow-x:hidden; background:radial-gradient(ellipse at 92% 8%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.13),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%) !important; }
+.notification > md-content > :not(.inbox-ambient-map) { position:relative; z-index:1; }
+.inbox-ambient-map { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.inbox-ambient-map::before { content:''; position:absolute; top:11%; right:-38%; width:94%; height:52%; border:1px solid rgba(127,185,255,.095); border-radius:48% 52% 50% 47%; transform:rotate(-24deg); }.inbox-ambient-map::after { content:''; position:absolute; bottom:5%; left:-43%; width:103%; height:48%; border:1px solid rgba(173,133,255,.08); border-radius:52% 48% 44% 56%; transform:rotate(18deg); }
+.inbox-route { position:absolute; display:block; width:72%; height:29%; border:1px solid rgba(143,190,255,.095); border-radius:50%; opacity:.72; }.inbox-route-one { top:27%; right:-29%; transform:rotate(-29deg); }.inbox-route-two { bottom:6%; left:-39%; border-color:rgba(185,149,255,.075); transform:rotate(21deg); }
+.inbox-route-light { position:absolute; top:31%; right:13%; width:7px; height:7px; border-radius:50%; background:#bce9ff; box-shadow:0 0 0 4px rgba(111,190,244,.06),0 0 15px rgba(108,197,255,.68); animation:lup-inbox-route-light 18s ease-in-out infinite; }.inbox-map-node { position:absolute; width:4px; height:4px; border-radius:50%; background:rgba(201,226,255,.58); box-shadow:0 0 11px rgba(117,194,255,.38); }.inbox-map-node-one { top:44%; right:29%; opacity:.38; }.inbox-map-node-two { bottom:22%; left:17%; background:rgba(204,178,255,.52); opacity:.33; }
+.inbox-map-pin { position:absolute; top:18%; right:6%; display:grid; place-items:center; width:50px; height:50px; border:1px solid rgba(158,210,255,.15); border-radius:50% 50% 50% 13px; background:linear-gradient(145deg,rgba(83,168,229,.12),rgba(113,84,196,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(19,58,109,.14); color:rgba(198,238,255,.56); transform:rotate(-45deg); animation:lup-inbox-pin-drift 16s ease-in-out infinite; }.inbox-map-pin .material-icons { font-size:27px; transform:rotate(45deg); filter:drop-shadow(0 3px 6px rgba(79,181,243,.34)); }
+.notification .notification-panel { background:transparent; }.notification .notification-panel > md-content { background:transparent !important; }.notification .notification-panel md-list { background:transparent !important; }
+.notification .inbox-empty { display:flex; align-items:center; min-height:92px; margin:18px 14px; padding:13px 14px; border:1px solid rgba(184,205,245,.14); border-radius:19px; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(108,91,185,.065)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075); }.notification .inbox-empty .inbox-empty-mark { display:grid; flex:0 0 42px; place-items:center; width:42px; height:42px; margin-right:11px; border:1px solid rgba(169,200,255,.20); border-radius:14px 14px 14px 5px; background:linear-gradient(145deg,rgba(91,165,229,.19),rgba(112,88,195,.13)); color:#d5ecff; }.notification .inbox-empty .inbox-empty-mark .material-icons { font-size:21px; }.notification .inbox-empty .md-list-item-text { min-width:0; }.notification .inbox-empty strong { display:block; margin:0 0 4px; color:#edf2ff; font-size:13px; font-weight:780; }.notification .inbox-empty p { margin:0; color:#afaac0 !important; font-size:11px; line-height:1.4; }
+@keyframes lup-inbox-pin-drift { 0%,100% { transform:rotate(-45deg) translate3d(0,0,0); opacity:.36; } 50% { transform:rotate(-45deg) translate3d(-8px,10px,0); opacity:.61; } }
+@keyframes lup-inbox-route-light { 0%,100% { transform:translate3d(0,0,0); opacity:.18; } 48%,52% { transform:translate3d(-72px,31px,0); opacity:.66; } }
+@media (max-width:480px) { .inbox-map-pin { top:20%; right:-1%; width:42px; height:42px; }.inbox-map-pin .material-icons { font-size:23px; }.inbox-route-light { top:32%; right:7%; }.inbox-route-one { top:28%; right:-44%; width:89%; }.notification .inbox-empty { margin-right:12px; margin-left:12px; } }
+@media (prefers-reduced-motion:reduce) { .inbox-route-light,.inbox-map-pin { animation:none; } }
+
+/* The inbox switch is two direct choices, not a dark framed component. */
+.notification .notification-switch { margin:0; padding-top:7px; padding-bottom:6px; border:0; background:transparent; box-shadow:none; }
+.notification .notification-switch::before,.notification .notification-switch::after { display:none; content:none; }
+.notification .notification-switch button { border:0; box-shadow:none; }
+.notification .notification-switch button.active { background:linear-gradient(145deg,rgba(98,141,215,.16),rgba(116,86,190,.12)); box-shadow:inset 0 1px 0 rgba(219,234,255,.07); }
+
+/* Empty inbox is guidance, not another heavy framed card. */
+.notification md-list > .inbox-empty,.notification .inbox-empty { display:flex; align-items:center; min-height:76px; margin:22px 14px 0; padding:0; border:0; border-radius:0; background:transparent !important; box-shadow:none; }
+.notification .inbox-empty .inbox-empty-mark { border:0; border-radius:0; background:transparent; box-shadow:none; color:#b8dcff; }
+.notification .inbox-empty .inbox-empty-copy { min-width:0; border:0; background:transparent !important; box-shadow:none !important; }
+
+/* A private conversation must not inherit any of Material's paper surfaces.
+   The message area and composer stay legible on the same night-blue base. */
+.query-page > md-content,.query-page > md-content > ng-include,.query-page > md-content md-content { background:transparent !important; color:#eef2ff !important; }
+.query-page > md-content { background:radial-gradient(ellipse at 92% 8%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.09),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%) !important; }
+.query-page .chat-msgs { background:linear-gradient(180deg,rgba(16,20,34,.18),rgba(10,13,24,.62)) !important; }
+.query-page .chatbottom { background:linear-gradient(180deg,rgba(13,17,29,.78),rgba(13,16,27,.96)) !important; }
+.query-page .chatbottom .chat-input { border:1px solid rgba(180,202,245,.14); border-radius:12px; background:rgba(38,43,65,.72); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
+.query-page .chatbottom input { border:0 !important; border-radius:12px !important; background:transparent !important; color:#f4f6ff !important; -webkit-text-fill-color:#f4f6ff !important; }
+.query-page .chatbottom input::placeholder { color:#a9b3cd; }.query-page .chatbottom input:focus { border:0 !important; box-shadow:0 0 0 2px rgba(137,184,255,.14) !important; }
+.query-page .chatbottom input:-webkit-autofill,.query-page .chatbottom input:-webkit-autofill:hover,.query-page .chatbottom input:-webkit-autofill:focus { -webkit-text-fill-color:#f4f6ff !important; -webkit-box-shadow:0 0 0 1000px #282d43 inset !important; transition:background-color 9999s ease-in-out 0s; }
+
+/* Friends shares LinkUUp's sense of place: one quiet map field and one
+   orientation pin.  It is deliberately behind every actionable surface. */
+.friends-page > md-content { position:relative; isolation:isolate; overflow-x:hidden; background:radial-gradient(ellipse at 92% 9%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.13),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%); }
+.friends-page > md-content > :not(.friends-ambient-map) { position:relative; z-index:1; }
+.friends-ambient-map { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.friends-ambient-map::before { content:''; position:absolute; top:8%; right:-36%; width:92%; height:54%; border:1px solid rgba(127,185,255,.10); border-radius:48% 52% 50% 47%; transform:rotate(-23deg); opacity:.78; }
+.friends-ambient-map::after { content:''; position:absolute; bottom:10%; left:-45%; width:104%; height:48%; border:1px solid rgba(173,133,255,.085); border-radius:52% 48% 44% 56%; transform:rotate(17deg); }
+.friends-route { position:absolute; display:block; width:72%; height:29%; border:1px solid rgba(143,190,255,.10); border-radius:50%; opacity:.72; }
+.friends-route-one { top:25%; right:-29%; transform:rotate(-29deg); }
+.friends-route-two { bottom:4%; left:-39%; border-color:rgba(185,149,255,.08); transform:rotate(21deg); }
+.friends-route-light { position:absolute; top:30%; right:12%; width:7px; height:7px; border-radius:50%; background:#bce9ff; box-shadow:0 0 0 4px rgba(111,190,244,.06),0 0 15px rgba(108,197,255,.68); opacity:.48; animation:lup-friends-route-light 18s ease-in-out infinite; }
+.friends-map-node { position:absolute; width:4px; height:4px; border-radius:50%; background:rgba(201,226,255,.62); box-shadow:0 0 11px rgba(117,194,255,.42); }
+.friends-map-node-one { top:42%; right:30%; opacity:.42; }.friends-map-node-two { bottom:24%; left:17%; background:rgba(204,178,255,.55); opacity:.35; }
+.friends-map-pin { position:absolute; top:18%; right:6%; display:grid; place-items:center; width:50px; height:50px; border:1px solid rgba(158,210,255,.16); border-radius:50% 50% 50% 13px; background:linear-gradient(145deg,rgba(83,168,229,.13),rgba(113,84,196,.085)); box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 12px 30px rgba(19,58,109,.15); color:rgba(198,238,255,.60); transform:rotate(-45deg); animation:lup-friends-pin-drift 16s ease-in-out infinite; }
+.friends-map-pin .material-icons { font-size:27px; transform:rotate(45deg); filter:drop-shadow(0 3px 6px rgba(79,181,243,.36)); }
+@keyframes lup-friends-pin-drift { 0%,100% { transform:rotate(-45deg) translate3d(0,0,0); opacity:.39; } 50% { transform:rotate(-45deg) translate3d(-8px,10px,0); opacity:.64; } }
+@keyframes lup-friends-route-light { 0%,100% { transform:translate3d(0,0,0); opacity:.20; } 48% { transform:translate3d(-72px,31px,0); opacity:.70; } 52% { transform:translate3d(-72px,31px,0); opacity:.70; } }
+@media (max-width:480px) { .friends-map-pin { top:20%; right:-1%; width:42px; height:42px; }.friends-map-pin .material-icons { font-size:23px; }.friends-route-light { top:31%; right:7%; }.friends-route-one { top:27%; right:-44%; width:89%; } }
+@media (prefers-reduced-motion:reduce) { .friends-route-light,.friends-map-pin { animation:none; } }
 
 /* Final, deliberately quiet review surface.  The interaction is the focus:
    place, score, voices, then one obvious action to leave a rating. */

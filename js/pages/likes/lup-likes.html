@@ -24,9 +24,8 @@
 				  <p class="username">{{ user.displayName(); }} ({{ user.likedMe }} Ups)</p>
 				  <p class="lup-user-status">{{ user.status(); }}</p>
 				</div>
-				<div>
-<!-- 				  <i class="md-secondary usericon likeuser" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()"></i> -->
-				  <i class="md-secondary usericon sendmessage" ng-click="gotoQuery(user)" ng-if="!user.isSelf()"></i>
+				<div class="lup-user-actions">
+				  <button class="lup-user-action lup-user-action-message" type="button" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()"><i class="material-icons">chat_bubble</i></button>
 				</div>
 			  </md-list-item>
 		   </div>

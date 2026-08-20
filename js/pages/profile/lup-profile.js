@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q,
+}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q, $timeout,
 	UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
 	ConfigSrvc, ProfileSrvc, SettingsSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
@@ -81,6 +81,39 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('ProfileCtrl.openQuery()', user);
 		$scope.gotoQuery(user);
 	};
+
+	// An Up is intentionally a deliberate pull on the yellow profile marker,
+	// not another crowded action button. The server stays authoritative for the
+	// number; this state only locks the gesture until its request has settled.
+	$scope.profilePullUp = function() {
+		var user = $scope.data.user;
+		if (!user || $scope.data.profileUpWorking) {
+			return;
+		}
+		if (user.isSelf()) {
+			var selfUpHintKey = 'lup-profile-self-up-hint';
+			if (!window.localStorage.getItem(selfUpHintKey)) {
+				window.localStorage.setItem(selfUpHintKey, '1');
+				DialogSrvc.openHTMLDialog('<p>Du kannst dir selbst keinen Up geben.</p>', 'Up');
+			}
+			return;
+		}
+		$scope.data.profileUpWorking = true;
+		LikeSrvc.likeUser(user).finally(function() {
+			$timeout(function() {
+				$scope.data.profileUpWorking = false;
+			}, 440);
+		});
+	};
+	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
+	$scope.profilePullFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	// A short tap remains navigation. Pulling is the deliberate gesture; it can
+	// perform a distinct action (the Up) without hiding any profile overview.
+	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
+	$scope.profileOpenUps = function() { return $scope.gotoLikes($scope.data.user); };
+	$scope.profileOpenFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	
 	///////////////////
 	// Avatar Upload //
@@ -239,7 +272,9 @@ angular.module('LUP').config(function($routeProvider) {
 		// 0x1160 returns room id, number of visits and last visit timestamp.
 		// The old profile code expected an unrelated paginated HTTP response,
 		// so it discarded the persisted websocket data after every reload.
-		while (gwsMessage.hasMore()) {
+		// 0x1160 can carry an empty legacy tail. A visit always contains three
+		// uint32 values, so never begin parsing unless the full record is present.
+		while (gwsMessage.LENGTH - gwsMessage.INDEX >= 12) {
 			var roomId = gwsMessage.read32();
 			var count = gwsMessage.read32();
 			var lastVisit = gwsMessage.read32();
@@ -250,6 +285,9 @@ angular.module('LUP').config(function($routeProvider) {
 				visit_at: lastVisit,
 				visit_count: count,
 			}));
+		}
+		if (gwsMessage.hasMore()) {
+			console.warn('Ignoring incomplete profile-course payload tail.');
 		}
 		$scope.data.course.page = 1;
 		$scope.data.course.nPages = 1;
@@ -372,6 +410,13 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////////////////////////
 	$scope.gotoUserCourse = function(user) {
 		console.log('ProfileCtrl.gotoUserCourse()', user);
+		// Your own visit history is always private-to-you and the server's
+		// optional ACL preflight can reject an empty legacy response. Go directly
+		// to the course view for the signed-in profile; the course endpoint itself
+		// remains the authoritative access check for every other profile.
+		if (user && user.isSelf()) {
+			return $scope.gotoCourse(user);
+		}
 		CourseSrvc.getCourseAllowed(user).then(
 				$scope.gotoCourse.bind($scope, user),
 				ErrorSrvc.websocketMaybeJSONError.bind(ErrorSrvc)
@@ -405,4 +450,90 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
+});
+
+/* A small physical pull interaction for the profile Up marker. Pointer events
+ * cover mouse, touch and pen without a second mobile-only event path. */
+angular.module('LUP').directive('lupPullAction', function($timeout) {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			var node = element[0];
+			var pointerId = null;
+			var startY = 0;
+			var pull = 0;
+			var threshold = 26;
+			var maximum = 42;
+			var pointerInteraction = false;
+
+			var openOverview = function() {
+				scope.$applyAsync(function() {
+					scope.$eval(attrs.lupPullOpen || attrs.lupPullAction);
+				});
+			};
+
+			var setPull = function(value) {
+				pull = Math.max(0, Math.min(maximum, value));
+				element.css('--lup-up-pull', pull + 'px');
+				element.toggleClass('is-pulling', pull > 2);
+			};
+			var release = function(event) {
+				if (pointerId === null || (event && event.pointerId !== pointerId)) {
+					return;
+				}
+				var accepted = pull >= threshold;
+				pointerId = null;
+				if (accepted) {
+					// Complete the physical pull before the spring-back animation so the
+					// visible cord reaches its latch even if the finger stopped early.
+					setPull(maximum);
+					element.addClass('is-released');
+					scope.$applyAsync(function() { scope.$eval(attrs.lupPullAction); });
+					$timeout(function() {
+						setPull(0);
+						element.removeClass('is-released');
+					}, 460, false);
+				}
+				else {
+					setPull(0);
+					openOverview();
+				}
+				$timeout(function() { pointerInteraction = false; }, 0, false);
+			};
+
+			element.on('pointerdown', function(event) {
+				if (scope.data.profileUpWorking || event.button > 0) {
+					return;
+				}
+				pointerId = event.pointerId;
+				pointerInteraction = true;
+				startY = event.clientY;
+				setPull(0);
+				if (node.setPointerCapture) {
+					node.setPointerCapture(pointerId);
+				}
+				event.preventDefault();
+			});
+			element.on('pointermove', function(event) {
+				if (pointerId !== event.pointerId) {
+					return;
+				}
+				setPull(event.clientY - startY);
+				event.preventDefault();
+			});
+			element.on('pointerup pointercancel', release);
+			element.on('click', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				// Pointer taps already opened their overview on pointerup. Keyboard
+				// activation reaches this handler directly and stays accessible.
+				if (!pointerInteraction) {
+					openOverview();
+				}
+			});
+			scope.$on('$destroy', function() {
+				element.off('pointerdown pointermove pointerup pointercancel click');
+			});
+		},
+	};
 });

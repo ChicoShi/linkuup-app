@@ -99,6 +99,14 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.unreadMessages = function() {
 		return ChatSrvc.unreadMessages();
 	};
+
+	$scope.selectNotificationTab = function(tab) {
+		$scope.data.activeTab3 = tab;
+		if (tab === 0) {
+			return $scope.loadChats();
+		}
+		return $scope.showNotifications();
+	};
 	
 	/////////////////////
 	// --- Actions --- //

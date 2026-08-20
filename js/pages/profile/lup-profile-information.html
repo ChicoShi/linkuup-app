@@ -1,10 +1,10 @@
 <md-content
  flex layout-padding
- ng-if="!data.profile.canGloballySee()">
+ ng-if="!data.profile.canGloballySee() && !data.user.isSelf()">
   <p>{{'VIEW_NOT_ALLOWED'|translate}}</p>
 </md-content>
 
-<md-list class="profile-information profile-about-single" ng-if="data.profile.canGloballySee()">
+<md-list class="profile-information profile-about-single" ng-if="data.profile.canGloballySee() || data.user.isSelf()">
   <md-list-item class="md-2-line profile-story-card">
     <md-list-item-text>
       <p class="profile-about-me" ng-if="data.profile.displayAbout()">{{data.profile.displayAbout()}}</p>
@@ -13,7 +13,7 @@
   </md-list-item>
 </md-list>
 
-<md-list class="profile-information profile-settings-view" ng-if="data.profile.canGloballySee()">
+<md-list class="profile-information profile-settings-view" ng-if="data.profile.canGloballySee() || data.user.isSelf()">
   <section ng-repeat="group in data.profileGroups track by group.module" class="profile-settings-group">
     <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
     <md-list-item class="md-2-line" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-setting-denied': field.error}">

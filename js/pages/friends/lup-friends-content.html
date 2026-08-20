@@ -3,6 +3,14 @@
  src="'js/pages/friends/lup-friends-search.html?v='+V"></ng-include>
 
 <!-- Begin user list -->
+<section class="friends-shell" flex>
+  <div class="friends-overview" ng-if="data.frienduser">
+    <span class="friends-overview-mark" aria-hidden="true"><i class="material-icons">groups</i></span>
+    <div>
+      <strong>{{data.frienduser.isSelf() ? ('FRIENDS'|translate) : data.frienduser.displayName()}}</strong>
+      <span>{{data.pagemenu.nItems}} Verbindung<span ng-if="data.pagemenu.nItems !== 1">en</span></span>
+    </div>
+  </div>
 <md-list class="friends-list" flex>
   
   <md-subheader class="md-no-sticky">
@@ -14,7 +22,7 @@
 
   <div class="lup-user-list">
     <md-list-item
-     class="md-2-line"
+     class="md-2-line friend-card"
      ng-repeat="user in sortedFriends()"
      on-long-press="deleteFriend(user)"
      class="no-right">
@@ -23,26 +31,30 @@
         <p class="username">{{ user.displayName(); }}</p>
         <p class="lup-user-status">{{ user.status(); }}</p>
       </div>
-      <div>
-<!--
-        <i
-         class="md-secondary usericon likeuser"
-         aria-label="Like this user"
-         ng-click="LikeSrvc.likeUser(user)"
-         ng-if="!user.isSelf() && user.isMember()"></i>
-		 -->
-        <i
-         class="md-secondary usericon removefriend"
-         aria-label="Remove a friend"
+      <div class="lup-user-actions">
+        <button
+         class="lup-user-action lup-user-action-remove"
+         type="button"
+         aria-label="Freund entfernen"
+         title="Freund entfernen"
          ng-click="deleteFriend(user)"
-         ng-if="!user.isSelf() && user.isMember() && user.isFriend()"></i>
-        <i
-         class="md-secondary usericon sendmessage"
-         aria-label="Chat with this user"
+         ng-if="!user.isSelf() && user.isMember() && user.isFriend()"><i class="material-icons">link_off</i></button>
+        <button
+         class="lup-user-action lup-user-action-message"
+         type="button"
+         aria-label="Nachricht senden"
+         title="Nachricht senden"
          ng-click="gotoQuery(user)"
-         ng-if="!user.isSelf()"></i>
+         ng-if="!user.isSelf()"><i class="material-icons">forum</i></button>
       </div>
     </md-list-item>
   </div>
+
+  <section class="friends-empty" ng-if="data.frienduser && !data.pagemenu.nItems">
+    <i class="material-icons" aria-hidden="true">person_search</i>
+    <strong>Noch keine Verbindungen.</strong>
+    <span>Finde Menschen, mit denen du in Kontakt bleiben möchtest.</span>
+  </section>
 </md-list>
+</section>
 <!-- End of user list -->

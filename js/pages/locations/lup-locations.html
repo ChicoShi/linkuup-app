@@ -34,7 +34,6 @@
 								<strong class="room-hero-name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 								<span class="room-hero-meta"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
 							</div>
-							<p class="room-hero-description" ng-if="room.info()" title="{{room.info()}}">{{room.info() | limitTo:80}}<span ng-if="room.info().length > 80">…</span></p>
 						</div>
 						
 						<!-- The hero above is the single place identity.  Keeping the old
