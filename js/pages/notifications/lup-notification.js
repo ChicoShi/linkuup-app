@@ -89,7 +89,9 @@ angular.module('LUP').config(function($routeProvider) {
 	// --- Private Messages --- //
 	//////////////////////////////
 	$scope.sortedQueries = function() {
-		var queries = ChatSrvc.QUERIES;
+		// Never reorder the shared live array during an Angular digest. A private
+		// sorted copy keeps the message view stable while websocket updates arrive.
+		var queries = ChatSrvc.QUERIES.slice();
 		queries = queries.sort(function(a,b){
 			return b.lastDate() - a.lastDate();
 		});
