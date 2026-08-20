@@ -941,6 +941,11 @@ md-list .md-list-item-text .username,
 .profile-page .user-top-information { position: relative; isolation: isolate; overflow: hidden; background: linear-gradient(145deg, rgba(39,43,65,.98), rgba(22,25,38,.98)); border: 1px solid rgba(255,255,255,.055); box-shadow: 0 16px 38px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.055); }
 .profile-page .user-top-information::before { content: ''; position: absolute; z-index: 0; inset: 0; background: radial-gradient(circle at 9% 0%, rgba(122,92,255,.30), transparent 38%), radial-gradient(circle at 92% 100%, rgba(43,157,244,.19), transparent 42%); pointer-events: none; }
 .profile-page .user-top-information .countitems { position: relative; z-index: 1; gap: 8px; padding: 0 10px 11px; box-sizing: border-box; }
+.profile-page .user-top-information .profile-activity-rail { position:absolute; z-index:4; top:4px; right:14%; left:14%; height:1px; overflow:hidden; border-radius:999px; background:rgba(195,205,247,.14); pointer-events:none; }
+.profile-page .user-top-information .profile-activity-rail span { position:absolute; top:0; left:-22%; width:20%; height:100%; border-radius:inherit; background:linear-gradient(90deg,transparent,#d9e8ff,#cbb8ff,transparent); box-shadow:0 0 9px rgba(173,199,255,.86); opacity:0; }
+.profile-page .user-top-information .profile-stats.has-profile-activity .profile-activity-rail { background:rgba(196,211,255,.34); box-shadow:0 0 7px rgba(158,188,255,.25); }
+.profile-page .user-top-information .profile-stats.has-profile-activity .profile-activity-rail span { opacity:1; animation:lup-profile-activity-sweep 1.35s ease-in-out 3; }
+@keyframes lup-profile-activity-sweep { 0% { left:-22%; } 56% { left:102%; } 100% { left:102%; } }
 .profile-page .user-top-information .countitem { position: relative; isolation: isolate; overflow: hidden; min-height: 76px; margin: 0; padding: 10px 4px 8px; border: 1px solid rgba(255,255,255,.065); border-radius: 15px; background: rgba(255,255,255,.048); box-shadow: inset 0 1px 0 rgba(255,255,255,.07); cursor: pointer; transition: transform .20s ease, background .20s ease, border-color .20s ease, box-shadow .20s ease; }
 .profile-page .user-top-information .countitem::before { content: ''; position: absolute; top: 0; left: 18%; right: 18%; height: 3px; border-radius: 0 0 999px 999px; background: #c9c3ff; box-shadow: 0 0 11px currentColor; opacity: .9; }
 .profile-page .user-top-information .countitem::after { content: ''; position: absolute; z-index: -1; top: -26px; left: 50%; width: 68px; height: 56px; transform: translateX(-50%); border-radius: 50%; background: currentColor; opacity: .09; filter: blur(13px); }
@@ -4894,6 +4899,7 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .lup-user-action-message { color:#c8dfff; border-color:rgba(118,174,239,.29); background:rgba(68,132,212,.14); }
 .lup-user-action-remove { color:#ffbdca; border-color:rgba(255,139,162,.25); background:rgba(211,83,112,.12); }
 @media (prefers-reduced-motion: reduce) { .lup-user-action { transition:none; } }
+@media (prefers-reduced-motion: reduce) { .profile-page .user-top-information .profile-stats.has-profile-activity .profile-activity-rail span { animation:none; opacity:.9; left:40%; } }
 
 /* The yellow Up marker is a small pull mechanism, not a third button below
    the profile. Dragging its visible bolt down gives one intentional Up and it

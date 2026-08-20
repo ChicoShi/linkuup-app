@@ -44,7 +44,8 @@
 	</div>
 		
 		<div class="user-top-information" ng-class="{ownuserprofile: data.user.isSelf()}">
-			<div class="countitems profile-stats">
+			<div class="countitems profile-stats" ng-class="{'has-profile-activity': data.profileActivitySignal}">
+				<span class="profile-activity-rail" aria-hidden="true"><span></span></span>
 				<button type="button" class="countitem stat-locations profile-stat-pull" lup-pull-action="profilePullLocations()" lup-pull-open="profileOpenLocations()"><span class="profile-stat-pull-lever"><i class="material-icons">place</i></span><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></button>
 				<button type="button" class="countitem stat-ups profile-stat-pull profile-up-pull" lup-pull-action="profilePullUp()" lup-pull-open="profileOpenUps()" ng-class="{'is-working': data.profileUpWorking}"><span class="profile-stat-pull-lever profile-up-pull-lever"><i class="material-icons">bolt</i></span><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></button>
 				<button type="button" class="countitem stat-friends profile-stat-pull" lup-pull-action="profilePullFriends()" lup-pull-open="profileOpenFriends()"><span class="profile-stat-pull-lever"><i class="material-icons">groups</i></span><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></button>
