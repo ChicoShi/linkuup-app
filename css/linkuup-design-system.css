@@ -4193,6 +4193,50 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-settings-view .profile-detail-card.profile-setting-denied { border-color:rgba(221,165,177,.16) !important; background:rgba(109,54,70,.10) !important; }
 @media (max-width:420px) { .profile-page .profile-information.profile-settings-view { padding-right:12px; padding-left:12px; }.profile-page .profile-information.profile-settings-view .profile-detail-card { padding:11px 12px; } }
 
+/* The public profile reads as compact facts: a label and its value belong in
+   one tile.  The responsive grid prevents a long, unstructured column while
+   still returning to one column before content would become cramped. */
+.profile-page .profile-information.profile-settings-view .profile-settings-group {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 22px;
+}
+.profile-page .profile-information.profile-settings-view .profile-settings-group > .md-subheader {
+  grid-column:1 / -1;
+  margin-bottom:0;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:92px;
+  margin:0;
+  padding:13px 14px 12px;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  min-height:25px;
+  margin-bottom:7px;
+  color:#b8cbe1 !important;
+  font-size:9px;
+  line-height:1.28;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card p {
+  color:#f2f6fb !important;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.32;
+}
+@media (min-width:680px) {
+  .profile-page .profile-information.profile-settings-view { width:min(100%,900px); }
+  .profile-page .profile-information.profile-settings-view .profile-settings-group { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .profile-page .profile-information.profile-settings-view .profile-detail-card { min-height:100px; }
+}
+@media (max-width:379px) {
+  .profile-page .profile-information.profile-settings-view .profile-settings-group { grid-template-columns:1fr; }
+  .profile-page .profile-information.profile-settings-view .profile-detail-card { min-height:76px; }
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
