@@ -23,7 +23,7 @@
 		<lup-avatar class="presence-avatar" ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
 		<div ng-click="gotoProfile(user)" class="md-list-item-text presence-person-copy" layout="column">
 		  <p class="username">{{ user.displayName(); }}</p>
-		  <p><i class="material-icons">location_on</i>{{ user.status() || ('ONLINE_VISITOR_HERE' | translate) }}</p>
+		  <p>{{ user.status() || ('ONLINE_VISITOR_HERE' | translate) }}</p>
 		</div>
 		<div class="presence-actions">
 		  <button type="button" class="presence-action presence-message" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()">

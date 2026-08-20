@@ -4848,6 +4848,32 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .location-page md-list.usernavigation.location-online-view .online-room-header .presence-total small { margin-top:3px !important; color:#8ce5b5 !important; font-size:7px !important; font-weight:850 !important; letter-spacing:.09em !important; }
 @media (max-width:360px) { .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto !important; gap:7px !important; min-height:53px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; } }
 
+/* A visitor has one live indicator only: the small dot on the centred avatar.
+   The editable status remains readable as calm text, never as a second green control. */
+.location-page md-list.usernavigation.location-online-view .presence-person .md-list-item-inner,
+.location-page md-list.usernavigation.location-online-view .presence-person .md-list-item-inner > div {
+  align-items:center !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  align-self:center !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person-copy p:last-child {
+  display:block !important;
+  overflow:hidden;
+  margin:0 !important;
+  color:#aaa7b8 !important;
+  font-size:10px !important;
+  line-height:1.35 !important;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 /* iPhone 14 Pro Max (430 CSS px): the toolbar has four fixed controls.
  * Let the place title use only the remaining space and truncate as one
  * deliberate line instead of letting individual letters collide. */
