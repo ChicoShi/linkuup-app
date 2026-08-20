@@ -165,14 +165,30 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.changeSetting = function(setting) {
 		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
-		SettingsSrvc.changeSetting(setting, setting.value, setting.acl)['catch'](function(gwsMessage){
+		SettingsSrvc.changeSetting(setting, setting.value, setting.acl).then(function() {
+			setting.initialValue = setting.value;
+			setting.initialACL = setting.acl;
+		}, function(gwsMessage) {
 			setting.value = setting.initialValue;
 			setting.acl = setting.initialACL;
 			ErrorSrvc.showError(gwsMessage, 'Settings');
-		}).then(function() {
-			setting.initialValue = setting.value;
-			setting.initialACL = setting.acl;
 		});
+	};
+
+	/* Native date/time controls do not consistently emit a useful blur event on
+	 * mobile browsers. Save their completed value from ng-change instead. */
+	$scope.changeDateSetting = function(setting) {
+		var inputType = setting.renderer && setting.renderer.input_type;
+		if (inputType === 'date' || inputType === 'time' || inputType === 'datetime-local') {
+			$scope.changeSetting(setting);
+		}
+	};
+
+	$scope.blurSetting = function(setting) {
+		var inputType = setting.renderer && setting.renderer.input_type;
+		if (inputType !== 'date' && inputType !== 'time' && inputType !== 'datetime-local') {
+			$scope.changeSetting(setting);
+		}
 	};
 	
 	$scope.$on('lup-inited', $scope.init);

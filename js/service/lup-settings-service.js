@@ -19,7 +19,7 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	SettingsSrvc.settingVar = function(setting) {
 		const config = SettingsSrvc.setting(setting);
 		const val = config.options.var !== undefined && config.options.var !== null ? config.options.var : config.options.selected;
-		console.log('SettingsSrvc.settingVar()', setting, val);
+		// console.log('SettingsSrvc.settingVar()', setting, val);
 		return val;
 	}
 	
@@ -32,16 +32,45 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		for (var module in cache) {
 			var settings = cache[module];
 			if (settings[setting]) {
-				console.log("SettingsSrvc.setting()", setting, settings[setting]);
+				// console.log("SettingsSrvc.setting()", setting, settings[setting]);
 				settings[setting].module = module;
 				return settings[setting];
 			}
 		}
 		console.error("SettingsSrvc.setting() yields null", setting);
 	};
+
+	/** Convert browser date controls to the compact wire format PHP expects. */
+	SettingsSrvc.valueForTransport = function(setting, value) {
+		var inputType = setting.renderer && setting.renderer.input_type;
+		if (!inputType || !(value instanceof Date) || isNaN(value.getTime())) {
+			return value;
+		}
+		var twoDigits = function(number) { return String(number).padStart(2, '0'); };
+		var date = value.getFullYear() + '-' + twoDigits(value.getMonth() + 1) + '-' + twoDigits(value.getDate());
+		var time = twoDigits(value.getHours()) + ':' + twoDigits(value.getMinutes());
+		if (inputType === 'date') {
+			return date;
+		}
+		if (inputType === 'time') {
+			return time;
+		}
+		if (inputType === 'datetime-local') {
+			return date + 'T' + time;
+		}
+		return value;
+	};
 	
 	SettingsSrvc.changeSetting = function(setting, value, relation) {
+		debugger;
 		var config = typeof setting === 'string' ? SettingsSrvc.setting(setting) : setting;
+		value = SettingsSrvc.valueForTransport(config, value);
+		// A value change must not be rejected just because its unchanged ACL is
+		// currently stricter than the profile default. Only put ACL data on the
+		// wire when the user actually changed it.
+		if (relation === config.initialACL) {
+			relation = null;
+		}
 		var gwsMessage = new GWS_Message().cmd(0x0107).sync();
 		var module = config.module;
 		var key = config.name || setting;
@@ -52,7 +81,11 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		if (relation !== undefined && relation !== null) {
 			gwsMessage.writeString(relation);
 		}
-		return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
+		// Settings are loaded through HTTP and can outlive a reconnect.  Ensure
+		// the binary write has a live socket instead of silently rejecting it.
+		return WebsocketSrvc.withConnection().then(function() {
+			return WebsocketSrvc.sendBinary(gwsMessage);
+		}).then(function(){
 			config.options = config.options || {};
 			config.options.var = value;
 			config.options.selected = value;

@@ -63,7 +63,21 @@ service('GDTRendererSrvc', function() {
 		if (!setting.renderer || setting.renderer.input_type === undefined) {
 			return value;
 		}
-		return this.dateValue(value, setting.renderer.input_type);
+		var inputType = setting.renderer.input_type;
+		var normalized = this.dateValue(value, inputType);
+		if (typeof normalized !== 'string') {
+			return normalized;
+		}
+		var match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/);
+		if (!match) {
+			return normalized;
+		}
+		if (inputType === 'date' || inputType === 'datetime-local') {
+			return new Date(
+				Number(match[1]), Number(match[2]) - 1, Number(match[3]),
+				Number(match[4] || 0), Number(match[5] || 0));
+		}
+		return normalized;
 	};
 
 	this.dateValue = function(value, inputType) {
