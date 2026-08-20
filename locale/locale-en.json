@@ -11,6 +11,7 @@
 "err_no_guest_avatar": "Only members are allowed to set their avatar.",
 "err_no_connection": "The chatserver connection could not be established.",
 "err_position_permission_denied": "Location access is blocked. Allow location access for LinkUUp in your browser settings and try again.",
+"ERR_OWN_AVATAR_ONLY": "You can only change your own profile picture.",
 "err_position_unavailable": "Your location could not be determined. Check that location services are enabled and try again.",
 "err_position_timeout": "Determining your location took too long. Check your connection and try again.",
 

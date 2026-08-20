@@ -146,24 +146,32 @@ angular.module('LUP').config(function($routeProvider) {
 	// Avatar Upload //
 	///////////////////
 	$scope.canUploadProfile = function() {
-		let user = $scope.data.ownUser;
-		if ( (!user) || (!user.isSelf()) ) {
+		// The rendered profile, not merely the signed-in account, decides whether
+		// an upload control may exist. Otherwise a foreign profile could briefly
+		// expose the current user's Flow uploader while the route is changing.
+		let profileUser = $scope.data.user;
+		let ownUser = $scope.data.ownUser;
+		if (!profileUser || !ownUser || !profileUser.isSelf() || profileUser.id() !== ownUser.id()) {
 			return false;
 		}
-		if ( (!ConfigSrvc.guestAvatars()) && (user.isGuest()) ) {
+		if ( (!ConfigSrvc.guestAvatars()) && (ownUser.isGuest()) ) {
 			return false;
 		}
 		return true;
 	};
 	
 	$scope.clickAvatarError = function() {
-		if ($scope.data.ownUser.isSelf()) {
+		if ($scope.data.user && $scope.data.user.isSelf() && $scope.data.ownUser && $scope.data.ownUser.isGuest()) {
 			ErrorSrvc.showError($translate.instant('err_no_guest_avatar'), 'Avatar');
 		}
 	};
 	
 	$scope.onFileUploaded = function($file, $flow, $msg) {
 		console.log('ProfileCtrl.onFileUploaded()', $file, $flow, $msg);
+		if (!$scope.canUploadProfile()) {
+			$flow.removeFile($file);
+			return $q.reject($translate.instant('ERR_OWN_AVATAR_ONLY'));
+		}
 		return $scope.sendAvatarUploadCommand($file.uniqueIdentifier).then(function(response) {
 			$flow.removeFile($file);
 			return $scope.avatarUploadSuccess(response);
@@ -172,6 +180,9 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.sendAvatarUploadCommand = function(flowIdentifier) {
 		console.log('ProfileCtrl.sendAvatarUploadCommand()');
+		if (!$scope.canUploadProfile()) {
+			return $q.reject($translate.instant('ERR_OWN_AVATAR_ONLY'));
+		}
 		var gwsMessage = new GWS_Message().cmd(0x0402).sync() // Upload Form
 		gwsMessage.writeString(flowIdentifier || '');
 		return WebsocketSrvc.sendBinary(gwsMessage);

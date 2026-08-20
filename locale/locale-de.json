@@ -13,6 +13,7 @@
 "err_no_connection": "Die Verbindung zum Chatserver kann nicht hergestellt werden.",
 "err_position_permission_denied": "Der Standortzugriff ist blockiert. Erlauben Sie LinkUUp den Standortzugriff in den Browser-Einstellungen und versuchen Sie es erneut.",
 "err_position_unavailable": "Ihr Standort konnte nicht ermittelt werden. Prüfen Sie, ob die Standortdienste aktiviert sind, und versuchen Sie es erneut.",
+"ERR_OWN_AVATAR_ONLY": "Du kannst nur dein eigenes Profilbild ändern.",
 "err_position_timeout": "Die Standortermittlung hat zu lange gedauert. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
 
 "HELP_LOCATIONS": "Hier findest du alle Locations in deiner Nähe<br/>Du kannst nur Chats beitreten wenn du in der nähe bist.",
