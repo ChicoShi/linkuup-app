@@ -25,6 +25,18 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'module_' + module.toLowerCase();
 	};
 
+	/* The backend delivers settings by module.  Keep that technically correct
+	 * grouping, but give each group a human-recognisable landmark in the UI. */
+	$scope.groupMeta = function(module) {
+		var groups = {
+			User: {icon: 'person_outline', tone: 'identity'},
+			Date: {icon: 'schedule', tone: 'time'},
+			Friends: {icon: 'group', tone: 'social'},
+			LinkUUp: {icon: 'location_on', tone: 'local'},
+		};
+		return groups[module] || {icon: 'tune', tone: 'general'};
+	};
+
 	$scope.enumLabel = function(value) {
 		return value;
 	};

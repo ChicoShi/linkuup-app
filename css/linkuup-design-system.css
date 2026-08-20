@@ -3860,6 +3860,149 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* Profile settings are a personal control panel, not a raw list of backend
+   modules.  One quiet ambient field stays visible through every transparent
+   surface; the icons only orient the user and never compete with a control. */
+.settings-page > md-content {
+  position:relative;
+  isolation:isolate;
+  overflow-x:hidden;
+  background:
+    radial-gradient(ellipse 72% 28% at 102% 8%,rgba(111,175,245,.16),transparent 70%),
+    radial-gradient(ellipse 58% 22% at -8% 42%,rgba(145,104,225,.11),transparent 72%),
+    linear-gradient(155deg,#151a2a 0%,#0d1322 56%,#101629 100%) !important;
+}
+.settings-page > md-content::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  opacity:.52;
+  background:
+    radial-gradient(circle at 15% 18%,rgba(180,223,255,.30) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 76% 31%,rgba(190,161,255,.24) 0 1px,transparent 1.7px),
+    linear-gradient(119deg,transparent 0 30%,rgba(128,192,255,.08) 30.1% 30.25%,transparent 30.35% 100%);
+  background-size:137px 149px,181px 203px,100% 100%;
+}
+.settings-page .lup-settings-list {
+  max-width:740px;
+  padding:16px 14px 36px;
+  background:transparent !important;
+}
+.settings-page .lup-settings-profile-visibility {
+  position:relative;
+  margin:0 0 20px;
+}
+.settings-page .lup-settings-profile-divider { display:none !important; }
+.settings-page .lup-settings-group { position:relative; margin:0 0 25px; }
+.settings-page .lup-settings-group::before {
+  content:'';
+  position:absolute;
+  top:25px;
+  bottom:-16px;
+  left:23px;
+  width:1px;
+  background:linear-gradient(to bottom,rgba(163,210,255,.34),rgba(163,210,255,.06));
+  pointer-events:none;
+}
+.settings-page .lup-settings-group:last-child::before { bottom:18px; }
+.settings-page .lup-settings-group-heading {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:39px;
+  margin:0 2px 8px;
+}
+.settings-page .lup-settings-group-heading .md-subheader {
+  display:block;
+  min-height:0;
+  margin:0 !important;
+  padding:0 !important;
+  color:#d8e7fa !important;
+  font-size:10px;
+  font-weight:820;
+  letter-spacing:.14em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+.settings-page .settings-group-mark,
+.settings-page .settings-field-mark {
+  display:grid;
+  flex:0 0 auto;
+  place-items:center;
+  width:36px;
+  height:36px;
+  border:1px solid rgba(181,215,255,.24);
+  border-radius:13px 13px 13px 5px;
+  background:linear-gradient(145deg,rgba(157,206,255,.16),rgba(111,91,201,.09));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 7px 14px rgba(1,8,25,.13);
+  color:#bce4ff;
+}
+.settings-page .settings-group-mark .material-icons { font-size:19px; }
+.settings-page .settings-field-mark {
+  width:31px;
+  height:31px;
+  margin-right:11px;
+  border-radius:10px 10px 10px 4px;
+  border-color:rgba(183,213,255,.16);
+  background:rgba(129,171,226,.08);
+  box-shadow:none;
+  color:#a4cbe9;
+}
+.settings-page .settings-field-mark .material-icons { font-size:16px; }
+.settings-page .settings-field-mark-quiet { opacity:.88; }
+.settings-page .settings-group-time .settings-group-mark { color:#cad0ff; border-color:rgba(194,192,255,.29); }
+.settings-page .settings-group-social .settings-group-mark { color:#b7e8df; border-color:rgba(160,229,211,.25); }
+.settings-page .settings-group-local .settings-group-mark { color:#b9dcff; border-color:rgba(156,205,255,.28); }
+.settings-page .lup-settings-list md-list-item.md-2-line {
+  min-height:72px;
+  margin:7px 0 7px 47px;
+  padding:8px 13px 8px 10px;
+  border:1px solid rgba(197,221,255,.115) !important;
+  border-radius:16px 16px 16px 7px;
+  background:linear-gradient(118deg,rgba(143,182,226,.095),rgba(255,255,255,.025) 68%,rgba(126,100,204,.055)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 9px 20px rgba(1,8,24,.11);
+}
+.settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; }
+.settings-page .lup-settings-list md-list-item.md-2-line:hover {
+  transform:translateY(-1px);
+  border-color:rgba(172,213,255,.34) !important;
+  background:linear-gradient(118deg,rgba(116,176,232,.16),rgba(143,109,222,.09) 72%) !important;
+}
+.settings-page .lup-settings-list .md-list-item-text { min-width:0; }
+.settings-page .lup-settings-list .md-list-item-text h3 {
+  overflow:hidden;
+  color:#f2f7ff !important;
+  font-size:13px;
+  font-weight:720;
+  line-height:1.22;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.settings-page .lup-settings-list .lup-setting-controls { gap:7px; margin-left:7px; }
+.settings-page .lup-settings-list md-select {
+  min-width:116px;
+  border-color:rgba(183,215,255,.22);
+  border-radius:10px;
+  background:rgba(9,16,30,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+@media (max-width:420px) {
+  .settings-page .lup-settings-list { padding:13px 11px 30px; }
+  .settings-page .lup-settings-group { margin-bottom:21px; }
+  .settings-page .lup-settings-group::before { left:19px; }
+  .settings-page .settings-group-mark { width:32px; height:32px; border-radius:11px 11px 11px 4px; }
+  .settings-page .settings-group-mark .material-icons { font-size:17px; }
+  .settings-page .lup-settings-list md-list-item.md-2-line { min-height:67px; margin-left:38px; padding-right:8px; padding-left:8px; }
+  .settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; }
+  .settings-page .settings-field-mark { width:27px; height:27px; margin-right:7px; }
+  .settings-page .settings-field-mark .material-icons { font-size:14px; }
+  .settings-page .lup-settings-list .md-list-item-text h3 { font-size:12px; }
+  .settings-page .lup-settings-list md-select { min-width:94px; max-width:42vw; }
+}
+@media (prefers-reduced-motion:reduce) { .settings-page .lup-settings-list md-list-item.md-2-line { transition:none; } }
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
