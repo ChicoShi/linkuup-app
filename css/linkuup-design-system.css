@@ -3925,6 +3925,48 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
 .query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
 
+/* Inbox geometry: Angular Material's md-secondary used absolute positioning
+   and the avatar directive kept a 32px inner image. Both are reset here. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:10px 12px !important;
+}
+.notification .notification-panel .inbox-thread-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  align-self:center !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 12px 0 0 !important;
+  padding:0 !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar {
+  display:block !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar .img,
+.notification .notification-panel .inbox-thread-avatar .lup-avatar span {
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.notification .notification-panel .inbox-thread-copy { min-width:0 !important; }
+.notification .notification-panel .inbox-thread-open.md-secondary,
+.notification .notification-panel .inbox-thread-open {
+  position:static !important;
+  right:auto !important;
+  margin:0 0 0 auto !important;
+}
+
 /* Exact alignment for direct messages. The avatar directive renders a nested
    .img layer, so it must be sized explicitly instead of inheriting the old
    32px avatar inset. This keeps the picture geometrically centred. */
@@ -7222,6 +7264,15 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (min-width:560px) { .location-page md-list.usernavigation .presence-actions .presence-action { width:auto !important; min-width:33px !important; padding:0 8px !important; }.location-page md-list.usernavigation .presence-actions .presence-action span { display:inline !important; font-size:9px !important; font-weight:800 !important; } }
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
+
+/* Final inbox geometry: content to the edge, avatar centred, forum control
+   fixed at the far right instead of Material's old secondary offset. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card { display:flex !important; align-items:center !important; width:100% !important; margin:0 !important; padding:10px 12px !important; }
+.notification .notification-panel .inbox-thread-avatar { display:block !important; flex:0 0 42px !important; align-self:center !important; width:42px !important; height:42px !important; margin:0 12px 0 0 !important; padding:0 !important; }
+.notification .notification-panel .inbox-thread-avatar .lup-avatar { display:block !important; width:42px !important; height:42px !important; margin:0 !important; padding:0 !important; overflow:hidden !important; }
+.notification .notification-panel .inbox-thread-avatar .lup-avatar .img,.notification .notification-panel .inbox-thread-avatar .lup-avatar span { top:0 !important; left:0 !important; width:100% !important; height:100% !important; margin:0 !important; }
+.notification .notification-panel .inbox-thread-copy { min-width:0 !important; }
+.notification .notification-panel .inbox-thread-open.md-secondary,.notification .notification-panel .inbox-thread-open { position:static !important; right:auto !important; margin:0 0 0 auto !important; }
 
 /* Query layout wins against every legacy message selector above. */
 .query-page .query-message-card { display:flex !important; align-items:center !important; width:100% !important; min-height:62px !important; margin:0 !important; padding:10px 13px !important; gap:12px !important; }
