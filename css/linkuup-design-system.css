@@ -6367,6 +6367,12 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .profile-section-nav button > * { position:relative; z-index:1; }
 .profile-page .profile-section-nav button.active .material-icons { color:#fbf9ff; text-shadow:0 0 13px rgba(194,181,255,.72); }
 .profile-page .profile-section-nav button.active span { color:#fbfaff; text-shadow:0 0 10px rgba(184,171,255,.42); }
+.profile-page .profile-section-nav button:first-child.active::before,
+.profile-page .profile-section-nav button:nth-child(2).active::before { opacity:1 !important; }
+.profile-page .profile-section-nav button:first-child.active .material-icons,
+.profile-page .profile-section-nav button:nth-child(2).active .material-icons { color:#fbf9ff !important; text-shadow:0 0 13px rgba(194,181,255,.72) !important; }
+.profile-page .profile-section-nav button:first-child.active span,
+.profile-page .profile-section-nav button:nth-child(2).active span { color:#fbfaff !important; text-shadow:0 0 10px rgba(184,171,255,.42) !important; }
 .profile-page .profile-ambient-route { position:absolute; display:block; border:1px solid rgba(147,198,255,.09); border-radius:50%; }
 .profile-page .profile-ambient-route-one { top:5%; right:-43%; width:112%; height:31%; transform:rotate(-24deg); }
 .profile-page .profile-ambient-route-two { top:42%; left:-47%; width:107%; height:25%; border-color:rgba(182,147,255,.075); transform:rotate(19deg); }
