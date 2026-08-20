@@ -38,36 +38,6 @@ angular.module('LUP').config(function($routeProvider) {
 	// tabs prevents an empty-grid flash and needless websocket round trips.
 	$scope.data.galleryLoadedFor = null;
 	$scope.data.galleryImages = [];
-	$scope.data.profileActivitySignal = false;
-	$scope.signalProfileActivity = function() {
-		$scope.data.profileActivitySignal = true;
-		$timeout(function() {
-			$scope.data.profileActivitySignal = false;
-		}, 4200);
-	};
-	$scope.syncProfileActivity = function(user) {
-		if (!user || !window.localStorage) {
-			return;
-		}
-		var key = 'lup-profile-stats-' + user.id();
-		var current = {
-			locations: Number(user.visits()) || 0,
-			ups: Number(user.likes()) || 0,
-			friends: Number(user.friends()) || 0,
-			cuddles: Number(user.cuddles()) || 0,
-		};
-		try {
-			var previous = JSON.parse(window.localStorage.getItem(key) || 'null');
-			if (previous && (current.locations > previous.locations || current.ups > previous.ups ||
-				current.friends > previous.friends || current.cuddles > previous.cuddles)) {
-				$scope.signalProfileActivity();
-			}
-			window.localStorage.setItem(key, JSON.stringify(current));
-		}
-		catch (error) {
-			console.warn('Could not store profile activity snapshot.', error);
-		}
-	};
 	$scope.init = function() {
 		console.log('ProfileCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
@@ -89,7 +59,6 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.galleryReady = false;
 		}
 		$scope.data.user = user;
-		$scope.syncProfileActivity(user);
 		$scope.data.profileGroups = [];
 		// The legacy help-read websocket command can reject on newer backends and
 		// surface an unhelpful "undefined" dialog. Profile loading must not depend
@@ -130,9 +99,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		$scope.data.profileUpWorking = true;
-		LikeSrvc.likeUser(user).then(function() {
-			$scope.signalProfileActivity();
-		}).finally(function() {
+		LikeSrvc.likeUser(user).finally(function() {
 			$timeout(function() {
 				$scope.data.profileUpWorking = false;
 			}, 440);
