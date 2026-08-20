@@ -5811,7 +5811,14 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 /* Each pull marker keeps its own quiet signal line. It extends the physical
    cord upward just enough to connect the icon to its meaning, without adding
    another visible card border. */
-.profile-page .user-top-information .profile-stat-pull::before { width:1px; height:18px; top:4px; opacity:.82; }
+.profile-page .user-top-information .profile-stat-pull::before {
+  width:1px;
+  height:calc(18px + var(--lup-up-pull,0px));
+  top:4px;
+  z-index:1;
+  opacity:.92;
+  will-change:height;
+}
 .profile-page .user-top-information .profile-stat-pull.stat-locations::before { background:linear-gradient(to bottom,rgba(191,170,255,.10),rgba(174,143,255,.96) 54%,rgba(174,143,255,.20)); box-shadow:0 0 9px rgba(171,140,255,.52); }
 .profile-page .user-top-information .profile-stat-pull.stat-ups::before { background:linear-gradient(to bottom,rgba(255,224,132,.10),rgba(255,205,100,.96) 54%,rgba(255,205,100,.20)); box-shadow:0 0 9px rgba(255,202,91,.48); }
 .profile-page .user-top-information .profile-stat-pull.stat-friends::before { background:linear-gradient(to bottom,rgba(147,221,255,.10),rgba(112,198,247,.96) 54%,rgba(112,198,247,.20)); box-shadow:0 0 9px rgba(89,188,246,.48); }
@@ -5836,6 +5843,9 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .user-top-information .profile-stat-pull .profile-stat-signal {
   z-index:20 !important;
   top:4px;
+}
+.profile-page .user-top-information .profile-stat-pull.is-released::before {
+  animation:none !important;
 }
 
 /* The shared list-avatar stylesheet keeps an old two-pixel inset. Inside the
