@@ -266,7 +266,9 @@ angular.module('LUP').config(function($routeProvider) {
 		// 0x1160 returns room id, number of visits and last visit timestamp.
 		// The old profile code expected an unrelated paginated HTTP response,
 		// so it discarded the persisted websocket data after every reload.
-		while (gwsMessage.hasMore()) {
+		// 0x1160 can carry an empty legacy tail. A visit always contains three
+		// uint32 values, so never begin parsing unless the full record is present.
+		while (gwsMessage.LENGTH - gwsMessage.INDEX >= 12) {
 			var roomId = gwsMessage.read32();
 			var count = gwsMessage.read32();
 			var lastVisit = gwsMessage.read32();
@@ -277,6 +279,9 @@ angular.module('LUP').config(function($routeProvider) {
 				visit_at: lastVisit,
 				visit_count: count,
 			}));
+		}
+		if (gwsMessage.hasMore()) {
+			console.warn('Ignoring incomplete profile-course payload tail.');
 		}
 		$scope.data.course.page = 1;
 		$scope.data.course.nPages = 1;

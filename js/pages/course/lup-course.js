@@ -38,6 +38,12 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.init = function() {
 		console.log('CourseCtrl.init()', $routeParams.id);
+		// Both the app init and view-content events reach this controller. A course
+		// request is enough; doing it twice made malformed legacy tails fail twice.
+		if ($scope.data.courseInitialized || !$scope.data.authenticated) {
+			return;
+		}
+		$scope.data.courseInitialized = true;
 		if ($scope.data.authenticated) {
 			$scope.loadCourses($routeParams.id);
 		}
@@ -60,13 +66,17 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.loadedCourse = function(gwsMessage) {
 		console.log('CourseCtrl.loadedCourse()', gwsMessage);
-		while(gwsMessage.hasMore()) {
+		// A visit is exactly three uint32 values. Do not attempt a partial tail.
+		while (gwsMessage.LENGTH - gwsMessage.INDEX >= 12) {
 			var visit = {
 				room: RoomSrvc.getOrCreate(gwsMessage.read32()),
 				visit_count: gwsMessage.read32(),
 				visit_last: gwsMessage.read32(),
 			};
 			$scope.data.course.push(visit);
+		}
+		if (gwsMessage.hasMore()) {
+			console.warn('Ignoring incomplete course payload tail.');
 		}
 		$scope.updateCourseStats();
 	};
