@@ -410,6 +410,13 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////////////////////////
 	$scope.gotoUserCourse = function(user) {
 		console.log('ProfileCtrl.gotoUserCourse()', user);
+		// Your own visit history is always private-to-you and the server's
+		// optional ACL preflight can reject an empty legacy response. Go directly
+		// to the course view for the signed-in profile; the course endpoint itself
+		// remains the authoritative access check for every other profile.
+		if (user && user.isSelf()) {
+			return $scope.gotoCourse(user);
+		}
 		CourseSrvc.getCourseAllowed(user).then(
 				$scope.gotoCourse.bind($scope, user),
 				ErrorSrvc.websocketMaybeJSONError.bind(ErrorSrvc)
