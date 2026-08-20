@@ -106,37 +106,72 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 	};
 	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
-	$scope.profilePullFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profilePullFriends = function() {
+		var user = $scope.data.user;
+		if (!user) {
+			return;
+		}
+		// Friend lists are private by default. The Friends marker on another
+		// profile is therefore a deliberate relationship gesture, not a route
+		// into a list the visitor may not see.
+		if (user.isSelf()) {
+			return $scope.gotoUserFriends(user);
+		}
+		if (!user.isMember() || !$scope.data.ownUser || !$scope.data.ownUser.isMember()) {
+			return;
+		}
+		if (user.isFriend()) {
+			return FriendSrvc.removeFriend(user);
+		}
+		if (user.JSON.relation_pending) {
+			return FriendSrvc.cancelFriendRequest(user);
+		}
+		return FriendSrvc.addFriend(user);
+	};
 	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	$scope.profilePullMessage = function() { return $scope.openQuery($scope.data.user); };
 	// A short tap remains navigation. Pulling is the deliberate gesture; it can
 	// perform a distinct action (the Up) without hiding any profile overview.
 	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profileOpenUps = function() { return $scope.gotoLikes($scope.data.user); };
-	$scope.profileOpenFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profileOpenFriends = function() {
+		if ($scope.data.user && $scope.data.user.isSelf()) {
+			return $scope.gotoUserFriends($scope.data.user);
+		}
+	};
 	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	$scope.profileOpenMessage = function() { return $scope.openQuery($scope.data.user); };
 	
 	///////////////////
 	// Avatar Upload //
 	///////////////////
 	$scope.canUploadProfile = function() {
-		let user = $scope.data.ownUser;
-		if ( (!user) || (!user.isSelf()) ) {
+		// The rendered profile, not merely the signed-in account, decides whether
+		// an upload control may exist. Otherwise a foreign profile could briefly
+		// expose the current user's Flow uploader while the route is changing.
+		let profileUser = $scope.data.user;
+		let ownUser = $scope.data.ownUser;
+		if (!profileUser || !ownUser || !profileUser.isSelf() || profileUser.id() !== ownUser.id()) {
 			return false;
 		}
-		if ( (!ConfigSrvc.guestAvatars()) && (user.isGuest()) ) {
+		if ( (!ConfigSrvc.guestAvatars()) && (ownUser.isGuest()) ) {
 			return false;
 		}
 		return true;
 	};
 	
 	$scope.clickAvatarError = function() {
-		if ($scope.data.ownUser.isSelf()) {
+		if ($scope.data.user && $scope.data.user.isSelf() && $scope.data.ownUser && $scope.data.ownUser.isGuest()) {
 			ErrorSrvc.showError($translate.instant('err_no_guest_avatar'), 'Avatar');
 		}
 	};
 	
 	$scope.onFileUploaded = function($file, $flow, $msg) {
 		console.log('ProfileCtrl.onFileUploaded()', $file, $flow, $msg);
+		if (!$scope.canUploadProfile()) {
+			$flow.removeFile($file);
+			return $q.reject($translate.instant('ERR_OWN_AVATAR_ONLY'));
+		}
 		return $scope.sendAvatarUploadCommand($file.uniqueIdentifier).then(function(response) {
 			$flow.removeFile($file);
 			return $scope.avatarUploadSuccess(response);
@@ -145,6 +180,9 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.sendAvatarUploadCommand = function(flowIdentifier) {
 		console.log('ProfileCtrl.sendAvatarUploadCommand()');
+		if (!$scope.canUploadProfile()) {
+			return $q.reject($translate.instant('ERR_OWN_AVATAR_ONLY'));
+		}
 		var gwsMessage = new GWS_Message().cmd(0x0402).sync() // Upload Form
 		gwsMessage.writeString(flowIdentifier || '');
 		return WebsocketSrvc.sendBinary(gwsMessage);
@@ -188,11 +226,32 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.buildProfileGroups = function(profile) {
+		/* “About me” is a public profile, not a mirror of account settings.
+		 * Privacy rules, activity preferences and friendship policies belong in
+		 * Settings.  Only voluntary, person-facing facts are useful to a visitor. */
+		var profileSections = {
+			User: {label: 'PROFILE_SECTION_BASICS', sort: 10, fields: ['gender']},
+			LinkUUp: {label: 'PROFILE_SECTION_LOCAL', sort: 20, fields: ['lup_status', 'lup_state', 'lup_city']},
+			About: {label: 'PROFILE_SECTION_ABOUT', sort: 30, fields: [
+				'lup_eyecolor', 'lup_height', 'lup_interest', 'lup_sexo',
+				'lup_has_pet', 'lup_drinks', 'lup_smokes', 'lup_sporty', 'lup_religion'
+			]},
+		};
+		var fieldOrder = {};
+		Object.keys(profileSections).forEach(function(section) {
+			profileSections[section].fields.forEach(function(key, index) {
+				fieldOrder[key] = {section: section, sort: index};
+			});
+		});
 		var groups = {};
 		var cache = SettingsSrvc.CACHE || {};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
+				var placement = fieldOrder[key];
+				if (!placement) {
+					continue;
+				}
 				// Legacy display helpers initialise a few optional enums with "0".
 				// The profile frame still knows that they were actually absent, and
 				// an absent field must not turn into a visible "not specified" row.
@@ -206,13 +265,16 @@ angular.module('LUP').config(function($routeProvider) {
 				if (!hasValue && !error) {
 					continue;
 				}
-				groups[module] = groups[module] || {
-					module: module,
-					sort: Number(setting.module_sort) || 1000,
+				var section = profileSections[placement.section];
+				groups[placement.section] = groups[placement.section] || {
+					module: placement.section,
+					label: section.label,
+					sort: section.sort,
 					fields: [],
 				};
-				groups[module].fields.push({
+				groups[placement.section].fields.push({
 					key: key,
+					sort: placement.sort,
 					setting: setting,
 					value: profile.JSON[key],
 					error: error,
@@ -226,7 +288,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return a.sort - b.sort || a.module.localeCompare(b.module);
 		});
 		result.forEach(function(group) {
-			group.fields.sort(function(a, b) { return a.key.localeCompare(b.key); });
+			group.fields.sort(function(a, b) { return a.sort - b.sort; });
 		});
 		return result;
 	};
@@ -336,6 +398,7 @@ angular.module('LUP').config(function($routeProvider) {
 				encodeURIComponent(gallery.id()) + "&edit=1&_ajax=1&_fmt=json&_cors=" +
 				encodeURIComponent(window.LUP_CONFIG.cors);
 			$scope.data.galleryReady = !!gallery.id();
+			$scope.data.gallery = gallery;
 			// Keep the gallery image objects intact. Besides their display URLs,
 			// they carry the file id required by the delete command.
 			$scope.data.galleryImages = gallery.IMAGES;
@@ -346,7 +409,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.onGalleryUploaded = function($file, $flow, $msg) {
 		console.log('GalleryCtrl.onGalleryUploaded()');
-		return GallerySrvc.onGalleryUpload($file.uniqueIdentifier).
+		return GallerySrvc.onGalleryUpload($file.uniqueIdentifier, $scope.data.gallery).
 			then(function(response) {
 				// Allow selecting the very same file again after it was removed
 				// from the gallery; otherwise Flow treats it as a duplicate.
@@ -396,7 +459,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.reallyDeleteGalleryImage = function(image) {
 		console.log('GalleryCtrl.deleteGalleryImage()', image);
-		return GallerySrvc.deleteImage(image).then(
+		return GallerySrvc.deleteImage(image, $scope.data.gallery).then(
 				$scope.showGallery.bind($scope, true),
 				ErrorSrvc.websocketFormError);
 	};
@@ -465,6 +528,7 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 			var threshold = 26;
 			var maximum = 42;
 			var pointerInteraction = false;
+			var pullEffect = attrs.lupPullEffect || '';
 
 			var openOverview = function() {
 				scope.$applyAsync(function() {
@@ -488,10 +552,13 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 					// visible cord reaches its latch even if the finger stopped early.
 					setPull(maximum);
 					element.addClass('is-released');
+					if (pullEffect) {
+						element.addClass(pullEffect);
+					}
 					scope.$applyAsync(function() { scope.$eval(attrs.lupPullAction); });
 					$timeout(function() {
 						setPull(0);
-						element.removeClass('is-released');
+						element.removeClass('is-released ' + pullEffect);
 					}, 460, false);
 				}
 				else {

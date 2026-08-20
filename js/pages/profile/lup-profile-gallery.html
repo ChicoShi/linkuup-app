@@ -1,27 +1,27 @@
 <md-content layout="column" flex=100 style="height: 100%;">
-  <div class="error" ng-if="data.galleryError">{{data.galleryError}}</div>
-  <div class="gallery-upload"
-       ng-if="data.user.isSelf() && data.user.isMember() && data.galleryReady"
-       ng-controller="GDOUploadCtrl"
-       ng-init="initConfig({maxSize: 10485760, success:'onGalleryUploaded'})"
-       flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
-       flow-file-progress="onFlowProgress($file, $flow, $message);"
-       flow-file-success="onFlowSuccess($file, $flow, $message);"
-       flow-file-removed="onRemoveFile($file, $flow);"
-       flow-file-error="onFlowError($file, $flow, $message);"
-       flow-files-submitted="onFlowSubmitted($flow);">
-    <button type="button" class="gallery-upload-button" flow-btn aria-label="Bild zur Galerie hinzufügen">
-      <i class="material-icons">add_photo_alternate</i><span>Foto hinzufügen</span>
-    </button>
-    <div id="gallery-list" class="gallery-grid">
+  <div class="error" ng-if="data.galleryError">{{'GALLERY_LOAD_ERROR'|translate}}</div>
+  <div class="gallery-grid" ng-if="data.galleryReady">
+    <div class="gallery-upload"
+         ng-if="data.user.isSelf() && data.user.isMember()"
+         ng-controller="GDOUploadCtrl"
+         ng-init="initConfig({maxSize: 10485760, success:'onGalleryUploaded'})"
+         flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
+         flow-file-progress="onFlowProgress($file, $flow, $message);"
+         flow-file-success="onFlowSuccess($file, $flow, $message);"
+         flow-file-removed="onRemoveFile($file, $flow);"
+         flow-file-error="onFlowError($file, $flow, $message);"
+         flow-files-submitted="onFlowSubmitted($flow);">
       <button type="button" class="gallery-add-tile" flow-btn
-        aria-label="Bild zur Galerie hinzufügen">
-        <i class="material-icons">add_a_photo</i><span>Foto hinzufügen</span>
-      </button>
-      <button type="button" class="gallery-tile" ng-repeat="image in data.galleryImages track by image.id()"
-        ng-click="data.user.isSelf() && deleteGalleryImage(image)" aria-label="Galeriebild öffnen">
-        <img alt="{{::image.description()}}" ng-src="{{::image.thumbURL()}}" loading="lazy" decoding="async" />
+        aria-label="{{'GALLERY_ADD_PHOTO'|translate}}">
+        <i class="material-icons">add_a_photo</i><span>{{'GALLERY_ADD_PHOTO'|translate}}</span>
       </button>
     </div>
+    <button type="button" class="gallery-tile" ng-repeat="image in data.galleryImages track by image.id()"
+      ng-click="data.user.isSelf() && deleteGalleryImage(image)" aria-label="{{'GALLERY_OPEN_PHOTO'|translate}}">
+      <img alt="{{::image.description()}}" ng-src="{{::image.thumbURL()}}" loading="lazy" decoding="async" />
+    </button>
+  </div>
+  <div class="gallery-empty" ng-if="data.galleryReady && !data.galleryLoading && !data.galleryImages.length">
+    <i class="material-icons">photo_library</i><span>{{'GALLERY_EMPTY'|translate}}</span>
   </div>
 </md-content>

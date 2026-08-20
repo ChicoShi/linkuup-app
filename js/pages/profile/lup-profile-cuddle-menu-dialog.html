@@ -1,11 +1,20 @@
 <md-dialog class="lup-cuddles-dialog" aria-label="{{'CUDDLES'|translate}}">
   <md-dialog-content>
-    <div class="lup-cuddles-dialog-content">
+    <div class="lup-cuddles-dialog-content highfive-choice-content">
       <button class="lup-cuddles-close" type="button" ng-click="cancel()" aria-label="{{'CLOSE'|translate}}"><i class="material-icons">close</i></button>
-      <div class="lup-cuddles-heart"><i class="material-icons">favorite</i></div>
-      <h2>{{'CUDDLES'|translate}}</h2>
-      <button class="md-raised md-primary" type="button" ng-click="data.showQRCode(); ok()"><i class="material-icons">qr_code_2</i> {{'CUDDLES_SHOW_QR'|translate}}</button>
-      <button class="md-raised" type="button" ng-click="data.showCuddles(); ok()"><i class="material-icons">favorite</i> {{'CUDDLES_SHOW_MINE'|translate}}</button>
+      <div class="highfive-choice-mark" aria-hidden="true"><i class="material-icons">front_hand</i></div>
+      <span class="highfive-choice-eyebrow">{{'HIGHFIVE_EYEBROW'|translate}}</span>
+      <h2>{{'HIGHFIVE_MENU_TITLE'|translate}}</h2>
+      <p>{{'HIGHFIVE_MENU_COPY'|translate}}</p>
+      <div class="highfive-choice-actions">
+        <button class="highfive-choice-card highfive-choice-qr" type="button" ng-click="data.showQRCode(); ok()">
+          <i class="material-icons" aria-hidden="true">qr_code_2</i><span><strong>{{'HIGHFIVE_MENU_QR_TITLE'|translate}}</strong><small>{{'HIGHFIVE_MENU_QR_COPY'|translate}}</small></span><i class="material-icons highfive-choice-arrow" aria-hidden="true">arrow_forward</i>
+        </button>
+        <button class="highfive-choice-card highfive-choice-history" type="button" ng-click="data.showCuddles(); ok()">
+          <i class="material-icons" aria-hidden="true">history</i><span><strong>{{'HIGHFIVE_MENU_HISTORY_TITLE'|translate}}</strong><small>{{'HIGHFIVE_MENU_HISTORY_COPY'|translate}}</small></span><i class="material-icons highfive-choice-arrow" aria-hidden="true">arrow_forward</i>
+        </button>
+      </div>
+      <span class="highfive-choice-note"><i class="material-icons" aria-hidden="true">verified_user</i>{{'HIGHFIVE_MENU_NOTE'|translate}}</span>
     </div>
   </md-dialog-content>
 </md-dialog>

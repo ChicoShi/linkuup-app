@@ -1,34 +1,21 @@
-<md-dialog class="lup-friend-delete-dialog" aria-label="Freund entfernen">
+<md-dialog class="lup-friend-delete-dialog" aria-label="{{'FRIEND_DELETE_TITLE'|translate}}">
   <form ng-cloak>
-
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <span class="friend-delete-mark" aria-hidden="true"><i class="material-icons">group_remove</i></span>
-        <h2 translate="DLGT_DELETE_FRIEND"></h2>
-        <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
-          <i class="material-icons">close</i>
-        </md-button>
-      </div>
-    </md-toolbar>
-
     <md-dialog-content>
-      <div class="md-dialog-content friend-delete-content">
-        <div class="friend-delete-person">
-          <lup-avatar ng-user="data.friend"></lup-avatar>
-          <div>
-            <strong>{{data.friend.displayName()}}</strong>
-            <span>Deine Freundesliste bleibt jederzeit unter deiner Kontrolle.</span>
-          </div>
+      <div class="md-dialog-content friend-delete-content friend-delete-content--calm">
+        <button type="button" class="friend-delete-close" ng-click="cancel()" aria-label="{{'CLOSE'|translate}}"><i class="material-icons">close</i></button>
+        <div class="friend-delete-connection" aria-hidden="true">
+          <span></span><lup-avatar ng-user="data.friend"></lup-avatar><i class="material-icons">link_off</i>
         </div>
-        <p translate="DLGP_DELETE_FRIEND" translate-value-friend="{{data.friend.displayName()}}"></p>
+        <span class="friend-delete-eyebrow">{{'FRIEND_DELETE_EYEBROW'|translate}}</span>
+        <h2>{{'FRIEND_DELETE_TITLE'|translate}}</h2>
+        <p class="friend-delete-question">{{'FRIEND_DELETE_COPY'|translate:{friend:data.friend.displayName()} }}</p>
+        <div class="friend-delete-note"><i class="material-icons" aria-hidden="true">history</i><span>{{'FRIEND_DELETE_CONTROL'|translate}}</span></div>
       </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
-      <md-button class="friend-delete-cancel" ng-click="cancel()" translate="BTN_CANCEL"></md-button>
-      <span flex></span>
-      <md-button class="friend-delete-confirm" ng-click="ok()"><i class="material-icons">person_remove_alt_1</i><span translate="BTN_DELETE"></span></md-button>
+    <md-dialog-actions class="friend-delete-actions friend-delete-actions--calm" layout="column">
+      <md-button class="friend-delete-cancel" ng-click="cancel()">{{'FRIEND_DELETE_KEEP'|translate}}</md-button>
+      <md-button class="friend-delete-confirm" ng-click="ok()"><i class="material-icons">link_off</i><span>{{'FRIEND_DELETE_CONFIRM'|translate}}</span></md-button>
     </md-dialog-actions>
     
   </form>

@@ -3,6 +3,15 @@ angular.module('LUP')
 .service('ErrorSrvc', function($q, $mdDialog, ExceptionSrvc, LoadingSrvc, DialogSrvc) {
 	
 	var ErrorSrvc = this;
+	ErrorSrvc.isProximityError = function(text) {
+		// Websocket releases have returned this restriction both as a translation
+		// and as the symbolic server key. Keep the recognition deliberately broad
+		// so a locale change cannot fall back to the legacy browser-looking alert.
+		return /err_user_not_near|(?:nicht|not).{0,56}(?:n[aä]he|near)/i.test(String(text || ''));
+	};
+	ErrorSrvc.showProximityError = function() {
+		return DialogSrvc.confirm('js/dialogs/lup-proximity-dialog.html', {}).catch(function() {});
+	};
 
 	// --- Dialogs --- //
 	ErrorSrvc.showMessage = function(text, title) {
@@ -17,6 +26,9 @@ angular.module('LUP')
 	
 	ErrorSrvc.showError = function(text, title) {
 		console.log(title, text);
+		if (ErrorSrvc.isProximityError(text)) {
+			return ErrorSrvc.showProximityError();
+		}
 		if (title === 'Protocol error' && (text === undefined || text === null || text === 'undefined' || text === 'ERR: undefined')) {
 			console.warn('Ignoring empty legacy protocol error.');
 			return $q.resolve();
