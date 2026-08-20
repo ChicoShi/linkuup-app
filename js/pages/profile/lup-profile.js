@@ -108,6 +108,12 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profilePullFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
 	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	// A short tap remains navigation. Pulling is the deliberate gesture; it can
+	// perform a distinct action (the Up) without hiding any profile overview.
+	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
+	$scope.profileOpenUps = function() { return $scope.gotoLikes($scope.data.user); };
+	$scope.profileOpenFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	
 	///////////////////
 	// Avatar Upload //
@@ -451,6 +457,13 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 			var pull = 0;
 			var threshold = 26;
 			var maximum = 42;
+			var pointerInteraction = false;
+
+			var openOverview = function() {
+				scope.$applyAsync(function() {
+					scope.$eval(attrs.lupPullOpen || attrs.lupPullAction);
+				});
+			};
 
 			var setPull = function(value) {
 				pull = Math.max(0, Math.min(maximum, value));
@@ -476,7 +489,9 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 				}
 				else {
 					setPull(0);
+					openOverview();
 				}
+				$timeout(function() { pointerInteraction = false; }, 0, false);
 			};
 
 			element.on('pointerdown', function(event) {
@@ -484,6 +499,7 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 					return;
 				}
 				pointerId = event.pointerId;
+				pointerInteraction = true;
 				startY = event.clientY;
 				setPull(0);
 				if (node.setPointerCapture) {
@@ -502,6 +518,11 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 			element.on('click', function(event) {
 				event.preventDefault();
 				event.stopPropagation();
+				// Pointer taps already opened their overview on pointerup. Keyboard
+				// activation reaches this handler directly and stays accessible.
+				if (!pointerInteraction) {
+					openOverview();
+				}
 			});
 			scope.$on('$destroy', function() {
 				element.off('pointerdown pointermove pointerup pointercancel click');
