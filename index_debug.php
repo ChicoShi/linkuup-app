@@ -44,6 +44,7 @@ $min = LUPConfig::$MIN;
   <link rel="stylesheet" href="css/linkuup-discovery-v2.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-venue-final.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-online-core.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-mira.css<?=$v?>">
 
 </head>
 
