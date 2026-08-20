@@ -5921,6 +5921,10 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   margin:0 !important;
   padding:0 !important;
   overflow:visible !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  border-radius:50% !important;
+  background:rgba(255,255,255,.06) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09) !important;
 }
 .lup-top-bar .md-toolbar-tools .navnotification {
   display:grid !important;
@@ -5929,7 +5933,9 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   width:36px !important;
   height:36px !important;
   margin:0 !important;
-  border-radius:50% !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background-color:transparent !important;
   background-image:none !important;
   background-size:0 !important;
   color:#d9eaff !important;
