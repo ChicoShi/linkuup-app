@@ -4968,6 +4968,23 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   font:inherit;
 }
 .profile-page .user-top-information .profile-stat-pull:hover { transform:none; }
+.profile-page .user-top-information .profile-stat-pull::before {
+  top:8px;
+  right:auto;
+  left:50%;
+  width:2px;
+  height:calc(15px + var(--lup-up-pull,0px));
+  transform:translateX(-50%);
+  border-radius:3px;
+  background:linear-gradient(to bottom,rgba(227,232,255,.78),rgba(164,180,235,.30));
+  box-shadow:0 0 7px rgba(161,190,255,.24);
+  color:transparent;
+  opacity:.9;
+  transition:height 120ms linear,box-shadow 160ms ease,background 160ms ease;
+}
+.profile-page .user-top-information .profile-stat-pull::after { opacity:.075; }
+.profile-page .profile-stat-pull.is-pulling::before { box-shadow:0 0 11px rgba(194,213,255,.48); }
+.profile-page .profile-stat-pull.is-released::before { animation:lup-profile-cord-return 460ms cubic-bezier(.2,.92,.26,1); }
 .profile-page .profile-stat-pull .profile-stat-pull-lever {
   position:relative;
   display:grid;
@@ -4984,17 +5001,7 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   transition:transform 180ms cubic-bezier(.2,.8,.25,1),box-shadow 180ms ease,filter 180ms ease;
 }
 .profile-page .profile-stat-pull .profile-stat-pull-lever::after {
-  content:'';
-  position:absolute;
-  top:-13px;
-  left:50%;
-  width:3px;
-  height:15px;
-  margin:0;
-  transform:translateX(-50%);
-  border-radius:3px;
-  background:rgba(219,224,255,.36);
-  box-shadow:0 0 8px rgba(184,199,255,.28);
+  display:none;
 }
 .profile-page .profile-stat-pull .profile-stat-pull-lever .material-icons { margin:0; color:inherit; font-size:24px; text-shadow:0 1px 0 rgba(0,0,0,.18); }
 .profile-page .profile-stat-pull.stat-locations .profile-stat-pull-lever { background:linear-gradient(145deg,#9c7bff,#635fc7); }
@@ -5010,6 +5017,12 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   49% { transform:translate3d(0,22px,0); }
   72% { transform:translate3d(0,4px,0); }
   100% { transform:translate3d(0,0,0); }
+}
+@keyframes lup-profile-cord-return {
+  0% { height:57px; opacity:1; }
+  24% { height:62px; opacity:1; }
+  55% { height:35px; opacity:.92; }
+  100% { height:15px; opacity:.9; }
 }
 @media (max-width:380px) {
   .profile-page .profile-stat-pull .profile-stat-pull-lever { width:38px; height:38px; border-radius:13px; }

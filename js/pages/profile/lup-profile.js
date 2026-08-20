@@ -458,11 +458,19 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 				}
 				var accepted = pull >= threshold;
 				pointerId = null;
-				setPull(0);
 				if (accepted) {
+					// Complete the physical pull before the spring-back animation so the
+					// visible cord reaches its latch even if the finger stopped early.
+					setPull(maximum);
 					element.addClass('is-released');
 					scope.$applyAsync(function() { scope.$eval(attrs.lupPullAction); });
-					$timeout(function() { element.removeClass('is-released'); }, 460, false);
+					$timeout(function() {
+						setPull(0);
+						element.removeClass('is-released');
+					}, 460, false);
+				}
+				else {
+					setPull(0);
 				}
 			};
 
