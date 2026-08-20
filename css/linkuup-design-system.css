@@ -6388,10 +6388,12 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .profile-ambient-node-one { top:15%; right:21%; opacity:.42; }
 .profile-page .profile-ambient-node-two { top:54%; left:14%; background:rgba(205,177,255,.54); box-shadow:0 0 12px rgba(173,126,255,.35); opacity:.31; }
 .profile-page .profile-ambient-node-three { bottom:17%; right:29%; opacity:.25; }
-.profile-page .profile-ambient-signal { position:absolute; top:23%; right:12%; display:block; width:7px; height:7px; border-radius:50%; background:#c0eaff; box-shadow:0 0 0 4px rgba(99,183,246,.06),0 0 16px rgba(95,195,255,.70); animation:lup-profile-route-signal 20s ease-in-out infinite; }
-@keyframes lup-profile-route-signal { 0%,100% { transform:translate3d(0,0,0); opacity:.22; } 22% { opacity:.66; } 47% { transform:translate3d(-106px,58px,0); opacity:.76; } 62% { opacity:.28; } 80% { transform:translate3d(-38px,126px,0); opacity:.45; } }
+.profile-page .profile-ambient-focus { position:absolute; top:92px; left:50%; display:block; width:172px; height:76px; border:1px solid rgba(157,211,255,.13); border-radius:50%; box-shadow:0 0 26px rgba(88,170,243,.11),inset 0 0 20px rgba(161,130,242,.04); transform:translateX(-50%) rotate(-12deg); animation:lup-profile-focus-breathe 8s ease-in-out infinite; }
+.profile-page .profile-ambient-signal { position:absolute; top:23%; right:12%; display:block; width:8px; height:8px; border-radius:50%; background:#c9efff; box-shadow:0 0 0 4px rgba(99,183,246,.07),0 0 18px rgba(95,195,255,.78); animation:lup-profile-route-signal 18s ease-in-out infinite; }
+@keyframes lup-profile-focus-breathe { 0%,100% { opacity:.28; transform:translateX(-50%) rotate(-12deg) scale(.96); } 50% { opacity:.66; transform:translateX(-50%) rotate(-12deg) scale(1.035); } }
+@keyframes lup-profile-route-signal { 0%,100% { transform:translate3d(0,0,0); opacity:.28; } 22% { opacity:.78; } 47% { transform:translate3d(-106px,58px,0); opacity:.88; } 62% { opacity:.33; } 80% { transform:translate3d(-38px,126px,0); opacity:.57; } }
 @media (max-width:480px) { .profile-page .profile-ambient-route-one { right:-58%; width:132%; height:27%; } .profile-page .profile-ambient-route-two { left:-62%; width:132%; } .profile-page .profile-ambient-route-three { right:-61%; width:130%; } .profile-page .profile-ambient-signal { top:20%; right:8%; } }
-@media (prefers-reduced-motion:reduce) { .profile-page .profile-ambient-signal { animation:none; } }
+@media (prefers-reduced-motion:reduce) { .profile-page .profile-ambient-signal,.profile-page .profile-ambient-focus { animation:none; } }
 /* Browsers must not draw a white native focus rectangle around “Alle”.
    Keyboard users still receive the same quiet LinkUUp focus signal. */
 .nearby .location-categories button:focus { outline:0 !important; }
