@@ -5848,19 +5848,34 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   animation:none !important;
 }
 
-/* High Fives are QR-confirmed encounters, not a pink reaction. Their marker
-   therefore shares the clear blue-white QR language and stays legible at a glance. */
-.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#83d9ff; }
+/* Five profile paths, five meanings: location violet, Up gold, friends blue,
+   QR-confirmed High Fives mint, messages soft violet. */
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#79e0bd; }
 .profile-page .user-top-information .profile-stat-pull.stat-cuddles .profile-stat-pull-lever {
-  border-color:rgba(214,245,255,.48) !important;
-  background:linear-gradient(145deg,#62c5ee,#596dcc 68%,#765eb5) !important;
-  box-shadow:0 8px 0 rgba(40,72,143,.45),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.42) !important;
+  border-color:rgba(202,255,231,.46) !important;
+  background:linear-gradient(145deg,#64cda6,#4d9c9b 68%,#557caf) !important;
+  box-shadow:0 8px 0 rgba(33,100,91,.45),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.42) !important;
   color:#f6fcff !important;
 }
 .profile-page .user-top-information .profile-stat-pull.stat-cuddles .profile-stat-pull-lever .material-icons {
   color:#f7fdff !important;
   font-size:23px !important;
-  text-shadow:0 1px 1px rgba(25,53,117,.35),0 0 9px rgba(218,246,255,.28) !important;
+  text-shadow:0 1px 1px rgba(20,75,70,.35),0 0 9px rgba(211,255,239,.28) !important;
+}
+.profile-page .user-top-information .countitem.stat-cuddles {
+  border-color:rgba(104,220,179,.26) !important;
+  background:linear-gradient(145deg,rgba(70,190,151,.16),rgba(78,126,184,.07)) !important;
+}
+.profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#c0abff; }
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever {
+  border-color:rgba(219,207,255,.38) !important;
+  background:linear-gradient(145deg,#a486ec,#636cc7) !important;
+  box-shadow:0 8px 0 rgba(59,54,131,.43),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.35) !important;
+  color:#fbf9ff !important;
+}
+.profile-page .user-top-information .stat-message {
+  border-color:rgba(181,161,255,.27) !important;
+  background:linear-gradient(150deg,rgba(135,108,230,.20),rgba(88,97,181,.08)) !important;
 }
 .profile-page .user-top-information .countitem .count {
   display:block;
