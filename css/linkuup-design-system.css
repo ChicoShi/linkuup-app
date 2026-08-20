@@ -5923,13 +5923,18 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   overflow:visible !important;
 }
 .lup-top-bar .md-toolbar-tools .navnotification {
-  display:block !important;
+  display:grid !important;
+  place-items:center !important;
   box-sizing:border-box !important;
   width:36px !important;
   height:36px !important;
   margin:0 !important;
   border-radius:50% !important;
-  background-size:20px !important;
+  background-image:none !important;
+  background-size:0 !important;
+  color:#d9eaff !important;
+  font-size:21px !important;
+  line-height:1 !important;
 }
 .lup-top-bar .md-toolbar-tools .navnotification-count {
   position:absolute !important;
