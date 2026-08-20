@@ -7310,3 +7310,16 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   transform:translateY(-50%) !important;
 }
 .notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container { display:flex !important; align-items:center !important; }
+
+/* The inbox must own the full panel width; otherwise Material measures a
+   shrink-to-fit list and the action can never reach the visible right edge. */
+.notification .notification-panel,
+.notification .notification-panel > ng-include,
+.notification .notification-panel > ng-include > md-content,
+.notification .notification-panel .inbox-message-list,
+.notification .notification-panel .inbox-message-list > md-list-item.inbox-thread-card {
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
