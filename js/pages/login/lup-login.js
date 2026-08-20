@@ -16,7 +16,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LoginCtrl', function($rootScope, $scope, $location, $mdDialog,
-		AuthSrvc, WebsocketSrvc, UserSrvc, ErrorSrvc, ConfigSrvc, LoadingSrvc) {
+		$translate, AuthSrvc, WebsocketSrvc, UserSrvc, ErrorSrvc, ConfigSrvc, LoadingSrvc) {
 
 	$scope.data.title = 'TITLE_LOGIN';
 
