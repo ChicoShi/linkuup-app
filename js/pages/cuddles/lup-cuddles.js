@@ -24,7 +24,15 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.loadedUser = function(user) {
 		$scope.data.cuddleUser = user;
-		return CuddleSrvc.getUserCuddles(user).then($scope.loadedCuddles, ErrorSrvc.websocketMaybeJSONError);
+		return CuddleSrvc.getUserCuddles(user).then($scope.loadedCuddles, $scope.cuddlesUnavailable);
+	};
+
+	/* Older/local websocket backends do not yet expose the encounter-history
+	 * command. Keep the High-Five view usable and quiet until the server-side
+	 * ledger is present instead of showing a technical protocol popup. */
+	$scope.cuddlesUnavailable = function(gwsMessage) {
+		console.warn('CuddlesCtrl: encounter history is not available on this server yet.', gwsMessage);
+		$scope.data.cuddles = [];
 	};
 
 	$scope.loadedCuddles = function(gwsMessage) {
