@@ -183,12 +183,14 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.loadedOwnComment = function(gwsMessage) {
 		console.log('LocationCtrl.loadedOwnComment()', gwsMessage.dump());
-		var roomId = gwsMessage.read32();
-		var userId = gwsMessage.read32();
-		$scope.data.rating = gwsMessage.read8();
-		$scope.data.commentText = gwsMessage.readString();
-		$scope.data.commentInput = gwsMessage.readString();
-		$scope.data.likes = gwsMessage.read32();
+		var ownComment = CommentSrvc.parseOwnCommentMessage(gwsMessage);
+		if (!ownComment) {
+			return;
+		}
+		$scope.data.rating = ownComment.rating;
+		$scope.data.commentText = ownComment.commentText;
+		$scope.data.commentInput = ownComment.commentInput;
+		$scope.data.likes = ownComment.likes;
 	};
 	
 	$scope.saveComment = function() {
