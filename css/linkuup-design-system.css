@@ -5961,6 +5961,91 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .query-page .chatbottom input::placeholder { color:#a9b3cd; }.query-page .chatbottom input:focus { border:0 !important; box-shadow:0 0 0 2px rgba(137,184,255,.14) !important; }
 .query-page .chatbottom input:-webkit-autofill,.query-page .chatbottom input:-webkit-autofill:hover,.query-page .chatbottom input:-webkit-autofill:focus { -webkit-text-fill-color:#f4f6ff !important; -webkit-box-shadow:0 0 0 1000px #282d43 inset !important; transition:background-color 9999s ease-in-out 0s; }
 
+/* Private conversation — each message gets one continuous, edge-to-edge row.
+   The avatar is a real column now, so it can never drift inside the text. */
+.query-page .chat-msgs { padding:0 !important; }
+.query-page .chat-msgs .msgline { width:100%; }
+.query-page .chat-msgs .lup-msg {
+  width:100%;
+  margin:0 !important;
+  border-bottom:1px solid rgba(192,210,247,.075);
+}
+.query-page .chat-msgs .lup-msg:last-child { border-bottom:0; }
+.query-page .query-message-card {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  min-height:60px;
+  box-sizing:border-box;
+  margin:0;
+  padding:11px 14px;
+}
+.query-page .query-message-avatar,
+.query-page .query-message-avatar .avatar,
+.query-page .query-message-avatar img {
+  display:block;
+  flex:0 0 38px;
+  width:38px !important;
+  height:38px !important;
+  margin:0 !important;
+  border-radius:50%;
+}
+.query-page .query-message-avatar {
+  overflow:hidden;
+  border:1px solid rgba(191,215,255,.22);
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  cursor:pointer;
+}
+.query-page .query-message-content { flex:1 1 auto; min-width:0; }
+.query-page .query-message-meta {
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  min-width:0;
+  margin:0 0 3px;
+}
+.query-page .query-message-meta .name {
+  overflow:hidden;
+  color:#e8efff !important;
+  font-size:11px;
+  font-weight:750;
+  line-height:1.2;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.query-page .query-message-meta .time {
+  flex:0 0 auto;
+  color:#8e9bb7 !important;
+  font-size:9px;
+  line-height:1.2;
+  white-space:nowrap;
+}
+.query-page .query-message-content .message {
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#cbd5e7 !important;
+  font-size:12px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.query-page .query-message-content .messager-inner { display:inline; float:none !important; padding:0 !important; }
+.query-page .query-message-content lup-msg-state { display:inline-flex; margin-left:5px; vertical-align:middle; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse; }
+.query-page .lup-own-msg .query-message-meta { justify-content:flex-end; }
+.query-page .lup-own-msg .query-message-content { text-align:right; }
+.query-page .lup-own-msg .query-message-content .message { color:#e4ebff !important; }
+@media (max-width:360px) {
+  .query-page .query-message-card { gap:9px; padding:10px 11px; }
+  .query-page .query-message-avatar,.query-page .query-message-avatar .avatar,.query-page .query-message-avatar img { flex-basis:34px; width:34px !important; height:34px !important; }
+}
+
 /* Friends shares LinkUUp's sense of place: one quiet map field and one
    orientation pin.  It is deliberately behind every actionable surface. */
 .friends-page > md-content { position:relative; isolation:isolate; overflow-x:hidden; background:radial-gradient(ellipse at 92% 9%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.13),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%); }
