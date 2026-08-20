@@ -47,26 +47,10 @@
 			<div class="countitems profile-stats">
 				<button type="button" class="countitem stat-locations profile-stat-pull" lup-pull-action="profilePullLocations()" lup-pull-open="profileOpenLocations()"><span class="profile-stat-pull-lever"><i class="material-icons">place</i></span><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></button>
 				<button type="button" class="countitem stat-ups profile-stat-pull profile-up-pull" lup-pull-action="profilePullUp()" lup-pull-open="profileOpenUps()" ng-class="{'is-working': data.profileUpWorking}"><span class="profile-stat-pull-lever profile-up-pull-lever"><i class="material-icons">bolt</i></span><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></button>
-				<button type="button" class="countitem stat-friends profile-stat-pull" lup-pull-action="profilePullFriends()" lup-pull-open="profileOpenFriends()"><span class="profile-stat-pull-lever"><i class="material-icons">groups</i></span><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></button>
+				<button type="button" class="countitem stat-friends profile-stat-pull" lup-pull-action="profilePullFriends()" lup-pull-open="profileOpenFriends()" lup-pull-effect="is-friend-gesture"><span class="profile-stat-pull-lever"><i class="material-icons">groups</i></span><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></button>
 				<button type="button" class="countitem stat-cuddles profile-stat-pull" lup-pull-action="profilePullCuddles()" lup-pull-open="profileOpenCuddles()" title="{{'CUDDLES'|translate}}"><span class="profile-stat-pull-lever"><i class="material-icons">qr_code_2</i></span><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></button>
+				<button type="button" ng-if="!data.user.isSelf()" class="countitem stat-message" aria-label="{{'PROFILE_ACTION_MESSAGE'|translate}}" title="{{'PROFILE_ACTION_MESSAGE'|translate}}" ng-click="openQuery(data.user)"><span class="profile-stat-pull-lever"><i class="material-icons">chat_bubble</i></span><span class="count count-action">+</span><span class="item">{{'PROFILE_ACTION_MESSAGE'|translate}}</span></button>
 			</div>
-		</div>
-	 
-	  <div class="profile-actions" ng-if="!data.user.isSelf()" aria-label="Profilaktionen">
-		  <div class="content-center profile-contact-rail">
-			<button class="profile-social-action profile-social-message" type="button" aria-label="{{'PROFILE_ACTION_MESSAGE'|translate}}" title="{{'PROFILE_ACTION_MESSAGE'|translate}}" ng-click="openQuery(data.user)">
-				<i class="material-icons">chat_bubble</i><span>{{'PROFILE_ACTION_MESSAGE'|translate}}</span>
-			</button>
-			<button ng-if="(!data.user.isFriend()) && (!data.user.JSON.relation_pending) && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-friend" type="button" aria-label="{{'PROFILE_ACTION_ADD_FRIEND'|translate}}" title="{{'PROFILE_ACTION_ADD_FRIEND'|translate}}" ng-click="FriendSrvc.addFriend(data.user)">
-				<i class="material-icons">person_add_alt_1</i><span>{{'PROFILE_ACTION_ADD_FRIEND'|translate}}</span>
-			</button>
-			<button ng-if="(!data.user.isFriend()) && data.user.JSON.relation_pending && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-pending" type="button" aria-label="{{'PROFILE_ACTION_PENDING'|translate}}" title="{{'PROFILE_ACTION_PENDING'|translate}}" ng-click="FriendSrvc.cancelFriendRequest(data.user)">
-				<i class="material-icons">schedule</i><span>{{'PROFILE_ACTION_PENDING'|translate}}</span>
-			</button>
-			<button ng-if="data.user.isFriend() && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-remove" type="button" aria-label="{{'PROFILE_ACTION_REMOVE_FRIEND'|translate}}" title="{{'PROFILE_ACTION_REMOVE_FRIEND'|translate}}" ng-click="FriendSrvc.removeFriend(data.user)">
-				<i class="material-icons">person_remove_alt_1</i><span>{{'PROFILE_ACTION_REMOVE_FRIEND'|translate}}</span>
-			</button>
-		</div>
 		</div>
 	
 	<div class="cb"></div>

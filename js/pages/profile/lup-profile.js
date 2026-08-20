@@ -106,13 +106,38 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 	};
 	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
-	$scope.profilePullFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profilePullFriends = function() {
+		var user = $scope.data.user;
+		if (!user) {
+			return;
+		}
+		// Friend lists are private by default. The Friends marker on another
+		// profile is therefore a deliberate relationship gesture, not a route
+		// into a list the visitor may not see.
+		if (user.isSelf()) {
+			return $scope.gotoUserFriends(user);
+		}
+		if (!user.isMember() || !$scope.data.ownUser || !$scope.data.ownUser.isMember()) {
+			return;
+		}
+		if (user.isFriend()) {
+			return FriendSrvc.removeFriend(user);
+		}
+		if (user.JSON.relation_pending) {
+			return FriendSrvc.cancelFriendRequest(user);
+		}
+		return FriendSrvc.addFriend(user);
+	};
 	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	// A short tap remains navigation. Pulling is the deliberate gesture; it can
 	// perform a distinct action (the Up) without hiding any profile overview.
 	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profileOpenUps = function() { return $scope.gotoLikes($scope.data.user); };
-	$scope.profileOpenFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profileOpenFriends = function() {
+		if ($scope.data.user && $scope.data.user.isSelf()) {
+			return $scope.gotoUserFriends($scope.data.user);
+		}
+	};
 	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	
 	///////////////////
@@ -465,6 +490,7 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 			var threshold = 26;
 			var maximum = 42;
 			var pointerInteraction = false;
+			var pullEffect = attrs.lupPullEffect || '';
 
 			var openOverview = function() {
 				scope.$applyAsync(function() {
@@ -488,10 +514,13 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 					// visible cord reaches its latch even if the finger stopped early.
 					setPull(maximum);
 					element.addClass('is-released');
+					if (pullEffect) {
+						element.addClass(pullEffect);
+					}
 					scope.$applyAsync(function() { scope.$eval(attrs.lupPullAction); });
 					$timeout(function() {
 						setPull(0);
-						element.removeClass('is-released');
+						element.removeClass('is-released ' + pullEffect);
 					}, 460, false);
 				}
 				else {
