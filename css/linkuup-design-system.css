@@ -6307,15 +6307,22 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 /* One continuous profile field: the route stays behind avatar, about and
    gallery alike.  It never receives pointer events or affects document flow. */
 .profile-page .user-profile-page {
+  position:relative;
+  isolation:isolate;
   overflow-x:hidden;
   background:
     radial-gradient(ellipse 90% 24% at 9% 7%,rgba(88,147,220,.13),transparent 66%),
     radial-gradient(ellipse 74% 28% at 92% 53%,rgba(121,87,205,.12),transparent 68%),
     linear-gradient(160deg,#111a2d 0%,#12182b 49%,#101522 100%) !important;
 }
-.profile-page .avatar-bg { position:relative; isolation:isolate; overflow:hidden; }
-.profile-page .avatar-bg > :not(.profile-ambient-map) { position:relative; z-index:1; }
-.profile-page .avatar-bg .profile-ambient-map { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.profile-page .user-profile-page > :not(.profile-ambient-map) { position:relative; z-index:1; }
+.profile-page .profile-ambient-map { position:absolute; z-index:0; inset:0; min-height:100%; overflow:hidden; pointer-events:none; }
+.profile-page .avatar-bg { overflow:hidden; background:radial-gradient(ellipse 72% 58% at 50% 19%,rgba(96,164,232,.12),transparent 70%) !important; }
+.profile-page .user-top-information .countitem { background:linear-gradient(145deg,rgba(255,255,255,.115),rgba(255,255,255,.025) 44%,rgba(30,37,65,.07)) !important; }
+.profile-page .profile-section-nav { background:rgba(15,21,38,.20) !important; backdrop-filter:blur(2px); }
+.profile-page .information-tabs,.profile-page .information-tabs md-content,.profile-page .information-tabs .md-tab-content { background:transparent !important; }
+.profile-page .profile-information.profile-about-single .profile-story-card { background:rgba(19,24,41,.18) !important; }
+.profile-page .profile-gallery,.profile-page .gallery-container { background:transparent !important; }
 .profile-page .profile-ambient-route { position:absolute; display:block; border:1px solid rgba(147,198,255,.09); border-radius:50%; }
 .profile-page .profile-ambient-route-one { top:5%; right:-43%; width:112%; height:31%; transform:rotate(-24deg); }
 .profile-page .profile-ambient-route-two { top:42%; left:-47%; width:107%; height:25%; border-color:rgba(182,147,255,.075); transform:rotate(19deg); }

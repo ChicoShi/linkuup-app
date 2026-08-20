@@ -5,6 +5,16 @@
   <ng-include class="left-sidebar"src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
 
   <md-content layout="column" class="user-profile-page" flex>
+
+    <div class="profile-ambient-map" aria-hidden="true">
+      <span class="profile-ambient-route profile-ambient-route-one"></span>
+      <span class="profile-ambient-route profile-ambient-route-two"></span>
+      <span class="profile-ambient-route profile-ambient-route-three"></span>
+      <span class="profile-ambient-node profile-ambient-node-one"></span>
+      <span class="profile-ambient-node profile-ambient-node-two"></span>
+      <span class="profile-ambient-node profile-ambient-node-three"></span>
+      <span class="profile-ambient-signal"></span>
+    </div>
   
     <ng-include class="inc-top-profile" src="'js/pages/profile/header-bar-profile.html?v='+V"></ng-include>
       
@@ -13,15 +23,6 @@
     
     <!-- Other's avatar -->
 	<div class="avatar-bg" ng-class="{'profile-online': data.user && data.user.isSelf() && data.authenticated}">
-		<div class="profile-ambient-map" aria-hidden="true">
-		  <span class="profile-ambient-route profile-ambient-route-one"></span>
-		  <span class="profile-ambient-route profile-ambient-route-two"></span>
-		  <span class="profile-ambient-route profile-ambient-route-three"></span>
-		  <span class="profile-ambient-node profile-ambient-node-one"></span>
-		  <span class="profile-ambient-node profile-ambient-node-two"></span>
-		  <span class="profile-ambient-node profile-ambient-node-three"></span>
-		  <span class="profile-ambient-signal"></span>
-		</div>
 		<div class="avatar" ng-if="!canUploadProfile()">
 		  <lup-avatar
 		   class="large-avatar"
