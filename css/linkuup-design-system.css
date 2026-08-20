@@ -3860,6 +3860,66 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* Exact alignment for direct messages. The avatar directive renders a nested
+   .img layer, so it must be sized explicitly instead of inheriting the old
+   32px avatar inset. This keeps the picture geometrically centred. */
+.query-page .query-message-avatar {
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  padding:0 !important;
+  line-height:0;
+}
+.query-page .query-message-avatar .img,
+.query-page .query-message-avatar span {
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.query-page .query-message-content {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  justify-content:center;
+  min-height:42px;
+}
+.query-page .query-message-content .message {
+  position:relative;
+  display:block !important;
+  min-height:18px;
+  padding:1px 0 2px !important;
+  text-align:left;
+}
+.query-page .query-message-content .message::after {
+  content:'';
+  position:absolute;
+  z-index:0;
+  right:0;
+  bottom:0;
+  left:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(150,197,246,.23),rgba(150,197,246,.045));
+}
+.query-page .query-message-content .messager-inner,
+.query-page .query-message-content .lup-message-state { position:relative; z-index:1; }
+.query-page .query-message-content .lup-message-state {
+  position:relative !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  display:inline-block !important;
+  width:auto;
+  height:auto;
+  margin-left:6px;
+}
+.query-page .lup-own-msg .query-message-content .message { text-align:right; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.045),rgba(150,197,246,.23)); }
+@media (max-width:360px) {
+  .query-page .query-message-avatar { flex-basis:38px !important; width:38px !important; height:38px !important; }
+}
+
 /* Inbox final geometry: let a message row reach the right content edge and
    centre its avatar in the actual row, independent of earlier legacy rules. */
 .notification .notification-panel .inbox-message-list .inbox-thread-card {
