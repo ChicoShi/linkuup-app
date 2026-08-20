@@ -7215,6 +7215,46 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .gallery-add-tile span { display:block; color:#e0efff; font:760 10px/1 Ubuntu,Roboto,Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; text-shadow:0 1px 8px rgba(32,76,142,.30); }
 .profile-page .gallery-add-tile:hover,.profile-page .gallery-add-tile:focus-visible { transform:translateY(-2px); border-color:rgba(213,239,255,.52) !important; background:linear-gradient(145deg,rgba(151,207,255,.22),rgba(139,104,224,.13) 52%,rgba(23,38,67,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 16px 30px rgba(1,8,25,.19),0 0 21px rgba(111,175,247,.12) !important; outline:0; }
 .profile-page .gallery-add-tile:hover .material-icons,.profile-page .gallery-add-tile:focus-visible .material-icons { box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 25px rgba(4,16,43,.23),0 0 15px rgba(172,221,255,.26),inset 0 1px 0 rgba(255,255,255,.50); }
+.profile-page .gallery-empty { display:grid; justify-items:center; gap:8px; margin:10px 12px 28px; padding:30px 18px; border:1px dashed rgba(184,211,255,.18); border-radius:18px; background:rgba(16,24,42,.28); color:#aab9d1; font:650 12px/1.45 Ubuntu,Roboto,Arial,sans-serif; text-align:center; }
+.profile-page .gallery-empty .material-icons { color:#b7dcff; font-size:27px; filter:drop-shadow(0 0 10px rgba(104,183,255,.28)); }
+
+/* Mobile composer safety: the visible viewport shrinks when a phone keyboard
+ * opens. Keep the message stream scrollable and the composer inside that
+ * viewport instead of letting it disappear behind the keyboard. */
+@media (max-width: 600px) {
+  .location-page > md-content,
+  .query-page > md-content {
+    height:var(--lup-viewport-height,100dvh);
+    min-height:0;
+    overflow:hidden;
+  }
+  .location-page md-tabs,
+  .location-page md-tabs-content-wrapper,
+  .location-page .md-tab-content,
+  .query-page > md-content > ng-include {
+    min-height:0 !important;
+  }
+  .location-page .location-chat-surface,
+  .query-page > md-content {
+    min-height:0 !important;
+  }
+  .location-page .location-chat-surface {
+    height:100%;
+    overflow:hidden;
+  }
+  .location-page .location-chat-surface .chat-msgs,
+  .query-page .chat-msgs {
+    min-height:0;
+    overflow-y:auto !important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .location-page .location-chat-surface .chatbottom,
+  .query-page .chatbottom {
+    flex:0 0 auto;
+    padding-bottom:max(9px,env(safe-area-inset-bottom)) !important;
+  }
+}
 
 /* Final inbox layout: messages use the whole horizontal content rail. */
 .notification .notification-panel .inbox-message-list .inbox-thread-card {

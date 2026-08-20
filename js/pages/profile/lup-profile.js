@@ -387,6 +387,7 @@ angular.module('LUP').config(function($routeProvider) {
 				encodeURIComponent(gallery.id()) + "&edit=1&_ajax=1&_fmt=json&_cors=" +
 				encodeURIComponent(window.LUP_CONFIG.cors);
 			$scope.data.galleryReady = !!gallery.id();
+			$scope.data.gallery = gallery;
 			// Keep the gallery image objects intact. Besides their display URLs,
 			// they carry the file id required by the delete command.
 			$scope.data.galleryImages = gallery.IMAGES;
@@ -397,7 +398,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.onGalleryUploaded = function($file, $flow, $msg) {
 		console.log('GalleryCtrl.onGalleryUploaded()');
-		return GallerySrvc.onGalleryUpload($file.uniqueIdentifier).
+		return GallerySrvc.onGalleryUpload($file.uniqueIdentifier, $scope.data.gallery).
 			then(function(response) {
 				// Allow selecting the very same file again after it was removed
 				// from the gallery; otherwise Flow treats it as a duplicate.
@@ -447,7 +448,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.reallyDeleteGalleryImage = function(image) {
 		console.log('GalleryCtrl.deleteGalleryImage()', image);
-		return GallerySrvc.deleteImage(image).then(
+		return GallerySrvc.deleteImage(image, $scope.data.gallery).then(
 				$scope.showGallery.bind($scope, true),
 				ErrorSrvc.websocketFormError);
 	};
