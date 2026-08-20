@@ -87,7 +87,15 @@ angular.module('LUP').config(function($routeProvider) {
 	// number; this state only locks the gesture until its request has settled.
 	$scope.profilePullUp = function() {
 		var user = $scope.data.user;
-		if (!user || user.isSelf() || $scope.data.profileUpWorking) {
+		if (!user || $scope.data.profileUpWorking) {
+			return;
+		}
+		if (user.isSelf()) {
+			var selfUpHintKey = 'lup-profile-self-up-hint';
+			if (!window.localStorage.getItem(selfUpHintKey)) {
+				window.localStorage.setItem(selfUpHintKey, '1');
+				DialogSrvc.openHTMLDialog('<p>Du kannst dir selbst keinen Up geben.</p>', 'Up');
+			}
 			return;
 		}
 		$scope.data.profileUpWorking = true;
@@ -97,6 +105,9 @@ angular.module('LUP').config(function($routeProvider) {
 			}, 440);
 		});
 	};
+	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
+	$scope.profilePullFriends = function() { return $scope.gotoUserFriends($scope.data.user); };
+	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	
 	///////////////////
 	// Avatar Upload //
@@ -425,7 +436,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 /* A small physical pull interaction for the profile Up marker. Pointer events
  * cover mouse, touch and pen without a second mobile-only event path. */
-angular.module('LUP').directive('lupPullUp', function($timeout) {
+angular.module('LUP').directive('lupPullAction', function($timeout) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs) {
@@ -450,7 +461,7 @@ angular.module('LUP').directive('lupPullUp', function($timeout) {
 				setPull(0);
 				if (accepted) {
 					element.addClass('is-released');
-					scope.$applyAsync(function() { scope.$eval(attrs.lupPullUp); });
+					scope.$applyAsync(function() { scope.$eval(attrs.lupPullAction); });
 					$timeout(function() { element.removeClass('is-released'); }, 460, false);
 				}
 			};
