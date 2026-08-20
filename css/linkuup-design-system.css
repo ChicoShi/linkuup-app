@@ -7296,3 +7296,17 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 /* The forum button stays in the row flow all the way to the right edge. */
 .notification .notification-panel .inbox-message-list .inbox-thread-card .md-list-item-inner { display:flex !important; align-items:center !important; width:100% !important; padding:0 !important; }
 .notification .notification-panel .inbox-message-list .inbox-thread-open { position:static !important; display:grid !important; flex:0 0 34px !important; align-self:center !important; width:34px !important; height:34px !important; min-width:34px !important; margin:0 0 0 auto !important; }
+
+/* Material may generate a secondary wrapper depending on template timing.
+   Anchor either form to the same physical right edge. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card { position:relative !important; padding-right:56px !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-open,
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container {
+  position:absolute !important;
+  top:50% !important;
+  right:12px !important;
+  left:auto !important;
+  margin:0 !important;
+  transform:translateY(-50%) !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container { display:flex !important; align-items:center !important; }
