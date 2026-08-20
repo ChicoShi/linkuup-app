@@ -4491,6 +4491,15 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-about-single .profile-about-me { color:#ded9e8; font-size:14px; font-weight:500; line-height:1.58; text-shadow:none; }
 .profile-page .profile-information.profile-about-single .profile-about-empty { margin:15px 0 0; padding-left:0; color:#aaa5ba; font-size:14px; }.profile-page .profile-information.profile-about-single .profile-about-empty::before { display:none; }
 
+/* Chromium lays out the old floated statistics card outside the profile flow.
+   Keep the profile header, stats, actions and section tabs as normal blocks so
+   none of them can cover the avatar or each other. */
+.profile-page .avatar-bg { min-height:286px; }
+.profile-page .user-top-information { float:none; left:auto; right:auto; margin:-57px auto 0; }
+.profile-page .profile-actions { clear:both; width:auto; min-height:48px; margin:16px auto 10px; position:relative; text-align:center; }
+.profile-page .profile-actions .content-center { display:inline-flex; align-items:center; justify-content:center; }
+.profile-page .profile-section-nav { clear:both; }
+
 /* About can be completely editorial: no separate card, simply the person's
    words on the same calm profile surface. */
 .profile-page .profile-information.profile-about-single .profile-story-card { min-height:0; padding:12px 4px 16px; border:0; border-radius:0; background:transparent !important; box-shadow:none; overflow:visible; }

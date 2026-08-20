@@ -6,11 +6,15 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	
 	FriendSrvc.addFriend = function(user) {
 		console.log('FriendSrvc.addFriend()', user);
-		var gwsMessage = new GWS_Message().cmd(0x1131).sync().write32(user.id()).write8(1);
-		var promise = WebsocketSrvc.sendBinary(gwsMessage);
-		promise['catch'](FriendSrvc.cannnotAddFriend);
-		promise.then(FriendSrvc.sentRequest.bind(FriendSrvc, user));
-		return promise;
+		// Request::createForm() expects frq_friend, frq_message and
+		// frq_relation in that order. GDT_FriendRelation is a 16-bit enum.
+		var gwsMessage = new GWS_Message().cmd(0x1131).sync()
+			.write32(user.id())
+			.writeString('')
+			.write16(1); // friend
+		return WebsocketSrvc.sendBinary(gwsMessage).then(
+			FriendSrvc.sentRequest.bind(FriendSrvc, user),
+			FriendSrvc.cannnotAddFriend);
 	};
 	
 	FriendSrvc.sentRequest = function(user) {

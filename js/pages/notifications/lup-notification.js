@@ -21,6 +21,14 @@ angular.module('LUP').config(function($routeProvider) {
 	LUPNotification['RoomSrvc'] = RoomSrvc;
 	LUPNotification.prototype.t = $translate.instant;
 
+	// Notifications may have arrived while this route was not active. Resolve
+	// those cached raw records now that their user/room services are available.
+	angular.forEach(NotificationSrvc.CACHE, function(notification) {
+		if (!notification.TYPE) {
+			notification.resolveData(true);
+		}
+	});
+
 	// Override defaults
 	$scope.data.title = "TITLE_NOTIFICATIONS";
 	

@@ -57,7 +57,12 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 						console.error('TypeSrvc.parseBinaryType: Cannot convert '+key+' which is a '+field.type);
 					} else {
 //						console.log("SET", key, value);
-						if (value instanceof Object) {
+						// Composite binary types such as GDT_Position intentionally expand
+						// into several columns. A JSON field, however, is one named value;
+						// flattening it loses that field (notably LUP_Notification.note_data).
+						if ((value instanceof Object) &&
+							(field.type !== 'GDO\\Core\\GDT_JSON') &&
+							(field.type !== 'GDO\\Core\\GDT_Array')) {
 							for (var i in value) {
 								gdo.JSON[i] = value[i];
 							}

@@ -78,8 +78,9 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 		// Parse notification via TypeSrvc into cache object
 		TypeSrvc.parseBinaryGDO(gwsMessage, "GDO\\LinkUUp\\LUP_Notification", NotificationSrvc.CACHE[id]);
 		
-		// Init html structure of notification
-		if (fresh) {
+		// A push may arrive before NotificationCtrl has attached the model
+		// resolvers. Keep the raw record then and resolve it when the page opens.
+		if ((fresh || !NotificationSrvc.CACHE[id].TYPE) && LUPNotification.UserSrvc) {
 			NotificationSrvc.CACHE[id].resolveData(recaching);
 		}
 
