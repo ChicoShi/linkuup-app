@@ -6958,6 +6958,46 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .gallery-add-tile span { display:block; color:#e0efff; font:760 10px/1 Ubuntu,Roboto,Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; text-shadow:0 1px 8px rgba(32,76,142,.30); }
 .profile-page .gallery-add-tile:hover,.profile-page .gallery-add-tile:focus-visible { transform:translateY(-2px); border-color:rgba(213,239,255,.52) !important; background:linear-gradient(145deg,rgba(151,207,255,.22),rgba(139,104,224,.13) 52%,rgba(23,38,67,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 16px 30px rgba(1,8,25,.19),0 0 21px rgba(111,175,247,.12) !important; outline:0; }
 .profile-page .gallery-add-tile:hover .material-icons,.profile-page .gallery-add-tile:focus-visible .material-icons { box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 25px rgba(4,16,43,.23),0 0 15px rgba(172,221,255,.26),inset 0 1px 0 rgba(255,255,255,.50); }
+
+/* Final inbox layout: messages use the whole horizontal content rail. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  min-height:68px !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+  padding:10px 13px 10px 12px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(192,214,242,.10) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:first-child { border-top:1px solid rgba(192,214,242,.07) !important; }
+.notification .notification-panel .inbox-thread-avatar {
+  display:grid !important;
+  place-items:center !important;
+  align-self:center !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 12px 0 0 !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar,
+.notification .notification-panel .inbox-thread-avatar .lup-avatar img {
+  display:block !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  transform:none !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28) !important;
+  outline:0 !important;
+  box-shadow:0 4px 12px rgba(2,10,29,.16) !important;
+}
+@media (max-width:360px) { .notification .notification-panel .inbox-message-list .inbox-thread-card { padding-right:10px !important; padding-left:9px !important; }.notification .notification-panel .inbox-thread-avatar,.notification .notification-panel .inbox-thread-avatar .lup-avatar,.notification .notification-panel .inbox-thread-avatar .lup-avatar img { flex-basis:38px !important; width:38px !important; height:38px !important; } }
 /* Browsers must not draw a white native focus rectangle around “Alle”.
    Keyboard users still receive the same quiet LinkUUp focus signal. */
 .nearby .location-categories button:focus { outline:0 !important; }
