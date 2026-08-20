@@ -4262,6 +4262,74 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   vertical-align:middle;
 }
 
+/* Inbox refinement: one conversation is one calm line.  The former stacked
+   card, avatar ring and action frame competed with the actual message. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  min-height:66px;
+  margin:0 14px;
+  padding:10px 6px 10px 3px;
+  border:0 !important;
+  border-bottom:1px solid rgba(192,214,242,.10) !important;
+  border-radius:0;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:first-child { border-top:1px solid rgba(192,214,242,.07) !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-card::before {
+  top:50%;
+  bottom:auto;
+  left:0;
+  width:3px;
+  height:18px;
+  border-radius:0 3px 3px 0;
+  background:transparent;
+  transform:translateY(-50%);
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:hover,
+.notification .notification-panel .inbox-message-list .inbox-thread-card:focus-within {
+  transform:none;
+  border-bottom-color:rgba(176,211,245,.20) !important;
+  background:linear-gradient(90deg,rgba(115,158,214,.075),transparent 72%) !important;
+  box-shadow:none !important;
+}
+.notification .inbox-thread-avatar {
+  width:42px;
+  height:42px;
+  margin:0 11px 0 9px;
+}
+.notification .inbox-thread-avatar .lup-avatar,
+.notification .inbox-thread-avatar .lup-avatar img {
+  width:42px;
+  height:42px;
+}
+.notification .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28);
+  border-radius:50%;
+  outline:0;
+  outline-offset:0;
+  box-shadow:0 4px 12px rgba(2,10,29,.16);
+}
+.notification .inbox-thread-live { right:-1px; bottom:0; border-color:#111a29; }
+.notification .inbox-thread-copy h4 { color:#edf4fb !important; font-size:13px !important; }
+.notification .inbox-thread-copy p { color:#a9b7ca !important; }
+.notification .inbox-thread-open {
+  width:29px;
+  height:29px;
+  min-width:29px;
+  margin-left:7px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  box-shadow:none;
+  color:#9bcbed;
+}
+.notification .inbox-thread-open:hover,.notification .inbox-thread-open:focus-visible { background:rgba(145,198,239,.10); filter:none; }
+.notification .inbox-thread-open .material-icons { font-size:17px; }
+@media (max-width:360px) {
+  .notification .notification-panel .inbox-message-list .inbox-thread-card { margin-right:10px; margin-left:10px; }
+  .notification .inbox-thread-avatar,.notification .inbox-thread-avatar .lup-avatar,.notification .inbox-thread-avatar .lup-avatar img { width:38px; height:38px; }
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
