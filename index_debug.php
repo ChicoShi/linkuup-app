@@ -159,6 +159,7 @@ $min = LUPConfig::$MIN;
   <script src="js/controller/gwf-upload-ctrl.js<?=$v?>"></script>
 
   <script src="js/pages/account/lup-account.js<?=$v?>"></script>
+	<script src="js/pages/add-room/lup-add-room.js<?=$v?>"></script>
   <script src="js/pages/debug/lup-debug.js<?=$v?>"></script>
   <script src="js/pages/login/lup-login.js<?=$v?>"></script>
   <script src="js/pages/register/lup-register.js<?=$v?>"></script>

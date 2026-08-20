@@ -198,6 +198,28 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.gotRooms(rooms);
 		}
 	});
+	$scope.$on('lup-rooms-resorted', function(event, roomId) {
+		if (!locationsInitialized || !roomId) {
+			return;
+		}
+		// Sorting must never throw the visitor back to the first card. Resolve the
+		// previously selected room in the freshly filtered rail and return Slick to
+		// that card after Angular and Slick have consumed the reordered list.
+		$timeout(function() {
+			var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
+				return room.id() === roomId;
+			});
+			if (roomIndex < 0) {
+				return; // It is intentionally hidden by the active category/search.
+			}
+			$scope.data.currentRoom = $scope.data.visibleRooms[roomIndex];
+			$scope.data.currentRoomIndex = roomIndex;
+			var $slick = getSlick();
+			if ($slick.hasClass('slick-initialized')) {
+				$slick.slick('slickGoTo', roomIndex, true);
+			}
+		}, 40);
+	});
 	$scope.$on('gwf-position-changed', function() {
 		// Distance labels are calculated live on the room model. Ensure this
 		// screen receives an Angular render immediately when GPS arrives, even if

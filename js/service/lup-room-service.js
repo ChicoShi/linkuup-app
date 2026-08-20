@@ -156,15 +156,24 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	
 	
 	RoomSrvc.sortDistance = function(a, b) {
-		if (b.inChatRange() == a.inChatRange()) {
-			return a.distance() - b.distance();
+		// Keep live RoomAdded events in exactly the same predictable order as a
+		// freshly fetched room list: chat-range first, then nearest distance. A
+		// missing GPS position must not turn the comparator into NaN/undefined,
+		// because browsers are then free to leave the newly appended room anywhere.
+		var aInRange = a.inChatRange();
+		var bInRange = b.inChatRange();
+		if (aInRange !== bInRange) {
+			return aInRange ? -1 : 1;
 		}
-		else if (b.inChatRange()) {
-			return 1;
+		var aDistance = a.distance();
+		var bDistance = b.distance();
+		aDistance = Number.isFinite(aDistance) ? aDistance : Number.POSITIVE_INFINITY;
+		bDistance = Number.isFinite(bDistance) ? bDistance : Number.POSITIVE_INFINITY;
+		if (aDistance !== bDistance) {
+			return aDistance - bDistance;
 		}
-		else if (a.inChatRange()) {
-			return -1;
-		}
+		var nameOrder = String(a.name() || '').localeCompare(String(b.name() || ''));
+		return nameOrder || (a.id() - b.id());
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {

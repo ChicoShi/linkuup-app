@@ -2,7 +2,7 @@
  * Base controller that catches some nav/auth/connection events.
  */
 angular.module('LUP').
-controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdMedia, $mdSidenav, $mdToast, $translate,
+controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $location, $mdMedia, $mdSidenav, $mdToast, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
 		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc,
@@ -386,7 +386,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		if (!window.GWF_USER.isVIP()) {
 			return ErrorSrvc.showError($translate.instant('ERR_VIP_ONLY'), $translate.instant('TITLE_ADD_ROOM'));
 		}
-		window.location.href = window.LUP_CONFIG.server + '/index.php?mo=LinkUUp&me=AddRoom';
+		return $scope.goto('/add-room');
 	};
 	$scope.gotoNavpage = function() { $scope.goto('/navigate'); };
 	$scope.gotoCityMap = function() { $scope.goto("/citymap"); };
@@ -505,8 +505,26 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		PositionSrvc.refresh();
 	};
 	angular.element(document).on('pointerup.lupPosition touchend.lupPosition focus.lupPosition', refreshPositionAfterInteraction);
+	// GPS distance is calculated by the room model, so periodically re-sort the
+	// existing lists without asking the server for the same room catalogue again.
+	// This keeps an open discovery screen honest even when the browser's movement
+	// threshold did not trigger a complete nearby-room reload.
+	var roomResortInterval = $interval(function() {
+		if (!$scope.data.inited || !Array.isArray($scope.data.rooms)) {
+			return;
+		}
+		var selectedRoomId = $scope.data.currentRoom ? $scope.data.currentRoom.id() : 0;
+		PositionSrvc.refresh();
+		$scope.data.rooms.sort(RoomSrvc.sortDistance);
+		if (Array.isArray(RoomSrvc.ALL_ROOMS) && RoomSrvc.ALL_ROOMS !== $scope.data.rooms) {
+			RoomSrvc.ALL_ROOMS.sort(RoomSrvc.sortDistance);
+		}
+		$rootScope.$broadcast('lup-rooms-ready', $scope.data.rooms);
+		$rootScope.$broadcast('lup-rooms-resorted', selectedRoomId);
+	}, 5 * 60 * 1000);
 	$scope.$on('$destroy', function() {
 		angular.element(document).off('.lupPosition');
+		$interval.cancel(roomResortInterval);
 	});
 
 	var roomRefreshTimer = null;
@@ -645,7 +663,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 		console.log('LUPCtrl.$on-gws-ws-message()', cmd, gwsMessage);
 		if ($scope[cmd]) {
 			$scope[cmd](gwsMessage);
-			$scope.$apply();
+			// WebsocketSrvc already enters Angular through $evalAsync(). Calling
+			// $apply() here re-enters the active digest and aborts live events.
 		}
 		else {
 			console.error('Missing command: '+cmd);
@@ -694,6 +713,24 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $location, $mdM
 	$scope.cmd_1106 = function userData(gwsMessage) {
 		console.log('LUPCtrl.userData()', gwsMessage.dump());
 		UserSrvc.gotUserMessage(gwsMessage);
+	};
+
+	$scope.cmd_1165 = function roomAdded(gwsMessage) {
+		var room = RoomSrvc.parseRoomMessage(gwsMessage);
+		var addRoom = function(rooms) {
+			if (!Array.isArray(rooms)) {
+				return;
+			}
+			if (!rooms.some(function(candidate) { return candidate.id() === room.id(); })) {
+				rooms.push(room);
+				rooms.sort(RoomSrvc.sortDistance);
+			}
+		};
+		// Update both live lists. This reaches every connected client without a
+		// reload, while a later category/search change still uses its full cache.
+		addRoom($scope.data.rooms);
+		addRoom(RoomSrvc.ALL_ROOMS);
+		$rootScope.$broadcast('lup-rooms-ready', $scope.data.rooms);
 	};
 	
 	$scope.cmd_1107 = function chatMessage(gwsMessage) {
