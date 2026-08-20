@@ -5289,6 +5289,9 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .notification md-list > .inbox-empty,.notification .inbox-empty { display:flex; align-items:center; min-height:76px; margin:22px 14px 0; padding:0; border:0; border-radius:0; background:transparent !important; box-shadow:none; }
 .notification .inbox-empty .inbox-empty-mark { border:0; border-radius:0; background:transparent; box-shadow:none; color:#b8dcff; }
 .notification .inbox-empty .inbox-empty-copy { min-width:0; border:0; background:transparent !important; box-shadow:none !important; }
+.notification .notification-panel .inbox-message-list { margin:0 !important; padding:0 !important; background:transparent !important; background-color:transparent !important; box-shadow:none !important; }
+.notification .notification-panel .inbox-message-list::before,.notification .notification-panel .inbox-message-list::after { display:none !important; content:none !important; }
+.notification .notification-panel ng-include,.notification .notification-panel ng-include > md-content,.notification .notification-panel ng-include md-content { background:transparent !important; background-color:transparent !important; box-shadow:none !important; }
 
 /* A private conversation must not inherit any of Material's paper surfaces.
    The message area and composer stay legible on the same night-blue base. */
