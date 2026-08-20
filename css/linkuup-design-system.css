@@ -7292,3 +7292,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .query-page .lup-own-msg .query-message-content { text-align:right !important; }
 .query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
 .query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
+
+/* The forum button stays in the row flow all the way to the right edge. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-list-item-inner { display:flex !important; align-items:center !important; width:100% !important; padding:0 !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-open { position:static !important; display:grid !important; flex:0 0 34px !important; align-self:center !important; width:34px !important; height:34px !important; min-width:34px !important; margin:0 0 0 auto !important; }
