@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q,
+}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q, $timeout,
 	UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
 	ConfigSrvc, ProfileSrvc, SettingsSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
@@ -80,6 +80,22 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.openQuery = function(user) {
 		console.log('ProfileCtrl.openQuery()', user);
 		$scope.gotoQuery(user);
+	};
+
+	// An Up is intentionally a deliberate pull on the yellow profile marker,
+	// not another crowded action button. The server stays authoritative for the
+	// number; this state only locks the gesture until its request has settled.
+	$scope.profilePullUp = function() {
+		var user = $scope.data.user;
+		if (!user || user.isSelf() || $scope.data.profileUpWorking) {
+			return;
+		}
+		$scope.data.profileUpWorking = true;
+		LikeSrvc.likeUser(user).finally(function() {
+			$timeout(function() {
+				$scope.data.profileUpWorking = false;
+			}, 440);
+		});
 	};
 	
 	///////////////////
@@ -405,4 +421,67 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
+});
+
+/* A small physical pull interaction for the profile Up marker. Pointer events
+ * cover mouse, touch and pen without a second mobile-only event path. */
+angular.module('LUP').directive('lupPullUp', function($timeout) {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			var node = element[0];
+			var pointerId = null;
+			var startY = 0;
+			var pull = 0;
+			var threshold = 26;
+			var maximum = 42;
+
+			var setPull = function(value) {
+				pull = Math.max(0, Math.min(maximum, value));
+				element.css('--lup-up-pull', pull + 'px');
+				element.toggleClass('is-pulling', pull > 2);
+			};
+			var release = function(event) {
+				if (pointerId === null || (event && event.pointerId !== pointerId)) {
+					return;
+				}
+				var accepted = pull >= threshold;
+				pointerId = null;
+				setPull(0);
+				if (accepted) {
+					element.addClass('is-released');
+					scope.$applyAsync(function() { scope.$eval(attrs.lupPullUp); });
+					$timeout(function() { element.removeClass('is-released'); }, 460, false);
+				}
+			};
+
+			element.on('pointerdown', function(event) {
+				if (scope.data.profileUpWorking || event.button > 0) {
+					return;
+				}
+				pointerId = event.pointerId;
+				startY = event.clientY;
+				setPull(0);
+				if (node.setPointerCapture) {
+					node.setPointerCapture(pointerId);
+				}
+				event.preventDefault();
+			});
+			element.on('pointermove', function(event) {
+				if (pointerId !== event.pointerId) {
+					return;
+				}
+				setPull(event.clientY - startY);
+				event.preventDefault();
+			});
+			element.on('pointerup pointercancel', release);
+			element.on('click', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+			});
+			scope.$on('$destroy', function() {
+				element.off('pointerdown pointermove pointerup pointercancel click');
+			});
+		},
+	};
 });

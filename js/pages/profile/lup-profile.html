@@ -46,7 +46,11 @@
 		<div class="user-top-information" ng-class="{ownuserprofile: data.user.isSelf()}">
 			<div class="countitems profile-stats">
 				<p class="countitem stat-locations" ng-click="gotoUserCourse(data.user)"><i class="material-icons">place</i><span class="count">{{data.user.visits()}}</span><span class="item">{{'LOCATIONS'|translate}}</span></p>
-				<p class="countitem stat-ups" ng-click="gotoLikes(data.user)"><i class="material-icons">bolt</i><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
+				<p class="countitem stat-ups" ng-if="data.user.isSelf()" ng-click="gotoLikes(data.user)"><i class="material-icons">bolt</i><span class="count">{{data.user.likes()}}</span><span class="item">{{"UP's"|translate}}</span></p>
+				<button type="button" class="countitem stat-ups profile-up-pull" ng-if="!data.user.isSelf()" lup-pull-up="profilePullUp()" ng-class="{'is-working': data.profileUpWorking}">
+					<span class="profile-up-pull-lever"><i class="material-icons">bolt</i></span>
+					<span class="count">{{data.user.likes()}}</span><span class="item">UP geben</span>
+				</button>
 				<p class="countitem stat-friends" ng-click="gotoUserFriends(data.user)"><i class="material-icons">groups</i><span class="count">{{data.user.friends()}}</span><span class="item">{{'FRIENDS'|translate}}</span></p>
 				<p class="countitem stat-cuddles" ng-click="gotoUserCuddles(data.user)" title="{{'CUDDLES'|translate}}"><i class="material-icons qr-cuddle-main">qr_code_2</i><span class="count">{{data.user.cuddles()}}</span><span class="item">{{'CUDDLES'|translate}}</span></p>
 			</div>
@@ -54,7 +58,6 @@
 	 
 	  <div class="profile-actions" ng-if="!data.user.isSelf()">
 		  <div class="content-center">
-			<button class="profile-social-action profile-social-up" type="button" aria-label="Up geben" title="Up geben" ng-click="LikeSrvc.likeUser(data.user)"><i class="material-icons">bolt</i></button>
 			<button ng-if="(!data.user.isFriend()) && (!data.user.JSON.relation_pending) && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-friend" type="button" aria-label="Freundschaftsanfrage senden" title="Freundschaft hinzufügen" ng-click="FriendSrvc.addFriend(data.user)"><i class="material-icons">person_add_alt_1</i></button>
 			<button ng-if="(!data.user.isFriend()) && data.user.JSON.relation_pending && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-pending" type="button" aria-label="Freundschaftsanfrage zurücknehmen" title="Anfrage offen – zurücknehmen" ng-click="FriendSrvc.cancelFriendRequest(data.user)"><i class="material-icons">schedule</i></button>
 			<button ng-if="data.user.isFriend() && data.user.isMember() && data.ownUser.isMember()" class="profile-social-action profile-social-remove" type="button" aria-label="Freundschaft entfernen" title="Freund entfernen" ng-click="FriendSrvc.removeFriend(data.user)"><i class="material-icons">person_remove_alt_1</i></button>

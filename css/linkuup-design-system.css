@@ -4895,6 +4895,66 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .lup-user-action-remove { color:#ffbdca; border-color:rgba(255,139,162,.25); background:rgba(211,83,112,.12); }
 @media (prefers-reduced-motion: reduce) { .lup-user-action { transition:none; } }
 
+/* The yellow Up marker is a small pull mechanism, not a third button below
+   the profile. Dragging its visible bolt down gives one intentional Up and it
+   returns to its normal resting position after the server request settles. */
+.profile-page .user-top-information .profile-up-pull {
+  appearance:none;
+  -webkit-appearance:none;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:ns-resize;
+  border-color:rgba(246,198,90,.34);
+  outline:0;
+}
+.profile-page .user-top-information .profile-up-pull:hover { transform:none; }
+.profile-page .profile-up-pull .profile-up-pull-lever {
+	position:relative;
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  margin:0 0 6px;
+  border:1px solid rgba(255,236,174,.38);
+  border-radius:15px;
+  background:linear-gradient(145deg,#f3c65d,#cf8351);
+  box-shadow:0 8px 0 rgba(133,76,38,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34);
+  color:#fff5c5;
+  transform:translate3d(0,var(--lup-up-pull,0px),0);
+  transition:transform 180ms cubic-bezier(.2,.8,.25,1),box-shadow 180ms ease,filter 180ms ease;
+}
+.profile-page .profile-up-pull .profile-up-pull-lever::after {
+  content:'';
+  position:absolute;
+  width:3px;
+  height:15px;
+  margin-top:-31px;
+  border-radius:3px;
+  background:rgba(255,223,135,.46);
+  box-shadow:0 0 8px rgba(255,208,93,.34);
+  opacity:.45;
+}
+.profile-page .profile-up-pull .profile-up-pull-lever .material-icons { margin:0; color:inherit; font-size:24px; text-shadow:0 1px 0 rgba(101,53,22,.25); }
+.profile-page .profile-up-pull.is-pulling .profile-up-pull-lever { box-shadow:0 3px 0 rgba(133,76,38,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.34); filter:brightness(1.06); }
+.profile-page .profile-up-pull.is-released .profile-up-pull-lever { animation:lup-up-lever-lock 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-up-pull.is-working .profile-up-pull-lever { filter:saturate(1.08) brightness(1.08); }
+@keyframes lup-up-lever-lock {
+  0% { transform:translate3d(0,33px,0); }
+  24% { transform:translate3d(0,39px,0); }
+  49% { transform:translate3d(0,22px,0); }
+  72% { transform:translate3d(0,4px,0); }
+  100% { transform:translate3d(0,0,0); }
+}
+@media (max-width:380px) {
+  .profile-page .profile-up-pull .profile-up-pull-lever { width:38px; height:38px; border-radius:13px; }
+  .profile-page .profile-up-pull .profile-up-pull-lever .material-icons { font-size:21px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-up-pull .profile-up-pull-lever { transition:none; }
+  .profile-page .profile-up-pull.is-released .profile-up-pull-lever { animation:none; }
+}
+
 /* Let the profile sections meet cleanly. The active section alone carries
    light; there is deliberately no inactive rail beneath it. */
 .profile-page .profile-section-nav { position:relative; width:100%; margin:0 0 6px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
