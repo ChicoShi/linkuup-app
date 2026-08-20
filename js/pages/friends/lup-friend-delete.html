@@ -18,16 +18,15 @@
           <lup-avatar ng-user="data.friend"></lup-avatar>
           <div>
             <strong>{{data.friend.displayName()}}</strong>
-            <span>Deine Freundesliste bleibt jederzeit unter deiner Kontrolle.</span>
+            <span>{{'FRIEND_DELETE_CONTROL'|translate}}</span>
           </div>
         </div>
         <p translate="DLGP_DELETE_FRIEND" translate-value-friend="{{data.friend.displayName()}}"></p>
       </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
+    <md-dialog-actions class="friend-delete-actions" layout="row">
       <md-button class="friend-delete-cancel" ng-click="cancel()" translate="BTN_CANCEL"></md-button>
-      <span flex></span>
       <md-button class="friend-delete-confirm" ng-click="ok()"><i class="material-icons">person_remove_alt_1</i><span translate="BTN_DELETE"></span></md-button>
     </md-dialog-actions>
     

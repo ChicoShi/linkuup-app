@@ -163,6 +163,7 @@
 "SEARCH_NEW_FRIENDS": "Search users",
 "DLGT_DELETE_FRIEND": "Quit friendship",
 "DLGP_DELETE_FRIEND": "Do you want to quit your friendship with {{friend}}?",
+"FRIEND_DELETE_CONTROL": "You can reconnect with this person at any time later.",
 "MSGT_SENT_FRIEND_REQUEST": "Friend request",
 "MSGP_SENT_FRIEND_REQUEST": "Your friend request has been sent.",
 

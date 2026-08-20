@@ -164,6 +164,7 @@
 "SEARCH_NEW_FRIENDS": "Benutzersuche",
 "DLGT_DELETE_FRIEND": "Freundschaft kündigen",
 "DLGP_DELETE_FRIEND": "Möchte Sie Ihre Freundschaft mit {{friend}} beenden?",
+"FRIEND_DELETE_CONTROL": "Du kannst diese Verbindung später jederzeit neu herstellen.",
 "MSGT_SENT_FRIEND_REQUEST": "Freundschaftsanfrage",
 "MSGP_SENT_FRIEND_REQUEST": "Ihre Freundschaftsanfrage wurde versendet.",
 
