@@ -3860,6 +3860,38 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* Inbox final geometry: let a message row reach the right content edge and
+   centre its avatar in the actual row, independent of earlier legacy rules. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  margin-right:0 !important;
+  margin-left:12px !important;
+  padding-right:12px !important;
+  padding-left:3px !important;
+}
+.notification .inbox-thread-avatar {
+  align-self:center;
+  width:42px !important;
+  height:42px !important;
+  margin:0 11px 0 8px !important;
+}
+.notification .inbox-thread-avatar .lup-avatar,
+.notification .inbox-thread-avatar .lup-avatar img {
+  display:block;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  transform:none !important;
+}
+.notification .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28) !important;
+  outline:0 !important;
+  box-shadow:0 4px 12px rgba(2,10,29,.16) !important;
+}
+@media (max-width:360px) {
+  .notification .notification-panel .inbox-message-list .inbox-thread-card { margin-left:8px !important; margin-right:0 !important; padding-right:9px !important; }
+  .notification .inbox-thread-avatar,.notification .inbox-thread-avatar .lup-avatar,.notification .inbox-thread-avatar .lup-avatar img { width:38px !important; height:38px !important; }
+}
+
 /* Profile settings are a personal control panel, not a raw list of backend
    modules.  One quiet ambient field stays visible through every transparent
    surface; the icons only orient the user and never compete with a control. */
