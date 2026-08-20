@@ -5946,6 +5946,14 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#ff9dbd; }
 .profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#92e1ff; }
 
+/* Final signal palette — kept beside the legacy rules so no older accent can
+   repaint a marker differently from its icon. */
+.profile-page .user-top-information .profile-stat-pull.stat-locations { --profile-signal:#bca9ff; }
+.profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
+.profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#79e0bd; }
+.profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#8ab8ff; }
+
 /* Let the profile sections meet cleanly. The active section alone carries
    light; there is deliberately no inactive rail beneath it. */
 .profile-page .profile-section-nav { position:relative; width:100%; margin:0 0 6px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
