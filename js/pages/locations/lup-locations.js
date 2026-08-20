@@ -751,7 +751,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
 	};
-	
+
 	$scope.sortedVisitors = function(room) {
 		return UserSrvc.sortedUsers(room.USERS);
 	};

@@ -2151,6 +2151,219 @@ md-list.usernavigation .presence-actions .usericon {
 .comments-template .lup-comment-date { color:#aaa3bb !important; font-size:11px; }
 .comments-template .md-secondary .material-icons { color:#ff9cad; }
 
+/* Inbox — private messages and events are two destinations, not a colourful
+ * carousel. The selected destination gets one quiet surface; the old moving
+ * gradient ink bar made the switch feel noisy and unrelated to the content. */
+.notification .notification-tabs {
+  padding: 8px 12px 0;
+  background: linear-gradient(180deg, rgba(23, 30, 52, .92), rgba(17, 23, 42, .72));
+}
+.notification .notification-tabs md-tabs-canvas,
+.notification .notification-tabs .md-tab-bar {
+  height: 48px;
+  border: 0;
+  background: transparent;
+}
+.notification .notification-tabs md-pagination-wrapper {
+  display: flex;
+  gap: 7px;
+  width: 100% !important;
+  transform: none !important;
+}
+.notification .notification-tabs md-tab-item {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 40px;
+  margin: 0 !important;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 12px 12px 5px 5px;
+  color: rgba(208, 213, 234, .7) !important;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .025em;
+  text-transform: none;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.notification .notification-tabs md-tab-item:first-child::before,
+.notification .notification-tabs md-tab-item:nth-child(2)::before {
+  margin-right: 7px;
+  color: currentColor;
+  font-family: 'Material Icons';
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1;
+}
+.notification .notification-tabs md-tab-item:first-child::before { content: 'forum'; }
+.notification .notification-tabs md-tab-item:nth-child(2)::before { content: 'notifications_none'; }
+.notification .notification-tabs md-tab-item:hover {
+  color: #f1f4ff !important;
+  background: rgba(139, 161, 224, .08);
+}
+.notification .notification-tabs md-tab-item.md-active {
+  border-color: rgba(139, 177, 255, .22);
+  background: linear-gradient(145deg, rgba(74, 116, 193, .32), rgba(73, 57, 131, .22));
+  box-shadow: inset 0 1px 0 rgba(224, 235, 255, .1);
+  color: #f8faff !important;
+}
+.notification .notification-tabs .md-ink-bar {
+  display: none !important;
+}
+.notification .notification-tabs md-tabs-content-wrapper {
+  margin-top: 7px;
+  border-top: 1px solid rgba(176, 194, 241, .09);
+}
+.notification .notification-tabs .md-tab-content > div,
+.notification .notification-tabs md-content,
+.notification .notification-tabs .scroll-notifications {
+  background: transparent !important;
+}
+.notification .notification-tabs md-list {
+  padding: 8px 13px 26px;
+}
+.notification .notification-tabs md-list > md-list-item {
+  position: relative;
+  overflow: hidden;
+  min-height: 70px;
+  margin: 8px 0;
+  padding: 9px 11px;
+  border: 1px solid rgba(179, 195, 238, .1);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(255,255,255,.055), rgba(104,124,186,.035));
+  box-shadow: none;
+}
+.notification .notification-tabs md-list > md-list-item::before {
+  position: absolute;
+  top: 17px;
+  bottom: 17px;
+  left: 0;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: rgba(151, 181, 255, .55);
+  content: '';
+  opacity: 0;
+}
+.notification .notification-tabs md-list > md-list-item.lup-notification-unread::before {
+  opacity: 1;
+}
+.notification .notification-tabs md-list > md-list-item.lup-notification-unread {
+  border-color: rgba(145, 174, 255, .25);
+  background: linear-gradient(135deg, rgba(77, 110, 185, .2), rgba(100, 74, 161, .13));
+}
+
+/* Private conversation — the legacy room composer inherited a white paper
+ * surface. Keep it in the same night-blue material as the location chat. */
+.query-page > md-content {
+  color: var(--lup-text);
+  background:
+    radial-gradient(ellipse at 90% 0, rgba(107, 139, 224, .15), transparent 34%),
+    linear-gradient(155deg, #171a2a, #0e101a 76%) !important;
+}
+.query-page .chat-msgs {
+  padding: 16px 13px !important;
+  background: linear-gradient(180deg, rgba(17,19,30,.12), rgba(9,11,19,.64)) !important;
+}
+.query-page .lup-msg { margin-bottom: 10px !important; }
+.query-page .chat-msgs .msg .message {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(255,255,255,.075) !important;
+  border-radius: 15px 15px 15px 6px !important;
+  background: rgba(255,255,255,.045) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055) !important;
+  color: #f4f5fb !important;
+}
+.query-page .lup-own-msg .msg .message {
+  border-color: rgba(149, 171, 255, .28) !important;
+  border-radius: 15px 15px 6px 15px !important;
+  background: linear-gradient(135deg, rgba(84,112,191,.24), rgba(96,67,164,.16)) !important;
+}
+.query-page .chat-msgs .msg .name,
+.query-page .chat-msgs .msg .time { color: #aeb7d0 !important; }
+.query-page .chatbottom {
+  display: flex !important;
+  align-items: center;
+  gap: 7px;
+  height: 54px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(172, 191, 241, .14) !important;
+  background: rgba(14,16,26,.96) !important;
+}
+.query-page .chatbottom .chat-input {
+  float: none !important;
+  flex: 1 1 auto;
+  width: auto !important;
+  padding: 0 !important;
+}
+.query-page .chatbottom input {
+  width: 100% !important;
+  height: 36px !important;
+  padding: 0 9px !important;
+  box-sizing: border-box;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #f5f7ff !important;
+  font-size: 12px !important;
+}
+.query-page .chatbottom input::placeholder { color: #93a0bc; opacity: 1; }
+.query-page .chatbottom input:focus {
+  border-bottom-color: #a9c8ff !important;
+  box-shadow: none !important;
+}
+.query-page .chatbottom .chat-button {
+  float: none !important;
+  display: grid;
+  place-items: center;
+  flex: 0 0 36px;
+  width: 36px !important;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(158, 185, 255, .3);
+  border-radius: 11px;
+  background: rgba(95, 129, 214, .16);
+}
+.query-page .chatbottom .chat-button button,
+.query-page .chatbottom .chat-button button.sendmessage {
+  width: 19px !important;
+  min-width: 19px !important;
+  max-width: 19px !important;
+  height: 19px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background-color: #bcd7ff !important;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.query-page .chatbottom .chat-button:has(button.sendmessage) {
+  border-color: rgba(193, 213, 255, .55);
+  background: linear-gradient(135deg, #759aeb, #775fc2);
+}
+.query-page .chatbottom .chat-button:has(button.sendmessage) button { background-color: #fff !important; }
+@media (max-width: 420px) {
+  .notification .notification-tabs { padding-right: 9px; padding-left: 9px; }
+  .notification .notification-tabs md-tab-item { padding: 0 6px; font-size: 10px; }
+  .notification .notification-tabs md-tab-item:first-child::before,
+  .notification .notification-tabs md-tab-item:nth-child(2)::before { margin-right: 5px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notification .notification-tabs md-tab-item { transition: none; }
+}
+
 /* Discovery pass — entry and filters use one restrained LinkUUp language. */
 .nearby .chatbutton:not(.chatbutton--locked) {
   width:min(86%,330px);
@@ -3744,6 +3957,90 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .nearby .placeboard .room-presence-count .material-icons { display:none !important; }
 .nearby .placeboard .room-presence-count::before { content:''; width:7px; height:7px; border-radius:50%; background:#7de4aa; box-shadow:0 0 0 3px rgba(125,228,170,.11),0 0 11px rgba(125,228,170,.44); }
 .nearby .placeboard .room-presence-count b { min-width:17px !important; height:17px !important; background:rgba(109,203,157,.24) !important; color:#f3fff8 !important; }
+
+/* The guest counter owns the right edge of every discovery card.  Whether a
+ * room is empty or somebody just joins must never move it across the rail. */
+.nearby .placeboard .room-user-preview::after {
+  order: 1;
+  margin-left: 8px !important;
+}
+.nearby .placeboard .room-user-preview .room-presence-count {
+  order: 2;
+  flex: 0 0 auto;
+  margin-left: auto !important;
+}
+
+/* Inbox switch: no underline, route or separator. The active destination is
+   recognised solely by its quiet surface and legible label. */
+.notification .notification-tabs md-tabs-canvas,
+.notification .notification-tabs .md-tab-bar,
+.notification .notification-tabs md-tabs-content-wrapper {
+  margin-top: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.notification .notification-tabs .md-ink-bar,
+.notification .notification-tabs [class*="ink-bar"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+.notification .notification-tabs md-tab-item.md-active {
+  background: rgba(124, 145, 208, .13) !important;
+  box-shadow: none !important;
+}
+
+/* Direct inbox switch. This intentionally does not use md-tabs: the two
+ * destinations need an uncomplicated choice, without a travelling ink bar. */
+.notification > md-content { display:flex; flex-direction:column; min-height:0; }
+.notification-switch {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:3px;
+  margin:0;
+  padding:7px 12px 6px;
+  background:rgba(19,25,43,.7);
+}
+.notification-switch button {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:0;
+  height:38px;
+  padding:0 9px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  box-shadow:none;
+  color:#a9afc1;
+  font:760 11px/1 Ubuntu,Roboto,Arial,sans-serif;
+  letter-spacing:.015em;
+  cursor:pointer;
+  transition:background-color 180ms ease,color 180ms ease;
+}
+.notification-switch button .material-icons { color:currentColor; font-size:17px; }
+.notification-switch button:hover { background:rgba(255,255,255,.045); color:#e6eaf5; }
+.notification-switch button.active { background:rgba(120,145,206,.14); color:#f4f6ff; }
+.notification-switch button b {
+  position:absolute;
+  top:8px;
+  right:11px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#9ee6c0;
+  box-shadow:0 0 8px rgba(108,224,163,.6);
+}
+.notification-panel { display:flex; flex:1 1 auto; min-height:0; }
+.notification-panel > md-content { width:100%; min-height:0; }
+@media (max-width:360px) {
+  .notification-switch { padding-right:9px; padding-left:9px; }
+  .notification-switch button { gap:5px; padding:0 5px; font-size:10px; }
+  .notification-switch button .material-icons { font-size:15px; }
+}
+
 
 /* Sidebar finishing pass — final cascade. The header is LinkUUp night-blue,
    and navigation icons stay free of individual boxes. */

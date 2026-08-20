@@ -7,29 +7,25 @@
     <ng-include src="'js/pages/notifications/lup-notifications-header.html?v='+V"></ng-include>
       
     <!-- CONTENT -->
-    <md-tabs
-     flex
-     class="notification-tabs"
-     md-selected="data.activeTab3"
-      xxmd-dynamic-height
-      xxmd-border-bottom
-     md-stretch-tabs="always">
-    
-      <md-tab
-       md-tab-class="lup-queries-tab"
-       label="{{'TAB_QUERIES'|translate}}"
-       md-on-select="loadChats()">
-        <ng-include src="'js/pages/notifications/lup-messages-tab.html?v='+V"></ng-include>
-      </md-tab>
+    <nav class="notification-switch" role="tablist" aria-label="Nachrichtenbereiche">
+      <button type="button" role="tab" ng-class="{active: data.activeTab3 === 0}"
+       ng-click="selectNotificationTab(0)" aria-label="Private Nachrichten">
+        <i class="material-icons">forum</i><span>{{'TAB_QUERIES'|translate}}</span>
+        <b ng-if="hasUnreadQueries()" aria-hidden="true"></b>
+      </button>
+      <button type="button" role="tab" ng-class="{active: data.activeTab3 === 1}"
+       ng-click="selectNotificationTab(1)" aria-label="Ereignisse">
+        <i class="material-icons">notifications_none</i><span>{{'TAB_NOTIFICATIONS'|translate}}</span>
+        <b ng-if="hasNotifications()" aria-hidden="true"></b>
+      </button>
+    </nav>
 
-      <md-tab
-       md-tab-class="lup-notifications-tab"
-       label="{{'TAB_NOTIFICATIONS'|translate}}"
-       md-on-select="showNotifications()">
-        <ng-include src="'js/pages/notifications/lup-notifications-tab.html?v='+V"></ng-include>
-      </md-tab>
-    
-    </md-tabs>
+    <section class="notification-panel" ng-if="data.activeTab3 === 0" role="tabpanel">
+      <ng-include src="'js/pages/notifications/lup-messages-tab.html?v='+V"></ng-include>
+    </section>
+    <section class="notification-panel" ng-if="data.activeTab3 === 1" role="tabpanel">
+      <ng-include src="'js/pages/notifications/lup-notifications-tab.html?v='+V"></ng-include>
+    </section>
 
   </md-content>
   <!-- END CONTENT -->

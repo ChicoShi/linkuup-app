@@ -137,7 +137,7 @@
     </button>
   </section>
 
-  <section class="venue-note" ng-if="data.room.info()">
+  <section class="venue-note" ng-if="data.room.info() && !isRegionalRoom(data.room)">
     <i class="material-icons">tips_and_updates</i><p>{{data.room.info()}}</p>
   </section>
 </md-content>

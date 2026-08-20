@@ -64,7 +64,7 @@
 	
 	<div class="cb"></div>
 
-	  <div class="profile-section-nav" ng-if="data.user.isMember()" role="tablist" aria-label="Profilbereiche">
+	  <div class="profile-section-nav" ng-if="data.user && (data.user.isMember() || data.user.isSelf())" role="tablist" aria-label="Profilbereiche">
 		<button type="button" ng-class="{active: data.selectedTab === 0}" ng-click="data.selectedTab = 0" role="tab">
 		  <i class="material-icons">person_outline</i><span>Über mich</span>
 		</button>
@@ -74,7 +74,7 @@
 	  </div>
 	
 	  <md-tabs
-	   ng-if="data.user.isMember()"
+	   ng-if="data.user && (data.user.isMember() || data.user.isSelf())"
 	   class="information-tabs"
        md-selected="data.selectedTab"
        md-dynamic-height
