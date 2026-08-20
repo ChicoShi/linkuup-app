@@ -213,17 +213,12 @@ angular.module('LUP').config(function($routeProvider) {
 		// previously selected room in the freshly filtered rail and return Slick to
 		// that card after Angular and Slick have consumed the reordered list.
 		$timeout(function() {
-			var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
-				return room.id() === roomId;
-			});
-			if (roomIndex < 0) {
+			if (!restoreSelectedRoom(roomId, false)) {
 				return; // It is intentionally hidden by the active category/search.
 			}
-			$scope.data.currentRoom = $scope.data.visibleRooms[roomIndex];
-			$scope.data.currentRoomIndex = roomIndex;
 			var $slick = getSlick();
 			if ($slick.hasClass('slick-initialized')) {
-				$slick.slick('slickGoTo', roomIndex, true);
+				$slick.slick('slickGoTo', $scope.data.currentRoomIndex, true);
 			}
 		}, 40);
 	});
@@ -261,6 +256,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.gotRooms = function(rooms) {
+		var roomId = selectedRoomId();
 		// Both the page and the background preload can observe the same promise.
 		// Render that result once; Slick otherwise performs needless work and can
 		// keep its visibility guard active longer than necessary.
@@ -287,6 +283,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		sortAndSelectNearestRoom();
+		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
 		locationsRoomsRendered = true;
 		slickStartAttempts = 0;
 		LoadingSrvc.addTask('slick_rooms');
@@ -426,12 +423,12 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.focusSlide = function($slide) {
 		var roomId = String($slide && $slide.attr('data-room-id') || '');
-		var room = $scope.data.rooms.find(function(candidate) {
+		var room = $scope.data.visibleRooms.find(function(candidate) {
 			return String(candidate.id()) === roomId;
 		});
 		if (room) {
 			$scope.data.currentRoom = room;
-			$scope.data.currentRoomIndex = $scope.data.rooms.indexOf(room);
+			$scope.data.currentRoomIndex = $scope.data.visibleRooms.indexOf(room);
 			// The initial room catalogue already carries its presence list and
 			// WebSocket join/part events keep it current. A round trip for every
 			// swipe made longer city rails visibly stutter after a few cards.
@@ -488,6 +485,26 @@ angular.module('LUP').config(function($routeProvider) {
 				.filter(Boolean).join(' ').toLocaleLowerCase();
 			return haystack.indexOf(query) >= 0;
 		});
+	};
+
+	var selectedRoomId = function() {
+		return $scope.data.currentRoom ? String($scope.data.currentRoom.id()) : '';
+	};
+	var restoreSelectedRoom = function(roomId, fallback) {
+		var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
+			return String(room.id()) === String(roomId);
+		});
+		if (roomIndex < 0 && fallback && $scope.data.visibleRooms.length) {
+			roomIndex = 0;
+		}
+		if (roomIndex < 0) {
+			$scope.data.currentRoom = null;
+			$scope.data.currentRoomIndex = -1;
+			return false;
+		}
+		$scope.data.currentRoom = $scope.data.visibleRooms[roomIndex];
+		$scope.data.currentRoomIndex = roomIndex;
+		return true;
 	};
 
 	var sortAndSelectNearestRoom = function() {
@@ -575,8 +592,6 @@ angular.module('LUP').config(function($routeProvider) {
 			fullCataloguePromise.then(function(rooms) {
 				if (selectionSerial === categorySelectionSerial &&
 					$scope.data.category.join(',') === categoryKey) {
-					$scope.data.currentRoom = null;
-					$scope.data.currentRoomIndex = -1;
 					$scope.gotRooms(rooms);
 				}
 			}, function(error) {
@@ -603,8 +618,6 @@ angular.module('LUP').config(function($routeProvider) {
 			detachCategoryRail();
 		}
 		$scope.updateVisibleRooms();
-		$scope.data.currentRoom = null;
-		$scope.data.currentRoomIndex = -1;
 		// The first explicit category loads the full catalogue once.  If the
 		// visitor changed tabs while that request was in flight, the catalogue is
 		// already cached but the old nearby room list may still be on screen.
@@ -622,6 +635,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.refreshCategoryFilter = function() {
+		restoreSelectedRoom(selectedRoomId(), true);
 		var $slick = getSlick();
 		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
