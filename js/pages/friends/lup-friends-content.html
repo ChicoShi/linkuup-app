@@ -23,24 +23,21 @@
         <p class="username">{{ user.displayName(); }}</p>
         <p class="lup-user-status">{{ user.status(); }}</p>
       </div>
-      <div>
-<!--
-        <i
-         class="md-secondary usericon likeuser"
-         aria-label="Like this user"
-         ng-click="LikeSrvc.likeUser(user)"
-         ng-if="!user.isSelf() && user.isMember()"></i>
-		 -->
-        <i
-         class="md-secondary usericon removefriend"
-         aria-label="Remove a friend"
+      <div class="lup-user-actions">
+        <button
+         class="lup-user-action lup-user-action-remove"
+         type="button"
+         aria-label="Freund entfernen"
+         title="Freund entfernen"
          ng-click="deleteFriend(user)"
-         ng-if="!user.isSelf() && user.isMember() && user.isFriend()"></i>
-        <i
-         class="md-secondary usericon sendmessage"
-         aria-label="Chat with this user"
+         ng-if="!user.isSelf() && user.isMember() && user.isFriend()"><i class="material-icons">person_remove_alt_1</i></button>
+        <button
+         class="lup-user-action lup-user-action-message"
+         type="button"
+         aria-label="Nachricht senden"
+         title="Nachricht senden"
          ng-click="gotoQuery(user)"
-         ng-if="!user.isSelf()"></i>
+         ng-if="!user.isSelf()"><i class="material-icons">chat_bubble</i></button>
       </div>
     </md-list-item>
   </div>
