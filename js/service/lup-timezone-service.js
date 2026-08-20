@@ -20,13 +20,15 @@ service('TimezoneSrvc', function($q, RequestSrvc, ErrorSrvc) {
 	
 	TimezoneSrvc.withTimezoneFor = function(user) {
 		console.log('TimezoneSrvc.withTimezoneFor()', user);
-		if (user.user_timezone > 1) {
+		var timezone = user.JSON.timezone || user.JSON.user_timezone;
+		if (Number(timezone) > 1) {
 			return $q.resolve(user);
 		}
 		let tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		let data = { timezone: tz, submit: 1 };
 		return RequestSrvc.sendGWF('Date', 'TimezoneDetect', data).then(function(response) {
 			user.JSON.timezone = response.data.tz_id;
+			user.JSON.user_timezone = response.data.tz_id;
 			return user;
 		}, function(e) {
 			alert(e);
