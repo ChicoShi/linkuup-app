@@ -25,7 +25,17 @@
 
 	  <md-list-item class="md-1-line nav-discover" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">explore</i>
-		<p>{{'TITLE_LOCATIONS'|translate}}</p>
+			<p>{{'TITLE_LOCATIONS'|translate}}</p>
+	  </md-list-item>
+
+	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
+	    <i class="material-icons nav-icon">groups</i>
+			<p>{{data.friendsCount}} {{'TITLE_FRIENDS'|translate}}</p>
+	  </md-list-item>
+
+	  <md-list-item class="md-1-line nav-private-messages" ng-click="gotoMessages()" ng-if="data.ownUser.isAuthed()">
+	    <i class="material-icons nav-icon">forum</i>
+			<p>{{data.pmCount}} {{'TITLE_PRIVATE_MESSAGES'|translate}}</p>
 	  </md-list-item>
 	  
 	  <md-list-item class="md-1-line" ng-click="gotoRegister()" ng-if="!data.ownUser.isAuthed()">
@@ -50,16 +60,6 @@
 		<p>[+] {{'TITLE_ADD_ROOM'|translate}}</p>
 	  </md-list-item>
 
-	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">groups</i>
-		<p>{{data.friendsCount}} {{'TITLE_FRIENDS'|translate}}</p>
-	  </md-list-item>
-
-	  <md-list-item class="md-1-line nav-private-messages" ng-click="gotoMessages()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">forum</i>
-		<p>{{data.pmCount}} {{'TITLE_PRIVATE_MESSAGES'|translate}}</p>
-	  </md-list-item>
-	  
 	  <md-list-item class="md-1-line nav-logout" ng-click="logout()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">logout</i>
 		<p>{{'BTN_LOGOUT'|translate}}</p>
