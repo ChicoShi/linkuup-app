@@ -3860,6 +3860,71 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* End-of-sheet query correction: legacy sections above this point intentionally
+   cannot override this final geometry. */
+.query-page .query-message-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  min-height:62px !important;
+  margin:0 !important;
+  padding:10px 13px !important;
+  gap:12px !important;
+}
+.query-page .query-message-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+.query-page .query-message-avatar .img,
+.query-page .query-message-avatar span {
+  position:absolute !important;
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.query-page .query-message-content {
+  display:flex !important;
+  flex:1 1 auto !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  min-width:0 !important;
+  min-height:42px !important;
+}
+.query-page .query-message-content .message {
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  min-height:20px !important;
+  padding:2px 0 3px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  text-align:left !important;
+}
+.query-page .query-message-content .message::after {
+  content:'' !important;
+  position:absolute !important;
+  right:0 !important;
+  bottom:0 !important;
+  left:0 !important;
+  height:1px !important;
+  background:linear-gradient(90deg,rgba(150,197,246,.28),rgba(150,197,246,.035)) !important;
+}
+.query-page .query-message-content .messager-inner,
+.query-page .query-message-content .lup-message-state { position:relative !important; z-index:1 !important; }
+.query-page .query-message-content .lup-message-state { right:auto !important; bottom:auto !important; left:auto !important; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse !important; }
+.query-page .lup-own-msg .query-message-content { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
+
 /* Exact alignment for direct messages. The avatar directive renders a nested
    .img layer, so it must be sized explicitly instead of inheriting the old
    32px avatar inset. This keeps the picture geometrically centred. */
@@ -7157,3 +7222,17 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (min-width:560px) { .location-page md-list.usernavigation .presence-actions .presence-action { width:auto !important; min-width:33px !important; padding:0 8px !important; }.location-page md-list.usernavigation .presence-actions .presence-action span { display:inline !important; font-size:9px !important; font-weight:800 !important; } }
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
+
+/* Query layout wins against every legacy message selector above. */
+.query-page .query-message-card { display:flex !important; align-items:center !important; width:100% !important; min-height:62px !important; margin:0 !important; padding:10px 13px !important; gap:12px !important; }
+.query-page .query-message-avatar { display:block !important; flex:0 0 42px !important; width:42px !important; height:42px !important; padding:0 !important; margin:0 !important; overflow:hidden !important; }
+.query-page .query-message-avatar .img,.query-page .query-message-avatar span { position:absolute !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; margin:0 !important; }
+.query-page .query-message-content { display:flex !important; flex:1 1 auto !important; flex-direction:column !important; justify-content:center !important; min-width:0 !important; min-height:42px !important; }
+.query-page .query-message-content .message { position:relative !important; display:block !important; width:100% !important; min-height:20px !important; padding:2px 0 3px !important; border:0 !important; border-radius:0 !important; background:transparent !important; text-align:left !important; }
+.query-page .query-message-content .message::after { content:'' !important; position:absolute !important; right:0 !important; bottom:0 !important; left:0 !important; height:1px !important; background:linear-gradient(90deg,rgba(150,197,246,.28),rgba(150,197,246,.035)) !important; }
+.query-page .query-message-content .messager-inner,.query-page .query-message-content .lup-message-state { position:relative !important; z-index:1 !important; }
+.query-page .query-message-content .lup-message-state { right:auto !important; bottom:auto !important; left:auto !important; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse !important; }
+.query-page .lup-own-msg .query-message-content { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
