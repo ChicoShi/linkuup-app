@@ -9,6 +9,9 @@ function GDO_Profile(json) {
 	this.EMPTY = {};
 	this.user = null;
 	this.relation = 0;
+	// Set from the GWS_Profile header. The server has already evaluated the
+	// target profile's global visibility ACL for the current viewer.
+	this.globallyVisible = false;
 
 	this.setJSON = function(json) {
 		this.JSON = json;
@@ -27,7 +30,7 @@ function GDO_Profile(json) {
 	};
 
 	this.canGloballySee = function() {
-		return this._canSee("profile_visible");
+		return this.globallyVisible;
 	};
 	this.canSee = function(setting) {
 		// TODO: Check if gdo6 is in single_ACL profile mode

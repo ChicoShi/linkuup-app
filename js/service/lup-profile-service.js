@@ -23,6 +23,7 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc,
 		profile.related = gwsMessage.read8();
 
 		const global = gwsMessage.read8();
+		profile.globallyVisible = !!global;
 		if (!global) {
 			console.log('ALL HIDDEN!');
 			return profile;
