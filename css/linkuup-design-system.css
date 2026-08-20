@@ -5770,8 +5770,18 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 @media (prefers-reduced-motion:reduce) {
   .profile-page .profile-stat-pull .profile-stat-pull-lever { transition:none; }
-  .profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:none; }
+.profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:none; }
 }
+
+/* Each pull marker keeps its own quiet signal line. It extends the physical
+   cord upward just enough to connect the icon to its meaning, without adding
+   another visible card border. */
+.profile-page .user-top-information .profile-stat-pull::before { width:1px; height:18px; top:4px; opacity:.82; }
+.profile-page .user-top-information .profile-stat-pull.stat-locations::before { background:linear-gradient(to bottom,rgba(191,170,255,.10),rgba(174,143,255,.96) 54%,rgba(174,143,255,.20)); box-shadow:0 0 9px rgba(171,140,255,.52); }
+.profile-page .user-top-information .profile-stat-pull.stat-ups::before { background:linear-gradient(to bottom,rgba(255,224,132,.10),rgba(255,205,100,.96) 54%,rgba(255,205,100,.20)); box-shadow:0 0 9px rgba(255,202,91,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-friends::before { background:linear-gradient(to bottom,rgba(147,221,255,.10),rgba(112,198,247,.96) 54%,rgba(112,198,247,.20)); box-shadow:0 0 9px rgba(89,188,246,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles::before { background:linear-gradient(to bottom,rgba(255,177,204,.10),rgba(255,139,177,.96) 54%,rgba(255,139,177,.20)); box-shadow:0 0 9px rgba(255,125,165,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-message::before { background:linear-gradient(to bottom,rgba(161,229,255,.10),rgba(117,211,255,.96) 54%,rgba(117,211,255,.20)); box-shadow:0 0 9px rgba(109,207,255,.48); }
 
 /* Let the profile sections meet cleanly. The active section alone carries
    light; there is deliberately no inactive rail beneath it. */
