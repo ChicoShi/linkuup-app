@@ -129,6 +129,7 @@ angular.module('LUP').config(function($routeProvider) {
 		return FriendSrvc.addFriend(user);
 	};
 	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	$scope.profilePullMessage = function() { return $scope.openQuery($scope.data.user); };
 	// A short tap remains navigation. Pulling is the deliberate gesture; it can
 	// perform a distinct action (the Up) without hiding any profile overview.
 	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
@@ -139,6 +140,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
+	$scope.profileOpenMessage = function() { return $scope.openQuery($scope.data.user); };
 	
 	///////////////////
 	// Avatar Upload //

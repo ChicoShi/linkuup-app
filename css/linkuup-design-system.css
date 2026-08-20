@@ -4875,9 +4875,13 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .user-top-information .stat-message { border-color:rgba(132,194,245,.28); background:linear-gradient(150deg,rgba(68,154,225,.20),rgba(87,96,181,.08)); }
 .profile-page .user-top-information .stat-message::before { background:#91d6ff; color:#91d6ff; }
 .profile-page .user-top-information .stat-message .profile-stat-pull-lever { background:linear-gradient(145deg,#68c5f4,#526fc5); box-shadow:0 8px 0 rgba(39,73,139,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34); }
-.profile-page .user-top-information .stat-message .count-action { font-size:1.05rem; line-height:1; color:#c9eaff; }
+.profile-page .user-top-information .stat-message { cursor:ns-resize; }
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever { margin-bottom:8px; }
+.profile-page .user-top-information .stat-message .item { color:#d7efff; }
 .profile-page .profile-stat-pull.is-friend-gesture::before { animation:lup-friend-cord-break 460ms cubic-bezier(.2,.92,.26,1); }
 .profile-page .profile-stat-pull.is-friend-gesture .profile-stat-pull-lever { animation:lup-friend-latch 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-stat-pull.is-message-gesture::before { background:linear-gradient(to bottom,rgba(176,228,255,.95),rgba(96,175,239,.25)); box-shadow:0 0 13px rgba(109,202,255,.58); }
+.profile-page .profile-stat-pull.is-message-gesture .profile-stat-pull-lever { filter:brightness(1.12); }
 @keyframes lup-friend-cord-break { 0%,38% { opacity:1; transform:translateX(-50%) scaleY(1); } 49% { opacity:1; transform:translateX(-50%) scaleY(.78); } 58% { opacity:.1; transform:translateX(-50%) scaleY(.42); } 75% { opacity:.78; transform:translateX(-50%) scaleY(.9); } 100% { opacity:.9; transform:translateX(-50%) scaleY(1); } }
 @keyframes lup-friend-latch { 0% { transform:translate3d(0,33px,0); } 42% { transform:translate3d(0,42px,0) rotate(0deg); } 58% { transform:translate3d(0,30px,0) rotate(-4deg); } 78% { transform:translate3d(0,6px,0) rotate(2deg); } 100% { transform:translate3d(0,0,0) rotate(0deg); } }
 @media (max-width:380px) { .profile-page:not(.has-own-user) .user-top-information .countitems { gap:4px; padding-left:5px; padding-right:5px; } .profile-page:not(.has-own-user) .user-top-information .countitem { min-height:94px; } .profile-page:not(.has-own-user) .user-top-information .countitem .item { font-size:.47rem; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever { width:35px; height:35px; border-radius:12px; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever .material-icons { font-size:20px; } }
