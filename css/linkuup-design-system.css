@@ -5832,6 +5832,28 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   z-index:20 !important;
   top:4px;
 }
+
+/* The shared list-avatar stylesheet keeps an old two-pixel inset. Inside the
+   Online roster that makes the face appear left/down inside its round rim.
+   This row owns a true circle: rim and image share exactly the same centre. */
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  box-sizing:border-box !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:50% !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar .img,
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar span {
+  position:absolute !important;
+  top:0 !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+  border-radius:50% !important;
+}
 .profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
 .profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
 .profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#ff9dbd; }
