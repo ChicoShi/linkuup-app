@@ -5954,6 +5954,15 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   margin:0 0 0 8px !important;
   padding:2px !important;
 }
+.lup-top-bar,
+.lup-top-bar .md-toolbar-tools,
+.lup-top-bar .md-toolbar-tools > .md-icon-button.lup-top-notification {
+  overflow:visible !important;
+}
+.lup-top-bar .md-toolbar-tools .navnotification {
+  overflow:visible !important;
+  font-size:19px !important;
+}
 
 /* The shared list-avatar stylesheet keeps an old two-pixel inset. Inside the
    Online roster that makes the face appear left/down inside its round rim.
