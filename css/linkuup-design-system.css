@@ -5921,10 +5921,10 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   margin:0 !important;
   padding:0 !important;
   overflow:visible !important;
-  border:1px solid rgba(255,255,255,.13) !important;
+  border:0 !important;
   border-radius:50% !important;
-  background:rgba(255,255,255,.06) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09) !important;
+  background:radial-gradient(circle at 36% 28%,rgba(175,223,255,.15),transparent 42%),rgba(82,104,163,.13) !important;
+  box-shadow:0 0 15px rgba(86,156,231,.10) !important;
 }
 .lup-top-bar .md-toolbar-tools .navnotification {
   display:grid !important;
@@ -5939,8 +5939,9 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   background-image:none !important;
   background-size:0 !important;
   color:#d9eaff !important;
-  font-size:21px !important;
+  font-size:23px !important;
   line-height:1 !important;
+  text-shadow:0 0 9px rgba(151,211,255,.30) !important;
 }
 .lup-top-bar .md-toolbar-tools .navnotification-count {
   position:absolute !important;
@@ -5967,7 +5968,7 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 .lup-top-bar .md-toolbar-tools .navnotification {
   overflow:visible !important;
-  font-size:19px !important;
+  font-size:23px !important;
 }
 
 /* The shared list-avatar stylesheet keeps an old two-pixel inset. Inside the
