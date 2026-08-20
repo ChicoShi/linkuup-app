@@ -4882,6 +4882,48 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-stat-pull.is-friend-gesture .profile-stat-pull-lever { animation:lup-friend-latch 460ms cubic-bezier(.2,.92,.26,1); }
 .profile-page .profile-stat-pull.is-message-gesture::before { background:linear-gradient(to bottom,rgba(176,228,255,.95),rgba(96,175,239,.25)); box-shadow:0 0 13px rgba(109,202,255,.58); }
 .profile-page .profile-stat-pull.is-message-gesture .profile-stat-pull-lever { filter:brightness(1.12); }
+
+/* Profile collection markers: a consistent translucent, lifted control set.
+   The message control keeps an invisible value line so all five markers share
+   the exact same vertical rhythm. */
+.profile-page .user-top-information .countitem {
+  border-color:rgba(211,222,255,.17);
+  background:linear-gradient(145deg,rgba(255,255,255,.135),rgba(255,255,255,.035) 44%,rgba(30,37,65,.12));
+  box-shadow:0 11px 23px rgba(2,7,22,.22),inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(12,16,34,.26);
+}
+.profile-page .user-top-information .countitem::after { opacity:.18; filter:blur(16px); }
+.profile-page .profile-stat-pull .profile-stat-pull-lever,
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever {
+  width:43px;
+  height:43px;
+  margin:0 0 6px;
+  border:1px solid rgba(239,246,255,.39);
+  border-radius:15px;
+  box-shadow:0 7px 0 rgba(34,44,91,.44),0 14px 22px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.44),inset 0 -7px 14px rgba(12,22,64,.14);
+}
+.profile-page .profile-stat-pull .profile-stat-pull-lever::before,
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever::before {
+  content:'';
+  position:absolute;
+  top:4px;
+  left:7px;
+  right:7px;
+  height:9px;
+  border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,0));
+  pointer-events:none;
+}
+.profile-page .user-top-information .countitem .count-spacer { visibility:hidden; }
+.profile-page .user-top-information .stat-message .item { margin-top:1px; }
+.profile-page .user-top-information .countitem:hover {
+  border-color:rgba(227,238,255,.32);
+  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.055) 44%,rgba(46,62,113,.15));
+  box-shadow:0 13px 27px rgba(2,7,22,.27),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(12,16,34,.26);
+}
+@media (max-width:380px) {
+  .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever,
+  .profile-page:not(.has-own-user) .user-top-information .stat-message .profile-stat-pull-lever { width:35px; height:35px; margin-bottom:6px; border-radius:12px; }
+}
 @keyframes lup-friend-cord-break { 0%,38% { opacity:1; transform:translateX(-50%) scaleY(1); } 49% { opacity:1; transform:translateX(-50%) scaleY(.78); } 58% { opacity:.1; transform:translateX(-50%) scaleY(.42); } 75% { opacity:.78; transform:translateX(-50%) scaleY(.9); } 100% { opacity:.9; transform:translateX(-50%) scaleY(1); } }
 @keyframes lup-friend-latch { 0% { transform:translate3d(0,33px,0); } 42% { transform:translate3d(0,42px,0) rotate(0deg); } 58% { transform:translate3d(0,30px,0) rotate(-4deg); } 78% { transform:translate3d(0,6px,0) rotate(2deg); } 100% { transform:translate3d(0,0,0) rotate(0deg); } }
 @media (max-width:380px) { .profile-page:not(.has-own-user) .user-top-information .countitems { gap:4px; padding-left:5px; padding-right:5px; } .profile-page:not(.has-own-user) .user-top-information .countitem { min-height:94px; } .profile-page:not(.has-own-user) .user-top-information .countitem .item { font-size:.47rem; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever { width:35px; height:35px; border-radius:12px; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever .material-icons { font-size:20px; } }
