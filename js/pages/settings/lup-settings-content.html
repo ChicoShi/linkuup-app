@@ -2,7 +2,6 @@
 
  <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
    <md-list-item class="md-2-line">
-     <span class="settings-field-mark" aria-hidden="true"><i class="material-icons">visibility</i></span>
      <div class="md-list-item-text" layout="column">
        <h3>{{'profile_visibility'|translate}}</h3>
      </div>
@@ -23,9 +22,8 @@
  <md-divider class="lup-settings-profile-divider"></md-divider>
  -->
 
- <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group" ng-class="'settings-group-' + groupMeta(group.module).tone">
+ <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
    <header class="lup-settings-group-heading">
-     <span class="settings-group-mark" aria-hidden="true"><i class="material-icons">{{groupMeta(group.module).icon}}</i></span>
      <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
    </header>
 
@@ -37,7 +35,6 @@
      </div>
 
      <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
-       <span class="settings-field-mark settings-field-mark-quiet" aria-hidden="true"><i class="material-icons">{{controlIs(setting, 'checkbox') ? 'toggle_on' : (controlIs(setting, 'textarea') ? 'notes' : (isCountry(setting) ? 'public' : (isLanguage(setting) ? 'translate' : (isTimezone(setting) ? 'schedule' : 'tune'))))}}</i></span>
        <div class="md-list-item-text" layout="column">
          <h3>{{setting.label|translate}}</h3>
        </div>

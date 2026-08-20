@@ -4003,6 +4003,89 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 @media (prefers-reduced-motion:reduce) { .settings-page .lup-settings-list md-list-item.md-2-line { transition:none; } }
 
+/* Settings refinement: words must carry the meaning.  The prior icon system
+   made ordinary choices look like an unexplained control board. */
+.settings-page > md-content {
+  background:
+    radial-gradient(ellipse 70% 25% at 102% 5%,rgba(131,168,221,.09),transparent 70%),
+    radial-gradient(ellipse 55% 20% at -7% 47%,rgba(145,119,201,.06),transparent 72%),
+    linear-gradient(155deg,#151925 0%,#0d1220 58%,#101522 100%) !important;
+}
+.settings-page > md-content::before { opacity:.24; }
+.settings-page .lup-settings-group { margin-bottom:22px; }
+.settings-page .lup-settings-group::before {
+  top:25px;
+  bottom:-14px;
+  left:5px;
+  background:linear-gradient(to bottom,rgba(180,210,246,.26),rgba(180,210,246,.035));
+}
+.settings-page .lup-settings-group-heading {
+  min-height:31px;
+  margin:0 4px 7px;
+  padding-left:13px;
+  border-left:2px solid rgba(176,209,247,.50);
+}
+.settings-page .lup-settings-group-heading .md-subheader {
+  color:#dce7f5 !important;
+  font-size:10px;
+  letter-spacing:.11em;
+}
+.settings-page .settings-group-mark,
+.settings-page .settings-field-mark { display:none !important; }
+.settings-page .lup-settings-list md-list-item.md-2-line,
+.settings-page .lup-settings-profile-visibility md-list-item.md-2-line {
+  min-height:68px;
+  margin:6px 0;
+  padding:8px 12px;
+  border-color:rgba(197,216,241,.11) !important;
+  border-radius:14px 14px 14px 6px;
+  background:linear-gradient(110deg,rgba(198,216,241,.045),rgba(255,255,255,.016) 70%,rgba(151,136,205,.032)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 18px rgba(1,8,24,.10);
+}
+.settings-page .lup-settings-list md-list-item.md-2-line:hover {
+  border-color:rgba(180,210,246,.26) !important;
+  background:linear-gradient(110deg,rgba(143,186,230,.10),rgba(151,136,205,.06)) !important;
+}
+.settings-page .lup-settings-list md-select,
+.settings-page .lup-settings-list .lup-setting-input input,
+.settings-page .lup-settings-list .lup-setting-input textarea {
+  color:#eef4fb !important;
+  -webkit-text-fill-color:#eef4fb;
+  border-color:rgba(188,211,240,.18) !important;
+  background:rgba(8,14,25,.26) !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-select .md-select-value span,
+.settings-page .lup-settings-list .md-select-value,
+.settings-page .lup-settings-list .md-select-value span {
+  color:#eef4fb !important;
+  border-bottom-color:rgba(188,211,240,.28) !important;
+  background:transparent !important;
+}
+.md-select-menu-container .md-select-menu,
+.md-select-menu-container md-content,
+.md-select-menu-container .md-select-menu md-content {
+  color:#edf4ff !important;
+  background:#121a2a !important;
+  border-color:rgba(187,211,243,.18) !important;
+}
+.md-select-menu-container md-option,
+.md-select-menu-container md-option .md-text {
+  color:#e8f0fb !important;
+  background:transparent !important;
+}
+.md-select-menu-container md-option:hover,
+.md-select-menu-container md-option:focus,
+.md-select-menu-container md-option.md-selected {
+  color:#fff !important;
+  background:rgba(126,160,213,.18) !important;
+}
+@media (max-width:420px) {
+  .settings-page .lup-settings-list md-list-item.md-2-line,
+  .settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; padding-right:9px; padding-left:9px; }
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
