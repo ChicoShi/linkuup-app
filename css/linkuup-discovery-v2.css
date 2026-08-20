@@ -35,6 +35,12 @@
 .nearby .placeboard .room-hero-name.room-hero-name--long { font-size:clamp(17px,4.6vw,20px) !important; line-height:1.08 !important; letter-spacing:-.022em !important; }
 .nearby .placeboard .room-hero-name.room-hero-name--longword { font-size:clamp(16px,4.25vw,19px) !important; line-height:1.08 !important; letter-spacing:-.028em !important; overflow-wrap:anywhere !important; word-break:break-word !important; }
 .nearby .placeboard .room-hero-meta { padding-bottom:2px !important; line-height:1.25 !important; }
+.nearby .placeboard .room-hero-description {
+  margin:10px 22px 0 !important;
+  color:rgba(232,236,250,.80) !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+}
 
 .nearby .placeboard .room-user-preview::before,
 .nearby .placeboard .room-user-preview::after { display:none !important; content:none !important; }

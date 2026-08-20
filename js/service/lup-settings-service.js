@@ -62,7 +62,6 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	};
 	
 	SettingsSrvc.changeSetting = function(setting, value, relation) {
-		debugger;
 		var config = typeof setting === 'string' ? SettingsSrvc.setting(setting) : setting;
 		value = SettingsSrvc.valueForTransport(config, value);
 		// A value change must not be rejected just because its unchanged ACL is

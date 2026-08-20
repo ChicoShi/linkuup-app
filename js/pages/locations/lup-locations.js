@@ -33,6 +33,10 @@ angular.module('LUP').config(function($routeProvider) {
 	var categoryRefreshTimer = null;
 	var categoryRailDetached = false;
 	var searchBaseRooms = null;
+	// Every usable GPS fix turns the current discovery order into a local one.
+	// Only the first fix selects the nearest room automatically; later updates
+	// must not pull a visitor away from their deliberate selection.
+	var nearestRoomInitiallySelected = false;
 	// Mobile browsers may emit a click on the card immediately after Slick has
 	// completed a horizontal drag. Keep taps working, but discard that trailing
 	// synthetic click so a swipe cannot accidentally enter the location.
@@ -224,7 +228,17 @@ angular.module('LUP').config(function($routeProvider) {
 		// Distance labels are calculated live on the room model. Ensure this
 		// screen receives an Angular render immediately when GPS arrives, even if
 		// it was opened from the sidenav while the first probe was pending.
-		$timeout(settleHorizontalRail, 0);
+		if (sortAndSelectNearestRoom()) {
+			// The existing Slick slide collection still reflects the pre-GPS order.
+			// Rebuild it once after Angular has applied the sorted ng-repeat list.
+			$timeout(function() {
+				$scope.refreshCategoryFilter();
+				settleHorizontalRail();
+			}, 0);
+		}
+		else {
+			$timeout(settleHorizontalRail, 0);
+		}
 	});
 	$scope.requestLocation = function(room, event) {
 		if (PositionSrvc.hasPosition(true)) {
@@ -251,6 +265,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (locationsRoomsRendered && $scope.data.rooms === rooms &&
 			$slick.length && $slick.hasClass('slick-initialized')) {
 			$scope.updateVisibleRooms();
+			sortAndSelectNearestRoom();
 			return $scope.refreshCategoryFilter();
 		}
 		var roomSetChanged = $scope.data.rooms !== rooms;
@@ -268,6 +283,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
+		sortAndSelectNearestRoom();
 		locationsRoomsRendered = true;
 		slickStartAttempts = 0;
 		LoadingSrvc.addTask('slick_rooms');
@@ -337,7 +353,15 @@ angular.module('LUP').config(function($routeProvider) {
 				// sliding a static card sideways.
 				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
 					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
-				$scope.focusSlide(slick.$slides.eq(nextSlide));
+				// Slick emits this from jQuery, which is outside Angular's digest.
+				// Queue the model update instead of forcing $apply(): the latter can
+				// re-enter a digest while a category/search render is still active.
+				var $nextSlide = slick.$slides.eq(nextSlide);
+				$scope.$evalAsync(function() {
+					if (!$scope.$$destroyed) {
+						$scope.focusSlide($nextSlide);
+					}
+				});
 			}).on('swipe.lupSlick', function() {
 				// Slick only emits this after it has accepted a horizontal gesture.
 				// The short guard catches the browser click that can follow the drag.
@@ -380,10 +404,10 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		
-		if (!nofocus) {
-//			$scope.focusRoom(0);
-			$scope.$apply();
-		}
+		// $timeout, route events and WebSocket callbacks already enter Angular.
+		// Do not call $apply() here: Slick can initialise during an active digest.
+		// The beforeChange handler above uses $evalAsync() for the one external
+		// jQuery callback that updates scope data.
 	};
 	
 	$scope.focusRoom = function(roomIndex) {
@@ -461,6 +485,33 @@ angular.module('LUP').config(function($routeProvider) {
 				.filter(Boolean).join(' ').toLocaleLowerCase();
 			return haystack.indexOf(query) >= 0;
 		});
+	};
+
+	var sortAndSelectNearestRoom = function() {
+		if (!PositionSrvc.hasPosition(true) || !$scope.data.rooms.length) {
+			return false;
+		}
+		var orderBefore = $scope.data.rooms.map(function(room) { return room.id(); }).join(',');
+		$scope.data.rooms.sort(RoomSrvc.sortDistance);
+		$scope.updateVisibleRooms();
+		if (!$scope.data.visibleRooms.length) {
+			return false;
+		}
+		var reordered = orderBefore !== $scope.data.rooms.map(function(room) { return room.id(); }).join(',');
+		if (!nearestRoomInitiallySelected) {
+			nearestRoomInitiallySelected = true;
+			$scope.data.currentRoom = $scope.data.visibleRooms[0];
+			$scope.data.currentRoomIndex = 0;
+			return true;
+		}
+		if ($scope.data.currentRoom) {
+			$scope.data.currentRoomIndex = $scope.data.visibleRooms.findIndex(function(room) {
+				return room.id() === $scope.data.currentRoom.id();
+			});
+		}
+		// Tell the caller whether Slick must rebuild its slide collection after
+		// Angular has rendered the newly sorted list.
+		return reordered;
 	};
 
 	$scope.isCategoryActive = function(categories) {
