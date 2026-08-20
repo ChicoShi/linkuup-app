@@ -385,6 +385,8 @@
 "PROFILE_SECTION_BASICS": "Profile",
 "PROFILE_SECTION_LOCAL": "Place & proximity",
 "PROFILE_SECTION_ABOUT": "About you",
+"PROFILE_ABOUT_EMPTY": "This is where your story can begin.",
+"PROFILE_ABOUT_EDIT": "Add about me",
 
 "gender": "Gender",
 "profile_visibility": "Minimum profile visibility",

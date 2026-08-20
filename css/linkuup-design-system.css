@@ -5514,6 +5514,11 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-about-single .profile-story-card h5::before { width:3px; height:3px; background:#a99bce; box-shadow:none; }
 .profile-page .profile-information.profile-about-single .profile-about-me { max-width:500px; color:#e4e0ec; font-size:15px; font-weight:450; line-height:1.68; letter-spacing:.004em; }
 .profile-page .profile-information.profile-about-single .profile-about-empty { max-width:360px; color:#aaa5ba; font-size:14px; line-height:1.55; }
+.profile-page .profile-information.profile-about-single .profile-about-empty { display:grid; justify-items:start; gap:10px; }
+.profile-page .profile-information.profile-about-single .profile-about-empty p { margin:0; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button { display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:0 11px; border:1px solid rgba(171,205,244,.22); border-radius:10px; background:rgba(109,151,211,.10); color:#cce8ff; font:700 11px/1 Ubuntu,Roboto,Arial,sans-serif; cursor:pointer; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button .material-icons { font-size:15px; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button:hover,.profile-page .profile-information.profile-about-single .profile-about-empty button:focus-visible { border-color:rgba(180,218,255,.48); background:rgba(110,164,224,.18); outline:0; }
 
 /* Stable profile navigation. The legacy Material header remains responsible
    for panels only; these two visible controls are the sole visual navigation. */

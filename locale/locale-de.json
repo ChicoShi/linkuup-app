@@ -404,6 +404,8 @@
 "PROFILE_SECTION_BASICS": "Profil",
 "PROFILE_SECTION_LOCAL": "Ort & Nähe",
 "PROFILE_SECTION_ABOUT": "Über dich",
+"PROFILE_ABOUT_EMPTY": "Hier ist Platz für deine Geschichte.",
+"PROFILE_ABOUT_EDIT": "Über mich ergänzen",
 
 "gender": "Geschlecht",
 "profile_visibility": "Mindestprofilanzeige",
