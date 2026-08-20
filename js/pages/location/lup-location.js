@@ -41,35 +41,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.commentText = '';
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
-	$scope.data.selectedTable = null;
 	var visitorCache = {source: null, signature: '', users: []};
-
-	/* The table lounge deliberately keeps selection locally for its first visual
-	 * release.  A later server-backed table membership will replace this small
-	 * state object; until then no UI can accidentally promise a private chat
-	 * that the server has not secured yet. */
-	$scope.tableSlots = function() { return [1, 2, 3, 4, 5, 6]; };
-	$scope.selectTable = function(table) {
-		$scope.data.selectedTable = table;
-	};
-	$scope.openTableLounge = function(event) {
-		var parentScope = $scope;
-		return $mdDialog.show({
-			parent: angular.element(document.body),
-			targetEvent: event,
-			clickOutsideToClose: true,
-			templateUrl: 'js/dialogs/lup-table-lounge-dialog.html?v=' + window.LUP_BUILD,
-			controller: ['$scope', '$mdDialog', function(dialogScope, $mdDialog) {
-				dialogScope.tables = parentScope.tableSlots();
-				dialogScope.data = {selectedTable: parentScope.data.selectedTable};
-				dialogScope.select = function(table) {
-					dialogScope.data.selectedTable = table;
-					parentScope.selectTable(table);
-				};
-				dialogScope.cancel = function() { $mdDialog.cancel(); };
-			}],
-		});
-	};
 	
 	$scope.init = function() {
 		console.log('LocationCtrl.init()', $routeParams.id);
