@@ -47,6 +47,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		authenticated: false,
 		inited: false,
 		notificationcount: 0,
+		pmCount: 0,
 		navstack: [],
 		initialUrl: null,
 	};
@@ -89,7 +90,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		
 		count += NotificationSrvc.unreadNotificationCount(); // Add Notifications
 		
-		count += ChatSrvc.unreadMessages(); // Add PM/Query Messages
+		$scope.data.pmCount = ChatSrvc.unreadMessages();
+		count += $scope.data.pmCount; // Add PM/Query Messages
 		
 		$scope.data.notificationcount = count;
 	
@@ -416,6 +418,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoSettings = function() { return $scope.goto('/settings'); };
 	$scope.gotoSearch = function() { return $scope.goto('/search'); };
 	$scope.gotoNotification = function() { return $scope.goto('/notifications'); };
+	$scope.gotoMessages = function() {
+		$scope.data.activeTab3 = 0;
+		return $scope.gotoNotification();
+	};
 	$scope.gotoCourse = function(user) { return $scope.goto('/course/'+user.id()); };
 	$scope.gotoCuddles = function(user) { return $scope.goto('/cuddles/'+user.id()); };
 	$scope.goto = function(url) {
@@ -653,6 +659,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl$lup-inited()', event);
 		NotificationSrvc.queryUnreadNotificationCount().then(
 				$scope.updateNotificationCount);
+		if (window.GWF_USER.isAuthed()) {
+			ChatSrvc.loadChats(window.GWF_USER.id()).then(
+					$scope.updateNotificationCount);
+		}
 	});
 	
 	/////////////////////////////

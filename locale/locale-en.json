@@ -155,6 +155,8 @@
 "SUBHEADER_LIKES": "{{user}} got {{count}} likes.",
 
 "TITLE_FRIENDS": "Friends",
+"TITLE_PRIVATE_MESSAGES": "Private messages",
+"MSG_NO_PRIVATE_MESSAGES": "You have not exchanged any private messages yet.",
 "SUBHEADER_FRIENDS": "{{user}} got {{count}} friend(s)",
 "SUBHEADER_YOUR_FRIENDS": "you got {{count}} friend(s)",
 "SEARCH_NEW_FRIENDS": "Search users",

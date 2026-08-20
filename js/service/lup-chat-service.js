@@ -8,6 +8,8 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	ChatSrvc.QUERIES = [];
 	ChatSrvc.CHATROOM = null;
 	ChatSrvc.UNREAD = 0;
+	ChatSrvc.CHATS_LOADED = false;
+	ChatSrvc.CHATS_LOADING = null;
 	window.LUP_Query.StorageSrvc = StorageSrvc;
 	
 	/**
@@ -92,7 +94,16 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		var gwsMessage = new GWS_Message().cmd(0x1108);
 		gwsMessage.write32(user.id());
 		gwsMessage.writeString(message);
-		return WebsocketSrvc.sendBinary(gwsMessage);
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			// The sender receives this as a synchronous reply, not as the normal
+			// asynchronous 0x1108 event. Add it locally so own PMs render at once.
+			var sent = ChatSrvc.loadMessage(response);
+			var chat = ChatSrvc.forMessage(sent);
+			chat.addNewMessage(sent);
+			$rootScope.updateNotificationCount();
+			$rootScope.$broadcast('lup-query-message', sent);
+			return sent;
+		});
 	};
 	
 	ChatSrvc.reset = function() {
@@ -100,6 +111,8 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		ChatSrvc.QUERIES = [];
 		ChatSrvc.MESSAGES = {};
 		ChatSrvc.loadingState = null;
+		ChatSrvc.CHATS_LOADED = false;
+		ChatSrvc.CHATS_LOADING = null;
 	};
 	
 	ChatSrvc.unreadMessages = function() {
@@ -151,8 +164,23 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	////////////////////////////
 	ChatSrvc.loadChats = function(userId) {
 		console.log('ChatSrvc.loadChats()', userId);
+		if (ChatSrvc.CHATS_LOADED) {
+			return $q.when(ChatSrvc.QUERIES);
+		}
+		if (ChatSrvc.CHATS_LOADING) {
+			return ChatSrvc.CHATS_LOADING;
+		}
 		var gwsMessage = new GWS_Message().cmd(0x110A).sync();
-		return WebsocketSrvc.sendBinary(gwsMessage).then(ChatSrvc.loadedChats);
+		ChatSrvc.CHATS_LOADING = WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			var chats = ChatSrvc.loadedChats(response);
+			ChatSrvc.CHATS_LOADED = true;
+			ChatSrvc.CHATS_LOADING = null;
+			return chats;
+		}, function(error) {
+			ChatSrvc.CHATS_LOADING = null;
+			return $q.reject(error);
+		});
+		return ChatSrvc.CHATS_LOADING;
 	};
 	
 	ChatSrvc.loadedChats = function(response) {
