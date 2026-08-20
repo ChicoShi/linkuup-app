@@ -5854,6 +5854,19 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   margin:0 !important;
   border-radius:50% !important;
 }
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  overflow:visible !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar::after {
+  z-index:3 !important;
+  right:-4px !important;
+  bottom:-3px !important;
+  width:10px !important;
+  height:10px !important;
+  border:2px solid #182235 !important;
+  background:#72dda0 !important;
+  box-shadow:0 0 0 3px rgba(114,221,160,.12),0 0 11px rgba(114,221,160,.64) !important;
+}
 .profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
 .profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
 .profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#ff9dbd; }
