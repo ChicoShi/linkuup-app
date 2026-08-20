@@ -4,7 +4,10 @@ angular.module('LUP')
 	
 	var ErrorSrvc = this;
 	ErrorSrvc.isProximityError = function(text) {
-		return /err_user_not_near|nicht\s+in\s+(?:ihrer|deiner)\s+n[aä]he|not\s+near/i.test(String(text || ''));
+		// Websocket releases have returned this restriction both as a translation
+		// and as the symbolic server key. Keep the recognition deliberately broad
+		// so a locale change cannot fall back to the legacy browser-looking alert.
+		return /err_user_not_near|(?:nicht|not).{0,56}(?:n[aä]he|near)/i.test(String(text || ''));
 	};
 	ErrorSrvc.showProximityError = function() {
 		return DialogSrvc.confirm('js/dialogs/lup-proximity-dialog.html', {}).catch(function() {});
