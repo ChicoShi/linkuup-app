@@ -1,12 +1,14 @@
 <section layout="row" flex class="login register-page auth-shell">
   <md-content flex class="auth-canvas">
+    <!-- One continuous location route: atmosphere for the entire registration
+         journey, never an extra surface behind individual fields. -->
+    <svg class="auth-route auth-route-global" viewBox="0 0 720 1120" aria-hidden="true">
+      <path class="auth-route-base" d="M-76,228 C145,158 99,395 304,376 S545,182 764,311 M-55,681 C125,610 244,794 411,706 S596,513 777,645" />
+      <path class="auth-route-light" d="M-76,228 C145,158 99,395 304,376 S545,182 764,311 M-55,681 C125,610 244,794 411,706 S596,513 777,645" />
+      <circle cx="304" cy="376" r="6" class="auth-route-point" />
+      <circle cx="411" cy="706" r="6" class="auth-route-point auth-route-point-late" />
+    </svg>
     <section class="auth-hero" aria-label="LinkUUp">
-      <svg class="auth-route" viewBox="0 0 720 440" aria-hidden="true">
-        <path class="auth-route-base" d="M-50,352 C112,325 104,99 296,138 S432,389 617,255 S718,91 796,114" />
-        <path class="auth-route-light" d="M-50,352 C112,325 104,99 296,138 S432,389 617,255 S718,91 796,114" />
-        <circle cx="296" cy="138" r="7" class="auth-route-point" />
-        <circle cx="617" cy="255" r="7" class="auth-route-point auth-route-point-late" />
-      </svg>
       <div class="auth-hero-copy">
         <span class="auth-mark"><i class="material-icons">location_on</i></span>
         <div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
