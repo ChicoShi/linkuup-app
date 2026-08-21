@@ -51,3 +51,22 @@ md-sidenav {
 .nearby > md-content {
 	min-width: 0;
 }
+
+/* The register view uses standalone Angular Material input containers rather
+ * than the login credentials wrapper.  Earlier generic auth styling leaves
+ * those containers at height 0, so their labels overlap and the TOS control
+ * is visually detached.  Give the public form its own normal flow. */
+.register-page .auth-panel md-input-container {
+	min-height: 62px;
+	height: 62px;
+	margin: 0 0 11px;
+}
+
+.register-page .auth-panel md-input-container > label {
+	display: none;
+}
+
+.register-page .auth-panel md-input-container .md-input {
+	float: none;
+	margin-top: 13px;
+}
