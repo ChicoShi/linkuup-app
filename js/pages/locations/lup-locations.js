@@ -415,7 +415,11 @@ angular.module('LUP').config(function($routeProvider) {
 		try {
 		$slick.slick({
 			arrows: false,
-			centerMode: false,
+			// Preserve the proven card itself.  Slick only reserves a narrow
+			// preview lane for the neighbouring real places, making the swipe
+			// direction visible without stretching any card internals.
+			centerMode: true,
+			centerPadding: '8%',
 			slidesToShow: 1,
 			slidesToScroll: 1,
 			focusOnSelect: false,
@@ -599,6 +603,9 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		try {
+			// Keep an old category's card from flashing while Angular replaces the
+			// slide collection below. The fresh rail removes this state on init.
+			$slick.addClass('lup-category-refreshing');
 			// Detach before Angular replaces ng-repeat cards.  Replacing children
 			// inside a live Slick track was the source of the brief wrong-card flash
 			// and the sluggish category taps.
@@ -624,6 +631,10 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.category = categories.slice(0);
 		if (needsFullCatalogue) {
 			$scope.data.categoryLoading = true;
+			var $currentRail = getSlick();
+			if ($currentRail.length) {
+				$currentRail.addClass('lup-category-refreshing');
+			}
 			if (!fullCataloguePromise) {
 				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
 					$scope.data.fullCatalogue = rooms;
@@ -693,6 +704,7 @@ angular.module('LUP').config(function($routeProvider) {
 		try {
 			// Recreate from Angular's current visible list.  This is intentionally
 			// one clean rebuild, not Slick's incremental filter/unfilter path.
+			$slick.addClass('lup-category-refreshing');
 			$slick.slick('unslick');
 			slickedEvents = false;
 			$timeout(function() {

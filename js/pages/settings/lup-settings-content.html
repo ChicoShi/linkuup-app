@@ -1,6 +1,19 @@
 <md-list class="lup-settings-list">
 
+ <header class="settings-hero" aria-label="Einstellungen">
+   <span class="settings-hero-route" aria-hidden="true"><i class="material-icons">tune</i></span>
+   <div>
+     <small>{{'SETTINGS_EYEBROW'|translate}}</small>
+     <h1>{{'SETTINGS_HEADLINE'|translate}}</h1>
+     <p>{{'SETTINGS_INTRO'|translate}}</p>
+   </div>
+ </header>
+
  <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
+   <header class="settings-visibility-heading">
+     <span>{{'SETTINGS_VISIBILITY_TITLE'|translate}}</span>
+     <small>{{'SETTINGS_VISIBILITY_HINT'|translate}}</small>
+   </header>
    <md-list-item class="md-2-line">
      <div class="md-list-item-text" layout="column">
        <h3>{{'profile_visibility'|translate}}</h3>
@@ -22,9 +35,12 @@
  <md-divider class="lup-settings-profile-divider"></md-divider>
  -->
 
- <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
+ <section ng-repeat="group in data.groups track by group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
    <header class="lup-settings-group-heading">
-     <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
+     <md-subheader class="md-no-sticky">
+       <b>{{sectionTitle(group.section)|translate}}</b>
+       <small>{{sectionHint(group.section)|translate}}</small>
+     </md-subheader>
    </header>
 
    <div ng-repeat="setting in group.settings track by setting.name">
@@ -37,6 +53,7 @@
      <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
        <div class="md-list-item-text" layout="column">
          <h3>{{setting.label|translate}}</h3>
+         <p ng-if="isDateSetting(setting)" class="settings-date-hint">{{'SETTINGS_DATE_HINT'|translate}}</p>
        </div>
 
        <div class="lup-setting-controls">
@@ -60,7 +77,7 @@
 	   <md-option value="0">{{'PLEASE_SELECT'|translate}}</md-option>
            <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
          </md-select>
-         <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input">
+         <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input" ng-class="{'lup-setting-date': isDateSetting(setting)}">
            <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-change="changeDateSetting(setting)" ng-blur="blurSetting(setting)">
            <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
          </md-input-container>

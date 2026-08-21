@@ -6,23 +6,39 @@
 
 		<ng-include src="'js/pages/likes/lup-likes-header.html?v='+V"></ng-include>
 		
-		<md-list flex class="md-dense">
-		  
-		  <md-subheader class="md-no-sticky">
-		    <div ng-if="data.isOwnLikeList">Du hast {{data.pagemenu.nItems}} Ups erhalten.</div>
-		    <div ng-if="!data.isOwnLikeList"
-		     translate="SUBHEADER_LIKES"
-		     translate-value-user="{{data.likeuser.displayName()}}"
-		     translate-value-count="{{data.pagemenu.nItems}}"
-		    ></div>
-		  </md-subheader>
-		  
+		<section class="ups-hero" aria-labelledby="ups-title">
+		  <div class="ups-hero-copy">
+		    <span>{{'UPS_EYEBROW'|translate}}</span>
+		    <h1 id="ups-title" ng-if="data.isOwnLikeList">{{'TITLE_UPS'|translate}}</h1>
+		    <h1 id="ups-title" ng-if="!data.isOwnLikeList">{{'UPS_FOR'|translate:{user:data.likeuser.displayName()} }}</h1>
+		    <p ng-if="data.totalUps">{{'UPS_TOTAL_COPY'|translate:{count:data.totalUps} }}</p>
+		    <p ng-if="!data.totalUps">{{'UPS_EMPTY_INTRO'|translate}}</p>
+		  </div>
+		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">bolt</i><b></b></div>
+		</section>
+
+		<section class="ups-favorite" ng-if="data.topUpGiver" aria-label="{{'UPS_FAVORITE_TITLE'|translate}}">
+		  <div class="ups-favorite-label"><i class="material-icons" aria-hidden="true">auto_awesome</i>{{'UPS_FAVORITE_TITLE'|translate}}</div>
+		  <div class="ups-favorite-person" ng-click="gotoProfile(data.topUpGiver)">
+		    <lup-avatar ng-user="data.topUpGiver"></lup-avatar>
+		    <div><strong>{{data.topUpGiver.displayName()}}</strong><span>{{'UPS_FAVORITE_COPY'|translate:{count:data.topUpGiver.likedMe} }}</span></div>
+		    <i class="material-icons" aria-hidden="true">arrow_forward</i>
+		  </div>
+		</section>
+
+		<section class="ups-empty-preview" ng-if="!data.topUpGiver">
+		  <i class="material-icons" aria-hidden="true">front_hand</i>
+		  <div><strong>{{'UPS_EMPTY_TITLE'|translate}}</strong><span>{{'UPS_EMPTY_COPY'|translate}}</span></div>
+		</section>
+
+		<md-list flex class="md-dense ups-list" ng-if="data.likes.length">
+		  <div class="ups-list-label"><span>{{'UPS_ALL_TITLE'|translate}}</span><small>{{data.likes.length}}</small></div>
 		  <div class="lup-user-list">
-			  <md-list-item class="md-2-line" ng-repeat="user in data.likes" class="no-right">
+			  <md-list-item class="md-2-line up-giver-card" ng-repeat="user in data.likes track by user.id()">
 				<lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
 				<div class="md-list-item-text" layout="column">
-				  <p class="username">{{ user.displayName(); }} ({{ user.likedMe }} Ups)</p>
-				  <p class="lup-user-status">{{ user.status(); }}</p>
+				  <p class="username">{{user.displayName()}}</p>
+				  <p class="lup-user-status">{{'UPS_GIVER_COUNT'|translate:{count:user.likedMe} }}</p>
 				</div>
 				<div class="lup-user-actions">
 				  <button class="lup-user-action lup-user-action-message" type="button" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()"><i class="material-icons">chat_bubble</i></button>

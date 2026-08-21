@@ -23,9 +23,44 @@ angular.module('LUP').config(function($routeProvider) {
 		// Keep the stored setting out of the generic renderer until it is.
 		LinkUUp: {lup_profile_outside_visible: true, lup_cuddles: true},
 	};
+	// Newer backend responses no longer add a `writeable: true` flag to every
+	// regular setting. Only keeping explicit false values hidden is important:
+	// otherwise the old `!setting.writeable` condition hides the entire table.
+	// These are genuine system counters/timestamps and are not member choices.
+	const READ_ONLY_SETTINGS = {
+		User: {last_activity: true, profile_views: true, level_spent: true},
+		Votes: {likes: true},
+		Friends: {friends_level: true},
+		Register: {register_date: true},
+	};
+	const SETTING_SECTIONS = {
+		User: 'identity',
+		AboutMe: 'identity',
+		LinkUUp: 'identity',
+		Language: 'local',
+		Date: 'local',
+		Country: 'local',
+		Birthday: 'privacy',
+		Friends: 'privacy',
+		Gallery: 'privacy',
+		Contact: 'contact',
+	};
+	const SECTION_ORDER = {identity: 10, local: 20, privacy: 30, contact: 40};
 
 	$scope.moduleLabel = function(module) {
 		return 'module_' + module.toLowerCase();
+	};
+
+	$scope.sectionTitle = function(section) {
+		return 'SETTINGS_SECTION_' + section.toUpperCase();
+	};
+
+	$scope.sectionHint = function(section) {
+		return 'SETTINGS_SECTION_' + section.toUpperCase() + '_HINT';
+	};
+
+	$scope.isDateSetting = function(setting) {
+		return $scope.inputType(setting) === 'date';
 	};
 
 	$scope.enumLabel = function(value) {
@@ -97,14 +132,24 @@ angular.module('LUP').config(function($routeProvider) {
 		return profileRank < 0 || relationRank < 0 || relationRank >= profileRank || setting.acl === relation;
 	};
 	
+	$scope.settingsLoading = false;
+	$scope.canLoadSettings = function() {
+		// A route change briefly resets data.authenticated while the root
+		// controller checks the already logged-in session again. The settings
+		// controller used to miss that short window and consequently rendered an
+		// empty page when it was opened from "Über mich ergänzen".
+		return !!($scope.data.authenticated ||
+			(window.GWF_USER && window.GWF_USER.authenticated && window.GWF_USER.authenticated(true)));
+	};
 	$scope.init = function() {
-		// This controller is recreated on every route visit.  Keep its loaded
-		// state local: the shared data object survives a visit to the legacy
-		// profile-settings route, while this view still needs to rebuild itself.
-		if ($scope.data.authenticated && !$scope.settingsInitialized) {
+		// Rebuild the setting groups whenever this route is opened. A previous
+		// controller could leave an inherited "initialized" flag behind, which
+		// made the settings view look empty after using “Über mich ergänzen”.
+		if ($scope.canLoadSettings() && !$scope.settingsLoading) {
 			console.log('SettingsCtrl.init()');
 			$scope.data.user = window.GWF_USER;
-			$scope.settingsInitialized = true;
+			$scope.settingsLoading = true;
+			$scope.data.groups = [];
 			SettingsSrvc.withConfig().then(function(cache) {
 				var groups = {};
 				$scope.data.profileVisibility = cache.User && cache.User.profile_visibility;
@@ -124,7 +169,9 @@ angular.module('LUP').config(function($routeProvider) {
 					for (var key in cache[module]) {
 						var setting = cache[module][key];
 						if (module === 'User' && key === 'profile_visibility') { continue; }
-						if (!setting.writeable || (HIDDEN_SETTINGS[module] && HIDDEN_SETTINGS[module][key])) { continue; }
+						if (!setting || !setting.type || setting.writeable === false ||
+							(HIDDEN_SETTINGS[module] && HIDDEN_SETTINGS[module][key]) ||
+							(READ_ONLY_SETTINGS[module] && READ_ONLY_SETTINGS[module][key])) { continue; }
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;
 						setting.options = setting.options || {};
@@ -140,28 +187,32 @@ angular.module('LUP').config(function($routeProvider) {
 						}
 						setting.initialValue = setting.value;
 						setting.initialACL = setting.acl;
-						groups[module] = groups[module] || {
-							module: module,
-							sort: setting.module_sort > 0 ? setting.module_sort : 1000,
+						var section = SETTING_SECTIONS[module] || 'identity';
+						groups[section] = groups[section] || {
+							section: section,
+							sort: SECTION_ORDER[section] || 1000,
 							settings: [],
 						};
-						groups[module].settings.push(setting);
+						groups[section].settings.push(setting);
 					}
 				}
-				$scope.data.groups = Object.keys(groups).map(function(module) { return groups[module]; });
+				$scope.data.groups = Object.keys(groups).map(function(section) { return groups[section]; });
 				$scope.data.groups.sort(function(a, b) {
-					return a.sort - b.sort || a.module.localeCompare(b.module);
+					return a.sort - b.sort || a.section.localeCompare(b.section);
 				});
 				$scope.data.groups.forEach(function(group) {
-					group.settings.sort(function(a, b) { return a.name.localeCompare(b.name); });
+					group.settings.sort(function(a, b) {
+						return a.module.localeCompare(b.module) || a.name.localeCompare(b.name);
+					});
 				});
 				return $q.all([CountrySrvc.withCountries(), TimezoneSrvc.withTimezones()]);
 			}).then(function(results) {
 				$scope.data.countries = results[0];
 				$scope.data.timezones = TimezoneSrvc.options();
 			})['catch'](function(error) {
-				$scope.settingsInitialized = false;
 				ErrorSrvc.showError(error, 'Settings');
+			})['finally'](function() {
+				$scope.settingsLoading = false;
 			});
 		}
 	};
@@ -196,4 +247,11 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
+	// Also react to the authentication result itself. This covers direct route
+	// navigation after the one-time "lup-inited" broadcast has already run.
+	$scope.$watch('data.authenticated', function(authenticated) {
+		if (authenticated) {
+			$scope.init();
+		}
+	});
 });
