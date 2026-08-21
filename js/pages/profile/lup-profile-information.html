@@ -7,10 +7,12 @@
 <md-list class="profile-information profile-about-single" ng-if="data.profile.canGloballySee() || data.user.isSelf()">
   <md-list-item class="md-2-line profile-story-card">
     <md-list-item-text>
+      <div class="profile-about-kicker" aria-hidden="true"><i class="material-icons">person_outline</i><span>{{'PROFILE_ABOUT_KICKER'|translate}}</span></div>
+      <div class="profile-about-route" aria-hidden="true"><span></span><b></b><em></em><i class="material-icons">location_on</i></div>
       <p class="profile-about-me" ng-if="data.profile.displayAbout()">{{data.profile.displayAbout()}}</p>
       <div class="profile-about-empty" ng-if="!data.profile.displayAbout()">
         <p>{{ 'PROFILE_ABOUT_EMPTY' | translate }}</p>
-        <button type="button" ng-if="data.user.isSelf()" ng-click="gotoProfileSettings()">
+        <button type="button" ng-if="data.user.isSelf()" ng-click="openProfileSettings($event)">
           <i class="material-icons" aria-hidden="true">edit</i>{{ 'PROFILE_ABOUT_EDIT' | translate }}
         </button>
       </div>
@@ -22,6 +24,7 @@
   <section ng-repeat="group in data.profileGroups track by group.module" class="profile-settings-group">
     <md-subheader class="md-no-sticky">{{group.label|translate}}</md-subheader>
     <md-list-item class="md-2-line profile-detail-card" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-setting-denied': field.error}">
+      <div class="profile-detail-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></div>
       <div class="md-list-item-text" layout="column">
         <h3>
           {{field.setting.label|translate}}

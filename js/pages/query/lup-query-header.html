@@ -7,10 +7,13 @@
       <i class="material-icons">arrow_back</i>
     </md-button>
 
-	<span flex></span>
-    <lup-avatar class="lup-title-avatar" ng-user="data.user"></lup-avatar>
-    <h2>{{data.user.displayName()}}</h2>
-	<span flex></span>
+    <div class="query-contact" flex>
+      <lup-avatar class="lup-title-avatar" ng-user="data.user" ng-click="gotoProfile(data.user)"></lup-avatar>
+      <div class="query-contact-copy">
+        <span>{{'QUERY_ACTIVE'|translate}}</span>
+        <h2>{{data.user.displayName()}}</h2>
+      </div>
+    </div>
 
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
 

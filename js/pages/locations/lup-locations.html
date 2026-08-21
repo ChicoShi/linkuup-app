@@ -68,7 +68,11 @@
 						<md-button
 						 class="md-raised md-primary"
 						 ng-if="room.inChatRange()"
-						 ng-click="gotoChat(room)">{{'JOIN_CHAT'|translate}}</md-button>
+						 ng-click="gotoChat(room)">
+						  <span class="chat-enter-mark" aria-hidden="true"><i class="material-icons">forum</i></span>
+						  <span class="chat-enter-copy"><b>{{'JOIN_CHAT'|translate}}</b><small>{{'JOIN_CHAT_HINT'|translate}}</small></span>
+						  <span class="chat-enter-status" aria-hidden="true"></span>
+						</md-button>
 						 
 					</section>
 	

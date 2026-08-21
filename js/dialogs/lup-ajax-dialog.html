@@ -1,19 +1,21 @@
-<md-dialog aria-label="{{data.title|translate}}" class="lup-agb-dialog">
+<md-dialog aria-label="{{data.title|translate}}" class="lup-agb-dialog lup-legal-dialog" ng-class="{'lup-privacy-dialog': data.title === 'PRIVACY', 'lup-impressum-dialog': data.title === 'IMPRESSUM'}">
   <form ng-cloak>
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>{{data.title|translate}}</h2>
+        <span class="legal-dialog-mark" aria-hidden="true"><i class="material-icons" ng-if="data.title === 'PRIVACY'">verified_user</i><i class="material-icons" ng-if="data.title !== 'PRIVACY'">account_balance</i></span>
+        <div class="legal-dialog-heading">
+          <small>LINKUUP · RECHTLICHES</small>
+          <h2>{{data.title|translate}}</h2>
+        </div>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
+		<md-button class="md-icon-button legal-dialog-close" aria-label="Schließen" ng-click="cancel()">
 			<i class="material-icons">close</i>
         </md-button>
       </div>
     </md-toolbar>
 
     <md-dialog-content>
-      <div
-       class="md-dialog-content"
-       ng-bind-html="data.html">
+      <div class="md-dialog-content legal-dialog-document" ng-bind-html="data.html">
       </div>
     </md-dialog-content>
 

@@ -1,24 +1,31 @@
-<h1 translate="TITLE_RECOVERY"></h1>
-<p class="recovery-explainer">Wir senden dir einen sicheren Link zum Festlegen eines neuen Passworts.</p>
+<div class="recovery-mail-note">
+  <i class="material-icons" aria-hidden="true">mark_email_read</i>
+  <span>{{'RECOVERY_MAIL_HINT'|translate}}</span>
+</div>
 
 <md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryLogin() || ConfigSrvc.recoveryEmail()">
-  <label>E-Mail oder Nutzername</label>
-  <input ng-model="data.identifier" type="text">
+  <label>{{'RECOVERY_IDENTIFIER'|translate}}</label>
+  <input ng-model="data.identifier" type="text" autocomplete="username">
   <div class="error">{{data.errors.login || data.errors.email}}</div>
 </md-input-container>
 
-<md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryCaptcha()">
-  <img ng-src="{{captchaUrl()}}" />
+<md-input-container class="recovery-captcha-image" ng-if="ConfigSrvc.recoveryCaptcha()">
+  <img src="{{captchaUrl()}}" alt="Sicherheitscode" />
 </md-input-container>
 <md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.recoveryCaptcha()">
   <label translate="CAPTCHA"></label>
-  <input ng-model="data.captcha" type="text">
+  <input ng-model="data.captcha" type="text" autocomplete="off">
   <div class="error">{{data.errors.captcha}}</div>
 </md-input-container>
 
-<section layout="row" flex>
-  <md-button type="submit" class="md-primary md-raised login-button" ng-click="recover()" translate="BTN_RECOVER"></md-button>
+<section class="recovery-submit" layout="row" flex>
+  <md-button type="submit" class="md-primary md-raised login-button" ng-click="recover()">
+    <i class="material-icons" aria-hidden="true">mark_email_read</i><span translate="BTN_RECOVER"></span>
+  </md-button>
 </section>
-<section layout="row" flex>
-  <md-button ng-click="gotoLogin()" class="md-primary md-raised backtologin" translate="BACK_TO_LOGIN"></md-button>
+<section class="recovery-return" layout="row" flex>
+  <md-button ng-click="gotoLogin()" class="backtologin">
+    <i class="material-icons" aria-hidden="true">arrow_back</i><span translate="BACK_TO_LOGIN"></span>
+  </md-button>
 </section>
+<p class="recovery-security-note"><i class="material-icons" aria-hidden="true">verified_user</i>{{'RECOVERY_SAFE_NOTE'|translate}}</p>

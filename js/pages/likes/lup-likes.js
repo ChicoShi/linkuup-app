@@ -11,11 +11,13 @@ angular.module('LUP').config(function($routeProvider) {
 		HelpSrvc, UserSrvc, LikeSrvc, ErrorSrvc) {
 	
 	// Main
-	$scope.data.title = 'TITLE_LIKES';
+	$scope.data.title = 'TITLE_UPS';
 	
 	// Data to work on
 	$scope.data.pagemenu = new GWFPagination();
-	$scope.data.likes = []; 
+	$scope.data.likes = [];
+	$scope.data.topUpGiver = null;
+	$scope.data.totalUps = 0;
 
 	// Hook services into template
 	$scope.LikeSrvc = LikeSrvc;
@@ -56,6 +58,13 @@ angular.module('LUP').config(function($routeProvider) {
 			friend.likedMe = gwsMessage.read32();
 			$scope.data.likes.push(friend);
 		}
+		$scope.data.likes.sort(function(a, b) {
+			return Number(b.likedMe || 0) - Number(a.likedMe || 0);
+		});
+		$scope.data.topUpGiver = $scope.data.likes[0] || null;
+		$scope.data.totalUps = $scope.data.likes.reduce(function(total, user) {
+			return total + Number(user.likedMe || 0);
+		}, 0);
 	};
 	
 	////////////////////

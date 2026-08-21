@@ -1,4 +1,17 @@
 <md-content layout="column" flex>
+  <section class="inbox-private-hero" aria-label="Private Nachrichten">
+    <div class="inbox-private-hero-copy">
+      <span>DEINE VERBINDUNGEN</span>
+      <h2>Private Nachrichten</h2>
+      <p ng-if="sortedQueries().length">Deine Gespräche – direkt, persönlich und bei dir.</p>
+      <p ng-if="!sortedQueries().length">Sobald du jemandem schreibst, beginnt euer Gespräch hier.</p>
+    </div>
+    <div class="inbox-private-signal" aria-hidden="true">
+      <i class="material-icons">forum</i>
+      <b></b><em></em>
+    </div>
+  </section>
+
   <md-list class="inbox-message-list" md-dense flex>
     
     <md-list-item

@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q, $timeout,
+}).controller('ProfileCtrl', function($scope, $routeParams, $translate, $q, $timeout, $location,
 	UserSrvc, LikeSrvc, FriendSrvc, GallerySrvc, CourseSrvc, CountrySrvc, TimezoneSrvc,
 	ConfigSrvc, ProfileSrvc, SettingsSrvc, WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, RenderSrvc) {
 	
@@ -80,6 +80,16 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.openQuery = function(user) {
 		console.log('ProfileCtrl.openQuery()', user);
 		$scope.gotoQuery(user);
+	};
+
+	$scope.openProfileSettings = function(event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		// Use the local route directly. The generic delayed navigation can be
+		// swallowed by the surrounding legacy list item on this profile view.
+		$location.path('/settings');
 	};
 
 	// An Up is intentionally a deliberate pull on the yellow profile marker,
@@ -295,6 +305,25 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.renderProfileSetting = function(field) {
 		return RenderSrvc.renderClass(field.setting, field.value);
+	};
+
+	$scope.profileFieldIcon = function(key) {
+		var icons = {
+			gender: 'person_outline',
+			lup_status: 'chat_bubble_outline',
+			lup_state: 'explore',
+			lup_city: 'location_city',
+			lup_eyecolor: 'visibility',
+			lup_height: 'height',
+			lup_interest: 'auto_awesome',
+			lup_sexo: 'favorite_outline',
+			lup_has_pet: 'pets',
+			lup_drinks: 'local_bar',
+			lup_smokes: 'smoke_free',
+			lup_sporty: 'directions_run',
+			lup_religion: 'self_improvement'
+		};
+		return icons[key] || 'tune';
 	};
 
 	$scope.countryURL = function(user) {
