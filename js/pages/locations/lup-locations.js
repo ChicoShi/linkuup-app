@@ -26,6 +26,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var locationsRoomsRendered = false;
 	var locationsInitialized = false;
 	var slickStartAttempts = 0;
+	var slickRetryTimer = null;
 	var initialRoomsTimer = null;
 	var initialRoomsRequested = false;
 	var initialRoomsPromise = null;
@@ -48,21 +49,44 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.currentRoomIndex = -1;
 
 	// During a route transition Angular can keep a retiring view in the DOM for
-	// one digest. Always operate on the newest rail, never a stale one.
+	// one digest. Prefer the active rail which already owns cards; `.last()`
+	// alone can otherwise select the leaving, empty view and make the live rail
+	// appear to have timed out.
 	var getSlick = function() {
-		return window.jQuery('ng-view .slickit').last();
+		var $rails = window.jQuery('ng-view .slickit').filter(function() {
+			return !window.jQuery(this).closest('.ng-leave').length;
+		});
+		var $withSlides = $rails.filter(function() {
+			return window.jQuery(this).children('.lup-room-slide-outer').length ||
+				window.jQuery(this).find('.slick-slide').length;
+		});
+		return ($withSlides.length ? $withSlides : $rails).last();
 	};
 	var revealRailFallback = function() {
 		getSlick().addClass('slick-inited lup-slick-fallback');
 		LoadingSrvc.removeTask('slick_rooms');
 	};
 	var retrySlick = function(nofocus) {
-		if (slickStartAttempts++ >= 12) {
+		if ($scope.$$destroyed) {
+			return;
+		}
+		// ng-repeat is rendered after the WebSocket/GPS callbacks have completed
+		// their current digest.  On slower phones that can outlast the former
+		// 600 ms retry window even though visibleRooms already contains cards.
+		// Match the page's loading safety window instead of falsely falling back
+		// to a vertical rail while Angular is still attaching the slides.
+		if (slickStartAttempts++ >= 64) {
 			console.warn('LinkUUp: location rail did not receive slides in time.');
 			revealRailFallback();
 			return;
 		}
-		$timeout(function() { $scope.slick(nofocus); }, 50);
+		if (slickRetryTimer) {
+			$timeout.cancel(slickRetryTimer);
+		}
+		slickRetryTimer = $timeout(function() {
+			slickRetryTimer = null;
+			$scope.slick(nofocus);
+		}, 50);
 	};
 
 	// The discovery surface is a rail, never a vertically stacked feed.  Browser
@@ -127,6 +151,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (initialRoomsTimer) {
 			$timeout.cancel(initialRoomsTimer);
+		}
+		if (slickRetryTimer) {
+			$timeout.cancel(slickRetryTimer);
 		}
 		if (categoryRefreshTimer) {
 			$timeout.cancel(categoryRefreshTimer);
@@ -286,6 +313,10 @@ angular.module('LUP').config(function($routeProvider) {
 		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
 		locationsRoomsRendered = true;
 		slickStartAttempts = 0;
+		if (slickRetryTimer) {
+			$timeout.cancel(slickRetryTimer);
+			slickRetryTimer = null;
+		}
 		LoadingSrvc.addTask('slick_rooms');
 		// Angular renders the repeated rooms asynchronously. Never reveal the
 		// raw repeated cards as a vertical list while that render is catching up:
@@ -320,6 +351,21 @@ angular.module('LUP').config(function($routeProvider) {
 			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
+		// Once Slick has started, it wraps the original direct cards in
+		// .slick-list/.slick-track.  Check that state before inspecting direct
+		// children, otherwise every later relayout mistakes a working carousel
+		// for an empty ng-repeat and eventually hides it behind the timeout path.
+		if ($slick.hasClass('slick-initialized')) {
+			try {
+				$slick.slick('setPosition');
+			}
+			catch (error) {
+				console.warn('LinkUUp: could not relayout the location rail.', error);
+			}
+			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
+			LoadingSrvc.removeTask('slick_rooms');
+			return;
+		}
 		if (!$slick.children('.lup-room-slide-outer').length) {
 			// An empty category/search result is a valid state, not a failed
 			// Angular render.  Retrying it produced a misleading timeout warning
@@ -330,17 +376,6 @@ angular.module('LUP').config(function($routeProvider) {
 				return;
 			}
 			retrySlick(nofocus);
-			return;
-		}
-		if ($slick.hasClass('slick-initialized')) {
-			try {
-				$slick.slick('setPosition');
-			}
-			catch (error) {
-				console.warn('LinkUUp: could not relayout the location rail.', error);
-			}
-			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
-			LoadingSrvc.removeTask('slick_rooms');
 			return;
 		}
 
