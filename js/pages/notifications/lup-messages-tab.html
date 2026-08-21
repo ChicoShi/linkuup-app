@@ -1,32 +1,40 @@
 <md-content layout="column" flex>
-  <md-list md-dense flex>
+  <md-list class="inbox-message-list" md-dense flex>
     
     <md-list-item
-     class="md-2-line"
-     ng-click="gotoQuery(query.user)" aria-label="goto private chat"
+     class="md-2-line inbox-thread-card"
+     ng-click="gotoQuery(query.user)" aria-label="Privatnachricht öffnen"
      ng-repeat="query in sortedQueries()"
      on-long-press="deleteChat(query)"
      ng-class="{'lup-notification-unread':query.unreadCount()>0}">
      
-      <lup-avatar ng-user="query.user" ng-click="gotoProfile(query.user)"></lup-avatar>
+      <div class="inbox-thread-avatar">
+        <lup-avatar ng-user="query.user" ng-click="$event.stopPropagation(); gotoProfile(query.user)"></lup-avatar>
+        <span class="inbox-thread-live" ng-if="query.unreadCount()>0" aria-hidden="true"></span>
+      </div>
 
-      <div class="md-list-item-text">
-        <h4>{{query.user.displayName()}}</h4>
+      <div class="md-list-item-text inbox-thread-copy">
+        <div class="inbox-thread-titleline">
+          <h4>{{query.user.displayName()}}</h4>
+          <span class="inbox-thread-unread" ng-if="query.unreadCount()>0">{{query.unreadCount()}}</span>
+        </div>
         <p>{{query.lastText()}}</p>
       </div>
 
-  	  <md-button class="md-secondary md-icon-button"
-  	   ng-click="gotoQuery(query.user)" aria-label="goto private chat">
-        <i class="material-icons">chevron_right</i>
-      </md-button>
+      <button class="inbox-thread-open" type="button"
+       ng-click="$event.stopPropagation(); gotoQuery(query.user)" aria-label="Privatnachricht öffnen">
+        <i class="material-icons">forum</i>
+      </button>
       
     </md-list-item>
     
-    <md-list-item class="md-1-line" ng-if="!sortedQueries().length">
-      <div class="md-list-item-text">
+    <div class="inbox-empty" ng-if="!sortedQueries().length">
+      <div class="inbox-empty-mark" aria-hidden="true"><i class="material-icons">forum</i></div>
+      <div class="inbox-empty-copy">
+        <strong>Deine privaten Nachrichten</strong>
         <p>{{'MSG_NO_PRIVATE_MESSAGES'|translate}}</p>
       </div>
-    </md-list-item>
+    </div>
     
   </md-list>
 </md-content>

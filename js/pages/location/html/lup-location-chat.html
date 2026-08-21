@@ -1,9 +1,6 @@
 <div class="location-chat-surface" ng-class="locationVisual(data.room).class" layout="column" flex
  XXin-view="$inview&&chatVisible()">
   <div class="chat-location-atmosphere" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
-  <button type="button" class="chat-table-trigger" ng-if="data.room.isSelfInRoom() && inChatRange()" ng-click="openTableLounge($event)" aria-label="Tischräume öffnen" title="Tischräume">
-    <i class="material-icons">table_restaurant</i><span class="chat-table-guests"><i class="material-icons">group</i></span>
-  </button>
   <div class="chat-msgs md-padding" flex="100">
     <div ng-if="!data.room.isSelfInRoom()" class="chat-join-button">
       <md-button

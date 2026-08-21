@@ -5,19 +5,35 @@
   <md-content layout="column" flex>
     <ng-include src="'js/pages/profile/header-bar-profile.html?v='+V"></ng-include>
 
-    <md-list class="md-dense" flex>
-      <md-subheader class="md-no-sticky">
-        {{'CUDDLES_WITH'|translate:{user: data.cuddleUser.displayName()} }}
-      </md-subheader>
-      <md-list-item class="md-2-line" ng-repeat="cuddle in data.cuddles track by $index">
-        <lup-avatar ng-user="cuddle.partner" ng-click="gotoProfile(cuddle.partner)"></lup-avatar>
-        <div class="md-list-item-text" layout="column">
-          <p>{{cuddle.partner.displayName()}}</p>
-          <p>{{cuddle.day | date:'mediumDate'}}</p>
+    <section class="highfive-hero" aria-labelledby="highfive-title">
+      <div class="highfive-hero-mark" aria-hidden="true"><i class="material-icons">front_hand</i></div>
+      <div class="highfive-hero-copy">
+        <span>{{'HIGHFIVE_EYEBROW'|translate}}</span>
+        <h1 id="highfive-title">{{'CUDDLES_WITH'|translate:{user: data.cuddleUser.displayName()} }}</h1>
+        <p>{{'HIGHFIVE_INTRO'|translate}}</p>
+      </div>
+    </section>
+
+    <section class="highfive-rule" aria-label="{{'HIGHFIVE_RULE_TITLE'|translate}}">
+      <i class="material-icons" aria-hidden="true">qr_code_2</i>
+      <div><strong>{{'HIGHFIVE_RULE_TITLE'|translate}}</strong><span>{{'HIGHFIVE_RULE_COPY'|translate}}</span></div>
+    </section>
+
+    <section class="highfive-ledger" aria-label="{{'CUDDLES'|translate}}">
+      <article class="highfive-entry" ng-repeat="cuddle in data.cuddles track by $index">
+        <lup-avatar class="highfive-avatar" ng-user="cuddle.partner" ng-click="gotoProfile(cuddle.partner)"></lup-avatar>
+        <div class="highfive-entry-copy">
+          <span>{{'HIGHFIVE_CONFIRMED'|translate}}</span><strong>{{cuddle.partner.displayName()}}</strong>
+          <small><i class="material-icons" aria-hidden="true">event</i>{{cuddle.day | date:'mediumDate'}}</small>
         </div>
-      </md-list-item>
-      <p class="lup-empty-list" ng-if="!data.cuddles.length">{{'CUDDLES_EMPTY'|translate}}</p>
-    </md-list>
+        <i class="material-icons highfive-entry-seal" aria-label="{{'HIGHFIVE_CONFIRMED'|translate}}">verified</i>
+      </article>
+      <div class="highfive-empty" ng-if="!data.cuddles.length">
+        <div aria-hidden="true"><i class="material-icons">front_hand</i></div>
+        <strong>{{'CUDDLES_EMPTY'|translate}}</strong><p>{{'HIGHFIVE_EMPTY_COPY'|translate}}</p>
+      </div>
+    </section>
+    <p class="highfive-footnote"><i class="material-icons" aria-hidden="true">lock</i>{{'HIGHFIVE_PRIVATE_NOTE'|translate}}</p>
   </md-content>
 
 </section>

@@ -9,15 +9,21 @@
 		 in-view="$inview&&onMessageRead(msg)"
 		 ng-class="{'lup-own-msg':msg.isOwnMessage(), 'lup-notification-unread':!msg.readMyself()}">
 		  <div class="head">
-			  <p class="msg">
-				  <span class="name">{{msg.fromUser().displayName()}}</span>
-				  <span class="time">{{msg.sent()|msgDate}}</span>
-				  <span class="message"><span class="messager-inner">{{msg.text()}}</span>
-				  <lup-msg-state message="msg"></lup-msg-state>
-				  <lup-avatar
+			  <article class="query-message-card">
+				  <lup-avatar class="query-message-avatar"
                    ng-user="msg.fromUser()"
                    ng-click="gotoProfile(msg.fromUser())"></lup-avatar>
-			  </p>
+				  <div class="query-message-content">
+					  <div class="query-message-meta">
+						  <span class="name">{{msg.fromUser().displayName()}}</span>
+						  <span class="time">{{msg.sent()|msgDate}}</span>
+					  </div>
+					  <div class="message">
+						  <span class="messager-inner">{{msg.text()}}</span>
+						  <lup-msg-state message="msg"></lup-msg-state>
+					  </div>
+				  </div>
+			  </article>
 		  </div>
 		</div>
     </div>

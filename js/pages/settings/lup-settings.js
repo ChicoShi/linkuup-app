@@ -15,10 +15,13 @@ angular.module('LUP').config(function($routeProvider) {
 	const ACLS = ['acl_all', 'acl_guests', 'acl_members', 'acl_friend_friends', 'acl_friends', 'acl_noone'];
 	const HIDDEN_SETTINGS = {
 		Date: {activity_accuracy: true},
+		// These values are internal moderation/progression data, not choices a
+		// LinkUUp member can make. Showing a naked number made the profile page
+		// both confusing and misleading.
 		Friends: {friends_level: true},
 		// The location-bound profile visibility policy is not implemented yet.
 		// Keep the stored setting out of the generic renderer until it is.
-		LinkUUp: {lup_profile_outside_visible: true},
+		LinkUUp: {lup_profile_outside_visible: true, lup_cuddles: true},
 	};
 
 	$scope.moduleLabel = function(module) {

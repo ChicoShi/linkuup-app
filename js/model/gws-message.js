@@ -6,6 +6,7 @@ function GWS_Message(buffer) {
 	this.INDEX = 0;
 	this.LENGTH = 0;
 	this.CMD = -1;
+	this.TRUNCATED = false;
 
 	if (buffer) {
 		this.BUFFER = new DataView(buffer);
@@ -19,6 +20,10 @@ function GWS_Message(buffer) {
 	// Setter / Getter //
 	/////////////////////
 	this.hasMore = function() { return this.INDEX < this.LENGTH; };
+	this.canRead = function(bytes, index) {
+		index = index === undefined ? this.INDEX : index;
+		return index >= 0 && bytes >= 0 && index + bytes <= this.LENGTH;
+	};
 	this.isSync = function() { return this.LENGTH > 0 ? (this.BUFFER.getUint8(0) & 0x80) > 0 : false; };
 	this.index = function(index) { if (index !== undefined) this.INDEX = index; return this.INDEX; };
 	this.moveIndex = function(by) { this.INDEX += by; return this.INDEX; };
@@ -45,6 +50,16 @@ function GWS_Message(buffer) {
 			alert("Cannot read 0 bytes.");
 		}
 		index = index === undefined ? this.INDEX : index;
+		if (!this.canRead(bytes, index)) {
+			// A server reply can legally end with an optional legacy tail. Never
+			// let one malformed or older frame turn into a browser RangeError popup.
+			if (!this.TRUNCATED) {
+				console.warn('Ignoring truncated websocket payload.', {index:index, bytes:bytes, length:this.LENGTH});
+				this.TRUNCATED = true;
+			}
+			this.INDEX = this.LENGTH;
+			return 0;
+		}
 		var back = 0;
 		for (var i = 0; i < bytes; i++) {
 			back <<= 8;
@@ -57,6 +72,7 @@ function GWS_Message(buffer) {
 	this.readString = function(index) {
 		this.index(index);
 		let back = '';
+		let code;
 		while (code = this.read8()) {
 			back += String.fromCharCode(code);
 		}
@@ -64,9 +80,16 @@ function GWS_Message(buffer) {
 		console.log('GWS_Message.readString == ' + back);
 		return back;
 	};
-	this.readFloat = function(index) {  let f = this.BUFFER.getFloat32(this.index(index), true); this.INDEX += 4; return f; };
+	this.readFloat = function(index) {
+		index = index === undefined ? this.INDEX : index;
+		if (!this.canRead(4, index)) { this.readN(4, index); return NaN; }
+		let f = this.BUFFER.getFloat32(index, true);
+		this.INDEX = index + 4;
+		return f;
+	};
 	this.readDouble = function(index) {
 		index = index === undefined ? this.INDEX : index;
+		if (!this.canRead(8, index)) { this.readN(8, index); return NaN; }
 		const buffer = new ArrayBuffer(8);
 		const view = new DataView(buffer);
 		for (let i = 0; i < 8; i++) {

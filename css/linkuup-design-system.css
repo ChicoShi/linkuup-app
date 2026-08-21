@@ -476,7 +476,7 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .distrat .distance { display:flex; flex:0 0 auto; align-items:center; min-width:0; margin:0; padding:0; }
 .nearby .distrat .location-cuddles { position:absolute; top:28px; left:26%; display:grid; place-items:center; width:52px; height:52px; border:1px solid rgba(255,214,231,.42); border-radius:17px 17px 17px 7px; background:linear-gradient(135deg,rgba(255,255,255,.30) 0 7%,transparent 7% 13%,rgba(255,255,255,.14) 13% 19%,transparent 19% 25%,rgba(255,255,255,.12) 25% 31%,transparent 31%),linear-gradient(145deg,#ffb3ca,#dc6799 57%,#8f4e9e); box-shadow:0 4px 9px rgba(105,40,89,.30),0 13px 23px rgba(0,0,0,.25),0 0 20px rgba(231,103,156,.13),inset 0 2px 1px rgba(255,255,255,.44); color:#fff; cursor:pointer; transform:translateX(-50%); transition:transform .22s ease,filter .22s ease; }
 .nearby .distrat .location-cuddles:hover { transform:translateX(-50%) translateY(-3px) rotate(-2deg) scale(1.05); filter:brightness(1.12); }
-.nearby .distrat .location-cuddles::after { content:'CUDDLE'; position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); color:#ffc2d6; font-size:8px; font-weight:900; letter-spacing:.12em; white-space:nowrap; }
+.nearby .distrat .location-cuddles::after { content:'HIGH FIVE'; position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); color:#ffc2d6; font-size:8px; font-weight:900; letter-spacing:.12em; white-space:nowrap; }
 .nearby .distrat .location-cuddles > .material-icons { color:inherit; font-size:30px; line-height:1; filter:drop-shadow(0 2px 0 rgba(111,42,85,.40)); }
 .nearby .distrat .location-cuddles strong { position:absolute; right:-10px; bottom:-9px; display:grid; place-items:center; min-width:23px; height:23px; padding:0 4px; border:2px solid #30223c; border-radius:12px; background:linear-gradient(145deg,#f8c07d,#e57975); box-shadow:0 4px 0 rgba(123,57,67,.48),0 7px 11px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.35); color:#fff; font-size:11px; line-height:1; }
 .nearby .distrat .distance { position:absolute; top:29px; left:calc(26% + 114px); align-items:flex-start; }
@@ -3860,6 +3860,683 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
 
+/* End-of-sheet query correction: legacy sections above this point intentionally
+   cannot override this final geometry. */
+.query-page .query-message-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  min-height:62px !important;
+  margin:0 !important;
+  padding:10px 13px !important;
+  gap:12px !important;
+}
+.query-page .query-message-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+.query-page .query-message-avatar .img,
+.query-page .query-message-avatar span {
+  position:absolute !important;
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.query-page .query-message-content {
+  display:flex !important;
+  flex:1 1 auto !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  min-width:0 !important;
+  min-height:42px !important;
+}
+.query-page .query-message-content .message {
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  min-height:20px !important;
+  padding:2px 0 3px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  text-align:left !important;
+}
+.query-page .query-message-content .message::after {
+  content:'' !important;
+  position:absolute !important;
+  right:0 !important;
+  bottom:0 !important;
+  left:0 !important;
+  height:1px !important;
+  background:linear-gradient(90deg,rgba(150,197,246,.28),rgba(150,197,246,.035)) !important;
+}
+.query-page .query-message-content .messager-inner,
+.query-page .query-message-content .lup-message-state { position:relative !important; z-index:1 !important; }
+.query-page .query-message-content .lup-message-state { right:auto !important; bottom:auto !important; left:auto !important; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse !important; }
+.query-page .lup-own-msg .query-message-content { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
+
+/* Inbox geometry: Angular Material's md-secondary used absolute positioning
+   and the avatar directive kept a 32px inner image. Both are reset here. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:10px 12px !important;
+}
+.notification .notification-panel .inbox-thread-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  align-self:center !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 12px 0 0 !important;
+  padding:0 !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar {
+  display:block !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar .img,
+.notification .notification-panel .inbox-thread-avatar .lup-avatar span {
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.notification .notification-panel .inbox-thread-copy { min-width:0 !important; }
+.notification .notification-panel .inbox-thread-open.md-secondary,
+.notification .notification-panel .inbox-thread-open {
+  position:static !important;
+  right:auto !important;
+  margin:0 0 0 auto !important;
+}
+
+/* Exact alignment for direct messages. The avatar directive renders a nested
+   .img layer, so it must be sized explicitly instead of inheriting the old
+   32px avatar inset. This keeps the picture geometrically centred. */
+.query-page .query-message-avatar {
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  padding:0 !important;
+  line-height:0;
+}
+.query-page .query-message-avatar .img,
+.query-page .query-message-avatar span {
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.query-page .query-message-content {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  justify-content:center;
+  min-height:42px;
+}
+.query-page .query-message-content .message {
+  position:relative;
+  display:block !important;
+  min-height:18px;
+  padding:1px 0 2px !important;
+  text-align:left;
+}
+.query-page .query-message-content .message::after {
+  content:'';
+  position:absolute;
+  z-index:0;
+  right:0;
+  bottom:0;
+  left:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(150,197,246,.23),rgba(150,197,246,.045));
+}
+.query-page .query-message-content .messager-inner,
+.query-page .query-message-content .lup-message-state { position:relative; z-index:1; }
+.query-page .query-message-content .lup-message-state {
+  position:relative !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  display:inline-block !important;
+  width:auto;
+  height:auto;
+  margin-left:6px;
+}
+.query-page .lup-own-msg .query-message-content .message { text-align:right; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.045),rgba(150,197,246,.23)); }
+@media (max-width:360px) {
+  .query-page .query-message-avatar { flex-basis:38px !important; width:38px !important; height:38px !important; }
+}
+
+/* Inbox final geometry: let a message row reach the right content edge and
+   centre its avatar in the actual row, independent of earlier legacy rules. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  margin-right:0 !important;
+  margin-left:12px !important;
+  padding-right:12px !important;
+  padding-left:3px !important;
+}
+.notification .inbox-thread-avatar {
+  align-self:center;
+  width:42px !important;
+  height:42px !important;
+  margin:0 11px 0 8px !important;
+}
+.notification .inbox-thread-avatar .lup-avatar,
+.notification .inbox-thread-avatar .lup-avatar img {
+  display:block;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  transform:none !important;
+}
+.notification .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28) !important;
+  outline:0 !important;
+  box-shadow:0 4px 12px rgba(2,10,29,.16) !important;
+}
+@media (max-width:360px) {
+  .notification .notification-panel .inbox-message-list .inbox-thread-card { margin-left:8px !important; margin-right:0 !important; padding-right:9px !important; }
+  .notification .inbox-thread-avatar,.notification .inbox-thread-avatar .lup-avatar,.notification .inbox-thread-avatar .lup-avatar img { width:38px !important; height:38px !important; }
+}
+
+/* Profile settings are a personal control panel, not a raw list of backend
+   modules.  One quiet ambient field stays visible through every transparent
+   surface; the icons only orient the user and never compete with a control. */
+.settings-page > md-content {
+  position:relative;
+  isolation:isolate;
+  overflow-x:hidden;
+  background:
+    radial-gradient(ellipse 72% 28% at 102% 8%,rgba(111,175,245,.16),transparent 70%),
+    radial-gradient(ellipse 58% 22% at -8% 42%,rgba(145,104,225,.11),transparent 72%),
+    linear-gradient(155deg,#151a2a 0%,#0d1322 56%,#101629 100%) !important;
+}
+.settings-page > md-content::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  opacity:.52;
+  background:
+    radial-gradient(circle at 15% 18%,rgba(180,223,255,.30) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 76% 31%,rgba(190,161,255,.24) 0 1px,transparent 1.7px),
+    linear-gradient(119deg,transparent 0 30%,rgba(128,192,255,.08) 30.1% 30.25%,transparent 30.35% 100%);
+  background-size:137px 149px,181px 203px,100% 100%;
+}
+.settings-page .lup-settings-list {
+  max-width:740px;
+  padding:16px 14px 36px;
+  background:transparent !important;
+}
+.settings-page .lup-settings-profile-visibility {
+  position:relative;
+  margin:0 0 20px;
+}
+.settings-page .lup-settings-profile-divider { display:none !important; }
+.settings-page .lup-settings-group { position:relative; margin:0 0 25px; }
+.settings-page .lup-settings-group::before {
+  content:'';
+  position:absolute;
+  top:25px;
+  bottom:-16px;
+  left:23px;
+  width:1px;
+  background:linear-gradient(to bottom,rgba(163,210,255,.34),rgba(163,210,255,.06));
+  pointer-events:none;
+}
+.settings-page .lup-settings-group:last-child::before { bottom:18px; }
+.settings-page .lup-settings-group-heading {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:39px;
+  margin:0 2px 8px;
+}
+.settings-page .lup-settings-group-heading .md-subheader {
+  display:block;
+  min-height:0;
+  margin:0 !important;
+  padding:0 !important;
+  color:#d8e7fa !important;
+  font-size:10px;
+  font-weight:820;
+  letter-spacing:.14em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+.settings-page .settings-group-mark,
+.settings-page .settings-field-mark {
+  display:grid;
+  flex:0 0 auto;
+  place-items:center;
+  width:36px;
+  height:36px;
+  border:1px solid rgba(181,215,255,.24);
+  border-radius:13px 13px 13px 5px;
+  background:linear-gradient(145deg,rgba(157,206,255,.16),rgba(111,91,201,.09));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 7px 14px rgba(1,8,25,.13);
+  color:#bce4ff;
+}
+.settings-page .settings-group-mark .material-icons { font-size:19px; }
+.settings-page .settings-field-mark {
+  width:31px;
+  height:31px;
+  margin-right:11px;
+  border-radius:10px 10px 10px 4px;
+  border-color:rgba(183,213,255,.16);
+  background:rgba(129,171,226,.08);
+  box-shadow:none;
+  color:#a4cbe9;
+}
+.settings-page .settings-field-mark .material-icons { font-size:16px; }
+.settings-page .settings-field-mark-quiet { opacity:.88; }
+.settings-page .settings-group-time .settings-group-mark { color:#cad0ff; border-color:rgba(194,192,255,.29); }
+.settings-page .settings-group-social .settings-group-mark { color:#b7e8df; border-color:rgba(160,229,211,.25); }
+.settings-page .settings-group-local .settings-group-mark { color:#b9dcff; border-color:rgba(156,205,255,.28); }
+.settings-page .lup-settings-list md-list-item.md-2-line {
+  min-height:72px;
+  margin:7px 0 7px 47px;
+  padding:8px 13px 8px 10px;
+  border:1px solid rgba(197,221,255,.115) !important;
+  border-radius:16px 16px 16px 7px;
+  background:linear-gradient(118deg,rgba(143,182,226,.095),rgba(255,255,255,.025) 68%,rgba(126,100,204,.055)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 9px 20px rgba(1,8,24,.11);
+}
+.settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; }
+.settings-page .lup-settings-list md-list-item.md-2-line:hover {
+  transform:translateY(-1px);
+  border-color:rgba(172,213,255,.34) !important;
+  background:linear-gradient(118deg,rgba(116,176,232,.16),rgba(143,109,222,.09) 72%) !important;
+}
+.settings-page .lup-settings-list .md-list-item-text { min-width:0; }
+.settings-page .lup-settings-list .md-list-item-text h3 {
+  overflow:hidden;
+  color:#f2f7ff !important;
+  font-size:13px;
+  font-weight:720;
+  line-height:1.22;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.settings-page .lup-settings-list .lup-setting-controls { gap:7px; margin-left:7px; }
+.settings-page .lup-settings-list md-select {
+  min-width:116px;
+  border-color:rgba(183,215,255,.22);
+  border-radius:10px;
+  background:rgba(9,16,30,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+@media (max-width:420px) {
+  .settings-page .lup-settings-list { padding:13px 11px 30px; }
+  .settings-page .lup-settings-group { margin-bottom:21px; }
+  .settings-page .lup-settings-group::before { left:19px; }
+  .settings-page .settings-group-mark { width:32px; height:32px; border-radius:11px 11px 11px 4px; }
+  .settings-page .settings-group-mark .material-icons { font-size:17px; }
+  .settings-page .lup-settings-list md-list-item.md-2-line { min-height:67px; margin-left:38px; padding-right:8px; padding-left:8px; }
+  .settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; }
+  .settings-page .settings-field-mark { width:27px; height:27px; margin-right:7px; }
+  .settings-page .settings-field-mark .material-icons { font-size:14px; }
+  .settings-page .lup-settings-list .md-list-item-text h3 { font-size:12px; }
+  .settings-page .lup-settings-list md-select { min-width:94px; max-width:42vw; }
+}
+@media (prefers-reduced-motion:reduce) { .settings-page .lup-settings-list md-list-item.md-2-line { transition:none; } }
+
+/* Settings refinement: words must carry the meaning.  The prior icon system
+   made ordinary choices look like an unexplained control board. */
+.settings-page > md-content {
+  background:
+    radial-gradient(ellipse 70% 25% at 102% 5%,rgba(131,168,221,.09),transparent 70%),
+    radial-gradient(ellipse 55% 20% at -7% 47%,rgba(145,119,201,.06),transparent 72%),
+    linear-gradient(155deg,#151925 0%,#0d1220 58%,#101522 100%) !important;
+}
+.settings-page > md-content::before { opacity:.24; }
+.settings-page .lup-settings-group { margin-bottom:22px; }
+.settings-page .lup-settings-group::before {
+  top:25px;
+  bottom:-14px;
+  left:5px;
+  background:linear-gradient(to bottom,rgba(180,210,246,.26),rgba(180,210,246,.035));
+}
+.settings-page .lup-settings-group-heading {
+  min-height:31px;
+  margin:0 4px 7px;
+  padding-left:13px;
+  border-left:2px solid rgba(176,209,247,.50);
+}
+.settings-page .lup-settings-group-heading .md-subheader {
+  color:#dce7f5 !important;
+  font-size:10px;
+  letter-spacing:.11em;
+}
+.settings-page .settings-group-mark,
+.settings-page .settings-field-mark { display:none !important; }
+.settings-page .lup-settings-list md-list-item.md-2-line,
+.settings-page .lup-settings-profile-visibility md-list-item.md-2-line {
+  min-height:68px;
+  margin:6px 0;
+  padding:8px 12px;
+  border-color:rgba(197,216,241,.11) !important;
+  border-radius:14px 14px 14px 6px;
+  background:linear-gradient(110deg,rgba(198,216,241,.045),rgba(255,255,255,.016) 70%,rgba(151,136,205,.032)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 18px rgba(1,8,24,.10);
+}
+.settings-page .lup-settings-list md-list-item.md-2-line:hover {
+  border-color:rgba(180,210,246,.26) !important;
+  background:linear-gradient(110deg,rgba(143,186,230,.10),rgba(151,136,205,.06)) !important;
+}
+.settings-page .lup-settings-list md-select,
+.settings-page .lup-settings-list .lup-setting-input input,
+.settings-page .lup-settings-list .lup-setting-input textarea {
+  color:#eef4fb !important;
+  -webkit-text-fill-color:#eef4fb;
+  border-color:rgba(188,211,240,.18) !important;
+  background:rgba(8,14,25,.26) !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-select .md-select-value span,
+.settings-page .lup-settings-list .md-select-value,
+.settings-page .lup-settings-list .md-select-value span {
+  color:#eef4fb !important;
+  border-bottom-color:rgba(188,211,240,.28) !important;
+  background:transparent !important;
+}
+.md-select-menu-container .md-select-menu,
+.md-select-menu-container md-content,
+.md-select-menu-container .md-select-menu md-content {
+  color:#edf4ff !important;
+  background:#121a2a !important;
+  border-color:rgba(187,211,243,.18) !important;
+}
+.md-select-menu-container md-option,
+.md-select-menu-container md-option .md-text {
+  color:#e8f0fb !important;
+  background:transparent !important;
+}
+.md-select-menu-container md-option:hover,
+.md-select-menu-container md-option:focus,
+.md-select-menu-container md-option.md-selected {
+  color:#fff !important;
+  background:rgba(126,160,213,.18) !important;
+}
+@media (max-width:420px) {
+  .settings-page .lup-settings-list md-list-item.md-2-line,
+  .settings-page .lup-settings-profile-visibility md-list-item.md-2-line { margin-left:0; padding-right:9px; padding-left:9px; }
+}
+
+/* Native Material controls are appended late by Angular.  Keep every variant
+   inside the same transparent LinkUUp surface instead of falling back to the
+   browser's white form styling. */
+.settings-page .lup-settings-list md-select,
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-input-container,
+.settings-page .lup-settings-list md-input-container .md-input,
+.settings-page .lup-settings-list .lup-setting-input input,
+.settings-page .lup-settings-list .lup-setting-input textarea {
+  background:rgba(8,14,25,.30) !important;
+  color:#edf4ff !important;
+  -webkit-text-fill-color:#edf4ff !important;
+}
+.settings-page .lup-settings-list .lup-setting-input input[type="color"] {
+  appearance:none;
+  -webkit-appearance:none;
+  padding:3px !important;
+  border:1px solid rgba(188,211,240,.20) !important;
+  background:rgba(8,14,25,.30) !important;
+}
+.settings-page .lup-settings-list .lup-setting-input input[type="color"]::-webkit-color-swatch-wrapper { padding:0; }
+.settings-page .lup-settings-list .lup-setting-input input[type="color"]::-webkit-color-swatch { border:0; border-radius:7px; }
+.settings-page .lup-settings-list md-select .md-select-value,
+.settings-page .lup-settings-list md-select .md-select-value span {
+  border-bottom-color:rgba(188,211,240,.24) !important;
+  background:transparent !important;
+}
+.settings-page .lup-settings-list .md-select-icon { color:#9fc9e8 !important; }
+.md-select-menu-container,
+.md-select-menu-container .md-select-menu,
+.md-select-menu-container md-content,
+.md-select-menu-container .md-select-menu md-content {
+  background:#111a29 !important;
+  box-shadow:0 14px 32px rgba(0,0,0,.36) !important;
+}
+
+/* Public “About me” values use the profile's ambient field.  The original
+   page stylesheet still styled unclassified list items as white cards; give
+   the renderer its explicit card class and neutralise that legacy fallback. */
+.profile-page .profile-information.profile-settings-view {
+  position:relative;
+  width:min(100%,720px);
+  display:block;
+  box-sizing:border-box;
+  margin:0 auto;
+  padding:3px 18px 30px;
+  background:transparent !important;
+}
+.profile-page .profile-information.profile-settings-view .profile-settings-group { margin:0 0 19px; }
+.profile-page .profile-information.profile-settings-view .md-subheader {
+  min-height:25px;
+  margin:0 0 7px;
+  padding:0 0 0 10px;
+  border-left:2px solid rgba(167,209,244,.45);
+  background:transparent !important;
+  color:#bccfe3 !important;
+  font-size:9px;
+  font-weight:780;
+  letter-spacing:.12em;
+  line-height:25px;
+  text-transform:uppercase;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card,
+.profile-page .profile-information.profile-settings-view .profile-detail-card .md-list-item-text {
+  min-height:0;
+  margin:0;
+  padding:0;
+  border:0 !important;
+  border-radius:0;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card {
+  position:relative;
+  display:block;
+  margin:6px 0;
+  padding:12px 14px 11px;
+  overflow:hidden;
+  border:1px solid rgba(195,218,245,.11) !important;
+  border-radius:14px 14px 14px 6px;
+  background:linear-gradient(112deg,rgba(142,177,219,.075),rgba(255,255,255,.018) 74%,rgba(135,112,197,.040)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 8px 17px rgba(0,0,0,.10) !important;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin:0 0 5px;
+  color:#dce8f6 !important;
+  font-size:10px;
+  font-weight:760;
+  letter-spacing:.06em;
+  line-height:1.25;
+  text-transform:uppercase;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card p {
+  margin:0;
+  color:#f1f5fa !important;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.38;
+  word-break:break-word;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card .profile-setting-acl { color:#9ed6ff; font-size:14px; }
+.profile-page .profile-information.profile-settings-view .profile-detail-card.profile-setting-denied { border-color:rgba(221,165,177,.16) !important; background:rgba(109,54,70,.10) !important; }
+@media (max-width:420px) { .profile-page .profile-information.profile-settings-view { padding-right:12px; padding-left:12px; }.profile-page .profile-information.profile-settings-view .profile-detail-card { padding:11px 12px; } }
+
+/* The public profile reads as compact facts: a label and its value belong in
+   one tile.  The responsive grid prevents a long, unstructured column while
+   still returning to one column before content would become cramped. */
+.profile-page .profile-information.profile-settings-view .profile-settings-group {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 22px;
+}
+.profile-page .profile-information.profile-settings-view .profile-settings-group > .md-subheader {
+  grid-column:1 / -1;
+  margin-bottom:0;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:92px;
+  margin:0;
+  padding:13px 14px 12px;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  min-height:25px;
+  margin-bottom:7px;
+  color:#b8cbe1 !important;
+  font-size:9px;
+  line-height:1.28;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card p {
+  color:#f2f6fb !important;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.32;
+}
+@media (min-width:680px) {
+  .profile-page .profile-information.profile-settings-view { width:min(100%,900px); }
+  .profile-page .profile-information.profile-settings-view .profile-settings-group { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .profile-page .profile-information.profile-settings-view .profile-detail-card { min-height:100px; }
+}
+@media (max-width:379px) {
+  .profile-page .profile-information.profile-settings-view .profile-settings-group { grid-template-columns:1fr; }
+  .profile-page .profile-information.profile-settings-view .profile-detail-card { min-height:76px; }
+}
+
+/* Keep the profile's ambient field continuous behind the final fact groups. */
+.profile-page .user-profile-page {
+  background:
+    radial-gradient(ellipse 75% 30% at 110% 68%,rgba(108,170,235,.09),transparent 72%),
+    radial-gradient(ellipse 64% 24% at -9% 88%,rgba(140,105,207,.08),transparent 72%),
+    var(--lup-bg) !important;
+}
+
+/* Keep the public facts directly connected to the story instead of leaving a
+   dead band between both parts of “About me”. */
+.profile-page .profile-information.profile-about-single { padding-bottom:5px !important; }
+.profile-page .profile-information.profile-settings-view { margin-top:0; padding-top:0; }
+.profile-page .profile-information.profile-settings-view .profile-settings-group:first-child { margin-top:0; }
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  min-width:0;
+  padding-right:2px;
+}
+.profile-page .profile-information.profile-settings-view .profile-setting-acl {
+  position:static;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 18px;
+  width:18px;
+  min-width:18px;
+  height:18px;
+  margin-left:auto;
+  line-height:18px;
+  overflow:visible;
+  transform:none !important;
+  vertical-align:middle;
+}
+
+/* Inbox refinement: one conversation is one calm line.  The former stacked
+   card, avatar ring and action frame competed with the actual message. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  min-height:66px;
+  margin:0 14px;
+  padding:10px 6px 10px 3px;
+  border:0 !important;
+  border-bottom:1px solid rgba(192,214,242,.10) !important;
+  border-radius:0;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:first-child { border-top:1px solid rgba(192,214,242,.07) !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-card::before {
+  top:50%;
+  bottom:auto;
+  left:0;
+  width:3px;
+  height:18px;
+  border-radius:0 3px 3px 0;
+  background:transparent;
+  transform:translateY(-50%);
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:hover,
+.notification .notification-panel .inbox-message-list .inbox-thread-card:focus-within {
+  transform:none;
+  border-bottom-color:rgba(176,211,245,.20) !important;
+  background:linear-gradient(90deg,rgba(115,158,214,.075),transparent 72%) !important;
+  box-shadow:none !important;
+}
+.notification .inbox-thread-avatar {
+  width:42px;
+  height:42px;
+  margin:0 11px 0 9px;
+}
+.notification .inbox-thread-avatar .lup-avatar,
+.notification .inbox-thread-avatar .lup-avatar img {
+  width:42px;
+  height:42px;
+}
+.notification .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28);
+  border-radius:50%;
+  outline:0;
+  outline-offset:0;
+  box-shadow:0 4px 12px rgba(2,10,29,.16);
+}
+.notification .inbox-thread-live { right:-1px; bottom:0; border-color:#111a29; }
+.notification .inbox-thread-copy h4 { color:#edf4fb !important; font-size:13px !important; }
+.notification .inbox-thread-copy p { color:#a9b7ca !important; }
+.notification .inbox-thread-open {
+  width:29px;
+  height:29px;
+  min-width:29px;
+  margin-left:7px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  box-shadow:none;
+  color:#9bcbed;
+}
+.notification .inbox-thread-open:hover,.notification .inbox-thread-open:focus-visible { background:rgba(145,198,239,.10); filter:none; }
+.notification .inbox-thread-open .material-icons { font-size:17px; }
+@media (max-width:360px) {
+  .notification .notification-panel .inbox-message-list .inbox-thread-card { margin-right:10px; margin-left:10px; }
+  .notification .inbox-thread-avatar,.notification .inbox-thread-avatar .lup-avatar,.notification .inbox-thread-avatar .lup-avatar img { width:38px; height:38px; }
+}
+
 /* Sidebar finishing pass — this is the final cascade in the app stylesheet.
    The header uses LinkUUp night-blue rather than the old metallic black, and
    icons deliberately have no individual square containers. */
@@ -4170,6 +4847,36 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .location-page md-list.usernavigation.location-online-view .online-room-header .presence-total strong { color:#f5fffa !important; font-size:18px !important; line-height:1 !important; }
 .location-page md-list.usernavigation.location-online-view .online-room-header .presence-total small { margin-top:3px !important; color:#8ce5b5 !important; font-size:7px !important; font-weight:850 !important; letter-spacing:.09em !important; }
 @media (max-width:360px) { .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto !important; gap:7px !important; min-height:53px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; } }
+
+/* A visitor has one live indicator only: the small dot on the centred avatar.
+   The editable status remains readable as calm text, never as a second green control. */
+.location-page md-list.usernavigation.location-online-view .presence-person .md-list-item-inner,
+.location-page md-list.usernavigation.location-online-view .presence-person .md-list-item-inner > div {
+  align-items:center !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  display:block !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  margin-left:4px !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  align-self:center !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person::before {
+  display:none !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person-copy p:last-child {
+  display:block !important;
+  overflow:hidden;
+  margin:0 !important;
+  color:#aaa7b8 !important;
+  font-size:10px !important;
+  line-height:1.35 !important;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
 
 /* iPhone 14 Pro Max (430 CSS px): the toolbar has four fixed controls.
  * Let the place title use only the remaining space and truncate as one
@@ -4807,6 +5514,11 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-about-single .profile-story-card h5::before { width:3px; height:3px; background:#a99bce; box-shadow:none; }
 .profile-page .profile-information.profile-about-single .profile-about-me { max-width:500px; color:#e4e0ec; font-size:15px; font-weight:450; line-height:1.68; letter-spacing:.004em; }
 .profile-page .profile-information.profile-about-single .profile-about-empty { max-width:360px; color:#aaa5ba; font-size:14px; line-height:1.55; }
+.profile-page .profile-information.profile-about-single .profile-about-empty { display:grid; justify-items:start; gap:10px; }
+.profile-page .profile-information.profile-about-single .profile-about-empty p { margin:0; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button { display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:0 11px; border:1px solid rgba(171,205,244,.22); border-radius:10px; background:rgba(109,151,211,.10); color:#cce8ff; font:700 11px/1 Ubuntu,Roboto,Arial,sans-serif; cursor:pointer; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button .material-icons { font-size:15px; }
+.profile-page .profile-information.profile-about-single .profile-about-empty button:hover,.profile-page .profile-information.profile-about-single .profile-about-empty button:focus-visible { border-color:rgba(180,218,255,.48); background:rgba(110,164,224,.18); outline:0; }
 
 /* Stable profile navigation. The legacy Material header remains responsible
    for panels only; these two visible controls are the sole visual navigation. */
@@ -4864,6 +5576,69 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-social-message { color:#c3ddff; border-color:rgba(118,174,239,.29); background:rgba(68,132,212,.14); }
 .profile-page .profile-social-action:hover { border-color:rgba(232,239,255,.52); background:rgba(159,181,237,.19); }
 @media (prefers-reduced-motion: reduce) { .profile-page .profile-social-action { transition:none; } }
+
+/* Foreign-profile controls live inside the five profile markers, not as a
+   separate row.  This keeps the social decision close to its context. */
+.profile-page .user-top-information .countitems { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.profile-page:not(.has-own-user) .user-top-information .countitems { grid-template-columns:repeat(5,minmax(0,1fr)); gap:7px; padding-left:9px; padding-right:9px; }
+.profile-page:not(.has-own-user) .user-top-information .countitem { min-width:0; min-height:102px; padding-left:3px; padding-right:3px; }
+.profile-page:not(.has-own-user) .user-top-information .countitem .item { font-size:.53rem; letter-spacing:.025em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.profile-page:not(.has-own-user) .profile-stat-pull.stat-friends { cursor:ns-resize; }
+.profile-page .user-top-information .stat-message { border-color:rgba(132,194,245,.28); background:linear-gradient(150deg,rgba(68,154,225,.20),rgba(87,96,181,.08)); }
+.profile-page .user-top-information .stat-message::before { background:#91d6ff; color:#91d6ff; }
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever { background:linear-gradient(145deg,#68c5f4,#526fc5); box-shadow:0 8px 0 rgba(39,73,139,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34); }
+.profile-page .user-top-information .stat-message { cursor:ns-resize; }
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever { margin-bottom:8px; }
+.profile-page .user-top-information .stat-message .item { color:#d7efff; }
+.profile-page .profile-stat-pull.is-friend-gesture::before { animation:lup-friend-cord-break 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-stat-pull.is-friend-gesture .profile-stat-pull-lever { animation:lup-friend-latch 460ms cubic-bezier(.2,.92,.26,1); }
+.profile-page .profile-stat-pull.is-message-gesture::before { background:linear-gradient(to bottom,rgba(176,228,255,.95),rgba(96,175,239,.25)); box-shadow:0 0 13px rgba(109,202,255,.58); }
+.profile-page .profile-stat-pull.is-message-gesture .profile-stat-pull-lever { filter:brightness(1.12); }
+
+/* Profile collection markers: a consistent translucent, lifted control set.
+   The message control keeps an invisible value line so all five markers share
+   the exact same vertical rhythm. */
+.profile-page .user-top-information .countitem {
+  border-color:rgba(211,222,255,.17);
+  background:linear-gradient(145deg,rgba(255,255,255,.135),rgba(255,255,255,.035) 44%,rgba(30,37,65,.12));
+  box-shadow:0 11px 23px rgba(2,7,22,.22),inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(12,16,34,.26);
+}
+.profile-page .user-top-information .countitem::after { opacity:.18; filter:blur(16px); }
+.profile-page .profile-stat-pull .profile-stat-pull-lever,
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever {
+  width:43px;
+  height:43px;
+  margin:0 0 6px;
+  border:1px solid rgba(239,246,255,.39);
+  border-radius:15px;
+  box-shadow:0 7px 0 rgba(34,44,91,.44),0 14px 22px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.44),inset 0 -7px 14px rgba(12,22,64,.14);
+}
+.profile-page .profile-stat-pull .profile-stat-pull-lever::before,
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever::before {
+  content:'';
+  position:absolute;
+  top:4px;
+  left:7px;
+  right:7px;
+  height:9px;
+  border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,0));
+  pointer-events:none;
+}
+.profile-page .user-top-information .countitem .count-spacer { visibility:hidden; }
+.profile-page .user-top-information .stat-message .item { margin-top:1px; }
+.profile-page .user-top-information .countitem:hover {
+  border-color:rgba(227,238,255,.32);
+  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.055) 44%,rgba(46,62,113,.15));
+  box-shadow:0 13px 27px rgba(2,7,22,.27),inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(12,16,34,.26);
+}
+@media (max-width:380px) {
+  .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever,
+  .profile-page:not(.has-own-user) .user-top-information .stat-message .profile-stat-pull-lever { width:35px; height:35px; margin-bottom:6px; border-radius:12px; }
+}
+@keyframes lup-friend-cord-break { 0%,38% { opacity:1; transform:translateX(-50%) scaleY(1); } 49% { opacity:1; transform:translateX(-50%) scaleY(.78); } 58% { opacity:.1; transform:translateX(-50%) scaleY(.42); } 75% { opacity:.78; transform:translateX(-50%) scaleY(.9); } 100% { opacity:.9; transform:translateX(-50%) scaleY(1); } }
+@keyframes lup-friend-latch { 0% { transform:translate3d(0,33px,0); } 42% { transform:translate3d(0,42px,0) rotate(0deg); } 58% { transform:translate3d(0,30px,0) rotate(-4deg); } 78% { transform:translate3d(0,6px,0) rotate(2deg); } 100% { transform:translate3d(0,0,0) rotate(0deg); } }
+@media (max-width:380px) { .profile-page:not(.has-own-user) .user-top-information .countitems { gap:4px; padding-left:5px; padding-right:5px; } .profile-page:not(.has-own-user) .user-top-information .countitem { min-height:94px; } .profile-page:not(.has-own-user) .user-top-information .countitem .item { font-size:.47rem; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever { width:35px; height:35px; border-radius:12px; } .profile-page:not(.has-own-user) .profile-stat-pull .profile-stat-pull-lever .material-icons { font-size:20px; } }
 
 /* Friends and received Ups use the same small action grammar as a profile:
    violet opens a conversation, rose is reserved for a deliberate removal. */
@@ -5030,8 +5805,218 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 }
 @media (prefers-reduced-motion:reduce) {
   .profile-page .profile-stat-pull .profile-stat-pull-lever { transition:none; }
-  .profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:none; }
+.profile-page .profile-stat-pull.is-released .profile-stat-pull-lever { animation:none; }
 }
+
+/* Each pull marker keeps its own quiet signal line. It extends the physical
+   cord upward just enough to connect the icon to its meaning, without adding
+   another visible card border. */
+.profile-page .user-top-information .profile-stat-pull::before {
+  width:1px;
+  height:calc(18px + var(--lup-up-pull,0px));
+  top:4px;
+  z-index:1;
+  opacity:.92;
+  will-change:height;
+}
+.profile-page .user-top-information .profile-stat-pull.stat-locations::before { background:linear-gradient(to bottom,rgba(191,170,255,.10),rgba(174,143,255,.96) 54%,rgba(174,143,255,.20)); box-shadow:0 0 9px rgba(171,140,255,.52); }
+.profile-page .user-top-information .profile-stat-pull.stat-ups::before { background:linear-gradient(to bottom,rgba(255,224,132,.10),rgba(255,205,100,.96) 54%,rgba(255,205,100,.20)); box-shadow:0 0 9px rgba(255,202,91,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-friends::before { background:linear-gradient(to bottom,rgba(147,221,255,.10),rgba(112,198,247,.96) 54%,rgba(112,198,247,.20)); box-shadow:0 0 9px rgba(89,188,246,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles::before { background:linear-gradient(to bottom,rgba(255,177,204,.10),rgba(255,139,177,.96) 54%,rgba(255,139,177,.20)); box-shadow:0 0 9px rgba(255,125,165,.48); }
+.profile-page .user-top-information .profile-stat-pull.stat-message::before { background:linear-gradient(to bottom,rgba(161,229,255,.10),rgba(117,211,255,.96) 54%,rgba(117,211,255,.20)); box-shadow:0 0 9px rgba(109,207,255,.48); }
+
+/* Dedicated signal rails: they are independent from the older pull-cord
+   pseudo-elements, so each profile control keeps a clearly visible light line. */
+.profile-page .user-top-information .profile-stat-pull { --profile-signal:#bca9ff; }
+.profile-page .user-top-information .profile-stat-pull .profile-stat-signal {
+  display:block; position:absolute !important; z-index:5 !important;
+  top:6px; left:15%; right:15%; width:auto !important; height:2px !important;
+  min-height:2px; margin:0 !important; padding:0 !important; border:0;
+  border-radius:999px; pointer-events:none; opacity:.98;
+  background:linear-gradient(90deg,transparent 0%,var(--profile-signal) 20%,rgba(255,255,255,.94) 50%,var(--profile-signal) 80%,transparent 100%);
+  box-shadow:0 0 5px var(--profile-signal),0 0 13px color-mix(in srgb,var(--profile-signal) 58%,transparent);
+}
+.profile-page .user-top-information .profile-stat-pull .profile-stat-pull-lever {
+  position:relative !important;
+  z-index:2 !important;
+}
+.profile-page .user-top-information .profile-stat-pull .profile-stat-signal {
+  z-index:20 !important;
+  top:3px;
+  left:12%;
+  right:12%;
+  height:2px !important;
+  background:linear-gradient(90deg,transparent 0%,var(--profile-signal) 17%,rgba(255,255,255,.82) 37%,#fff 50%,rgba(255,255,255,.82) 63%,var(--profile-signal) 83%,transparent 100%);
+  box-shadow:0 0 6px var(--profile-signal),0 0 14px color-mix(in srgb,var(--profile-signal) 64%,transparent),0 0 2px rgba(255,255,255,.92);
+}
+.profile-page .user-top-information .profile-stat-pull.is-released::before {
+  animation:none !important;
+}
+
+/* Five profile paths, five meanings: location violet, Up gold, friends blue,
+   QR-confirmed High Fives mint, messages soft violet. */
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#79e0bd; }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles .profile-stat-pull-lever {
+  border-color:rgba(202,255,231,.46) !important;
+  background:linear-gradient(145deg,#64cda6,#4d9c9b 68%,#557caf) !important;
+  box-shadow:0 8px 0 rgba(33,100,91,.45),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.42) !important;
+  color:#f6fcff !important;
+}
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles .profile-stat-pull-lever .material-icons {
+  color:#f7fdff !important;
+  font-size:23px !important;
+  text-shadow:0 1px 1px rgba(20,75,70,.35),0 0 9px rgba(211,255,239,.28) !important;
+}
+.profile-page .user-top-information .countitem.stat-cuddles {
+  border-color:rgba(104,220,179,.26) !important;
+  background:linear-gradient(145deg,rgba(70,190,151,.16),rgba(78,126,184,.07)) !important;
+}
+.profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#8ab8ff; }
+.profile-page .user-top-information .stat-message .profile-stat-pull-lever {
+  border-color:rgba(207,230,255,.40) !important;
+  background:linear-gradient(145deg,#5d9dec,#4965bf) !important;
+  box-shadow:0 8px 0 rgba(41,69,147,.43),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.35) !important;
+  color:#fbf9ff !important;
+}
+.profile-page .user-top-information .stat-message {
+  border-color:rgba(125,178,255,.28) !important;
+  background:linear-gradient(150deg,rgba(74,145,226,.20),rgba(72,97,181,.08)) !important;
+}
+.profile-page .user-top-information .countitem .count {
+  display:block;
+  min-height:22px;
+  font-size:clamp(17px,4.7vw,20px) !important;
+  line-height:1.1 !important;
+  font-variant-numeric:tabular-nums;
+}
+.profile-page .user-top-information .countitem .item {
+  display:block;
+  min-height:20px;
+  padding:0 2px;
+  overflow-wrap:anywhere;
+  color:#c7c7d5 !important;
+  font-size:clamp(7px,1.95vw,9px) !important;
+  font-weight:760 !important;
+  line-height:1.12 !important;
+  letter-spacing:.035em !important;
+  text-align:center;
+  white-space:normal !important;
+}
+.profile-page .user-top-information .profile-stat-pull .profile-stat-pull-lever .material-icons {
+  color:#fbfdff !important;
+  text-shadow:0 1px 1px rgba(18,29,67,.42),0 0 7px rgba(255,255,255,.18) !important;
+}
+
+/* Header actions share one physical size. Material's default icon-button
+   clipping used to cut the notification seal at the lower-right corner. */
+.lup-top-bar .md-toolbar-tools > .md-icon-button.lup-top-notification {
+  position:relative !important;
+  display:grid !important;
+  place-items:center !important;
+  flex:0 0 36px !important;
+  width:36px !important;
+  min-width:36px !important;
+  height:36px !important;
+  min-height:36px !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle at 36% 28%,rgba(175,223,255,.15),transparent 42%),rgba(82,104,163,.13) !important;
+  box-shadow:0 0 15px rgba(86,156,231,.10) !important;
+}
+.lup-top-bar .md-toolbar-tools .navnotification {
+  display:grid !important;
+  place-items:center !important;
+  box-sizing:border-box !important;
+  width:36px !important;
+  height:36px !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background-color:transparent !important;
+  background-image:none !important;
+  background-size:0 !important;
+  color:#d9eaff !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  text-shadow:0 0 9px rgba(151,211,255,.30) !important;
+}
+.lup-top-bar .md-toolbar-tools .navnotification-count {
+  position:absolute !important;
+  z-index:3 !important;
+  top:3px !important;
+  right:3px !important;
+  bottom:auto !important;
+  left:auto !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+}
+.lup-top-bar .md-toolbar-tools > div.lup-avatar {
+  box-sizing:border-box !important;
+  flex:0 0 36px !important;
+  width:36px !important;
+  height:36px !important;
+  margin:0 0 0 8px !important;
+  padding:2px !important;
+}
+.lup-top-bar,
+.lup-top-bar .md-toolbar-tools,
+.lup-top-bar .md-toolbar-tools > .md-icon-button.lup-top-notification {
+  overflow:visible !important;
+}
+.lup-top-bar .md-toolbar-tools .navnotification {
+  overflow:visible !important;
+  font-size:23px !important;
+}
+
+/* The shared list-avatar stylesheet keeps an old two-pixel inset. Inside the
+   Online roster that makes the face appear left/down inside its round rim.
+   This row owns a true circle: rim and image share exactly the same centre. */
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  box-sizing:border-box !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:50% !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar .img,
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar span {
+  position:absolute !important;
+  top:0 !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:0 !important;
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+  border-radius:50% !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  overflow:visible !important;
+}
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar::after {
+  z-index:3 !important;
+  right:-4px !important;
+  bottom:-3px !important;
+  width:10px !important;
+  height:10px !important;
+  border:2px solid #182235 !important;
+  background:#72dda0 !important;
+  box-shadow:0 0 0 3px rgba(114,221,160,.12),0 0 11px rgba(114,221,160,.64) !important;
+}
+.profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
+.profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#ff9dbd; }
+.profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#92e1ff; }
+
+/* Final signal palette — kept beside the legacy rules so no older accent can
+   repaint a marker differently from its icon. */
+.profile-page .user-top-information .profile-stat-pull.stat-locations { --profile-signal:#bca9ff; }
+.profile-page .user-top-information .profile-stat-pull.stat-ups { --profile-signal:#ffd365; }
+.profile-page .user-top-information .profile-stat-pull.stat-friends { --profile-signal:#75d5ff; }
+.profile-page .user-top-information .profile-stat-pull.stat-cuddles { --profile-signal:#79e0bd; }
+.profile-page .user-top-information .profile-stat-pull.stat-message { --profile-signal:#8ab8ff; }
 
 /* Let the profile sections meet cleanly. The active section alone carries
    light; there is deliberately no inactive rail beneath it. */
@@ -5201,6 +6186,7 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
    overlay below a few mobile layers, making a star tap appear to do nothing. */
 .md-dialog-container { z-index:10020 !important; }
 md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
+.lup-proximity-dialog { position:relative; width:min(392px,calc(100vw - 30px)); overflow:hidden; border:1px solid rgba(174,218,255,.21); border-radius:24px !important; background:radial-gradient(circle at 85% 3%,rgba(90,167,243,.22),transparent 33%),linear-gradient(155deg,#17263e,#0c1424) !important; box-shadow:0 28px 76px rgba(0,0,0,.52),0 0 42px rgba(89,165,241,.12); color:#edf7ff; }.lup-proximity-dialog::before { content:''; position:absolute; inset:-38% -20% auto; height:175px; border:1px solid rgba(155,214,255,.13); border-radius:50%; box-shadow:0 0 0 26px rgba(142,199,255,.035),0 0 0 53px rgba(142,199,255,.02); pointer-events:none; }.lup-proximity-dialog md-dialog-content,.lup-proximity-dialog .md-dialog-content { background:transparent !important; }.lup-proximity-dialog-content { position:relative; padding:28px 25px 13px; text-align:center; }.lup-proximity-close { position:absolute; z-index:2; top:11px; right:11px; display:grid; place-items:center; width:32px; height:32px; padding:0; border:1px solid rgba(213,236,255,.14); border-radius:11px; background:rgba(5,13,26,.34); color:#c9d9ea; cursor:pointer; }.lup-proximity-close .material-icons { font-size:18px; }.lup-proximity-signal { position:relative; display:grid; place-items:center; width:64px; height:64px; margin:0 auto 12px; border:1px solid rgba(194,230,255,.42); border-radius:50% 50% 50% 16px; background:linear-gradient(145deg,#5caeee,#526ec1); box-shadow:0 8px 0 rgba(39,70,133,.42),0 17px 30px rgba(0,0,0,.24),0 0 31px rgba(115,196,255,.31),inset 0 1px rgba(255,255,255,.40); color:#fff; }.lup-proximity-signal::before,.lup-proximity-signal::after { content:''; position:absolute; border:1px solid rgba(151,220,255,.31); border-radius:50%; pointer-events:none; }.lup-proximity-signal::before { inset:-12px; }.lup-proximity-signal::after { inset:-25px; opacity:.45; }.lup-proximity-signal .material-icons { font-size:37px; text-shadow:0 2px 7px rgba(8,24,55,.38); }.lup-proximity-eyebrow { display:block; color:#9bd8ff; font-size:9px; font-weight:850; letter-spacing:.16em; }.lup-proximity-dialog h2 { margin:6px 0 8px; color:#f3f9ff; font-size:22px; line-height:1.12; letter-spacing:-.03em; }.lup-proximity-dialog p { max-width:294px; margin:0 auto; color:#bdcee1; font-size:12px; line-height:1.5; }.lup-proximity-rule { display:flex; align-items:flex-start; gap:8px; margin:17px 0 0; padding:10px 11px; border-left:2px solid #8bd6ff; background:rgba(116,191,255,.08); color:#d9eafb; font-size:10px; line-height:1.4; text-align:left; }.lup-proximity-rule .material-icons { flex:0 0 auto; color:#a8e6ca; font-size:16px; }.lup-proximity-dialog md-dialog-actions { min-height:0; padding:11px 18px 17px; justify-content:center; }.lup-proximity-ok { width:100%; min-height:43px; border:1px solid rgba(203,235,255,.29); border-radius:13px; background:linear-gradient(135deg,#65b9ef,#6477cf); box-shadow:0 5px 0 rgba(44,67,133,.44),0 11px 18px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.36); color:#fff; font:800 12px inherit; cursor:pointer; }
 .md-dialog-container .lup-comment-dialog {
   display:block !important;
   width:calc(100vw - 32px);
@@ -5212,28 +6198,30 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .lup-comment-dialog md-dialog-actions .md-button { min-height:38px; border-radius:10px; color:#d9d3e8; }
 
 /* Removing a friend is a considered relationship action, not an alarm. */
-.lup-friend-delete-dialog { width:min(91vw,390px); overflow:hidden; border:1px solid rgba(212,202,245,.19); border-radius:22px !important; background:linear-gradient(155deg,#292b43,#171925) !important; box-shadow:0 24px 52px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.10); }
-.lup-friend-delete-dialog md-toolbar,.lup-friend-delete-dialog md-toolbar .md-toolbar-tools { min-height:61px; padding:0 14px; background:transparent !important; border:0; }
-.lup-friend-delete-dialog .friend-delete-mark { display:grid; place-items:center; width:31px; height:31px; margin-right:9px; border:1px solid rgba(223,198,235,.26); border-radius:11px; background:linear-gradient(145deg,rgba(189,139,186,.35),rgba(101,94,166,.24)); color:#f0d2e9; box-shadow:inset 0 1px 0 rgba(255,255,255,.18); }
+.lup-friend-delete-dialog { box-sizing:border-box; width:calc(100vw - 24px); max-width:390px; max-height:calc(var(--lup-viewport-height,100dvh) - 24px); margin:12px !important; overflow:hidden; border:1px solid rgba(180,205,244,.18); border-radius:20px !important; background:linear-gradient(155deg,#202a40,#121926) !important; box-shadow:0 24px 52px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.10); }
+.lup-friend-delete-dialog md-toolbar,.lup-friend-delete-dialog md-toolbar .md-toolbar-tools { min-height:57px; padding:0 13px; background:transparent !important; border:0; }
+.lup-friend-delete-dialog .friend-delete-mark { display:grid; place-items:center; width:30px; height:30px; margin-right:9px; border:1px solid rgba(172,208,248,.23); border-radius:10px; background:linear-gradient(145deg,rgba(104,155,215,.25),rgba(101,94,166,.18)); color:#d8ecff; box-shadow:inset 0 1px 0 rgba(255,255,255,.16); }
 .lup-friend-delete-dialog .friend-delete-mark .material-icons { font-size:18px; }
-.lup-friend-delete-dialog .md-toolbar-tools h2 { overflow:hidden; margin:0; color:#fbf9ff; font-size:18px; font-weight:760; text-overflow:ellipsis; white-space:nowrap; }
-.lup-friend-delete-dialog .md-icon-button { width:35px; height:35px; min-height:35px; margin:0; border:1px solid rgba(255,255,255,.10); border-radius:11px; background:rgba(255,255,255,.045); color:#d9d5e8; }
+.lup-friend-delete-dialog .md-toolbar-tools h2 { overflow:hidden; margin:0; color:#fbf9ff; font-size:16px; font-weight:760; text-overflow:ellipsis; white-space:nowrap; }
+.lup-friend-delete-dialog .md-icon-button { width:33px; height:33px; min-height:33px; margin:0; border:1px solid rgba(255,255,255,.09); border-radius:10px; background:rgba(255,255,255,.04); color:#dce9fa; }
 .lup-friend-delete-dialog md-dialog-content,.lup-friend-delete-dialog .md-dialog-content { background:transparent !important; }
-.lup-friend-delete-dialog .friend-delete-content { padding:4px 20px 12px; }
-.lup-friend-delete-dialog .friend-delete-person { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.045); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); }
+.lup-friend-delete-dialog .friend-delete-content { padding:3px 16px 11px; }
+.lup-friend-delete-dialog .friend-delete-person { display:flex; align-items:center; gap:11px; padding:11px; border:1px solid rgba(178,207,246,.12); border-radius:15px; background:linear-gradient(110deg,rgba(95,139,204,.10),rgba(255,255,255,.03)); box-shadow:inset 0 1px 0 rgba(255,255,255,.07); }
 .lup-friend-delete-dialog .friend-delete-person .lup-avatar { flex:0 0 auto; width:42px; height:42px; margin:0; }
 .lup-friend-delete-dialog .friend-delete-person div { display:grid; min-width:0; gap:3px; }
 .lup-friend-delete-dialog .friend-delete-person strong { overflow:hidden; color:#fff; font-size:14px; text-overflow:ellipsis; white-space:nowrap; }
-.lup-friend-delete-dialog .friend-delete-person span { color:#bcb5cd; font-size:11px; line-height:1.35; }
-.lup-friend-delete-dialog .friend-delete-content > p { margin:13px 2px 3px; color:#d7d1e1; font-size:12px; line-height:1.46; }
-.lup-friend-delete-dialog md-dialog-actions { min-height:64px; padding:11px 18px 16px; border-top:1px solid rgba(255,255,255,.065); }
-.lup-friend-delete-dialog md-dialog-actions .md-button { min-height:39px; margin:0; padding:0 13px; border-radius:11px; font-size:12px; font-weight:750; letter-spacing:.01em; }
-.lup-friend-delete-dialog .friend-delete-cancel { border:1px solid rgba(211,205,235,.19); background:rgba(255,255,255,.035); color:#e4dfef; }
-.lup-friend-delete-dialog .friend-delete-confirm { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(245,171,193,.27); background:rgba(184,83,117,.15); color:#ffd8e5; }
+.lup-friend-delete-dialog .friend-delete-person span { color:#b9c9dc; font-size:11px; line-height:1.35; }
+.lup-friend-delete-dialog .friend-delete-content > p { margin:12px 2px 3px; color:#d6dfed; font-size:12px; line-height:1.46; }
+.lup-friend-delete-dialog md-dialog-actions { min-height:61px; padding:10px 16px 14px; border-top:1px solid rgba(184,211,247,.09); }
+.lup-friend-delete-dialog .friend-delete-actions .md-button { flex:1 1 0; min-width:0; min-height:39px; margin:0; padding:0 10px; border-radius:11px; font-size:12px; font-weight:750; letter-spacing:.01em; }
+.lup-friend-delete-dialog .friend-delete-cancel { border:1px solid rgba(181,205,239,.17); background:rgba(255,255,255,.03); color:#dbe6f4; }
+.lup-friend-delete-dialog .friend-delete-confirm { display:inline-flex; align-items:center; justify-content:center; gap:6px; margin-left:8px !important; border:1px solid rgba(244,174,195,.24); background:linear-gradient(135deg,rgba(175,79,112,.23),rgba(111,79,147,.18)); color:#ffe1ea; }
 .lup-friend-delete-dialog .friend-delete-confirm .material-icons { font-size:17px; }
 .lup-friend-delete-dialog .friend-delete-cancel:hover { background:rgba(255,255,255,.09); }
 .lup-friend-delete-dialog .friend-delete-confirm:hover { border-color:rgba(255,190,211,.48); background:rgba(203,96,133,.24); }
+@media (max-width:360px) { .lup-friend-delete-dialog .friend-delete-content { padding-right:13px; padding-left:13px; }.lup-friend-delete-dialog .friend-delete-actions .md-button { padding-right:7px; padding-left:7px; font-size:11px; }.lup-friend-delete-dialog .friend-delete-confirm { margin-left:6px !important; } }
 @media (prefers-reduced-motion:reduce) { .lup-friend-delete-dialog * { transition:none !important; } }
+.lup-friend-delete-dialog { border-color:rgba(167,211,255,.20); background:radial-gradient(circle at 82% 0%,rgba(86,159,232,.18),transparent 34%),linear-gradient(155deg,#192742,#0d1627) !important; }.lup-friend-delete-dialog .friend-delete-content--calm { position:relative; padding:27px 23px 14px; text-align:center; }.lup-friend-delete-dialog .friend-delete-close { position:absolute; top:11px; right:11px; display:grid; place-items:center; width:31px; height:31px; padding:0; border:1px solid rgba(212,233,255,.13); border-radius:10px; background:rgba(8,17,31,.30); color:#c8d8ea; cursor:pointer; }.lup-friend-delete-dialog .friend-delete-close .material-icons { font-size:18px; }.lup-friend-delete-dialog .friend-delete-connection { position:relative; display:grid; place-items:center; width:72px; height:61px; margin:0 auto 10px; }.lup-friend-delete-dialog .friend-delete-connection > span { position:absolute; width:66px; height:1px; background:linear-gradient(90deg,transparent,rgba(168,215,255,.72),transparent); transform:rotate(-18deg); }.lup-friend-delete-dialog .friend-delete-connection .lup-avatar { position:relative; z-index:1; width:53px; height:53px; margin:0; border:2px solid rgba(205,235,255,.55); border-radius:50%; box-shadow:0 0 0 6px rgba(119,185,255,.08),0 10px 23px rgba(0,0,0,.23); }.lup-friend-delete-dialog .friend-delete-connection > .material-icons { position:absolute; z-index:2; right:0; bottom:0; display:grid; place-items:center; width:24px; height:24px; border:1px solid rgba(231,190,207,.33); border-radius:50%; background:#3b3049; color:#ffd6e3; font-size:13px; }.lup-friend-delete-dialog .friend-delete-eyebrow { display:block; color:#a6dafd; font-size:9px; font-weight:850; letter-spacing:.16em; }.lup-friend-delete-dialog .friend-delete-content--calm h2 { margin:6px 0 7px; color:#f4f8ff; font-size:21px; font-weight:780; letter-spacing:-.03em; }.lup-friend-delete-dialog .friend-delete-question { max-width:265px; margin:0 auto; color:#c2d1e4; font-size:12px; line-height:1.48; }.lup-friend-delete-dialog .friend-delete-note { display:flex; align-items:flex-start; gap:7px; margin:16px 0 0; padding:9px 10px; border-left:2px solid #83cefa; background:rgba(109,187,245,.07); color:#d8e7f8; font-size:10px; line-height:1.38; text-align:left; }.lup-friend-delete-dialog .friend-delete-note .material-icons { flex:0 0 auto; color:#9cdcff; font-size:16px; }.lup-friend-delete-dialog .friend-delete-actions--calm { display:grid; grid-template-columns:1fr; gap:8px; padding:10px 18px 17px; border-top:1px solid rgba(187,216,247,.09); }.lup-friend-delete-dialog .friend-delete-actions--calm .md-button { width:100%; min-height:41px; margin:0; border-radius:12px; font-size:12px; font-weight:780; letter-spacing:0; text-transform:none; }.lup-friend-delete-dialog .friend-delete-actions--calm .friend-delete-cancel { order:0; border:1px solid rgba(190,220,248,.18); background:linear-gradient(135deg,rgba(90,155,221,.28),rgba(92,108,192,.26)); color:#f2f8ff; box-shadow:inset 0 1px rgba(255,255,255,.20); }.lup-friend-delete-dialog .friend-delete-actions--calm .friend-delete-confirm { order:1; margin:0 !important; border:0; background:transparent; box-shadow:none; color:#aebfd4; }.lup-friend-delete-dialog .friend-delete-actions--calm .friend-delete-confirm:hover { background:rgba(255,255,255,.045); color:#f3d5df; }.lup-friend-delete-dialog .friend-delete-actions--calm .friend-delete-confirm .material-icons { font-size:15px; }
 
 /* Friends is a contact space: search, recognise, then choose one calm action. */
 .friends-page > md-content { background:radial-gradient(circle at 84% 5%,rgba(128,100,230,.14),transparent 29%),radial-gradient(circle at 9% 76%,rgba(76,158,226,.10),transparent 31%),#10121d; }
@@ -5262,6 +6250,224 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .friends-page .lup-user-action-remove:hover { border-color:rgba(250,192,214,.38); background:rgba(202,109,142,.17); }
 .friends-page .friends-empty { display:grid; justify-items:center; gap:7px; padding:42px 20px; border:1px dashed rgba(197,184,242,.20); border-radius:20px; background:rgba(255,255,255,.025); color:#c8c1d9; text-align:center; }.friends-page .friends-empty .material-icons { display:grid; place-items:center; width:42px; height:42px; border-radius:15px; background:rgba(126,99,219,.15); color:#cbbdff; font-size:23px; }.friends-page .friends-empty strong { color:#eeeaff; font-size:14px; }.friends-page .friends-empty span { max-width:250px; color:#aaa4bd; font-size:12px; line-height:1.45; }
 @media (max-width:380px) { .friends-page .search-input-wrap,.friends-shell { width:94%; }.friends-page .lup-user-list md-list-item.friend-card { padding-right:9px; padding-left:9px; }.friends-page .lup-user-actions { gap:4px; margin-left:5px; padding-left:6px; }.friends-page .lup-user-action { width:32px; height:32px; }.friends-page .lup-user-action .material-icons { font-size:16px; } }
+
+/* Inbox uses the same quiet place field as Friends: a single landmark helps
+   orientation while conversations and events remain the visual priority. */
+.notification > md-content { position:relative; isolation:isolate; overflow-x:hidden; background:radial-gradient(ellipse at 92% 8%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.13),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%) !important; }
+.notification > md-content > :not(.inbox-ambient-map) { position:relative; z-index:1; }
+.inbox-ambient-map { position:absolute; z-index:0; inset:0; overflow:hidden; pointer-events:none; }
+.inbox-ambient-map::before { content:''; position:absolute; top:11%; right:-38%; width:94%; height:52%; border:1px solid rgba(127,185,255,.095); border-radius:48% 52% 50% 47%; transform:rotate(-24deg); }.inbox-ambient-map::after { content:''; position:absolute; bottom:5%; left:-43%; width:103%; height:48%; border:1px solid rgba(173,133,255,.08); border-radius:52% 48% 44% 56%; transform:rotate(18deg); }
+.inbox-route { position:absolute; display:block; width:72%; height:29%; border:1px solid rgba(143,190,255,.095); border-radius:50%; opacity:.72; }.inbox-route-one { top:27%; right:-29%; transform:rotate(-29deg); }.inbox-route-two { bottom:6%; left:-39%; border-color:rgba(185,149,255,.075); transform:rotate(21deg); }
+.inbox-route-light { position:absolute; top:31%; right:13%; width:7px; height:7px; border-radius:50%; background:#bce9ff; box-shadow:0 0 0 4px rgba(111,190,244,.06),0 0 15px rgba(108,197,255,.68); animation:lup-inbox-route-light 18s ease-in-out infinite; }.inbox-map-node { position:absolute; width:4px; height:4px; border-radius:50%; background:rgba(201,226,255,.58); box-shadow:0 0 11px rgba(117,194,255,.38); }.inbox-map-node-one { top:44%; right:29%; opacity:.38; }.inbox-map-node-two { bottom:22%; left:17%; background:rgba(204,178,255,.52); opacity:.33; }
+.inbox-map-pin { position:absolute; top:18%; right:6%; display:grid; place-items:center; width:50px; height:50px; border:1px solid rgba(158,210,255,.15); border-radius:50% 50% 50% 13px; background:linear-gradient(145deg,rgba(83,168,229,.12),rgba(113,84,196,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(19,58,109,.14); color:rgba(198,238,255,.56); transform:rotate(-45deg); animation:lup-inbox-pin-drift 16s ease-in-out infinite; }.inbox-map-pin .material-icons { font-size:27px; transform:rotate(45deg); filter:drop-shadow(0 3px 6px rgba(79,181,243,.34)); }
+.notification .notification-panel { background:transparent; }.notification .notification-panel > md-content { background:transparent !important; }.notification .notification-panel md-list { background:transparent !important; }
+.notification .inbox-empty { display:flex; align-items:center; min-height:92px; margin:18px 14px; padding:13px 14px; border:1px solid rgba(184,205,245,.14); border-radius:19px; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(108,91,185,.065)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075); }.notification .inbox-empty .inbox-empty-mark { display:grid; flex:0 0 42px; place-items:center; width:42px; height:42px; margin-right:11px; border:1px solid rgba(169,200,255,.20); border-radius:14px 14px 14px 5px; background:linear-gradient(145deg,rgba(91,165,229,.19),rgba(112,88,195,.13)); color:#d5ecff; }.notification .inbox-empty .inbox-empty-mark .material-icons { font-size:21px; }.notification .inbox-empty .md-list-item-text { min-width:0; }.notification .inbox-empty strong { display:block; margin:0 0 4px; color:#edf2ff; font-size:13px; font-weight:780; }.notification .inbox-empty p { margin:0; color:#afaac0 !important; font-size:11px; line-height:1.4; }
+@keyframes lup-inbox-pin-drift { 0%,100% { transform:rotate(-45deg) translate3d(0,0,0); opacity:.36; } 50% { transform:rotate(-45deg) translate3d(-8px,10px,0); opacity:.61; } }
+@keyframes lup-inbox-route-light { 0%,100% { transform:translate3d(0,0,0); opacity:.18; } 48%,52% { transform:translate3d(-72px,31px,0); opacity:.66; } }
+@media (max-width:480px) { .inbox-map-pin { top:20%; right:-1%; width:42px; height:42px; }.inbox-map-pin .material-icons { font-size:23px; }.inbox-route-light { top:32%; right:7%; }.inbox-route-one { top:28%; right:-44%; width:89%; }.notification .inbox-empty { margin-right:12px; margin-left:12px; } }
+@media (prefers-reduced-motion:reduce) { .inbox-route-light,.inbox-map-pin { animation:none; } }
+
+/* The inbox switch is two direct choices, not a dark framed component. */
+.notification .notification-switch { margin:0; padding-top:7px; padding-bottom:6px; border:0; background:transparent; box-shadow:none; }
+.notification .notification-switch::before,.notification .notification-switch::after { display:none; content:none; }
+.notification .notification-switch button { border:0; box-shadow:none; }
+.notification .notification-switch button.active { background:linear-gradient(145deg,rgba(98,141,215,.16),rgba(116,86,190,.12)); box-shadow:inset 0 1px 0 rgba(219,234,255,.07); }
+
+/* Empty inbox is guidance, not another heavy framed card. */
+.notification md-list > .inbox-empty,.notification .inbox-empty { display:flex; align-items:center; min-height:76px; margin:22px 14px 0; padding:0; border:0; border-radius:0; background:transparent !important; box-shadow:none; }
+.notification .inbox-empty .inbox-empty-mark { border:0; border-radius:0; background:transparent; box-shadow:none; color:#b8dcff; }
+.notification .inbox-empty .inbox-empty-copy { min-width:0; border:0; background:transparent !important; box-shadow:none !important; }
+.notification .notification-panel .inbox-message-list { margin:0 !important; padding:0 !important; background:transparent !important; background-color:transparent !important; box-shadow:none !important; }
+.notification .notification-panel .inbox-message-list::before,.notification .notification-panel .inbox-message-list::after { display:none !important; content:none !important; }
+.notification .notification-panel ng-include,.notification .notification-panel ng-include > md-content,.notification .notification-panel ng-include md-content { background:transparent !important; background-color:transparent !important; box-shadow:none !important; }
+
+/* Private-message threads are people and conversations, not Material list rows.
+   The left signal is reserved for unread activity; the right bubble opens the
+   same conversation without adding a second, visually noisy chevron. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-height:72px;
+  margin:8px 12px;
+  padding:10px 10px 10px 13px;
+  border:1px solid rgba(186,208,250,.12);
+  border-radius:17px;
+  background:linear-gradient(110deg,rgba(70,89,145,.19),rgba(20,28,47,.48) 66%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(2,7,20,.12);
+  cursor:pointer;
+  transition:transform 170ms ease,border-color 170ms ease,background 170ms ease,box-shadow 170ms ease;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card::before {
+  content:'';
+  position:absolute;
+  top:14px;
+  bottom:14px;
+  left:0;
+  width:2px;
+  border-radius:0 3px 3px 0;
+  background:rgba(142,202,255,.28);
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:hover,
+.notification .notification-panel .inbox-message-list .inbox-thread-card:focus-within {
+  transform:translateY(-1px);
+  border-color:rgba(167,211,255,.28);
+  background:linear-gradient(110deg,rgba(81,112,178,.27),rgba(25,35,58,.58) 66%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 11px 22px rgba(2,7,20,.17);
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card.lup-notification-unread::before {
+  background:#91e1bd;
+  box-shadow:0 0 12px rgba(112,226,169,.70);
+}
+.notification .inbox-thread-avatar {
+  position:relative;
+  flex:0 0 auto;
+  width:45px;
+  height:45px;
+  margin-right:12px;
+}
+.notification .inbox-thread-avatar .lup-avatar,
+.notification .inbox-thread-avatar .lup-avatar img { width:45px; height:45px; }
+.notification .inbox-thread-avatar .lup-avatar {
+  display:block;
+  border-radius:50%;
+  outline:1px solid rgba(161,215,255,.38);
+  outline-offset:3px;
+  overflow:hidden;
+}
+.notification .inbox-thread-live {
+  position:absolute;
+  z-index:2;
+  right:-3px;
+  bottom:0;
+  width:9px;
+  height:9px;
+  border:2px solid #172038;
+  border-radius:50%;
+  background:#8ce4b5;
+  box-shadow:0 0 10px rgba(115,232,174,.78);
+}
+.notification .inbox-thread-copy { min-width:0; flex:1 1 auto; margin:0 !important; }
+.notification .inbox-thread-titleline { display:flex; align-items:center; gap:8px; min-width:0; }
+.notification .inbox-thread-copy h4 { min-width:0; margin:0 !important; overflow:hidden; color:#f2f6ff !important; font-size:13px !important; font-weight:760 !important; line-height:1.25 !important; text-overflow:ellipsis; white-space:nowrap; }
+.notification .inbox-thread-copy p { margin:4px 0 0 !important; overflow:hidden; color:#aab7ce !important; font-size:11px !important; line-height:1.25 !important; text-overflow:ellipsis; white-space:nowrap; }
+.notification .inbox-thread-unread { display:grid; flex:0 0 auto; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:10px; background:rgba(112,220,168,.17); color:#caffdf; font-size:9px; font-weight:850; line-height:1; }
+.notification .inbox-thread-open {
+  display:grid;
+  flex:0 0 auto;
+  place-items:center;
+  width:34px;
+  height:34px;
+  min-width:34px;
+  margin:0 0 0 9px;
+  padding:0;
+  border:1px solid rgba(178,162,255,.27);
+  border-radius:11px;
+  background:linear-gradient(145deg,rgba(139,111,230,.26),rgba(83,122,198,.15));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  color:#e4dcff;
+  cursor:pointer;
+  transition:transform 160ms ease,filter 160ms ease;
+}
+.notification .inbox-thread-open:hover,.notification .inbox-thread-open:focus-visible { transform:translateY(-1px); filter:brightness(1.15); outline:0; }
+.notification .inbox-thread-open .material-icons { font-size:18px; }
+@media (max-width:360px) { .notification .notification-panel .inbox-message-list .inbox-thread-card { margin-right:9px; margin-left:9px; padding-right:8px; padding-left:11px; } .notification .inbox-thread-avatar,.notification .inbox-thread-avatar .lup-avatar,.notification .inbox-thread-avatar .lup-avatar img { width:39px; height:39px; } .notification .inbox-thread-avatar { margin-right:10px; } .notification .inbox-thread-open { width:31px; height:31px; min-width:31px; margin-left:6px; } }
+
+/* A private conversation must not inherit any of Material's paper surfaces.
+   The message area and composer stay legible on the same night-blue base. */
+.query-page > md-content,.query-page > md-content > ng-include,.query-page > md-content md-content { background:transparent !important; color:#eef2ff !important; }
+.query-page > md-content { background:radial-gradient(ellipse at 92% 8%,rgba(107,150,237,.13),transparent 31%),radial-gradient(ellipse at 8% 84%,rgba(115,83,198,.09),transparent 35%),linear-gradient(160deg,#101726 0%,#101421 49%,#131225 100%) !important; }
+.query-page .chat-msgs { background:linear-gradient(180deg,rgba(16,20,34,.18),rgba(10,13,24,.62)) !important; }
+.query-page .chatbottom { background:linear-gradient(180deg,rgba(13,17,29,.78),rgba(13,16,27,.96)) !important; }
+.query-page .chatbottom .chat-input { border:1px solid rgba(180,202,245,.14); border-radius:12px; background:rgba(38,43,65,.72); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
+.query-page .chatbottom input { border:0 !important; border-radius:12px !important; background:transparent !important; color:#f4f6ff !important; -webkit-text-fill-color:#f4f6ff !important; }
+.query-page .chatbottom input::placeholder { color:#a9b3cd; }.query-page .chatbottom input:focus { border:0 !important; box-shadow:0 0 0 2px rgba(137,184,255,.14) !important; }
+.query-page .chatbottom input:-webkit-autofill,.query-page .chatbottom input:-webkit-autofill:hover,.query-page .chatbottom input:-webkit-autofill:focus { -webkit-text-fill-color:#f4f6ff !important; -webkit-box-shadow:0 0 0 1000px #282d43 inset !important; transition:background-color 9999s ease-in-out 0s; }
+
+/* Private conversation — each message gets one continuous, edge-to-edge row.
+   The avatar is a real column now, so it can never drift inside the text. */
+.query-page .chat-msgs { padding:0 !important; }
+.query-page .chat-msgs .msgline { width:100%; }
+.query-page .chat-msgs .lup-msg {
+  width:100%;
+  margin:0 !important;
+  border-bottom:1px solid rgba(192,210,247,.075);
+}
+.query-page .chat-msgs .lup-msg:last-child { border-bottom:0; }
+.query-page .query-message-card {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  min-height:60px;
+  box-sizing:border-box;
+  margin:0;
+  padding:11px 14px;
+}
+.query-page .query-message-avatar,
+.query-page .query-message-avatar .avatar,
+.query-page .query-message-avatar img {
+  display:block;
+  flex:0 0 38px;
+  width:38px !important;
+  height:38px !important;
+  margin:0 !important;
+  border-radius:50%;
+}
+.query-page .query-message-avatar {
+  overflow:hidden;
+  border:1px solid rgba(191,215,255,.22);
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  cursor:pointer;
+}
+.query-page .query-message-content { flex:1 1 auto; min-width:0; }
+.query-page .query-message-meta {
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  min-width:0;
+  margin:0 0 3px;
+}
+.query-page .query-message-meta .name {
+  overflow:hidden;
+  color:#e8efff !important;
+  font-size:11px;
+  font-weight:750;
+  line-height:1.2;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.query-page .query-message-meta .time {
+  flex:0 0 auto;
+  color:#8e9bb7 !important;
+  font-size:9px;
+  line-height:1.2;
+  white-space:nowrap;
+}
+.query-page .query-message-content .message {
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#cbd5e7 !important;
+  font-size:12px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.query-page .query-message-content .messager-inner { display:inline; float:none !important; padding:0 !important; }
+.query-page .query-message-content lup-msg-state { display:inline-flex; margin-left:5px; vertical-align:middle; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse; }
+.query-page .lup-own-msg .query-message-meta { justify-content:flex-end; }
+.query-page .lup-own-msg .query-message-content { text-align:right; }
+.query-page .lup-own-msg .query-message-content .message { color:#e4ebff !important; }
+@media (max-width:360px) {
+  .query-page .query-message-card { gap:9px; padding:10px 11px; }
+  .query-page .query-message-avatar,.query-page .query-message-avatar .avatar,.query-page .query-message-avatar img { flex-basis:34px; width:34px !important; height:34px !important; }
+}
 
 /* Friends shares LinkUUp's sense of place: one quiet map field and one
    orientation pin.  It is deliberately behind every actionable surface. */
@@ -5963,6 +7169,11 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner { display:flex !important; align-items:center !important; flex-wrap:nowrap !important; gap:9px !important; padding-right:49px !important; }.location-page md-list.usernavigation .location-presence-heading .presence-live-mark { position:relative !important; top:auto !important; right:auto !important; left:auto !important; flex:0 0 30px !important; margin:0 !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div { flex:1 1 auto !important; min-width:0 !important; padding-left:0 !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div > strong,.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div > span { overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
 .location-page md-list.usernavigation .location-presence-heading .presence-live-mark { border-color:rgba(123,203,255,.58) !important; background:radial-gradient(circle at 34% 27%,rgba(226,248,255,.31),transparent 33%),linear-gradient(145deg,rgba(71,164,232,.42),rgba(57,82,176,.22)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 0 19px rgba(74,183,255,.27) !important; color:#d3f0ff !important; }.location-page md-list.usernavigation .md-subheader-inner > div > span { margin-top:0 !important; color:#c1cce0 !important; font-size:10px !important; }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
+
+/* Do not let Angular Material wrap the conversation control as a secondary
+   item. It remains a normal flex child and therefore reaches the true edge. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-list-item-inner { display:flex !important; align-items:center !important; width:100% !important; padding:0 !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-open { position:static !important; display:grid !important; flex:0 0 34px !important; align-self:center !important; width:34px !important; height:34px !important; min-width:34px !important; margin:0 0 0 auto !important; }
 .location-page md-list.usernavigation .location-presence-heading .presence-total { position:absolute !important; top:8px !important; right:3px !important; display:grid !important; justify-items:end !important; gap:0 !important; min-width:34px !important; margin:0 !important; }.location-page md-list.usernavigation .location-presence-heading .presence-total strong { color:#eef5ff !important; font-size:18px !important; font-weight:760 !important; line-height:1 !important; }.location-page md-list.usernavigation .location-presence-heading .presence-total b { display:none !important; }.location-page md-list.usernavigation .location-presence-heading .presence-total small { margin-top:3px !important; color:#91cdb0 !important; font-size:7px !important; font-weight:850 !important; letter-spacing:.09em !important; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div { padding-left:1px; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner strong { font-size:13px !important; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div > span { margin-top:2px !important; font-size:9px !important; }
 
@@ -6107,6 +7318,239 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
    profile statistics sit directly on the page rather than in a second frame. */
 .profile-page .user-top-information { border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
 .profile-page .user-top-information::before { display:none !important; }
+
+/* One continuous profile field: the route stays behind avatar, about and
+   gallery alike.  It never receives pointer events or affects document flow. */
+.profile-page .user-profile-page {
+  position:relative;
+  isolation:isolate;
+  overflow-x:hidden;
+  background:
+    radial-gradient(ellipse 90% 24% at 9% 7%,rgba(88,147,220,.13),transparent 66%),
+    radial-gradient(ellipse 74% 28% at 92% 53%,rgba(121,87,205,.12),transparent 68%),
+    linear-gradient(160deg,#111a2d 0%,#12182b 49%,#101522 100%) !important;
+}
+.profile-page .user-profile-page > :not(.profile-ambient-map) { position:relative; z-index:1; }
+.profile-page .profile-ambient-map { position:absolute; z-index:0; inset:0; min-height:100%; overflow:hidden; pointer-events:none; }
+.profile-page .profile-ambient-map::before,
+.profile-page .profile-ambient-map::after { content:''; position:absolute; display:block; border-radius:50%; pointer-events:none; }
+.profile-page .profile-ambient-map::before { top:-105px; left:-166px; width:378px; height:378px; border:1px solid rgba(99,183,247,.14); background:radial-gradient(circle at 66% 67%,rgba(72,163,238,.11),transparent 47%); box-shadow:inset 0 0 56px rgba(81,153,235,.045),0 0 50px rgba(53,127,221,.045); animation:lup-profile-ring-drift-a 22s ease-in-out infinite; }
+.profile-page .profile-ambient-map::after { top:35%; right:-208px; width:410px; height:410px; border:1px solid rgba(161,122,238,.105); background:radial-gradient(circle at 30% 34%,rgba(105,168,244,.09),transparent 47%); box-shadow:inset 0 0 62px rgba(132,93,223,.04),0 0 54px rgba(92,144,236,.04); animation:lup-profile-ring-drift-b 26s ease-in-out infinite; }
+@keyframes lup-profile-ring-drift-a { 0%,100% { transform:translate3d(0,0,0) scale(1); opacity:.40; } 45% { transform:translate3d(28px,21px,0) scale(1.055); opacity:.76; } 72% { transform:translate3d(9px,44px,0) scale(.985); opacity:.48; } }
+@keyframes lup-profile-ring-drift-b { 0%,100% { transform:translate3d(0,0,0) scale(1); opacity:.32; } 39% { transform:translate3d(-32px,18px,0) scale(1.05); opacity:.68; } 70% { transform:translate3d(-14px,-23px,0) scale(.97); opacity:.43; } }
+.profile-page .avatar-bg { overflow:hidden; background:radial-gradient(ellipse 72% 58% at 50% 19%,rgba(96,164,232,.12),transparent 70%) !important; }
+.profile-page .user-top-information .countitem { background:linear-gradient(145deg,rgba(255,255,255,.115),rgba(255,255,255,.025) 44%,rgba(30,37,65,.07)) !important; }
+.profile-page .profile-section-nav { background:rgba(15,21,38,.20) !important; backdrop-filter:blur(2px); }
+.profile-page .information-tabs,.profile-page .information-tabs md-content,.profile-page .information-tabs .md-tab-content { background:transparent !important; }
+.profile-page .profile-information.profile-about-single .profile-story-card { background:rgba(19,24,41,.18) !important; }
+.profile-page .profile-gallery,.profile-page .gallery-container { background:transparent !important; }
+
+/* The profile switch is lit, not boxed.  One narrow cone makes the chosen
+   section legible without adding another visible container to the profile. */
+.profile-page .profile-section-nav {
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+.profile-page .profile-section-nav button,
+.profile-page .profile-section-nav button.active,
+.profile-page .profile-section-nav button:hover {
+  overflow:hidden;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-section-nav button + button::before { display:none !important; content:none !important; }
+.profile-page .profile-section-nav button::before { display:none; content:none; }
+.profile-page .profile-section-nav button.active::before {
+  display:block;
+  content:'';
+  position:absolute;
+  z-index:0;
+  top:-12px;
+  left:13%;
+  width:74%;
+  height:57px;
+  background:linear-gradient(180deg,rgba(190,181,255,.33),rgba(157,142,245,.11) 47%,rgba(118,181,238,0) 100%);
+  clip-path:polygon(47% 0,53% 0,100% 100%,0 100%);
+  filter:blur(.1px);
+  opacity:.85;
+}
+.profile-page .profile-section-nav button.active::after {
+  height:1px;
+  background:linear-gradient(90deg,transparent 4%,rgba(164,151,255,.66) 27%,#d8d2ff 50%,rgba(135,197,245,.62) 73%,transparent 96%) !important;
+  box-shadow:0 0 9px rgba(178,164,255,.52) !important;
+}
+.profile-page .profile-section-nav button > * { position:relative; z-index:1; }
+.profile-page .profile-section-nav button.active .material-icons { color:#fbf9ff; text-shadow:0 0 13px rgba(194,181,255,.72); }
+.profile-page .profile-section-nav button.active span { color:#fbfaff; text-shadow:0 0 10px rgba(184,171,255,.42); }
+.profile-page .profile-section-nav button:first-child.active::before,
+.profile-page .profile-section-nav button:nth-child(2).active::before { opacity:1 !important; }
+.profile-page .profile-section-nav button:first-child.active .material-icons,
+.profile-page .profile-section-nav button:nth-child(2).active .material-icons { color:#fbf9ff !important; text-shadow:0 0 13px rgba(194,181,255,.72) !important; }
+.profile-page .profile-section-nav button:first-child.active span,
+.profile-page .profile-section-nav button:nth-child(2).active span { color:#fbfaff !important; text-shadow:0 0 10px rgba(184,171,255,.42) !important; }
+/* The legacy divider used !important and hid the second tab's ::before.  Both
+   profile choices now expose the same lamp cone when active. */
+.profile-page .profile-section-nav button:nth-child(2).active::before {
+  display:none !important;
+  content:none !important;
+}
+.profile-page .profile-section-nav button:first-child.active::before { display:none !important; content:none !important; }
+.profile-page .profile-ambient-route { position:absolute; display:block; border:1px solid rgba(147,198,255,.09); border-radius:50%; }
+.profile-page .profile-ambient-route-one { top:5%; right:-43%; width:112%; height:31%; transform:rotate(-24deg); }
+.profile-page .profile-ambient-route-two { top:42%; left:-47%; width:107%; height:25%; border-color:rgba(182,147,255,.075); transform:rotate(19deg); }
+.profile-page .profile-ambient-route-three { bottom:4%; right:-44%; width:102%; height:30%; border-color:rgba(128,194,245,.065); transform:rotate(-17deg); }
+.profile-page .profile-ambient-node { position:absolute; display:block; width:4px; height:4px; border-radius:50%; background:rgba(198,226,255,.58); box-shadow:0 0 12px rgba(104,193,255,.42); }
+.profile-page .profile-ambient-node-one { top:15%; right:21%; opacity:.42; }
+.profile-page .profile-ambient-node-two { top:54%; left:14%; background:rgba(205,177,255,.54); box-shadow:0 0 12px rgba(173,126,255,.35); opacity:.31; }
+.profile-page .profile-ambient-node-three { bottom:17%; right:29%; opacity:.25; }
+.profile-page .profile-ambient-focus { position:absolute; top:92px; left:50%; display:block; width:172px; height:76px; border:1px solid rgba(157,211,255,.13); border-radius:50%; box-shadow:0 0 26px rgba(88,170,243,.11),inset 0 0 20px rgba(161,130,242,.04); transform:translateX(-50%) rotate(-12deg); animation:lup-profile-focus-breathe 8s ease-in-out infinite; }
+.profile-page .profile-ambient-signal { position:absolute; top:23%; right:12%; display:block; width:8px; height:8px; border-radius:50%; background:#c9efff; box-shadow:0 0 0 4px rgba(99,183,246,.07),0 0 18px rgba(95,195,255,.78); animation:lup-profile-route-signal 18s ease-in-out infinite; }
+@keyframes lup-profile-focus-breathe { 0%,100% { opacity:.28; transform:translateX(-50%) rotate(-12deg) scale(.96); } 50% { opacity:.66; transform:translateX(-50%) rotate(-12deg) scale(1.035); } }
+@keyframes lup-profile-route-signal { 0%,100% { transform:translate3d(0,0,0); opacity:.28; } 22% { opacity:.78; } 47% { transform:translate3d(-106px,58px,0); opacity:.88; } 62% { opacity:.33; } 80% { transform:translate3d(-38px,126px,0); opacity:.57; } }
+@media (max-width:480px) { .profile-page .profile-ambient-route-one { right:-58%; width:132%; height:27%; } .profile-page .profile-ambient-route-two { left:-62%; width:132%; } .profile-page .profile-ambient-route-three { right:-61%; width:130%; } .profile-page .profile-ambient-signal { top:20%; right:8%; } }
+@media (prefers-reduced-motion:reduce) { .profile-page .profile-ambient-signal,.profile-page .profile-ambient-focus,.profile-page .profile-ambient-map::before,.profile-page .profile-ambient-map::after { animation:none; } }
+
+/* Gallery upload becomes a single glass invitation.  It inherits the live
+   profile field instead of looking like a separate technical drop zone. */
+.profile-page .gallery-add-tile {
+  position:relative;
+  isolation:isolate;
+  gap:10px;
+  overflow:hidden;
+  border:1px solid rgba(187,220,255,.25) !important;
+  border-radius:20px;
+  background:linear-gradient(145deg,rgba(139,192,245,.14),rgba(119,92,203,.08) 52%,rgba(18,29,53,.10)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(14,21,45,.16),0 12px 25px rgba(1,8,25,.14) !important;
+  backdrop-filter:blur(5px);
+  color:#e6f4ff;
+}
+.profile-page .gallery-add-tile::before {
+  display:block !important;
+  content:'';
+  position:absolute;
+  z-index:-1;
+  top:-45%;
+  left:-25%;
+  width:105%;
+  height:82%;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,255,255,.22),rgba(194,225,255,.045) 38%,transparent 68%);
+  transform:rotate(-18deg);
+}
+.profile-page .gallery-add-tile::after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  right:14%;
+  bottom:14px;
+  left:14%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(202,235,255,.38),transparent);
+  box-shadow:0 0 10px rgba(130,197,255,.25);
+}
+.profile-page .gallery-add-tile .material-icons {
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  border:1px solid rgba(229,246,255,.46);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(179,221,255,.36),rgba(93,148,218,.22));
+  box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 22px rgba(4,16,43,.20),inset 0 1px 0 rgba(255,255,255,.48);
+  color:#f4fbff;
+  font-size:23px;
+  text-shadow:0 2px 6px rgba(49,92,166,.35);
+}
+.profile-page .gallery-add-tile span { display:block; color:#e0efff; font:760 10px/1 Ubuntu,Roboto,Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; text-shadow:0 1px 8px rgba(32,76,142,.30); }
+.profile-page .gallery-add-tile:hover,.profile-page .gallery-add-tile:focus-visible { transform:translateY(-2px); border-color:rgba(213,239,255,.52) !important; background:linear-gradient(145deg,rgba(151,207,255,.22),rgba(139,104,224,.13) 52%,rgba(23,38,67,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 16px 30px rgba(1,8,25,.19),0 0 21px rgba(111,175,247,.12) !important; outline:0; }
+.profile-page .gallery-add-tile:hover .material-icons,.profile-page .gallery-add-tile:focus-visible .material-icons { box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 25px rgba(4,16,43,.23),0 0 15px rgba(172,221,255,.26),inset 0 1px 0 rgba(255,255,255,.50); }
+.profile-page .gallery-empty { display:grid; justify-items:center; gap:8px; margin:10px 12px 28px; padding:30px 18px; border:1px dashed rgba(184,211,255,.18); border-radius:18px; background:rgba(16,24,42,.28); color:#aab9d1; font:650 12px/1.45 Ubuntu,Roboto,Arial,sans-serif; text-align:center; }
+.profile-page .gallery-empty .material-icons { color:#b7dcff; font-size:27px; filter:drop-shadow(0 0 10px rgba(104,183,255,.28)); }
+
+/* Mobile composer safety: the visible viewport shrinks when a phone keyboard
+ * opens. Keep the message stream scrollable and the composer inside that
+ * viewport instead of letting it disappear behind the keyboard. */
+@media (max-width: 600px) {
+  .location-page > md-content,
+  .query-page > md-content {
+    height:var(--lup-viewport-height,100dvh);
+    min-height:0;
+    overflow:hidden;
+  }
+  .location-page md-tabs,
+  .location-page md-tabs-content-wrapper,
+  .location-page .md-tab-content,
+  .query-page > md-content > ng-include {
+    min-height:0 !important;
+  }
+  .location-page .location-chat-surface,
+  .query-page > md-content {
+    min-height:0 !important;
+  }
+  .location-page .location-chat-surface {
+    height:100%;
+    overflow:hidden;
+  }
+  .location-page .location-chat-surface .chat-msgs,
+  .query-page .chat-msgs {
+    min-height:0;
+    overflow-y:auto !important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .location-page .location-chat-surface .chatbottom,
+  .query-page .chatbottom {
+    flex:0 0 auto;
+    padding-bottom:max(9px,env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Final inbox layout: messages use the whole horizontal content rail. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card {
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  min-height:68px !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+  padding:10px 13px 10px 12px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(192,214,242,.10) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card:first-child { border-top:1px solid rgba(192,214,242,.07) !important; }
+.notification .notification-panel .inbox-thread-avatar {
+  display:grid !important;
+  place-items:center !important;
+  align-self:center !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 12px 0 0 !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar,
+.notification .notification-panel .inbox-thread-avatar .lup-avatar img {
+  display:block !important;
+  width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  transform:none !important;
+}
+.notification .notification-panel .inbox-thread-avatar .lup-avatar {
+  border:1px solid rgba(180,215,246,.28) !important;
+  outline:0 !important;
+  box-shadow:0 4px 12px rgba(2,10,29,.16) !important;
+}
+@media (max-width:360px) { .notification .notification-panel .inbox-message-list .inbox-thread-card { padding-right:10px !important; padding-left:9px !important; }.notification .notification-panel .inbox-thread-avatar,.notification .notification-panel .inbox-thread-avatar .lup-avatar,.notification .notification-panel .inbox-thread-avatar .lup-avatar img { flex-basis:38px !important; width:38px !important; height:38px !important; } }
 /* Browsers must not draw a white native focus rectangle around “Alle”.
    Keyboard users still receive the same quiet LinkUUp focus signal. */
 .nearby .location-categories button:focus { outline:0 !important; }
@@ -6121,3 +7565,72 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (min-width:560px) { .location-page md-list.usernavigation .presence-actions .presence-action { width:auto !important; min-width:33px !important; padding:0 8px !important; }.location-page md-list.usernavigation .presence-actions .presence-action span { display:inline !important; font-size:9px !important; font-weight:800 !important; } }
 @media (max-width:360px) { .location-page md-list.usernavigation { padding-right:11px !important; padding-left:11px !important; }.location-page md-list.usernavigation .presence-person { padding-right:7px !important; padding-left:9px !important; }.location-page md-list.usernavigation .presence-person .presence-avatar,.location-page md-list.usernavigation .presence-person .presence-avatar img { width:40px !important; height:40px !important; }.location-page md-list.usernavigation .presence-actions { gap:2px !important; margin-left:4px !important; }.location-page md-list.usernavigation .presence-actions .presence-action { width:28px !important; height:28px !important; min-width:28px !important; } }
 @media (prefers-reduced-motion:reduce) { .location-page md-list.usernavigation .presence-live-mark .material-icons { animation:none !important; } }
+
+/* Final inbox geometry: content to the edge, avatar centred, forum control
+   fixed at the far right instead of Material's old secondary offset. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card { display:flex !important; align-items:center !important; width:100% !important; margin:0 !important; padding:10px 12px !important; }
+.notification .notification-panel .inbox-thread-avatar { display:block !important; flex:0 0 42px !important; align-self:center !important; width:42px !important; height:42px !important; margin:0 12px 0 0 !important; padding:0 !important; }
+.notification .notification-panel .inbox-thread-avatar .lup-avatar { display:block !important; width:42px !important; height:42px !important; margin:0 !important; padding:0 !important; overflow:hidden !important; }
+.notification .notification-panel .inbox-thread-avatar .lup-avatar .img,.notification .notification-panel .inbox-thread-avatar .lup-avatar span { top:0 !important; left:0 !important; width:100% !important; height:100% !important; margin:0 !important; }
+.notification .notification-panel .inbox-thread-copy { min-width:0 !important; }
+.notification .notification-panel .inbox-thread-open.md-secondary,.notification .notification-panel .inbox-thread-open { position:static !important; right:auto !important; margin:0 0 0 auto !important; }
+
+/* Query layout wins against every legacy message selector above. */
+.query-page .query-message-card { display:flex !important; align-items:center !important; width:100% !important; min-height:62px !important; margin:0 !important; padding:10px 13px !important; gap:12px !important; }
+.query-page .query-message-avatar { display:block !important; flex:0 0 42px !important; width:42px !important; height:42px !important; padding:0 !important; margin:0 !important; overflow:hidden !important; }
+.query-page .query-message-avatar .img,.query-page .query-message-avatar span { position:absolute !important; top:0 !important; left:0 !important; width:100% !important; height:100% !important; margin:0 !important; }
+.query-page .query-message-content { display:flex !important; flex:1 1 auto !important; flex-direction:column !important; justify-content:center !important; min-width:0 !important; min-height:42px !important; }
+.query-page .query-message-content .message { position:relative !important; display:block !important; width:100% !important; min-height:20px !important; padding:2px 0 3px !important; border:0 !important; border-radius:0 !important; background:transparent !important; text-align:left !important; }
+.query-page .query-message-content .message::after { content:'' !important; position:absolute !important; right:0 !important; bottom:0 !important; left:0 !important; height:1px !important; background:linear-gradient(90deg,rgba(150,197,246,.28),rgba(150,197,246,.035)) !important; }
+.query-page .query-message-content .messager-inner,.query-page .query-message-content .lup-message-state { position:relative !important; z-index:1 !important; }
+.query-page .query-message-content .lup-message-state { right:auto !important; bottom:auto !important; left:auto !important; }
+.query-page .lup-own-msg .query-message-card { flex-direction:row-reverse !important; }
+.query-page .lup-own-msg .query-message-content { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message { text-align:right !important; }
+.query-page .lup-own-msg .query-message-content .message::after { background:linear-gradient(90deg,rgba(150,197,246,.035),rgba(150,197,246,.28)) !important; }
+
+/* The forum button stays in the row flow all the way to the right edge. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-list-item-inner { display:flex !important; align-items:center !important; width:100% !important; padding:0 !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-open { position:static !important; display:grid !important; flex:0 0 34px !important; align-self:center !important; width:34px !important; height:34px !important; min-width:34px !important; margin:0 0 0 auto !important; }
+
+/* Material may generate a secondary wrapper depending on template timing.
+   Anchor either form to the same physical right edge. */
+.notification .notification-panel .inbox-message-list .inbox-thread-card { position:relative !important; padding-right:56px !important; }
+.notification .notification-panel .inbox-message-list .inbox-thread-open,
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container {
+  position:absolute !important;
+  top:50% !important;
+  right:7px !important;
+  left:auto !important;
+  margin:0 !important;
+  transform:translateY(-50%) !important;
+  z-index:2 !important;
+}
+.notification .notification-panel .inbox-message-list .inbox-thread-card .md-secondary-container { display:flex !important; align-items:center !important; }
+
+/* The inbox must own the full panel width; otherwise Material measures a
+   shrink-to-fit list and the action can never reach the visible right edge. */
+.notification .notification-panel,
+.notification .notification-panel > ng-include,
+.notification .notification-panel > ng-include > md-content,
+.notification .notification-panel .inbox-message-list,
+.notification .notification-panel .inbox-message-list > md-list-item.inbox-thread-card {
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+
+/* High Fives are an encounter ledger: personal, calm and clearly distinct
+   from the public score or a generic friend list. */
+.highfive-page > md-content { position:relative; isolation:isolate; overflow-x:hidden; background:radial-gradient(ellipse at 93% 6%,rgba(101,175,240,.16),transparent 32%),radial-gradient(ellipse at 7% 88%,rgba(174,110,205,.12),transparent 39%),linear-gradient(160deg,#101726 0%,#101421 53%,#151126 100%) !important; color:#edf4ff; }
+.highfive-page > md-content::before,.highfive-page > md-content::after { content:''; position:absolute; z-index:0; border:1px solid rgba(153,211,255,.09); border-radius:50%; pointer-events:none; }.highfive-page > md-content::before { top:18%; right:-40%; width:104%; height:30%; transform:rotate(-24deg); }.highfive-page > md-content::after { bottom:10%; left:-43%; width:110%; height:28%; border-color:rgba(196,150,255,.08); transform:rotate(18deg); }.highfive-page > md-content > :not(.lup-top-bar) { position:relative; z-index:1; }
+.highfive-hero { display:grid; grid-template-columns:48px minmax(0,1fr); gap:12px; align-items:center; margin:17px 14px 10px; padding:15px 14px; border:1px solid rgba(185,219,255,.15); border-radius:19px; background:linear-gradient(135deg,rgba(72,117,176,.24),rgba(52,38,97,.18)); box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 12px 28px rgba(2,10,29,.14); }.highfive-hero-mark { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(205,235,255,.30); border-radius:16px 16px 16px 6px; background:linear-gradient(145deg,rgba(100,187,240,.38),rgba(126,95,205,.27)); box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px rgba(7,25,65,.22); color:#ebf8ff; }.highfive-hero-mark .material-icons { font-size:26px; }.highfive-hero-copy { min-width:0; }.highfive-hero-copy > span,.highfive-entry-copy > span { display:block; color:#9edcff; font-size:8px; font-weight:850; letter-spacing:.12em; line-height:1.2; }.highfive-hero-copy h1 { overflow:hidden; margin:4px 0 5px; color:#f1f6ff; font-size:18px; font-weight:780; line-height:1.13; text-overflow:ellipsis; white-space:nowrap; }.highfive-hero-copy p { margin:0; color:#b9c8dd; font-size:11px; line-height:1.4; }
+.highfive-rule { display:flex; gap:9px; align-items:center; margin:0 14px 12px; padding:10px 12px; border-left:2px solid #8ed9ff; background:rgba(113,170,233,.07); color:#dceaff; }.highfive-rule > .material-icons { color:#aee8ff; font-size:20px; }.highfive-rule div { min-width:0; }.highfive-rule strong,.highfive-rule span { display:block; }.highfive-rule strong { font-size:10px; font-weight:790; }.highfive-rule span { margin-top:2px; color:#a9b8cd; font-size:10px; line-height:1.35; }
+.highfive-ledger { margin:0 14px; }.highfive-entry { display:grid; grid-template-columns:42px minmax(0,1fr) 26px; gap:11px; align-items:center; min-height:67px; padding:10px 2px; border-bottom:1px solid rgba(191,213,243,.10); }.highfive-entry:first-child { border-top:1px solid rgba(191,213,243,.07); }.highfive-avatar,.highfive-avatar .img,.highfive-avatar span { width:42px !important; height:42px !important; }.highfive-avatar { display:block; margin:0 !important; padding:0 !important; overflow:hidden; border:1px solid rgba(173,220,255,.28); box-shadow:0 5px 14px rgba(1,9,25,.22); }.highfive-avatar .img,.highfive-avatar span { top:0 !important; left:0 !important; margin:0 !important; }.highfive-entry-copy { min-width:0; }.highfive-entry-copy strong { display:block; overflow:hidden; margin:3px 0; color:#f2f7ff; font-size:13px; font-weight:760; line-height:1.15; text-overflow:ellipsis; white-space:nowrap; }.highfive-entry-copy small { display:flex; align-items:center; gap:4px; color:#aab8cc; font-size:10px; }.highfive-entry-copy small .material-icons { color:#92dfff; font-size:12px; }.highfive-entry-seal { display:grid; place-items:center; width:26px; height:26px; border:1px solid rgba(135,224,190,.23); border-radius:50%; background:rgba(79,177,138,.12); color:#9de7c5; font-size:16px; box-shadow:0 0 14px rgba(102,222,170,.10); }
+.highfive-empty { display:grid; justify-items:center; gap:7px; padding:43px 19px; color:#b7c4d7; text-align:center; }.highfive-empty > div { display:grid; place-items:center; width:46px; height:46px; border:1px solid rgba(175,218,255,.20); border-radius:17px 17px 17px 6px; background:rgba(105,165,224,.10); color:#bfeaff; }.highfive-empty > div .material-icons { font-size:25px; }.highfive-empty strong { color:#e8f0fb; font-size:13px; }.highfive-empty p { max-width:244px; margin:0; color:#aab8ce; font-size:11px; line-height:1.45; }.highfive-footnote { display:flex; align-items:center; justify-content:center; gap:5px; margin:16px 18px 28px; color:#8190aa; font-size:9px; text-align:center; }.highfive-footnote .material-icons { color:#91bddb; font-size:12px; }
+@media (max-width:360px) { .highfive-hero { grid-template-columns:43px minmax(0,1fr); margin-right:10px; margin-left:10px; padding:12px 11px; }.highfive-hero-mark { width:43px; height:43px; }.highfive-hero-copy h1 { font-size:16px; }.highfive-rule,.highfive-ledger { margin-right:10px; margin-left:10px; } }
+
+/* Own-profile High Five choice: one compact, clear fork between scanning and
+   reviewing the personal encounter history. */
+.lup-cuddles-dialog:has(.highfive-choice-content) { width:min(91vw,370px) !important; border-color:rgba(177,221,255,.24) !important; border-radius:25px !important; background:radial-gradient(circle at 50% -10%,rgba(103,177,245,.29),transparent 40%),radial-gradient(circle at 90% 55%,rgba(186,104,205,.14),transparent 34%),linear-gradient(154deg,#172949,#12182a 67%,#101524) !important; box-shadow:0 24px 62px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.10) !important; }.highfive-choice-content { padding:27px 20px 19px !important; text-align:center; }.highfive-choice-mark { display:grid; place-items:center; width:58px; height:58px; margin:0 auto 9px; border:1px solid rgba(208,239,255,.42); border-radius:50%; background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.38),transparent 24%),linear-gradient(145deg,#63bbe9,#686bd4 65%,#aa619d); box-shadow:0 0 0 7px rgba(118,200,255,.07),0 13px 28px rgba(8,22,54,.40),inset 0 1px 0 rgba(255,255,255,.40); color:#f2fbff; }.highfive-choice-mark .material-icons { font-size:30px; }.highfive-choice-eyebrow { display:block; color:#a9ddff; font-size:9px; font-weight:880; letter-spacing:.15em; }.highfive-choice-content h2 { margin:5px 0 6px; color:#f4f8ff; font-size:21px; line-height:1.12; }.highfive-choice-content > p { max-width:278px; margin:0 auto 16px; color:#bfcee2; font-size:12px; line-height:1.42; }.highfive-choice-actions { display:grid; gap:8px; }.highfive-choice-card { display:grid; grid-template-columns:35px minmax(0,1fr) 17px; gap:10px; align-items:center; width:100%; min-height:62px; padding:10px; border:1px solid rgba(190,219,255,.15); border-radius:16px; background:rgba(255,255,255,.048); color:#eef6ff; font:inherit; text-align:left; cursor:pointer; transition:transform 160ms ease,border-color 160ms ease,background 160ms ease,box-shadow 160ms ease; }.highfive-choice-card > .material-icons:first-child { display:grid; place-items:center; width:35px; height:35px; border:1px solid rgba(208,237,255,.26); border-radius:12px 12px 12px 5px; background:rgba(107,174,229,.17); color:#c9efff; font-size:19px; }.highfive-choice-card span { min-width:0; }.highfive-choice-card strong,.highfive-choice-card small { display:block; }.highfive-choice-card strong { color:#f1f6ff; font-size:12px; font-weight:780; }.highfive-choice-card small { margin-top:3px; color:#9fadc4; font-size:10px; line-height:1.28; }.highfive-choice-arrow { color:#91ccef; font-size:17px; }.highfive-choice-qr { border-color:rgba(143,213,255,.25); background:linear-gradient(116deg,rgba(78,159,216,.21),rgba(104,78,181,.13)); }.highfive-choice-history > .material-icons:first-child { color:#dacaff; border-color:rgba(204,185,255,.24); background:rgba(141,111,211,.16); }.highfive-choice-card:hover,.highfive-choice-card:focus-visible { border-color:rgba(191,224,255,.42); background:rgba(120,177,233,.13); box-shadow:0 10px 21px rgba(2,10,30,.18),inset 0 1px 0 rgba(255,255,255,.10); outline:0; transform:translateY(-1px); }.highfive-choice-note { display:flex; align-items:center; justify-content:center; gap:5px; margin-top:13px; color:#90a2bd; font-size:9px; line-height:1.35; }.highfive-choice-note .material-icons { color:#a7dff7; font-size:13px; }

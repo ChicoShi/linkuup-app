@@ -23,7 +23,9 @@
  -->
 
  <section ng-repeat="group in data.groups track by group.module" class="lup-settings-group">
-   <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
+   <header class="lup-settings-group-heading">
+     <md-subheader class="md-no-sticky">{{moduleLabel(group.module)|translate}}</md-subheader>
+   </header>
 
    <div ng-repeat="setting in group.settings track by setting.name">
      <div ng-if="controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl-above">
