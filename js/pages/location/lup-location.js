@@ -511,6 +511,16 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.manualLocationTab = true;
 		$scope.data.selectedTab = 2;
 		$scope.data.selectedTab2 = 2;
+		/* A room card can have been opened before another person joined.  Fetch
+		 * the authoritative live list when Online is selected instead of relying
+		 * on that stale card snapshot.  This deliberately treats named guests
+		 * exactly like registered users for presence; only interaction controls
+		 * stay restricted further down in the template. */
+		if ($scope.data.room && $scope.data.room.id()) {
+			RoomSrvc.withUsers($scope.data.room).catch(function(error) {
+				console.warn('Could not refresh room visitors.', error);
+			});
+		}
 		return $scope.visitorsVisible();
 	};
 	

@@ -450,6 +450,40 @@ section.login md-content {
 .auth-panel md-input-container .md-input::placeholder,
 .auth-panel input::placeholder { color:#75839b; }
 .auth-panel .md-input-focused .md-input { border-bottom-color:rgba(137,204,246,.68) !important; }
+/* Angular Material normally floats labels above a thin underline.  The
+ * LinkUUp registration form uses full-height fields, so keep every label in
+ * normal document flow.  Without this override labels from consecutive
+ * fields can stack on top of the first input on narrow screens. */
+.register-panel md-input-container {
+	display:block;
+	min-height:69px;
+	padding:0;
+	border:0 !important;
+	border-radius:0 !important;
+	background:transparent !important;
+	box-shadow:none !important;
+}
+.register-panel md-input-container > label {
+	position:static !important;
+	display:block !important;
+	margin:0 0 6px !important;
+	padding:0 !important;
+	transform:none !important;
+	-webkit-transform:none !important;
+	opacity:1 !important;
+	line-height:1.25 !important;
+}
+.register-panel md-input-container .md-input {
+	margin:0 !important;
+}
+.register-panel .tos-line {
+	position:relative;
+	display:block;
+	min-height:48px;
+	margin:0 0 13px;
+}
+.register-panel .tos-line .check { position:absolute; top:3px; left:0; }
+.register-panel .tos-line span { display:block; padding-left:31px; }
 .auth-panel .login-credentials { width:100% !important; margin:0 !important; padding:0 !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
 .auth-panel .guest-credentials { padding:0 !important; }
 .auth-panel .login-links { display:flex; gap:12px; margin:0 0 9px; padding:0 !important; }
@@ -519,7 +553,13 @@ section.login md-content {
 	.auth-mark { width:46px; height:46px; margin-bottom:16px; border-radius:15px 15px 15px 6px; }
 	.auth-mark .material-icons { font-size:22px; }
 	.auth-shell .login-wordmark { font-size:48px; }
-	.auth-shell .login-brand-claim { margin-top:12px; font-size:12px; }
+	.auth-shell .login-brand-claim {
+		width:min(100%,292px);
+		max-width:292px;
+		margin:12px auto 0;
+		font-size:12px;
+		white-space:normal !important;
+	}
 	.auth-panel { width:calc(100% - 26px); margin:18px auto 25px; padding:35px 23px 26px; border-radius:17px; }
 	.auth-panel > h1 { font-size:27px; }
 	.auth-route { height:290px; top:-9px; }
