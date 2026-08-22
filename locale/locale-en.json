@@ -491,5 +491,6 @@
 "ONLINE_LIVE_TITLE": "Here right now",
 "ONLINE_LIVE_SUBTITLE": "People currently at this location",
 "ONLINE_EMPTY_SUBTITLE": "You are the first visible guest here.",
-"ONLINE_VISITOR_HERE": "Currently at this location"
+"ONLINE_VISITOR_HERE": "Currently at this location",
+"PROFILE_FIELD_PRIVATE": "Visible only to you"
 }

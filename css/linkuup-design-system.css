@@ -8385,6 +8385,21 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .profile-signal:nth-child(4n) {
   background:linear-gradient(122deg,rgba(61,90,117,.35),rgba(18,30,48,.72)) !important;
 }
+.profile-page .profile-signal--private {
+  background:linear-gradient(122deg,rgba(70,48,89,.36),rgba(24,27,48,.76)) !important;
+}
+.profile-page .profile-signal--private::before {
+  border-color:rgba(227,192,255,.22) !important;
+}
+.profile-page .profile-signal--private .profile-signal-icon {
+  border-color:rgba(222,191,255,.27) !important;
+  background:linear-gradient(145deg,rgba(153,108,210,.21),rgba(81,69,139,.12)) !important;
+  color:#e8d9ff !important;
+}
+.profile-page .profile-signal--private .profile-signal-copy strong,
+.profile-page .profile-signal--private .profile-signal-copy strong .material-icons {
+  color:#dec9f6 !important;
+}
 .profile-page .profile-signal-icon {
   width:38px !important;
   height:38px !important;

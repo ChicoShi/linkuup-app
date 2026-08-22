@@ -302,14 +302,15 @@ angular.module('LUP').config(function($routeProvider) {
 				// legacy endpoint) into an empty profile card.
 				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
 				var error = (profile.ERRORS || {})[key];
-				// A profile is a presentation, not a privacy debugger. Hidden fields
-				// are configured in settings and must not leave an eye-off error card
-				// in either the visitor's or owner's profile view.
-				if (error) {
+				// Visitors never see private facts. Their owner, however, needs one
+				// quiet confirmation that the field exists and is currently locked.
+				// This keeps privacy understandable without exposing the value.
+				var isPrivateForOwner = !!error && $scope.data.user.isSelf();
+				if (error && !isPrivateForOwner) {
 					continue;
 				}
 				// Empty settings are intentionally omitted from the profile.
-				if (!hasValue) {
+				if (!hasValue && !isPrivateForOwner) {
 					continue;
 				}
 				var section = profileSections[placement.section];
@@ -326,6 +327,7 @@ angular.module('LUP').config(function($routeProvider) {
 					label: profileLabels[key] || setting.label || key,
 					value: value,
 					error: error,
+					private: isPrivateForOwner,
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.
 					acl: profile.ACL[key],

@@ -507,5 +507,6 @@
 "ONLINE_LIVE_TITLE": "Jetzt vor Ort",
 "ONLINE_LIVE_SUBTITLE": "Menschen, die gerade in dieser Location sind",
 "ONLINE_EMPTY_SUBTITLE": "Du bist gerade der erste sichtbare Gast.",
-"ONLINE_VISITOR_HERE": "Gerade in dieser Location"
+"ONLINE_VISITOR_HERE": "Gerade in dieser Location",
+"PROFILE_FIELD_PRIVATE": "Nur für dich sichtbar"
 }
