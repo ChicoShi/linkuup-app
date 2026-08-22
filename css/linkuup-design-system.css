@@ -8275,3 +8275,141 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   animation:none !important;
   box-shadow:none !important;
 }
+
+/* Profile atlas — a shared profile is a small map of a person, not a pile of
+   settings cards. Each category becomes one connected coordinate surface;
+   the segmented details make it feel constructed without competing with the
+   person's actual words. */
+.profile-page .profile-information.profile-signal-board {
+  width:min(100%,720px) !important;
+  padding:7px 14px 42px !important;
+}
+.profile-page .profile-signal-group {
+  position:relative !important;
+  margin:0 0 25px !important;
+  padding:0 0 0 14px !important;
+}
+.profile-page .profile-signal-group::before {
+  content:'' !important;
+  position:absolute !important;
+  top:25px !important;
+  bottom:-20px !important;
+  left:2px !important;
+  width:1px !important;
+  background:linear-gradient(180deg,rgba(157,226,255,.46),rgba(144,157,255,.13),transparent) !important;
+}
+.profile-page .profile-signal-group:last-child::before { display:none !important; }
+.profile-page .profile-signal-group-heading {
+  position:relative !important;
+  height:27px !important;
+  margin:0 0 8px -14px !important;
+  padding:0 3px 0 14px !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  position:absolute !important;
+  top:9px !important;
+  left:0 !important;
+  width:6px !important;
+  height:6px !important;
+  border:1px solid rgba(222,247,255,.62) !important;
+  background:#aeeaff !important;
+  box-shadow:0 0 0 4px rgba(112,205,255,.08),0 0 14px rgba(111,206,255,.92) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  position:relative !important;
+  padding:5px 9px 5px 0 !important;
+  color:#c8eaff !important;
+  font-size:9px !important;
+  font-weight:880 !important;
+  letter-spacing:.17em !important;
+}
+.profile-page .profile-signal-group-heading small::after {
+  content:'' !important;
+  position:absolute !important;
+  top:50% !important;
+  left:calc(100% + 2px) !important;
+  width:38px !important;
+  height:1px !important;
+  background:linear-gradient(90deg,rgba(161,221,255,.44),transparent) !important;
+}
+.profile-page .profile-signal-grid {
+  position:relative !important;
+  gap:1px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(171,218,250,.17) !important;
+  border-radius:21px 21px 21px 7px !important;
+  background:rgba(140,207,246,.14) !important;
+  box-shadow:0 16px 34px rgba(1,9,27,.17),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+.profile-page .profile-signal-grid::before {
+  content:'' !important;
+  position:absolute !important;
+  z-index:2 !important;
+  top:0 !important;
+  right:7% !important;
+  left:7% !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(211,244,255,.58),transparent) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal {
+  grid-template-columns:38px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:74px !important;
+  padding:12px 12px !important;
+  background:linear-gradient(122deg,rgba(47,79,122,.39),rgba(17,28,49,.72)) !important;
+  transition:transform 190ms ease,background 190ms ease !important;
+}
+.profile-page .profile-signal::before {
+  content:'' !important;
+  position:absolute !important;
+  top:10px !important;
+  right:11px !important;
+  width:16px !important;
+  height:16px !important;
+  border-top:1px solid rgba(174,226,255,.16) !important;
+  border-right:1px solid rgba(174,226,255,.16) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal::after {
+  right:-35px !important;
+  bottom:-45px !important;
+  width:103px !important;
+  height:103px !important;
+  border-color:rgba(142,215,255,.10) !important;
+  background:radial-gradient(circle,rgba(109,184,245,.10),transparent 65%) !important;
+}
+.profile-page .profile-signal:nth-child(3n) {
+  background:linear-gradient(122deg,rgba(74,59,124,.38),rgba(25,27,52,.72)) !important;
+}
+.profile-page .profile-signal:nth-child(4n) {
+  background:linear-gradient(122deg,rgba(61,90,117,.35),rgba(18,30,48,.72)) !important;
+}
+.profile-page .profile-signal-icon {
+  width:38px !important;
+  height:38px !important;
+  border:1px solid rgba(184,232,255,.30) !important;
+  border-radius:13px 13px 13px 4px !important;
+  background:linear-gradient(145deg,rgba(113,207,246,.29),rgba(105,100,202,.11)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.21),0 7px 17px rgba(1,10,33,.19) !important;
+  color:#d7f5ff !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon { border-color:rgba(216,195,255,.27) !important; background:linear-gradient(145deg,rgba(159,124,232,.24),rgba(88,84,171,.10)) !important; color:#ebe1ff !important; }
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon { border-color:rgba(255,221,157,.24) !important; background:linear-gradient(145deg,rgba(223,170,86,.18),rgba(91,91,161,.10)) !important; color:#fff0c5 !important; }
+.profile-page .profile-signal-icon .material-icons { font-size:19px !important; }
+.profile-page .profile-signal-copy small { color:#a9c0d6 !important; font-size:8px !important; font-weight:820 !important; letter-spacing:.09em !important; }
+.profile-page .profile-signal-copy strong { margin-top:5px !important; color:#f1f8ff !important; font-size:13px !important; font-weight:740 !important; letter-spacing:-.01em !important; }
+.profile-page .profile-signal:hover { transform:translate3d(0,-2px,0) !important; background:linear-gradient(122deg,rgba(65,111,162,.48),rgba(20,35,59,.79)) !important; }
+.profile-page .profile-signal-grid .profile-signal:first-child:last-child { grid-column:1 / -1 !important; }
+@media (max-width:360px) {
+  .profile-page .profile-information.profile-signal-board { padding-right:10px !important; padding-left:10px !important; }
+  .profile-page .profile-signal-group { padding-left:10px !important; }
+  .profile-page .profile-signal-group-heading { margin-left:-10px !important; padding-left:11px !important; }
+  .profile-page .profile-signal { grid-template-columns:33px minmax(0,1fr) !important; gap:8px !important; min-height:67px !important; padding:10px 9px !important; }
+  .profile-page .profile-signal-icon { width:33px !important; height:33px !important; border-radius:11px 11px 11px 3px !important; }
+  .profile-page .profile-signal-icon .material-icons { font-size:17px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-signal { transition:none !important; }
+}
