@@ -24,11 +24,12 @@
 /* Ten stars are the whole control: the library's reset glyph would make the
  * row wrap and hides the colour progression on a phone. */
 .vote-dialog jk-rating-stars .button:not(.star-button) { display:none; }
-.vote-dialog jk-rating-stars .jk-rating-stars-container { display:flex; align-items:center; justify-content:center; width:260px; max-width:100%; overflow:hidden; }
-.vote-dialog jk-rating-stars .star-button { display:inline-grid; place-items:center; flex:0 0 26px; min-width:0 !important; max-width:26px; width:26px; height:31px; margin:0; padding:0; }
+.vote-dialog jk-rating-stars .jk-rating-stars-container { display:flex; align-items:center; justify-content:center; width:180px; max-width:100%; overflow:visible; }
+.vote-dialog jk-rating-stars .star-button { display:inline-grid; place-items:center; flex:0 0 18px; min-width:0 !important; max-width:18px; width:18px; height:27px; margin:0; padding:0; }
+.vote-dialog jk-rating-stars .star-button .material-icons { font-size:19px; }
 .vote-dialog jk-rating-stars .star-button.star-off .material-icons { color:rgba(226,239,255,.18) !important; text-shadow:none; }
 .vote-dialog jk-rating-stars .star-button.star-on .material-icons { color:var(--tier,#ffe083) !important; filter:drop-shadow(0 0 6px var(--tier-glow)); }
-@media (max-width:360px) { .vote-dialog jk-rating-stars .jk-rating-stars-container { width:240px; }.vote-dialog jk-rating-stars .star-button { flex-basis:24px; max-width:24px; width:24px; }.vote-dialog jk-rating-stars .material-icons { font-size:24px; } }
+@media (max-width:360px) { .vote-dialog jk-rating-stars .jk-rating-stars-container { width:170px; }.vote-dialog jk-rating-stars .star-button { flex-basis:17px; max-width:17px; width:17px; }.vote-dialog jk-rating-stars .material-icons { font-size:18px; } }
 
 /* Ten real steps, coloured by reputation. The tenth step becomes a crystal
  * signal, while lower scores remain plainly visible instead of hidden. */
