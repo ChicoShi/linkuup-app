@@ -20,18 +20,18 @@
   </md-list-item>
 </md-list>
 
-<md-list class="profile-information profile-settings-view" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
-  <section ng-repeat="group in data.profileGroups track by group.module" class="profile-settings-group">
-    <md-subheader class="md-no-sticky">{{group.label|translate}}</md-subheader>
-    <md-list-item class="md-2-line profile-detail-card" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-setting-denied': field.error}">
-      <div class="profile-detail-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></div>
-      <div class="md-list-item-text" layout="column">
-        <h3>
-          {{field.label|translate}}
-        </h3>
-        <p ng-if="field.error"><i class="material-icons" aria-hidden="true">visibility_off</i> {{field.error}}</p>
-        <p ng-if="!field.error" ng-bind-html="renderProfileSetting(field)"></p>
-      </div>
-    </md-list-item>
+<section class="profile-information profile-signal-board" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
+  <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
+    <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
+    <div class="profile-signal-grid">
+      <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-signal--denied': field.error}">
+        <span class="profile-signal-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
+        <div class="profile-signal-copy">
+          <small>{{field.label|translate}}</small>
+          <strong ng-if="field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
+          <strong ng-if="!field.error" ng-bind-html="renderProfileSetting(field)"></strong>
+        </div>
+      </article>
+    </div>
   </section>
-</md-list>
+</section>
