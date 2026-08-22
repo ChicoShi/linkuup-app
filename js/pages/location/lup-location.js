@@ -217,6 +217,15 @@ angular.module('LUP').config(function($routeProvider) {
 		return Math.max(0, Number(room && room.JSON && room.JSON.room_cuddles) || 0);
 	};
 
+	$scope.ratingTier = function(rating) {
+		rating = Number(rating) || 0;
+		if (rating >= 10) { return 'crystal'; }
+		if (rating >= 8) { return 'azure'; }
+		if (rating >= 5) { return 'gold'; }
+		if (rating >= 3) { return 'amber'; }
+		return 'ember';
+	};
+
 	//////////////////
 	// --- Vote --- //
 	//////////////////
