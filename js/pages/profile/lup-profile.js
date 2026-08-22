@@ -228,7 +228,19 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
 		$scope.data.profile = profile;
-		$scope.data.profileGroups = $scope.buildProfileGroups(profile);
+		$scope.rebuildProfileGroups();
+		// Profile values and their human labels arrive through two independent
+		// endpoints. If the settings catalogue was still loading, the old code
+		// rendered anonymous/empty cards and never revisited them.
+		if (!SettingsSrvc.CACHE) {
+			SettingsSrvc.withConfig().then(function() {
+				$scope.rebuildProfileGroups();
+			}, angular.noop);
+		}
+	};
+
+	$scope.rebuildProfileGroups = function() {
+		$scope.data.profileGroups = $scope.buildProfileGroups($scope.data.profile);
 	};
 
 	$scope.moduleLabel = function(module) {
@@ -254,12 +266,21 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 		});
 		var groups = {};
+		var profileLabels = {
+			gender: 'SETTING_LABEL_GENDER', lup_status: 'SETTING_LABEL_STATUS',
+			lup_state: 'SETTING_LABEL_STATE', lup_city: 'SETTING_LABEL_CITY',
+			lup_eyecolor: 'SETTING_LABEL_EYE_COLOR', lup_height: 'SETTING_LABEL_HEIGHT',
+			lup_interest: 'SETTING_LABEL_INTEREST', lup_sexo: 'SETTING_LABEL_ORIENTATION',
+			lup_has_pet: 'SETTING_LABEL_PET', lup_drinks: 'SETTING_LABEL_DRINKS',
+			lup_smokes: 'SETTING_LABEL_SMOKES', lup_sporty: 'SETTING_LABEL_SPORT',
+			lup_religion: 'SETTING_LABEL_RELIGION'
+		};
 		var cache = SettingsSrvc.CACHE || {};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
 				var placement = fieldOrder[key];
-				if (!placement) {
+				if (!placement || !setting) {
 					continue;
 				}
 				// Legacy display helpers initialise a few optional enums with "0".
@@ -268,8 +289,11 @@ angular.module('LUP').config(function($routeProvider) {
 				if (profile.EMPTY[key]) {
 					continue;
 				}
-				var hasValue = Object.prototype.hasOwnProperty.call(profile.JSON, key);
-				var error = profile.ERRORS[key];
+				var value = (profile.JSON || {})[key];
+				// Do not turn an absent optional enum (often represented as 0 by a
+				// legacy endpoint) into an empty profile card.
+				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
+				var error = (profile.ERRORS || {})[key];
 				// Only values and meaningful ACL errors deserve a row. Empty settings
 				// are intentionally omitted from the public profile.
 				if (!hasValue && !error) {
@@ -286,7 +310,8 @@ angular.module('LUP').config(function($routeProvider) {
 					key: key,
 					sort: placement.sort,
 					setting: setting,
-					value: profile.JSON[key],
+					label: profileLabels[key] || setting.label || key,
+					value: value,
 					error: error,
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.

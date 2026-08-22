@@ -46,6 +46,35 @@ angular.module('LUP').config(function($routeProvider) {
 		Contact: 'contact',
 	};
 	const SECTION_ORDER = {identity: 10, local: 20, privacy: 30, contact: 40};
+	/* The settings endpoint is intentionally generic and a few older modules
+	 * return no display label at all.  A blank title turns a real setting into a
+	 * confusing anonymous control.  Keep the user-facing profile vocabulary in
+	 * one place and fall back to a readable name for future backend settings. */
+	const SETTING_LABELS = {
+		about_me: 'SETTING_LABEL_ABOUT_ME',
+		gender: 'SETTING_LABEL_GENDER',
+		lup_status: 'SETTING_LABEL_STATUS',
+		lup_state: 'SETTING_LABEL_STATE',
+		lup_city: 'SETTING_LABEL_CITY',
+		lup_eyecolor: 'SETTING_LABEL_EYE_COLOR',
+		lup_height: 'SETTING_LABEL_HEIGHT',
+		lup_interest: 'SETTING_LABEL_INTEREST',
+		lup_sexo: 'SETTING_LABEL_ORIENTATION',
+		lup_has_pet: 'SETTING_LABEL_PET',
+		lup_drinks: 'SETTING_LABEL_DRINKS',
+		lup_smokes: 'SETTING_LABEL_SMOKES',
+		lup_sporty: 'SETTING_LABEL_SPORT',
+		lup_religion: 'SETTING_LABEL_RELIGION'
+	};
+
+	$scope.settingDisplayLabel = function(setting) {
+		if (!setting) { return ''; }
+		if (SETTING_LABELS[setting.name]) { return SETTING_LABELS[setting.name]; }
+		if (setting.label && setting.label !== setting.name) { return setting.label; }
+		return String(setting.name || '').replace(/^lup_/, '').replace(/_/g, ' ').replace(/\b\w/g, function(letter) {
+			return letter.toUpperCase();
+		});
+	};
 
 	$scope.moduleLabel = function(module) {
 		return 'module_' + module.toLowerCase();
@@ -174,6 +203,7 @@ angular.module('LUP').config(function($routeProvider) {
 							(READ_ONLY_SETTINGS[module] && READ_ONLY_SETTINGS[module][key])) { continue; }
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;
+						setting.displayLabel = $scope.settingDisplayLabel(setting);
 						setting.options = setting.options || {};
 						setting.renderer = GDTRendererSrvc.forSetting(setting);
 						var selected = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;

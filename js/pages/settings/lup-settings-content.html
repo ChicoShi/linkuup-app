@@ -52,7 +52,7 @@
 
      <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
        <div class="md-list-item-text" layout="column">
-         <h3>{{setting.label|translate}}</h3>
+        <h3>{{setting.displayLabel|translate}}</h3>
          <p ng-if="isDateSetting(setting)" class="settings-date-hint">{{'SETTINGS_DATE_HINT'|translate}}</p>
        </div>
 

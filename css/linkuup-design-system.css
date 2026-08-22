@@ -8109,6 +8109,87 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (max-width:360px) { .profile-page .profile-about-route { top:12px; right:6px; opacity:.42; transform:scale(.82); transform-origin:top right; }.profile-page .profile-information.profile-about-single .profile-about-me { padding-right:5px; } }
 @media (prefers-reduced-motion:reduce) { .profile-page .profile-about-route > em { animation:none !important; opacity:.55; } .profile-page .profile-information.profile-settings-view .profile-detail-card { transition:none !important; } }
 
+/* Profile facts and account settings share the same promise: every control
+   says what it changes.  Keep them compact enough for a phone, but never
+   squeeze a label into an anonymous or truncated chip. */
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  display:-webkit-box !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card {
+  align-content:start !important;
+}
+.lup-settings-list .lup-settings-group {
+  margin:0 0 21px !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader {
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+  margin:14px 4px 8px !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader b {
+  color:#dbeeff !important;
+  font-size:10px !important;
+  font-weight:850 !important;
+  letter-spacing:.11em !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader small {
+  color:#91a8c2 !important;
+  font-size:11px !important;
+  font-weight:520 !important;
+  letter-spacing:0 !important;
+  line-height:1.35 !important;
+  text-transform:none !important;
+}
+.lup-settings-list md-list-item.md-2-line {
+  min-height:72px !important;
+  margin:6px 0 !important;
+  padding:8px 12px !important;
+  border-color:rgba(181,212,245,.12) !important;
+  border-radius:14px !important;
+  background:linear-gradient(115deg,rgba(62,91,139,.18),rgba(22,31,50,.42)) !important;
+}
+.lup-settings-list .md-list-item-text {
+  min-width:0 !important;
+}
+.lup-settings-list .md-list-item-text h3 {
+  overflow:visible !important;
+  margin:0 !important;
+  color:#edf6ff !important;
+  font-size:13px !important;
+  font-weight:760 !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+}
+.lup-settings-list .lup-setting-controls {
+  flex:0 1 52% !important;
+}
+.lup-settings-list .lup-setting-controls > md-select,
+.lup-settings-list .lup-setting-controls > .lup-setting-input {
+  max-width:min(48vw,310px) !important;
+}
+.lup-settings-list .lup-setting-textarea {
+  min-height:151px !important;
+}
+.lup-settings-list .lup-setting-textarea .md-list-item-text {
+  margin-bottom:10px !important;
+}
+.lup-settings-list .lup-setting-input input,
+.lup-settings-list .lup-setting-input textarea {
+  border-color:rgba(161,207,245,.14) !important;
+  border-radius:10px !important;
+  background:rgba(10,18,33,.42) !important;
+}
+@media (max-width:360px) {
+  .lup-settings-list md-list-item.md-2-line { padding:8px 10px !important; }
+  .lup-settings-list .md-list-item-text h3 { font-size:12px !important; }
+  .lup-settings-list .lup-setting-controls { flex-basis:49% !important; gap:5px !important; }
+}
+
 /* Retire the old discovery circuit completely.  It used to leave a thin
    animated divider directly below the category strip on wide displays.  The
    category controls still keep their own selected-state feedback; only the
