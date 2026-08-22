@@ -51,8 +51,21 @@ angular.module('LUP').config(function($routeProvider) {
 	 * confusing anonymous control.  Keep the user-facing profile vocabulary in
 	 * one place and fall back to a readable name for future backend settings. */
 	const SETTING_LABELS = {
-		about_me: 'SETTING_LABEL_ABOUT_ME',
+		language: 'language',
 		gender: 'SETTING_LABEL_GENDER',
+		color: 'SETTING_LABEL_PROFILE_COLOUR',
+		timezone: 'SETTING_LABEL_TIMEZONE',
+		country_of_living: 'country_of_living',
+		country_of_origin: 'country_of_origin',
+		friend_who: 'friend_who',
+		friends_show: 'friends_show',
+		birthday: 'SETTING_LABEL_BIRTHDAY',
+		age_visible: 'age_visible',
+		announce_my_birthday: 'announce_my_birthday',
+		announce_me_birthdays: 'announce_me_birthdays',
+		whatsapp_number: 'whatsapp_number',
+		gallery_acl: 'SETTING_LABEL_GALLERY_VISIBILITY',
+		about_me: 'SETTING_LABEL_ABOUT_ME',
 		lup_status: 'SETTING_LABEL_STATUS',
 		lup_state: 'SETTING_LABEL_STATE',
 		lup_city: 'SETTING_LABEL_CITY',

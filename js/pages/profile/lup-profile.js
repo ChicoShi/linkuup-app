@@ -243,6 +243,14 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.profileGroups = $scope.buildProfileGroups($scope.data.profile);
 	};
 
+	$scope.$on('lup-profile-setting-saved', function(event, setting) {
+		// Only the signed-in person's profile can be affected by Settings. Reload
+		// its server-filtered public data so privacy changes are reflected too.
+		if ($scope.data.user && $scope.data.user.isSelf() && setting) {
+			$scope.loadInformation();
+		}
+	});
+
 	$scope.moduleLabel = function(module) {
 		return 'module_' + String(module).toLowerCase();
 	};

@@ -91,6 +91,10 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 			if (relation !== undefined && relation !== null) {
 				config.acl = relation;
 			}
+			// A profile can remain open behind the settings route on mobile. Tell
+			// that view immediately that a saved public value is available instead
+			// of leaving the old cards on screen until a full browser reload.
+			$rootScope.$broadcast('lup-profile-setting-saved', config);
 		});
 	};
 
