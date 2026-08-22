@@ -9162,3 +9162,8 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   .profile-page .profile-signal-visibility { right:7px !important; bottom:6px !important; font-size:6px !important; }
   .profile-page .profile-signal-visibility .material-icons { font-size:10px !important; }
 }
+
+/* Visibility is enforced by the server; it is intentionally not repeated as
+   decoration inside the profile insight. */
+.profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:0 !important; }
+.profile-page .profile-signal-visibility { display:none !important; }

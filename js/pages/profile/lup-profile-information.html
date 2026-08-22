@@ -45,7 +45,6 @@
             <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
             <strong ng-if="!field.private && !field.error" ng-bind-html="renderProfileSetting(field)"></strong>
           </div>
-          <span class="profile-signal-visibility" ng-if="data.user.isSelf()"><i class="material-icons" aria-hidden="true">{{field.visibility === 'private' ? 'visibility_off' : (field.visibility === 'friends' ? 'group' : (field.visibility === 'members' ? 'people_outline' : 'visibility'))}}</i><span>{{profileFieldVisibilityLabel(field)|translate}}</span></span>
         </article>
       </div>
     </section>
