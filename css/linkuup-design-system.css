@@ -8582,3 +8582,127 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (prefers-reduced-motion:reduce) {
   .profile-page .profile-signal-grid::after { animation:none !important; opacity:.68 !important; }
 }
+
+/* Profile passport: one composed instrument, not a stack of generated cards.
+   The outer frame is the profile's readable boundary; the inner rules carry
+   structure without giving every fact a different background. */
+.profile-page .profile-information.profile-signal-board {
+  position:relative !important;
+  max-width:700px !important;
+  margin:5px auto 38px !important;
+  padding:15px 14px 13px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(169,205,231,.24) !important;
+  border-radius:18px 18px 28px 7px !important;
+  background:
+    linear-gradient(112deg,rgba(47,83,122,.17),transparent 36%),
+    radial-gradient(circle at 88% 11%,rgba(104,179,232,.12),transparent 23%),
+    #0c1627 !important;
+  box-shadow:inset 0 1px 0 rgba(237,249,255,.09),inset 0 -34px 50px rgba(1,7,20,.22),0 18px 40px rgba(1,7,22,.18) !important;
+}
+.profile-page .profile-information.profile-signal-board::before {
+  content:'' !important;
+  position:absolute !important;
+  inset:0 !important;
+  opacity:.42 !important;
+  background-image:linear-gradient(90deg,rgba(164,209,237,.07) 1px,transparent 1px),linear-gradient(rgba(164,209,237,.045) 1px,transparent 1px) !important;
+  background-size:42px 42px !important;
+  mask-image:linear-gradient(120deg,transparent 3%,black 41%,transparent 90%) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-information.profile-signal-board::after {
+  content:'' !important;
+  position:absolute !important;
+  top:10px !important;
+  right:12px !important;
+  bottom:10px !important;
+  width:2px !important;
+  background:linear-gradient(180deg,transparent,rgba(165,227,255,.70) 24%,rgba(174,146,255,.26) 68%,transparent) !important;
+  box-shadow:0 0 15px rgba(111,200,255,.22) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal-group {
+  position:relative !important;
+  z-index:1 !important;
+  margin:0 0 17px !important;
+}
+.profile-page .profile-signal-group:last-child { margin-bottom:0 !important; }
+.profile-page .profile-signal-group-heading {
+  height:31px !important;
+  margin:0 !important;
+  padding:0 10px !important;
+  border:1px solid rgba(184,216,238,.13) !important;
+  border-bottom:0 !important;
+  border-radius:10px 10px 0 0 !important;
+  background:rgba(5,13,27,.33) !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  position:relative !important;
+  top:auto !important;
+  left:auto !important;
+  width:6px !important;
+  height:6px !important;
+  border:1px solid rgba(210,244,255,.72) !important;
+  border-radius:50% !important;
+  background:#91dbff !important;
+  box-shadow:0 0 11px rgba(110,205,255,.67) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  padding:0 0 0 8px !important;
+  color:#d8e6f2 !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+  letter-spacing:.07em !important;
+  line-height:30px !important;
+}
+.profile-page .profile-signal-group-heading small::after { display:none !important; }
+.profile-page .profile-signal-grid {
+  position:relative !important;
+  z-index:1 !important;
+  border:1px solid rgba(184,216,238,.13) !important;
+  border-radius:0 0 13px 13px !important;
+  background:rgba(6,14,28,.38) !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal-grid::before {
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:0 !important;
+  width:auto !important;
+  background:linear-gradient(90deg,transparent,rgba(171,223,250,.40),transparent) !important;
+}
+.profile-page .profile-signal-grid::after { display:none !important; }
+.profile-page .profile-signal {
+  grid-template-columns:34px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:74px !important;
+  padding:14px 13px !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal:nth-child(2n),
+.profile-page .profile-signal--private:nth-child(2n) { background:rgba(255,255,255,.022) !important; }
+.profile-page .profile-signal:nth-child(n+3) { border-top-color:rgba(181,204,225,.13) !important; }
+.profile-page .profile-signal:nth-child(2n) { border-left-color:rgba(181,204,225,.13) !important; }
+.profile-page .profile-signal-icon {
+  width:32px !important;
+  height:32px !important;
+  border:1px solid rgba(174,222,250,.30) !important;
+  border-radius:10px 10px 10px 3px !important;
+  background:linear-gradient(145deg,rgba(117,200,240,.12),rgba(82,99,177,.05)) !important;
+  box-shadow:inset 0 1px 0 rgba(243,251,255,.10),0 5px 13px rgba(0,8,24,.10) !important;
+  color:#bfeaff !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon { border-color:rgba(209,194,255,.30) !important; color:#e0d5ff !important; }
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon { border-color:rgba(255,218,159,.30) !important; color:#ffe1a4 !important; }
+.profile-page .profile-signal-icon .material-icons { font-size:17px !important; }
+.profile-page .profile-signal-copy small { color:#91a8bd !important; font-size:8px !important; letter-spacing:.11em !important; }
+.profile-page .profile-signal-copy strong { color:#f1f7fc !important; font-size:13px !important; font-weight:680 !important; }
+.profile-page .profile-signal:hover { transform:none !important; background:rgba(117,181,223,.08) !important; }
+@media (max-width:360px) {
+  .profile-page .profile-information.profile-signal-board { margin-right:10px !important; margin-left:10px !important; padding:11px 9px 9px !important; }
+  .profile-page .profile-signal { grid-template-columns:29px minmax(0,1fr) !important; min-height:66px !important; padding:11px 9px !important; }
+  .profile-page .profile-signal-icon { width:28px !important; height:28px !important; border-radius:9px 9px 9px 3px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
