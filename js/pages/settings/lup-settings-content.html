@@ -13,9 +13,14 @@
       <i class="material-icons" aria-hidden="true">visibility</i>
       <div><strong>{{'SETTINGS_VISIBILITY_TITLE'|translate}}</strong><small>{{'SETTINGS_VISIBILITY_HINT'|translate}}</small></div>
     </header>
-    <md-select class="lup-setting-primary-select" ng-model="data.profileVisibility.value" ng-change="changeSetting(data.profileVisibility)" aria-label="{{'profile_visibility'|translate}}">
-      <md-option ng-repeat="relation in aclChoices(data.profileVisibility)" value="{{relation}}">{{enumLabel(relation)|translate}}</md-option>
-    </md-select>
+    <div class="lup-profile-visibility-choice">
+      <button type="button" class="lup-visibility-trigger" ng-click="toggleProfileVisibility($event)" ng-disabled="data.profileVisibility.saving" aria-expanded="{{!!data.profileVisibility.visibilityOpen}}">
+        <span>{{data.profileVisibility.value|translate}}</span><i class="material-icons" aria-hidden="true">{{data.profileVisibility.visibilityOpen ? 'expand_less' : 'expand_more'}}</i>
+      </button>
+      <div class="lup-visibility-menu" ng-if="data.profileVisibility.visibilityOpen">
+        <button type="button" ng-repeat="relation in aclChoices(data.profileVisibility)" ng-click="selectProfileVisibility(relation, $event)" ng-class="{'is-selected': data.profileVisibility.value === relation}">{{enumLabel(relation)|translate}}</button>
+      </div>
+    </div>
   </section>
 
   <section ng-repeat="group in data.groups track by group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
@@ -60,7 +65,7 @@
             <span>{{visibilityLabel(setting)|translate}}</span><i class="material-icons" aria-hidden="true">{{setting.visibilityOpen ? 'expand_less' : 'expand_more'}}</i>
           </button>
           <div class="lup-visibility-menu" ng-if="setting.visibilityOpen">
-            <button type="button" ng-repeat="relation in aclChoices(setting)" ng-click="selectVisibility(setting, relation, $event)" ng-disabled="!aclAllowed(setting, relation)" ng-class="{'is-selected': visibilityLabel(setting) === relation}">{{enumLabel(relation)|translate}}</button>
+            <button type="button" ng-repeat="relation in aclChoices(setting)" ng-click="selectVisibility(setting, relation, $event)" ng-class="{'is-selected': visibilityLabel(setting) === relation}">{{enumLabel(relation)|translate}}</button>
           </div>
         </div>
       </div>

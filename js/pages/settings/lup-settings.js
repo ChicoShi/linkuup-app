@@ -312,10 +312,26 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.selectVisibility = function(setting, relation, event) {
 		if (event) { event.preventDefault(); event.stopPropagation(); }
-		if (!setting || setting.saving || !relation || ! $scope.aclAllowed(setting, relation)) { return; }
+		if (!setting || setting.saving || !relation) { return; }
 		setting.acl = relation;
 		setting.visibilityOpen = false;
 		$scope.changeVisibility(setting);
+	};
+
+	$scope.toggleProfileVisibility = function(event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		var setting = $scope.data.profileVisibility;
+		if (!setting || setting.saving) { return; }
+		setting.visibilityOpen = !setting.visibilityOpen;
+	};
+
+	$scope.selectProfileVisibility = function(relation, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		var setting = $scope.data.profileVisibility;
+		if (!setting || setting.saving || !relation) { return; }
+		setting.value = relation;
+		setting.visibilityOpen = false;
+		$scope.changeSetting(setting);
 	};
 
 	/* Native date/time controls do not consistently emit a useful blur event on
