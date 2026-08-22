@@ -324,7 +324,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$timeout(function() {
 			$scope.slick(true);
 			settleHorizontalRail();
-		}, 0);
+		}, 16);
 	};
 	
 	$scope.maybeGotoRoom = function(room, event) {
@@ -594,7 +594,7 @@ angular.module('LUP').config(function($routeProvider) {
 		categoryRefreshTimer = $timeout(function() {
 			categoryRefreshTimer = null;
 			$scope.refreshCategoryFilter();
-		}, 0);
+		}, 16);
 	};
 
 	var detachCategoryRail = function() {

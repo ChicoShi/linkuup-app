@@ -1511,14 +1511,16 @@ md-list.usernavigation .presence-actions .usericon {
 .nearby .slickit { overflow: visible; }
 .nearby .slick-list { overflow: hidden; }
 .nearby .slick-slide .lup-room-slide {
-  transition-duration: .52s, .42s, .46s;
-  will-change: transform, opacity, filter;
+  transition-duration: .36s, .28s;
+  /* The rail is used continuously. Keep its compositor work to properties
+     that remain smooth on older phones as well as desktop browsers. */
+  will-change: transform, opacity;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-category-hero {
-  animation: lup-place-arrive-right .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-place-arrive-right .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-backward .slick-current .room-category-hero {
-  animation: lup-place-arrive-left .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-place-arrive-left .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .distrat,
 .nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
@@ -1526,23 +1528,23 @@ md-list.usernavigation .presence-actions .usericon {
 .nearby .slickit.lup-swipe-backward .slick-current .distrat,
 .nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
 .nearby .slickit.lup-swipe-backward .slick-current .chatbutton {
-  animation: lup-place-detail-rise .42s cubic-bezier(.16,.8,.25,1) both;
+  animation: lup-place-detail-rise .26s cubic-bezier(.16,.8,.25,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat { animation-delay: .12s; }
+.nearby .slickit.lup-swipe-backward .slick-current .distrat { animation-delay: .05s; }
 .nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview { animation-delay: .19s; }
+.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview { animation-delay: .08s; }
 .nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation-delay: .26s; }
+.nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation-delay: .11s; }
 @keyframes lup-place-arrive-right {
-  0% { opacity: .08; transform: translate3d(52px,12px,0) rotate(3deg) scale(.88); filter: saturate(.7); }
-  68% { opacity: 1; transform: translate3d(-5px,-3px,0) rotate(-.5deg) scale(1.025); filter: saturate(1.08); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .18; transform: translate3d(24px,6px,0) rotate(1deg) scale(.96); }
+  72% { opacity: 1; transform: translate3d(-2px,-1px,0) rotate(0) scale(1.008); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-place-arrive-left {
-  0% { opacity: .08; transform: translate3d(-52px,12px,0) rotate(-3deg) scale(.88); filter: saturate(.7); }
-  68% { opacity: 1; transform: translate3d(5px,-3px,0) rotate(.5deg) scale(1.025); filter: saturate(1.08); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .18; transform: translate3d(-24px,6px,0) rotate(-1deg) scale(.96); }
+  72% { opacity: 1; transform: translate3d(2px,-1px,0) rotate(0) scale(1.008); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-place-detail-rise {
   from { opacity: 0; transform: translateY(15px) scale(.96); }
@@ -1561,23 +1563,22 @@ md-list.usernavigation .presence-actions .usericon {
 
 /* The complete location panel joins the swipe: large frame first, then its children. */
 .nearby .slick-slide .roominfo {
-  transform: translateY(12px) scale(.925);
+  transform: translateY(7px) scale(.965);
   transform-origin: 50% 46%;
   opacity: .5;
-  transition: transform .52s cubic-bezier(.16,.82,.24,1), opacity .34s ease, filter .42s ease;
+  transition: transform .36s cubic-bezier(.16,.82,.24,1), opacity .28s ease;
 }
 .nearby .slick-slide.slick-current .roominfo {
   transform: none;
   opacity: 1;
-  filter: none;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .roominfo,
 .nearby .slickit.lup-swipe-backward .slick-current .roominfo {
-  animation: lup-location-stage .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-location-stage .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
 .nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit {
-  animation: lup-location-seal .62s cubic-bezier(.16,.82,.24,1) both;
+  animation: lup-location-seal .38s cubic-bezier(.16,.82,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
 .nearby .slickit.lup-swipe-backward .slick-current .room-presence-count {
@@ -1588,9 +1589,9 @@ md-list.usernavigation .presence-actions .usericon {
   animation: lup-location-chip .38s cubic-bezier(.18,.8,.28,1) .33s both;
 }
 @keyframes lup-location-stage {
-  0% { opacity: .15; transform: translateY(26px) scale(.82); filter: brightness(.72) saturate(.72); }
-  70% { opacity: 1; transform: translateY(-3px) scale(1.022); filter: brightness(1.04) saturate(1.06); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .22; transform: translateY(14px) scale(.93); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.012); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-location-seal {
   0% { opacity: 0; transform: translateY(18px) scale(.48) rotate(-15deg); }
