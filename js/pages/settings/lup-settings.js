@@ -277,7 +277,11 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.changeSetting = function(setting) {
+		if (!setting || setting.saving) {
+			return;
+		}
 		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
+		setting.saving = true;
 		SettingsSrvc.changeSetting(setting, setting.value, setting.acl).then(function() {
 			setting.initialValue = setting.value;
 			setting.initialACL = setting.acl;
@@ -285,7 +289,15 @@ angular.module('LUP').config(function($routeProvider) {
 			setting.value = setting.initialValue;
 			setting.acl = setting.initialACL;
 			ErrorSrvc.showError(gwsMessage, 'Settings');
+		})['finally'](function() {
+			setting.saving = false;
 		});
+	};
+
+	$scope.changeVisibility = function(setting) {
+		// Keep visibility as a deliberate, field-bound action. It must never be
+		// interpreted as the next row's value control on compact mobile layouts.
+		$scope.changeSetting(setting);
 	};
 
 	/* Native date/time controls do not consistently emit a useful blur event on

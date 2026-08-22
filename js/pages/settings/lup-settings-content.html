@@ -55,7 +55,7 @@
 
       <div ng-if="setting.acl !== null" class="lup-setting-visibility">
         <span><i class="material-icons" aria-hidden="true">visibility</i>{{'LBL_VISIBILITY'|translate}}</span>
-        <md-select ng-model="setting.acl" ng-change="changeSetting(setting)" aria-label="{{'LBL_VISIBILITY'|translate}}">
+        <md-select ng-model="setting.acl" ng-change="changeVisibility(setting)" ng-disabled="setting.saving" aria-label="{{'LBL_VISIBILITY'|translate}}" id="setting-visibility-{{setting.module}}-{{setting.name}}">
           <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
         </md-select>
       </div>
