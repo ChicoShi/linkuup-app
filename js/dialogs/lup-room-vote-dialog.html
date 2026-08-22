@@ -16,8 +16,9 @@
 		<div class="vote-dialog-intro"><span class="vote-dialog-mark"><i class="material-icons">forum</i></span><p>{{'LUP_VOTE_COPY'|translate}}</p></div>
 		<p class="vote-dialog-note" ng-if="data.comment">{{'LUP_VOTE_UPDATE_NOTE'|translate}}</p>
 		<section class="vote-rating-panel">
-		  <span>{{'LUP_VOTE_RATING'|translate}}</span>
+		  <div class="vote-rating-head"><span>{{'LUP_VOTE_RATING'|translate}}</span><b>{{data.rating || 0}}<small>/ 10</small></b></div>
 		  <jk-rating-stars max-rating="10" rating="data.rating" reset-allowed="false"></jk-rating-stars>
+		  <div class="vote-rating-scale" aria-hidden="true"><span>ehrlich</span><span>besonders</span></div>
 		</section>
       
         <md-input-container flex>
