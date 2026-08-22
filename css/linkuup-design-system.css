@@ -8036,3 +8036,25 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @keyframes lup-profile-about-route { 0%,100% { opacity:.25; transform:translate3d(0,0,0) scale(.7); } 46%,54% { opacity:1; transform:translate3d(-43px,20px,0) scale(1.22); } }
 @media (max-width:360px) { .profile-page .profile-about-route { top:12px; right:6px; opacity:.42; transform:scale(.82); transform-origin:top right; }.profile-page .profile-information.profile-about-single .profile-about-me { padding-right:5px; } }
 @media (prefers-reduced-motion:reduce) { .profile-page .profile-about-route > em { animation:none !important; opacity:.55; } .profile-page .profile-information.profile-settings-view .profile-detail-card { transition:none !important; } }
+
+/* Retire the old discovery circuit completely.  It used to leave a thin
+   animated divider directly below the category strip on wide displays.  The
+   category controls still keep their own selected-state feedback; only the
+   obsolete bridge into the carousel is gone. */
+.nearby .slickit::before,
+.nearby .slickit::after {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  box-shadow:none !important;
+}
+
+/* The wide discovery canvas keeps its calm moving map points.  The separate
+   diagonal flash was a leftover visual route and could cross the category
+   area on desktop, so it is intentionally retired. */
+.nearby md-content.greybg::after {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  box-shadow:none !important;
+}
