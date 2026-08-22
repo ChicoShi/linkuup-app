@@ -66,6 +66,12 @@ angular.module('LUP').config(function($routeProvider) {
 		failedComments: function(error) {
 			console.log("CommentsCtrl$comments.failedComments()", error);
 			this.loading = false;
+			// An empty response is a normal initial state for locations that have
+			// not received a comment yet.  Do not interrupt the voices view with a
+			// modal literally displaying "undefined".
+			if (error === undefined || error === null || error === 'undefined') {
+				return;
+			}
 			return ErrorSrvc.showError(error, 'LinkUUp');
 		},
 	};

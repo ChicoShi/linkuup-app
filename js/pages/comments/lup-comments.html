@@ -20,6 +20,12 @@
 			<i class="material-icons">chevron_right</i>
 		</section>
 
+		<button class="reviews-compose" type="button" ng-click="onVoteDialog($event)">
+			<i class="material-icons">edit_note</i>
+			<span><b>{{'LUP_REVIEWS_COMPOSE'|translate}}</b><small>{{'LUP_REVIEWS_COMPOSE_COPY'|translate}}</small></span>
+			<i class="material-icons">arrow_forward</i>
+		</button>
+
 		<md-list flex class="md-dense reviews-list">
 
 			<div class="reviews-list-heading reviews-list-heading--plain"><i class="material-icons">forum</i><span>{{'LUP_REVIEWS_CURRENT'|translate}}</span><b>{{data.comments.pagination.nItems || 0}}</b></div>
@@ -41,9 +47,11 @@
 				   translate-value-date="{{comment.displayDate()}}"></p>
 				</div>
 				<div class="md-secondary">
-				  <i class="material-icons"
+				  <button class="review-delete" type="button"
 				   ng-if="hasPermission('staff') || comment.isOwn()"
-				   ng-click="deleteComment(comment)">delete</i>
+				   ng-click="deleteComment(comment)" aria-label="{{'LUP_REVIEWS_DELETE'|translate}}">
+				   <i class="material-icons">delete_outline</i><span>{{'LUP_REVIEWS_DELETE'|translate}}</span>
+				  </button>
 				</div>
 			</md-list-item>
 
