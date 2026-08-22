@@ -6229,6 +6229,35 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-about-single { padding-top:0 !important; }
 .profile-page .gallery-grid { padding-top:0 !important; }
 
+/* Angular Material's dynamic-height mode animates the entire profile height
+   for 500 ms. Switching from a long About section to a short gallery then
+   forces the scroll container upward mid-animation. Keep the active panel in
+   normal document flow and animate only its content surface. */
+.profile-page .information-tabs:not(.md-dynamic-height) md-tabs-content-wrapper {
+  position:relative !important;
+  top:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  min-height:0 !important;
+  overflow:visible !important;
+}
+.profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active {
+  position:relative !important;
+  bottom:auto !important;
+  overflow:hidden !important;
+}
+.profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active > div {
+  animation:lup-profile-panel-arrive .22s cubic-bezier(.2,.8,.25,1) both;
+}
+@keyframes lup-profile-panel-arrive {
+  from { opacity:.58; transform:translate3d(0,6px,0); }
+  to { opacity:1; transform:translate3d(0,0,0); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active > div { animation:none; }
+}
+
 /* Gallery entry: an elegant empty album slot instead of a technical upload
    field. It stays clearly actionable without competing with real photos. */
 .profile-page .gallery-add-tile { position:relative; gap:9px; border:1px solid rgba(195,187,231,.16); border-radius:17px; background:radial-gradient(circle at 50% 28%,rgba(149,125,237,.17),transparent 31%),linear-gradient(145deg,rgba(49,50,73,.70),rgba(24,26,40,.82)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 10px 20px rgba(0,0,0,.13); color:#d6d0e6; }
