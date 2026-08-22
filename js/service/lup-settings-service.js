@@ -61,7 +61,7 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		return value;
 	};
 	
-	SettingsSrvc.changeSetting = function(setting, value, relation) {
+	SettingsSrvc.changeSetting = function(setting, value, relation, visibilityOnly) {
 		var config = typeof setting === 'string' ? SettingsSrvc.setting(setting) : setting;
 		value = SettingsSrvc.valueForTransport(config, value);
 		// A value change must not be rejected just because its unchanged ACL is
@@ -79,6 +79,9 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		gwsMessage.writeString(value);
 		if (relation !== undefined && relation !== null) {
 			gwsMessage.writeString(relation);
+		}
+		if (visibilityOnly) {
+			gwsMessage.writeString('visibility-only');
 		}
 		// Settings are loaded through HTTP and can outlive a reconnect.  Ensure
 		// the binary write has a live socket instead of silently rejecting it.

@@ -276,13 +276,13 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 	
-	$scope.changeSetting = function(setting) {
+	$scope.changeSetting = function(setting, visibilityOnly) {
 		if (!setting || setting.saving) {
 			return;
 		}
 		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
 		setting.saving = true;
-		SettingsSrvc.changeSetting(setting, setting.value, setting.acl).then(function() {
+		SettingsSrvc.changeSetting(setting, setting.value, setting.acl, visibilityOnly).then(function() {
 			setting.initialValue = setting.value;
 			setting.initialACL = setting.acl;
 		}, function(gwsMessage) {
@@ -297,7 +297,10 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.changeVisibility = function(setting) {
 		// Keep visibility as a deliberate, field-bound action. It must never be
 		// interpreted as the next row's value control on compact mobile layouts.
-		$scope.changeSetting(setting);
+		if (setting.acl === setting.initialACL) {
+			return;
+		}
+		$scope.changeSetting(setting, true);
 	};
 
 	$scope.visibilityLabel = function(setting) {
