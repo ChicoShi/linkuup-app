@@ -432,6 +432,11 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.showGallery = function(forceReload) {
 		console.log('GalleryCtrl.showGallery()');
 		if ($scope.data.galleryLoading) {
+			// An upload can finish while the initial gallery request is still in
+			// flight. Remember the refresh instead of returning stale image data.
+			if (forceReload) {
+				$scope.data.galleryReloadAfterLoad = true;
+			}
 			return $scope.data.galleryRequest;
 		}
 		if (!forceReload &&
@@ -447,6 +452,14 @@ angular.module('LUP').config(function($routeProvider) {
 			finally(function() {
 				$scope.data.galleryLoading = false;
 				$scope.data.galleryRequest = null;
+				if ($scope.data.galleryReloadAfterLoad) {
+					$scope.data.galleryReloadAfterLoad = false;
+					// Run this in the next digest turn so the finished request cannot
+					// be mistaken for the reload request.
+					$timeout(function() {
+						$scope.showGallery(true);
+					}, 0, false);
+				}
 			});
 		return $scope.data.galleryRequest;
 	};
