@@ -21,6 +21,15 @@
 /* A single, compact ten-step instrument instead of a generic star row. */
 .vote-rating-head { display:flex; align-items:center; justify-content:space-between; width:100%; }.vote-rating-head > span { color:#a7d7f5; font-size:8px; font-weight:850; letter-spacing:.14em; }.vote-rating-head b { display:flex; align-items:baseline; gap:3px; color:var(--tier,#dff5ff); font-size:22px; letter-spacing:-.04em; text-shadow:0 0 15px var(--tier-glow); }.vote-rating-head b small { color:#93aec5; font-size:9px; letter-spacing:0; }.vote-rating-scale { display:flex; justify-content:space-between; width:min(267px,100%); margin-top:-4px; color:#8ea8c0; font-size:8px; font-weight:720; letter-spacing:.06em; text-transform:uppercase; }.vote-rating-scale span:last-child { color:var(--tier,#badff8); }
 
+/* Ten stars are the whole control: the library's reset glyph would make the
+ * row wrap and hides the colour progression on a phone. */
+.vote-dialog jk-rating-stars .button:not(.star-button) { display:none; }
+.vote-dialog jk-rating-stars .jk-rating-stars-container { display:flex; align-items:center; justify-content:center; width:260px; max-width:100%; overflow:hidden; }
+.vote-dialog jk-rating-stars .star-button { display:inline-grid; place-items:center; width:26px; height:31px; margin:0; padding:0; }
+.vote-dialog jk-rating-stars .star-button.star-off .material-icons { color:rgba(226,239,255,.18); text-shadow:none; }
+.vote-dialog jk-rating-stars .star-button.star-on .material-icons { color:var(--tier,#ffe083); filter:drop-shadow(0 0 6px var(--tier-glow)); }
+@media (max-width:360px) { .vote-dialog jk-rating-stars .jk-rating-stars-container { width:240px; }.vote-dialog jk-rating-stars .star-button { width:24px; }.vote-dialog jk-rating-stars .material-icons { font-size:24px; } }
+
 /* Ten real steps, coloured by reputation. The tenth step becomes a crystal
  * signal, while lower scores remain plainly visible instead of hidden. */
 .reviews-scoreboard { --tier:#ef765f; --tier-glow:rgba(239,118,95,.24); border-color:color-mix(in srgb,var(--tier) 38%,rgba(189,220,255,.15)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 11px 22px rgba(0,0,0,.12),0 0 22px var(--tier-glow); }.reviews-scoreboard::before { background:linear-gradient(90deg,var(--tier),transparent); box-shadow:0 0 12px var(--tier-glow); }.reviews-score strong { color:color-mix(in srgb,var(--tier) 48%,#fff4c5); }.reviews-stars .jk-rating-stars-container { display:flex; flex-wrap:wrap; gap:0; max-width:178px; }.reviews-stars .jk-rating-stars-container .material-icons { color:rgba(232,241,255,.18); font-size:14px; }.reviews-stars .jk-rating-stars-container .material-icons.md-on { color:var(--tier); filter:drop-shadow(0 0 6px var(--tier-glow)); }.reviews-scoreboard > .material-icons { color:var(--tier); }
