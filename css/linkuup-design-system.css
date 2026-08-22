@@ -9054,3 +9054,71 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (prefers-reduced-motion:reduce) {
   .profile-page .profile-detail-reveal,.profile-page .profile-insight-chevron { transition:none; }
 }
+
+/* Each revealed fact is a compact LinkUUp signal.  Its light intensity is
+   literal: bright for everybody, restrained for circles, dim for the owner
+   alone.  The server remains the source of truth for every ACL. */
+.profile-page .profile-detail-reveal .profile-signal-grid {
+  gap:9px 11px !important;
+}
+.profile-page .profile-detail-reveal .profile-signal {
+  grid-template-columns:34px minmax(0,1fr) 19px !important;
+  gap:9px !important;
+  min-height:67px !important;
+  padding:10px 9px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(169,215,244,.16) !important;
+  border-radius:14px 14px 14px 5px !important;
+  background:linear-gradient(145deg,rgba(87,151,207,.10),rgba(11,24,44,.14)) !important;
+  box-shadow:inset 0 1px 0 rgba(244,252,255,.055),0 9px 20px rgba(1,8,24,.08) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  right:-12px !important;
+  bottom:-14px !important;
+  width:46px !important;
+  height:46px !important;
+  border:1px solid rgba(176,231,255,.11) !important;
+  border-radius:50% !important;
+  background:transparent !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--public {
+  border-color:rgba(159,224,252,.31) !important;
+  background:linear-gradient(145deg,rgba(93,177,223,.17),rgba(15,30,53,.16)) !important;
+  box-shadow:inset 0 1px 0 rgba(247,253,255,.10),0 0 18px rgba(100,197,246,.09) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--members { border-color:rgba(178,190,255,.24) !important; }
+.profile-page .profile-detail-reveal .profile-signal--friends { border-color:rgba(255,202,232,.22) !important; }
+.profile-page .profile-detail-reveal .profile-signal--private {
+  border-color:rgba(185,163,209,.13) !important;
+  background:rgba(67,49,86,.15) !important;
+  box-shadow:none !important;
+  opacity:.68 !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon { width:33px !important; height:33px !important; }
+.profile-page .profile-signal-visibility {
+  display:grid;
+  place-items:center;
+  align-self:start;
+  width:18px;
+  height:18px;
+  margin-top:1px;
+  border-radius:50%;
+  background:rgba(139,197,230,.09);
+  color:#9edcf8;
+}
+.profile-page .profile-signal-visibility .material-icons { font-size:12px; }
+.profile-page .profile-signal--public .profile-signal-visibility { background:rgba(143,222,254,.15); color:#d1f3ff; box-shadow:0 0 11px rgba(111,207,252,.42); }
+.profile-page .profile-signal--members .profile-signal-visibility { color:#c8cbff; }
+.profile-page .profile-signal--friends .profile-signal-visibility { color:#ffc4df; }
+.profile-page .profile-signal--private .profile-signal-visibility { background:rgba(187,159,210,.07); color:#c6b7d5; box-shadow:none; }
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-grid { gap:7px !important; }
+  .profile-page .profile-detail-reveal .profile-signal { grid-template-columns:29px minmax(0,1fr) 16px !important; gap:7px !important; min-height:62px !important; padding:9px 7px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon { width:28px !important; height:28px !important; }
+  .profile-page .profile-signal-visibility { width:16px; height:16px; }
+  .profile-page .profile-signal-visibility .material-icons { font-size:11px; }
+}

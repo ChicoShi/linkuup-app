@@ -251,6 +251,22 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.profileDetailsOpen = !$scope.data.profileDetailsOpen;
 	};
 
+	$scope.profileFieldVisibility = function(field) {
+		if (!field || field.private || field.acl === 'acl_noone' || field.acl === 'acl_hidden') {
+			return 'private';
+		}
+		if (field.acl === 'acl_friends' || field.acl === 'acl_friend_friends') {
+			return 'friends';
+		}
+		if (field.acl === 'acl_members') {
+			return 'members';
+		}
+		// Existing installations sometimes have no per-field ACL in old profile
+		// frames. Those values are already server-approved, so treat them as the
+		// open state rather than showing a false private indicator.
+		return 'public';
+	};
+
 	$scope.$on('lup-profile-setting-saved', function(event, setting) {
 		// Only the signed-in person's profile can be affected by Settings. Reload
 		// its server-filtered public data so privacy changes are reflected too.
@@ -339,6 +355,10 @@ angular.module('LUP').config(function($routeProvider) {
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.
 					acl: profile.ACL[key],
+					visibility: $scope.profileFieldVisibility({
+						acl: profile.ACL[key],
+						private: isPrivateForOwner,
+					}),
 				});
 			}
 		}

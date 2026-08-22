@@ -37,7 +37,7 @@
     <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
       <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
       <div class="profile-signal-grid">
-        <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-signal--denied': field.error, 'profile-signal--private': field.private}">
+        <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-signal--denied': field.error, 'profile-signal--private': field.private, 'profile-signal--public': field.visibility === 'public', 'profile-signal--members': field.visibility === 'members', 'profile-signal--friends': field.visibility === 'friends'}">
           <span class="profile-signal-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
           <div class="profile-signal-copy">
             <small>{{field.label|translate}}</small>
@@ -45,6 +45,7 @@
             <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
             <strong ng-if="!field.private && !field.error" ng-bind-html="renderProfileSetting(field)"></strong>
           </div>
+          <span class="profile-signal-visibility" aria-hidden="true"><i class="material-icons">{{field.visibility === 'private' ? 'visibility_off' : (field.visibility === 'friends' ? 'group' : (field.visibility === 'members' ? 'people_outline' : 'visibility'))}}</i></span>
         </article>
       </div>
     </section>
