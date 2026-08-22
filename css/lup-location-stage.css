@@ -1,0 +1,189 @@
+/*
+ * The public face of a location.  This is deliberately loaded last: older
+ * experiments remain untouched while the place page gets one clear visual
+ * hierarchy instead of a stack of competing cards.
+ */
+.venue-view {
+  min-height:100% !important;
+  background:
+    radial-gradient(ellipse 100% 28% at 50% -4%,rgba(97,170,231,.17),transparent 74%),
+    radial-gradient(circle at 8% 75%,rgba(94,141,205,.08),transparent 32%),
+    linear-gradient(160deg,#121a2a 0%,#0d1423 60%,#0a101c 100%) !important;
+}
+
+.venue-view::before {
+  opacity:.58 !important;
+  background:
+    radial-gradient(circle at 14% 15%,rgba(207,238,255,.36) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 74% 29%,rgba(207,238,255,.25) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 37% 72%,rgba(173,219,255,.22) 0 .8px,transparent 1.6px),
+    linear-gradient(121deg,transparent 0 38%,rgba(150,205,255,.10) 38.1% 38.25%,transparent 38.4% 100%) !important;
+}
+
+/* 1. Identity: compact enough to make room for the actual place. */
+.venue-identity {
+  min-height:116px !important;
+  padding:17px 17px 15px !important;
+  background:linear-gradient(112deg,rgba(38,56,87,.84),rgba(14,20,35,.82) 68%,rgba(10,16,28,.58)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 12px 26px rgba(0,0,0,.12) !important;
+}
+.venue-category-mark { width:52px !important; height:52px !important; border-radius:18px 18px 18px 7px !important; }
+.venue-category-mark .material-icons { font-size:28px !important; }
+.venue-title h1 { font-size:clamp(21px,5.5vw,28px) !important; letter-spacing:-.04em !important; }
+.venue-title p { font-size:10px !important; }
+
+/* 2. Discovery: the single large visual moment.  It is also the real map
+ * link, so the design never pretends to be an action which does not exist. */
+.venue-map-portal,
+.venue-map-portal--regional {
+  grid-template-columns:112px minmax(0,1fr) 22px !important;
+  min-height:204px !important;
+  margin:14px 16px 11px !important;
+  padding:18px 14px 17px 15px !important;
+  border-color:color-mix(in srgb,var(--venue-accent) 37%,rgba(211,235,255,.14)) !important;
+  border-radius:26px 26px 26px 9px !important;
+  background:
+    radial-gradient(circle at 21% 52%,color-mix(in srgb,var(--venue-accent) 16%,transparent),transparent 31%),
+    linear-gradient(126deg,color-mix(in srgb,var(--venue-accent) 17%,rgba(38,54,86,.88)),rgba(10,16,29,.94) 70%) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 40px rgba(0,0,0,.19),0 0 35px color-mix(in srgb,var(--venue-accent) 7%,transparent) !important;
+}
+.venue-map-portal::before {
+  background:
+    linear-gradient(116deg,transparent 0 40%,rgba(214,239,255,.06) 40.2% 40.45%,transparent 40.7% 100%),
+    linear-gradient(159deg,transparent 0 63%,color-mix(in srgb,var(--venue-accent) 16%,transparent) 63.2% 63.45%,transparent 63.7% 100%) !important;
+  opacity:.72 !important;
+}
+.venue-discovery-trace { position:absolute; z-index:0; inset:0; pointer-events:none; overflow:hidden; }
+.venue-discovery-trace::before { content:''; position:absolute; top:50%; left:-13%; width:126%; height:1px; background:linear-gradient(90deg,transparent 0 9%,color-mix(in srgb,var(--venue-accent) 12%,transparent) 9.5% 35%,color-mix(in srgb,var(--venue-accent) 58%,#e8f7ff) 50%,color-mix(in srgb,var(--venue-accent) 12%,transparent) 65% 89%,transparent 90%); transform:rotate(-16deg); box-shadow:0 0 19px var(--venue-glow); opacity:.82; }
+.venue-discovery-trace::after { content:''; position:absolute; right:18%; bottom:-41px; width:170px; height:170px; border:1px solid color-mix(in srgb,var(--venue-accent) 22%,transparent); border-radius:50%; box-shadow:0 0 0 25px color-mix(in srgb,var(--venue-accent) 4%,transparent),0 0 0 52px color-mix(in srgb,var(--venue-accent) 2%,transparent); }
+.venue-discovery-trace i,.venue-discovery-trace b { position:absolute; display:block; z-index:1; width:6px; height:6px; border-radius:50%; background:#eaf9ff; box-shadow:0 0 0 5px color-mix(in srgb,var(--venue-accent) 14%,transparent),0 0 14px var(--venue-accent); }
+.venue-discovery-trace i:nth-child(1) { top:61%; left:19%; }
+.venue-discovery-trace i:nth-child(2) { top:47%; left:45%; animation:venue-stage-pulse 3.6s ease-in-out infinite; }
+.venue-discovery-trace i:nth-child(3) { top:34%; left:72%; }
+.venue-discovery-trace b { top:27%; right:16%; width:8px; height:8px; animation:venue-stage-pulse 4.8s ease-in-out 1.2s infinite; }
+.venue-map-orbit { width:102px !important; height:102px !important; border-radius:50% 50% 50% 18px !important; }
+.venue-map-orbit::before { inset:-16px !important; }
+.venue-map-orbit::after { inset:-33px !important; }
+.venue-map-orbit i { font-size:58px !important; }
+.venue-map-copy { align-content:center; gap:6px !important; }
+.venue-map-copy small { font-size:8px !important; letter-spacing:.17em !important; }
+.venue-map-copy strong { font-size:21px !important; white-space:normal !important; }
+.venue-map-copy > span { font-size:10px !important; }
+.venue-map-arrow { align-self:start; padding-top:8px; }
+@keyframes venue-stage-pulse { 0%,100% { opacity:.52; transform:scale(.78); } 48% { opacity:1; transform:scale(1.18); } }
+
+/* 3. Real signals: compact, factual, and lower than the visual anchor. */
+.venue-cuddle-hub {
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+  gap:8px !important;
+  margin:0 16px 12px !important;
+}
+.venue-cuddle-count,.venue-cuddle-claim {
+  min-height:74px !important;
+  padding:10px 11px !important;
+  border-radius:16px !important;
+  background:linear-gradient(145deg,rgba(30,43,68,.72),rgba(10,16,29,.82)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 9px 19px rgba(0,0,0,.11) !important;
+}
+.venue-cuddle-count strong { font-size:28px !important; }
+.venue-cuddle-claim .material-icons { font-size:26px !important; }
+
+/* 4. Voices are intentionally the final, unmistakable action. */
+.venue-actions { margin:0 16px 24px !important; }
+.venue-action {
+  min-height:72px !important;
+  grid-template-columns:39px minmax(0,1fr) auto !important;
+  border-color:color-mix(in srgb,var(--venue-accent) 39%,rgba(205,230,255,.16)) !important;
+  border-radius:18px 18px 18px 7px !important;
+  background:linear-gradient(110deg,color-mix(in srgb,var(--venue-accent) 17%,rgba(32,47,76,.82)),rgba(10,16,29,.90)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 15px 30px rgba(0,0,0,.15),0 0 26px color-mix(in srgb,var(--venue-accent) 6%,transparent) !important;
+}
+.venue-action .material-icons { width:37px !important; height:37px !important; font-size:20px !important; }
+.venue-action span { font-size:13px !important; }
+.venue-action small { max-width:128px !important; }
+
+@media (max-width:360px) {
+  .venue-identity { min-height:103px !important; padding:14px 11px !important; }
+  .venue-category-mark { width:46px !important; height:46px !important; }
+  .venue-map-portal,.venue-map-portal--regional { grid-template-columns:76px minmax(0,1fr) 16px !important; min-height:156px !important; margin-right:11px !important; margin-left:11px !important; padding:13px 10px !important; }
+  .venue-map-orbit { width:68px !important; height:68px !important; }
+  .venue-map-orbit i { font-size:42px !important; }
+  .venue-map-copy strong { font-size:17px !important; }
+  .venue-cuddle-hub,.venue-actions { margin-right:11px !important; margin-left:11px !important; }
+  .venue-cuddle-count,.venue-cuddle-claim { min-height:68px !important; padding:9px !important; }
+  .venue-cuddle-claim small,.venue-action small { display:none; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .venue-map-orbit,.venue-discovery-trace i,.venue-discovery-trace b { animation:none !important; }
+}
+
+/* Deliberate second layer: the discovery area is not a conventional card.
+ * It becomes the open place canvas, while the one useful follow-up action
+ * remains anchored below it. */
+.venue-view .venue-map-portal,
+.venue-view .venue-map-portal--regional {
+  display:block !important;
+  min-height:286px !important;
+  margin:0 0 6px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.venue-view .venue-map-portal::before {
+  inset:12px 16px 0 !important;
+  border:1px solid rgba(193,224,255,.09);
+  border-radius:0 0 36px 36px;
+  background:
+    radial-gradient(ellipse at 49% 45%,color-mix(in srgb,var(--venue-accent) 14%,transparent),transparent 48%),
+    linear-gradient(118deg,transparent 0 42%,rgba(219,241,255,.08) 42.2% 42.45%,transparent 42.7% 100%) !important;
+  opacity:1 !important;
+}
+.venue-view .venue-map-portal::after { top:38px !important; right:-65px !important; width:290px !important; height:290px !important; opacity:.74; }
+.venue-view .venue-discovery-trace::before { top:50% !important; left:-12% !important; width:124% !important; opacity:.92; }
+.venue-view .venue-discovery-trace i:nth-child(1) { top:61% !important; left:16% !important; }
+.venue-view .venue-discovery-trace i:nth-child(2) { top:45% !important; left:43% !important; }
+.venue-view .venue-discovery-trace i:nth-child(3) { top:29% !important; left:72% !important; }
+.venue-view .venue-discovery-trace b { top:20% !important; right:13% !important; }
+.venue-view .venue-map-orbit {
+  position:absolute !important;
+  z-index:2 !important;
+  top:57px !important;
+  left:calc(50% - 53px) !important;
+  width:106px !important;
+  height:106px !important;
+}
+.venue-view .venue-map-copy {
+  position:absolute !important;
+  z-index:3 !important;
+  right:28px !important;
+  bottom:26px !important;
+  left:28px !important;
+  gap:5px !important;
+  text-align:center !important;
+}
+.venue-view .venue-map-copy small { color:color-mix(in srgb,var(--venue-accent) 83%,#eaf8ff) !important; }
+.venue-view .venue-map-copy strong { font-size:24px !important; letter-spacing:-.045em !important; }
+.venue-view .venue-map-copy > span { margin:auto; max-width:270px; color:#b8c9dc !important; }
+.venue-view .venue-map-arrow { position:absolute !important; z-index:3 !important; right:22px !important; bottom:29px !important; padding:0 !important; }
+.venue-view .venue-actions { position:relative; z-index:3; margin:0 16px 28px !important; }
+.venue-view .venue-action { min-height:68px !important; border-radius:17px 17px 17px 6px !important; }
+.venue-voice-preview { position:relative; z-index:2; margin:-14px 16px 28px; padding:26px 13px 13px; overflow:hidden; border:1px solid rgba(195,221,255,.10); border-radius:0 0 20px 20px; background:linear-gradient(180deg,rgba(17,27,46,.56),rgba(9,15,27,.20)); color:#d6e3f2; }
+.venue-voice-preview::before { content:''; position:absolute; top:0; left:13px; width:42px; height:1px; background:linear-gradient(90deg,var(--venue-accent),transparent); box-shadow:0 0 14px var(--venue-glow); }
+.venue-voice-preview-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }.venue-voice-preview-head > span { color:color-mix(in srgb,var(--venue-accent) 78%,#eff9ff); font-size:8px; font-weight:850; letter-spacing:.14em; }.venue-voice-preview-head b { display:flex; align-items:center; gap:4px; color:#e5f2ff; font-size:10px; }.venue-voice-preview-head b .material-icons { color:var(--venue-accent); font-size:15px; }
+.venue-voice-preview-content { display:grid; grid-template-columns:31px minmax(0,1fr); gap:8px; align-items:center; margin-top:10px; }.venue-voice-preview-content lup-avatar,.venue-voice-preview-content lup-avatar .avatar,.venue-voice-preview-content lup-avatar img { width:31px !important; height:31px !important; border-radius:50%; }.venue-voice-preview-content p { display:-webkit-box; overflow:hidden; margin:0; color:#c6d4e4; font-size:10px; line-height:1.38; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+.venue-voice-preview-empty { display:flex; align-items:center; gap:7px; min-height:30px; margin-top:8px; color:#8fa4bc; font-size:9px; }.venue-voice-preview-empty .material-icons { color:var(--venue-accent); font-size:16px; }
+
+@media (max-width:360px) {
+  .venue-view .venue-map-portal,.venue-view .venue-map-portal--regional { min-height:240px !important; }
+  .venue-view .venue-map-portal::before { right:11px !important; left:11px !important; }
+  .venue-view .venue-map-orbit { top:46px !important; left:calc(50% - 43px) !important; width:86px !important; height:86px !important; }
+  .venue-view .venue-map-orbit i { font-size:48px !important; }
+  .venue-view .venue-map-copy { right:20px !important; bottom:20px !important; left:20px !important; }
+  .venue-view .venue-map-copy strong { font-size:20px !important; }
+  .venue-view .venue-map-arrow { right:17px !important; bottom:23px !important; }
+  .venue-voice-preview { margin-right:11px; margin-left:11px; }
+}

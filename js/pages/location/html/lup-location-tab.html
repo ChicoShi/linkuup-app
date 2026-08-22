@@ -112,29 +112,41 @@
   </header>
 
   <a class="venue-map-portal" ng-if="!isRegionalRoom(data.room)" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
+    <span class="venue-discovery-trace" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
     <span class="venue-map-orbit" aria-hidden="true"><b></b><em></em><i class="material-icons">location_on</i></span>
     <span class="venue-map-copy"><small>{{'LUP_VENUE_ROUTE_LABEL'|translate}}</small><strong>{{'LUP_VENUE_ROUTE_HEAD'|translate}}</strong><span>{{data.room.addressDisplay() || ('LUP_VENUE_ROUTE_COPY'|translate)}}</span></span>
     <i class="material-icons venue-map-arrow" aria-hidden="true">north_east</i>
   </a>
   <button class="venue-map-portal venue-map-portal--regional" ng-if="isRegionalRoom(data.room)" type="button" ng-click="showNearbyLocations()">
+    <span class="venue-discovery-trace" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
     <span class="venue-map-orbit" aria-hidden="true"><b></b><em></em><i class="material-icons">location_city</i></span>
     <span class="venue-map-copy"><small>{{'LUP_CITY_ROOM_LABEL'|translate}}</small><strong>{{'LUP_CITY_ROOM_EXPLORE_HEAD'|translate}}</strong><span>{{'LUP_CITY_ROOM_EXPLORE_COPY'|translate}}</span></span>
     <i class="material-icons venue-map-arrow" aria-hidden="true">north_east</i>
   </button>
 
-  <section class="venue-cuddle-hub" ng-if="!isRegionalRoom(data.room)" aria-label="{{'LUP_VENUE_CUDDLE_LABEL'|translate}}">
-    <div class="venue-cuddle-count"><span>{{'LUP_VENUE_CUDDLE_LABEL'|translate}}</span><strong>{{roomCuddles(data.room)}}</strong><small>{{'LUP_VENUE_CUDDLE_COUNT_COPY'|translate}}</small></div>
-    <button class="venue-cuddle-claim" type="button" ng-click="showLocationCuddle($event)"><i class="material-icons">qr_code_2</i><span>{{'LUP_VENUE_CUDDLE_HEAD'|translate}}</span><small>{{'LUP_VENUE_CUDDLE_COPY'|translate}}</small></button>
-  </section>
-  <section class="venue-cuddle-hub" ng-if="isRegionalRoom(data.room)" aria-label="{{'LUP_CITY_ROOM_VOICES'|translate}}">
-    <div class="venue-cuddle-count"><span>{{'LUP_CITY_ROOM_LABEL'|translate}}</span><strong>{{data.room.comments()}}</strong><small>{{'LUP_CITY_ROOM_VOICES_COPY'|translate}}</small></div>
-    <button class="venue-cuddle-claim" type="button" ng-click="gotoComments(data.room)"><i class="material-icons">forum</i><span>{{'LUP_CITY_ROOM_VOICES'|translate}}</span><small>{{'LUP_CITY_ROOM_VOICES_COPY'|translate}}</small></button>
+  <section class="venue-actions" aria-label="Ort-Aktionen">
+    <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
+      <i class="material-icons">forum</i>
+      <span ng-if="!isRegionalRoom(data.room)">{{'LUP_VENUE_VOICES'|translate}}</span>
+      <span ng-if="isRegionalRoom(data.room)">{{'LUP_CITY_ROOM_VOICES'|translate}}</span>
+      <small ng-if="!isRegionalRoom(data.room)">{{'LUP_VENUE_VOICES_COPY'|translate}}</small>
+      <small ng-if="isRegionalRoom(data.room)">{{'LUP_CITY_ROOM_VOICES_COPY'|translate}}</small>
+    </button>
   </section>
 
-  <section class="venue-actions" ng-if="!isRegionalRoom(data.room)" aria-label="Ort-Aktionen">
-    <button class="venue-action" type="button" ng-click="gotoComments(data.room)">
-      <i class="material-icons">forum</i><span>{{'LUP_VENUE_VOICES'|translate}}</span><small>{{'LUP_VENUE_VOICES_COPY'|translate}}</small>
-    </button>
+  <section class="venue-voice-preview" aria-label="Vorschau der Ortsstimmen">
+    <div class="venue-voice-preview-head">
+      <span ng-if="!isRegionalRoom(data.room)">{{'LUP_VENUE_VOICES_LABEL'|translate}}</span>
+      <span ng-if="isRegionalRoom(data.room)">{{'LUP_CITY_ROOM_VOICES'|translate}}</span>
+      <b><i class="material-icons">forum</i>{{data.room.comments()}}</b>
+    </div>
+    <div class="venue-voice-preview-content" ng-if="data.topComments[0] && !data.topComments[0].isBlankComment()">
+      <lup-avatar ng-user="data.topComments[0].user()"></lup-avatar>
+      <p>{{data.topComments[0].text()}}</p>
+    </div>
+    <div class="venue-voice-preview-empty" ng-if="!data.topComments[0] || data.topComments[0].isBlankComment()">
+      <i class="material-icons">chat_bubble_outline</i><span>{{'NO_COMMENT_YET'|translate}}</span>
+    </div>
   </section>
 
   <section class="venue-note" ng-if="data.room.info() && !isRegionalRoom(data.room)">
