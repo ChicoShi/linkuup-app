@@ -101,6 +101,22 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'SETTINGS_SECTION_' + section.toUpperCase() + '_HINT';
 	};
 
+	$scope.settingIcon = function(setting) {
+		var icons = {
+			about_me: 'edit_note', gender: 'person_outline', color: 'palette',
+			lup_status: 'chat_bubble_outline', lup_city: 'location_city', lup_state: 'map',
+			lup_eyecolor: 'visibility', lup_height: 'height', lup_interest: 'auto_awesome',
+			lup_sexo: 'favorite_outline', lup_has_pet: 'pets', lup_drinks: 'local_bar',
+			lup_smokes: 'smoke_free', lup_sporty: 'directions_run', lup_religion: 'self_improvement',
+			language: 'translate', timezone: 'schedule', country_of_living: 'home',
+			country_of_origin: 'public', birthday: 'cake', age_visible: 'visibility',
+			announce_my_birthday: 'celebration', announce_me_birthdays: 'campaign',
+			friend_who: 'person_add', friends_show: 'group', gallery_acl: 'photo_library',
+			whatsapp_number: 'chat'
+		};
+		return icons[setting && setting.name] || 'tune';
+	};
+
 	$scope.isDateSetting = function(setting) {
 		return $scope.inputType(setting) === 'date';
 	};

@@ -1,94 +1,64 @@
-<md-list class="lup-settings-list">
+<main class="lup-settings-list" aria-label="Einstellungen">
+  <header class="settings-hero">
+    <span class="settings-hero-route" aria-hidden="true"><i class="material-icons">tune</i></span>
+    <div>
+      <small>{{'SETTINGS_EYEBROW'|translate}}</small>
+      <h1>{{'SETTINGS_HEADLINE'|translate}}</h1>
+      <p>{{'SETTINGS_INTRO'|translate}}</p>
+    </div>
+  </header>
 
- <header class="settings-hero" aria-label="Einstellungen">
-   <span class="settings-hero-route" aria-hidden="true"><i class="material-icons">tune</i></span>
-   <div>
-     <small>{{'SETTINGS_EYEBROW'|translate}}</small>
-     <h1>{{'SETTINGS_HEADLINE'|translate}}</h1>
-     <p>{{'SETTINGS_INTRO'|translate}}</p>
-   </div>
- </header>
+  <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
+    <header class="settings-visibility-heading">
+      <i class="material-icons" aria-hidden="true">visibility</i>
+      <div><strong>{{'SETTINGS_VISIBILITY_TITLE'|translate}}</strong><small>{{'SETTINGS_VISIBILITY_HINT'|translate}}</small></div>
+    </header>
+    <md-select class="lup-setting-primary-select" ng-model="data.profileVisibility.value" ng-change="changeSetting(data.profileVisibility)" aria-label="{{'profile_visibility'|translate}}">
+      <md-option ng-repeat="relation in aclChoices(data.profileVisibility)" value="{{relation}}">{{enumLabel(relation)|translate}}</md-option>
+    </md-select>
+  </section>
 
- <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
-   <header class="settings-visibility-heading">
-     <span>{{'SETTINGS_VISIBILITY_TITLE'|translate}}</span>
-     <small>{{'SETTINGS_VISIBILITY_HINT'|translate}}</small>
-   </header>
-   <md-list-item class="md-2-line">
-     <div class="md-list-item-text" layout="column">
-       <h3>{{'profile_visibility'|translate}}</h3>
-     </div>
-     <md-select ng-model="data.profileVisibility.value" ng-change="changeSetting(data.profileVisibility)">
-       <md-option ng-repeat="relation in aclChoices(data.profileVisibility)" value="{{relation}}">{{enumLabel(relation)|translate}}</md-option>
-     </md-select>
-   </md-list-item>
- </section>
- <md-divider class="lup-settings-profile-divider"></md-divider>
+  <section ng-repeat="group in data.groups track by group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
+    <header class="lup-settings-group-heading">
+      <small>{{sectionTitle(group.section)|translate}}</small>
+      <p>{{sectionHint(group.section)|translate}}</p>
+    </header>
 
- <!--
- <md-list-item class="md-2-line">
-   <div class="md-list-item-text" layout="column">
-     <h3>{{'lup_profile_outside_visible'|translate}}</h3>
-   </div>
-   <md-switch ng-model="data.profileOutsideVisible" ng-true-value="'1'" ng-false-value="'0'"></md-switch>
- </md-list-item>
- <md-divider class="lup-settings-profile-divider"></md-divider>
- -->
+    <article ng-repeat="setting in group.settings track by setting.name" class="lup-setting-card" ng-class="{'lup-setting-card--textarea': controlIs(setting, 'textarea')}">
+      <header class="lup-setting-card-heading">
+        <span class="lup-setting-icon" aria-hidden="true"><i class="material-icons">{{settingIcon(setting)}}</i></span>
+        <div><h3>{{setting.displayLabel|translate}}</h3><p ng-if="isDateSetting(setting)">{{'SETTINGS_DATE_HINT'|translate}}</p></div>
+      </header>
 
- <section ng-repeat="group in data.groups track by group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
-   <header class="lup-settings-group-heading">
-     <md-subheader class="md-no-sticky">
-       <b>{{sectionTitle(group.section)|translate}}</b>
-       <small>{{sectionHint(group.section)|translate}}</small>
-     </md-subheader>
-   </header>
+      <div class="lup-setting-value">
+        <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}"></md-switch>
+        <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting) && !isTimezone(setting) && !isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+          <md-option ng-if="!setting.options.notNull" value="0">{{'PLEASE_SELECT'|translate}}</md-option>
+          <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
+        </md-select>
+        <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+          <md-option value="0">{{'not_specified'|translate}}</md-option>
+          <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}"><span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span> {{country.text}}</md-option>
+        </md-select>
+        <md-select ng-if="isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+          <md-option ng-repeat="language in data.languages" value="{{language.id}}"><span class="country-flag" ng-style="languageStyle(language)" aria-hidden="true"></span> {{language.text}}</md-option>
+        </md-select>
+        <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+          <md-option value="0">{{'PLEASE_SELECT'|translate}}</md-option>
+          <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
+        </md-select>
+        <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input" ng-class="{'lup-setting-date': isDateSetting(setting)}">
+          <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-change="changeDateSetting(setting)" ng-blur="blurSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+          <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4" aria-label="{{setting.displayLabel|translate}}"></textarea>
+        </md-input-container>
+      </div>
 
-   <div ng-repeat="setting in group.settings track by setting.name">
-     <div ng-if="controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl-above">
-       <md-select ng-model="setting.acl" ng-change="changeSetting(setting)">
-         <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
-       </md-select>
-     </div>
-
-     <md-list-item class="md-2-line" ng-class="{'lup-setting-textarea': controlIs(setting, 'textarea')}">
-       <div class="md-list-item-text" layout="column">
-        <h3>{{setting.displayLabel|translate}}</h3>
-         <p ng-if="isDateSetting(setting)" class="settings-date-hint">{{'SETTINGS_DATE_HINT'|translate}}</p>
-       </div>
-
-       <div class="lup-setting-controls">
-         <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)"></md-switch>
-         <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting) && !isTimezone(setting) && !isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
-           <md-option ng-if="!setting.options.notNull" value="0">{{'PLEASE_SELECT'|translate}}</md-option>
-           <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
-         </md-select>
-         <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
-           <md-option value="0">{{'not_specified'|translate}}</md-option>
-           <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}">
-             <span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span> {{country.text}}
-           </md-option>
-         </md-select>
-         <md-select ng-if="isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
-           <md-option ng-repeat="language in data.languages" value="{{language.id}}">
-             <span class="country-flag" ng-style="languageStyle(language)" aria-hidden="true"></span> {{language.text}}
-           </md-option>
-         </md-select>
-         <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)">
-	   <md-option value="0">{{'PLEASE_SELECT'|translate}}</md-option>
-           <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
-         </md-select>
-         <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input" ng-class="{'lup-setting-date': isDateSetting(setting)}">
-           <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-change="changeDateSetting(setting)" ng-blur="blurSetting(setting)">
-           <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4"></textarea>
-         </md-input-container>
-
-         <md-select ng-if="!controlIs(setting, 'textarea') && setting.acl !== null" class="lup-setting-acl" ng-model="setting.acl" ng-change="changeSetting(setting)" aria-label="{{'LBL_VISIBILITY'|translate}}">
-           <md-tooltip>{{'LBL_VISIBILITY'|translate}}</md-tooltip>
-           <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
-         </md-select>
-       </div>
-     </md-list-item>
-   </div>
- </section>
-
-</md-list>
+      <div ng-if="setting.acl !== null" class="lup-setting-visibility">
+        <span><i class="material-icons" aria-hidden="true">visibility</i>{{'LBL_VISIBILITY'|translate}}</span>
+        <md-select ng-model="setting.acl" ng-change="changeSetting(setting)" aria-label="{{'LBL_VISIBILITY'|translate}}">
+          <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
+        </md-select>
+      </div>
+    </article>
+  </section>
+</main>
