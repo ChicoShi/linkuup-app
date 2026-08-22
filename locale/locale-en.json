@@ -495,5 +495,8 @@
 "ONLINE_LIVE_SUBTITLE": "People currently at this location",
 "ONLINE_EMPTY_SUBTITLE": "You are the first visible guest here.",
 "ONLINE_VISITOR_HERE": "Currently at this location",
-"PROFILE_FIELD_PRIVATE": "Visible only to you"
+"PROFILE_FIELD_PRIVATE": "Visible only to you",
+"PROFILE_VISIBILITY_PUBLIC": "Visible to everyone",
+"PROFILE_VISIBILITY_MEMBERS": "Visible to members",
+"PROFILE_VISIBILITY_FRIENDS": "Visible to friends"
 }

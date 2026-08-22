@@ -9122,3 +9122,43 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   .profile-page .profile-signal-visibility { width:16px; height:16px; }
   .profile-page .profile-signal-visibility .material-icons { font-size:11px; }
 }
+
+/* Visibility is written plainly for the profile owner.  It deliberately has
+   no round badge: the field's own icon remains the only large symbol. */
+.profile-page .profile-detail-reveal .profile-signal::after { display:none !important; content:none !important; }
+.profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:12px !important; }
+.profile-page .profile-signal-visibility {
+  position:absolute !important;
+  right:9px !important;
+  bottom:7px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:3px !important;
+  width:auto !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#8fa7bd !important;
+  font-size:7px !important;
+  font-weight:780 !important;
+  letter-spacing:.055em !important;
+  line-height:1 !important;
+  text-transform:uppercase !important;
+}
+.profile-page .profile-signal-visibility .material-icons { color:inherit !important; font-size:11px !important; }
+.profile-page .profile-signal--public .profile-signal-visibility {
+  color:#bbecff !important;
+  text-shadow:0 0 9px rgba(105,206,255,.45) !important;
+}
+.profile-page .profile-signal--members .profile-signal-visibility { color:#c9c9ff !important; }
+.profile-page .profile-signal--friends .profile-signal-visibility { color:#ffc4df !important; }
+.profile-page .profile-signal--private .profile-signal-visibility { color:#a798b2 !important; text-shadow:none !important; }
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:10px !important; }
+  .profile-page .profile-signal-visibility { right:7px !important; bottom:6px !important; font-size:6px !important; }
+  .profile-page .profile-signal-visibility .material-icons { font-size:10px !important; }
+}

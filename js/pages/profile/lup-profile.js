@@ -267,6 +267,16 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'public';
 	};
 
+	$scope.profileFieldVisibilityLabel = function(field) {
+		var visibility = field && field.visibility || 'public';
+		return {
+			public: 'PROFILE_VISIBILITY_PUBLIC',
+			members: 'PROFILE_VISIBILITY_MEMBERS',
+			friends: 'PROFILE_VISIBILITY_FRIENDS',
+			private: 'PROFILE_FIELD_PRIVATE',
+		}[visibility] || 'PROFILE_VISIBILITY_PUBLIC';
+	};
+
 	$scope.$on('lup-profile-setting-saved', function(event, setting) {
 		// Only the signed-in person's profile can be affected by Settings. Reload
 		// its server-filtered public data so privacy changes are reflected too.
