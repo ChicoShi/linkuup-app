@@ -34,6 +34,10 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.profile = new GDO_Profile();
 	$scope.data.profileGroups = [];
+	// The personal text remains the profile's first impression. Voluntary
+	// details live one deliberate interaction deeper, so a profile never reads
+	// like an account form on first open.
+	$scope.data.profileDetailsOpen = false;
 	// Gallery data belongs to one profile. Keeping it while the user switches
 	// tabs prevents an empty-grid flash and needless websocket round trips.
 	$scope.data.galleryLoadedFor = null;
@@ -241,6 +245,10 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.rebuildProfileGroups = function() {
 		$scope.data.profileGroups = $scope.buildProfileGroups($scope.data.profile);
+	};
+
+	$scope.toggleProfileDetails = function() {
+		$scope.data.profileDetailsOpen = !$scope.data.profileDetailsOpen;
 	};
 
 	$scope.$on('lup-profile-setting-saved', function(event, setting) {

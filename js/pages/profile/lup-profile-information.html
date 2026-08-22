@@ -20,19 +20,33 @@
   </md-list-item>
 </md-list>
 
-<section class="profile-information profile-signal-board" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
-  <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
-    <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
-    <div class="profile-signal-grid">
-      <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-signal--denied': field.error, 'profile-signal--private': field.private}">
-        <span class="profile-signal-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
-        <div class="profile-signal-copy">
-          <small>{{field.label|translate}}</small>
-          <strong ng-if="field.private"><i class="material-icons" aria-hidden="true">visibility_off</i>{{'PROFILE_FIELD_PRIVATE'|translate}}</strong>
-          <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
-          <strong ng-if="!field.private && !field.error" ng-bind-html="renderProfileSetting(field)"></strong>
-        </div>
-      </article>
-    </div>
+<div class="profile-insight-control" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
+  <button type="button" class="profile-insight-toggle" ng-click="toggleProfileDetails()" ng-class="{'is-open': data.profileDetailsOpen}" aria-expanded="{{data.profileDetailsOpen}}">
+    <span class="profile-insight-toggle-icon" aria-hidden="true"><i class="material-icons">auto_awesome</i></span>
+    <span class="profile-insight-toggle-copy">
+      <small>{{'PROFILE_INSIGHT_LABEL'|translate}}</small>
+      <strong ng-if="!data.profileDetailsOpen">{{'PROFILE_INSIGHT_OPEN'|translate}}</strong>
+      <strong ng-if="data.profileDetailsOpen">{{'PROFILE_INSIGHT_CLOSE'|translate}}</strong>
+    </span>
+    <i class="material-icons profile-insight-chevron" aria-hidden="true">{{data.profileDetailsOpen ? 'expand_less' : 'expand_more'}}</i>
+  </button>
+</div>
+
+<div class="profile-detail-reveal" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length" ng-class="{'is-open': data.profileDetailsOpen}">
+  <section class="profile-information profile-signal-board">
+    <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
+      <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
+      <div class="profile-signal-grid">
+        <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="{'profile-signal--denied': field.error, 'profile-signal--private': field.private}">
+          <span class="profile-signal-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
+          <div class="profile-signal-copy">
+            <small>{{field.label|translate}}</small>
+            <strong ng-if="field.private"><i class="material-icons" aria-hidden="true">visibility_off</i>{{'PROFILE_FIELD_PRIVATE'|translate}}</strong>
+            <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
+            <strong ng-if="!field.private && !field.error" ng-bind-html="renderProfileSetting(field)"></strong>
+          </div>
+        </article>
+      </div>
+    </section>
   </section>
-</section>
+</div>
