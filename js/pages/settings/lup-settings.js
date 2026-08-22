@@ -300,6 +300,10 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.changeSetting(setting);
 	};
 
+	$scope.visibilityLabel = function(setting) {
+		return setting && (setting.acl || setting.initialACL) || 'acl_all';
+	};
+
 	/* Native date/time controls do not consistently emit a useful blur event on
 	 * mobile browsers. Save their completed value from ng-change instead. */
 	$scope.changeDateSetting = function(setting) {

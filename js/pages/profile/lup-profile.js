@@ -302,6 +302,12 @@ angular.module('LUP').config(function($routeProvider) {
 				// legacy endpoint) into an empty profile card.
 				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
 				var error = (profile.ERRORS || {})[key];
+				// The server has already evaluated this field's ACL. A denied field
+				// is not profile content for another visitor; hiding it completely is
+				// clearer and prevents the settings page from leaking a field name.
+				if (error && profile.user && !profile.user.isSelf()) {
+					continue;
+				}
 				// Only values and meaningful ACL errors deserve a row. Empty settings
 				// are intentionally omitted from the public profile.
 				if (!hasValue && !error) {
