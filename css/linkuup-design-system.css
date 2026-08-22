@@ -8860,3 +8860,41 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   .profile-page .profile-signal-icon { width:29px !important; height:29px !important; border-radius:10px 10px 10px 3px !important; }
   .profile-page .profile-signal-icon .material-icons { font-size:16px !important; }
 }
+
+/* The facts use an open coordinate grid: no enclosing card, only the two
+   axes needed to read a paired profile at a glance. */
+.profile-page .profile-information.profile-signal-board {
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-information.profile-signal-board::after { display:none !important; content:none !important; }
+.profile-page .profile-signal-group-heading { border:0 !important; background:transparent !important; }
+.profile-page .profile-signal-grid {
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-grid::before {
+  display:block !important;
+  top:0 !important;
+  right:auto !important;
+  bottom:0 !important;
+  left:50% !important;
+  width:1px !important;
+  height:auto !important;
+  opacity:1 !important;
+  background:linear-gradient(180deg,transparent,rgba(170,222,248,.18) 8%,rgba(170,222,248,.18) 92%,transparent) !important;
+  box-shadow:0 0 7px rgba(100,192,245,.07) !important;
+}
+.profile-page .profile-signal {
+  background:transparent !important;
+  border:0 !important;
+}
+.profile-page .profile-signal:nth-child(n+3) {
+  border-top:1px solid rgba(170,222,248,.14) !important;
+}
+.profile-page .profile-signal:nth-child(2n) { border-left:0 !important; }
+.profile-page .profile-signal::before { display:none !important; content:none !important; }
+.profile-page .profile-signal:hover { background:rgba(128,191,230,.035) !important; }
