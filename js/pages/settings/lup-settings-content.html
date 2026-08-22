@@ -56,10 +56,12 @@
       <div ng-if="setting.acl !== null" class="lup-setting-visibility">
         <span><i class="material-icons" aria-hidden="true">visibility</i>{{'LBL_VISIBILITY'|translate}}</span>
         <div class="lup-setting-visibility-choice">
-          <small>{{visibilityLabel(setting)|translate}}</small>
-          <md-select ng-model="setting.acl" ng-change="changeVisibility(setting)" ng-disabled="setting.saving" aria-label="{{'LBL_VISIBILITY'|translate}}" id="setting-visibility-{{setting.module}}-{{setting.name}}">
-            <md-option ng-repeat="relation in aclChoices(setting)" value="{{relation}}" ng-disabled="!aclAllowed(setting, relation)">{{enumLabel(relation)|translate}}</md-option>
-          </md-select>
+          <button type="button" class="lup-visibility-trigger" ng-click="toggleVisibility(setting, $event)" ng-disabled="setting.saving" aria-expanded="{{!!setting.visibilityOpen}}">
+            <span>{{visibilityLabel(setting)|translate}}</span><i class="material-icons" aria-hidden="true">{{setting.visibilityOpen ? 'expand_less' : 'expand_more'}}</i>
+          </button>
+          <div class="lup-visibility-menu" ng-if="setting.visibilityOpen">
+            <button type="button" ng-repeat="relation in aclChoices(setting)" ng-click="selectVisibility(setting, relation, $event)" ng-disabled="!aclAllowed(setting, relation)" ng-class="{'is-selected': visibilityLabel(setting) === relation}">{{enumLabel(relation)|translate}}</button>
+          </div>
         </div>
       </div>
     </article>

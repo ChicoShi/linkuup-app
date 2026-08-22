@@ -304,6 +304,20 @@ angular.module('LUP').config(function($routeProvider) {
 		return setting && (setting.acl || setting.initialACL) || 'acl_all';
 	};
 
+	$scope.toggleVisibility = function(setting, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving) { return; }
+		setting.visibilityOpen = !setting.visibilityOpen;
+	};
+
+	$scope.selectVisibility = function(setting, relation, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving || !relation || ! $scope.aclAllowed(setting, relation)) { return; }
+		setting.acl = relation;
+		setting.visibilityOpen = false;
+		$scope.changeVisibility(setting);
+	};
+
 	/* Native date/time controls do not consistently emit a useful blur event on
 	 * mobile browsers. Save their completed value from ng-change instead. */
 	$scope.changeDateSetting = function(setting) {
