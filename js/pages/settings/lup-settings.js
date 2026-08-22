@@ -280,6 +280,15 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!setting || setting.saving) {
 			return;
 		}
+		// Leaving a text field to open its visibility menu also fires blur. That
+		// used to submit an unchanged value first and show a false error after the
+		// actual visibility update had already succeeded.
+		var inputType = setting.renderer && setting.renderer.input_type;
+		if (!visibilityOnly && inputType !== 'date' && inputType !== 'time' && inputType !== 'datetime-local' &&
+			String(setting.value === undefined || setting.value === null ? '' : setting.value) === String(setting.initialValue === undefined || setting.initialValue === null ? '' : setting.initialValue) &&
+			setting.acl === setting.initialACL) {
+			return;
+		}
 		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
 		setting.saving = true;
 		SettingsSrvc.changeSetting(setting, setting.value, setting.acl, visibilityOnly).then(function() {
