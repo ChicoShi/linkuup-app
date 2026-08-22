@@ -8428,3 +8428,157 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (prefers-reduced-motion:reduce) {
   .profile-page .profile-signal { transition:none !important; }
 }
+
+/* Profile atlas, second pass: deliberately remove the repeated “glowing
+   card” language. This is an ink-and-metal LinkUUp passport: one calm
+   surface, engraved dividers and a single travelling coordinate. */
+.profile-page .profile-information.profile-signal-board {
+  max-width:690px !important;
+  padding-top:12px !important;
+}
+.profile-page .profile-signal-group {
+  margin-bottom:30px !important;
+  padding-left:0 !important;
+}
+.profile-page .profile-signal-group::before { display:none !important; }
+.profile-page .profile-signal-group-heading {
+  height:30px !important;
+  margin:0 0 5px !important;
+  padding:0 1px !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  top:12px !important;
+  left:1px !important;
+  width:4px !important;
+  height:4px !important;
+  border:0 !important;
+  background:#b6ecff !important;
+  box-shadow:0 0 9px rgba(124,211,255,.9) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  padding:0 0 0 13px !important;
+  color:#c6d6e9 !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+  letter-spacing:.075em !important;
+  line-height:30px !important;
+  text-transform:none !important;
+}
+.profile-page .profile-signal-group-heading small::first-letter { color:#dff7ff !important; }
+.profile-page .profile-signal-group-heading small::after {
+  top:15px !important;
+  left:calc(100% + 9px) !important;
+  width:58px !important;
+  background:linear-gradient(90deg,rgba(173,210,239,.36),transparent) !important;
+}
+.profile-page .profile-signal-grid {
+  gap:0 !important;
+  border:1px solid rgba(171,198,223,.19) !important;
+  border-radius:5px 5px 19px 5px !important;
+  background:#101a2b !important;
+  box-shadow:0 15px 30px rgba(1,7,19,.18),inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+.profile-page .profile-signal-grid::before {
+  top:auto !important;
+  right:16px !important;
+  bottom:13px !important;
+  left:auto !important;
+  width:58px !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(148,214,246,.60),transparent) !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal-grid::after {
+  content:'' !important;
+  position:absolute !important;
+  right:36px !important;
+  bottom:11px !important;
+  width:4px !important;
+  height:4px !important;
+  border-radius:50% !important;
+  background:#c7f3ff !important;
+  box-shadow:0 0 10px rgba(137,218,255,.95) !important;
+  animation:lup-profile-atlas-coordinate 10s cubic-bezier(.45,.05,.55,.95) infinite !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal {
+  grid-template-columns:31px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:72px !important;
+  padding:13px 13px 12px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal:nth-child(2n) { background:rgba(255,255,255,.018) !important; }
+.profile-page .profile-signal:nth-child(n+3) { border-top:1px solid rgba(181,204,225,.11) !important; }
+.profile-page .profile-signal:nth-child(2n) { border-left:1px solid rgba(181,204,225,.11) !important; }
+.profile-page .profile-signal::before,
+.profile-page .profile-signal::after { display:none !important; content:none !important; }
+.profile-page .profile-signal:hover {
+  transform:none !important;
+  background:rgba(118,173,216,.075) !important;
+}
+.profile-page .profile-signal-icon {
+  align-self:start !important;
+  width:27px !important;
+  height:27px !important;
+  border:1px solid rgba(180,220,245,.34) !important;
+  border-radius:50% !important;
+  background:transparent !important;
+  box-shadow:inset 0 0 0 3px rgba(142,201,235,.035) !important;
+  color:#b9e6fa !important;
+}
+.profile-page .profile-signal-icon .material-icons {
+  font-size:15px !important;
+  filter:none !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon {
+  border-color:rgba(210,197,255,.32) !important;
+  background:transparent !important;
+  color:#dacdff !important;
+}
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon {
+  border-color:rgba(255,218,159,.31) !important;
+  background:transparent !important;
+  color:#ffe2a4 !important;
+}
+.profile-page .profile-signal-copy small {
+  color:#8299b1 !important;
+  font-size:8px !important;
+  font-weight:800 !important;
+  letter-spacing:.105em !important;
+}
+.profile-page .profile-signal-copy strong {
+  margin-top:5px !important;
+  color:#edf5fc !important;
+  font-size:13px !important;
+  font-weight:650 !important;
+  letter-spacing:0 !important;
+}
+.profile-page .profile-signal--private,
+.profile-page .profile-signal--private:nth-child(2n) { background:rgba(81,56,99,.14) !important; }
+.profile-page .profile-signal--private .profile-signal-icon {
+  border-color:rgba(220,193,248,.28) !important;
+  background:transparent !important;
+  color:#e5d1fb !important;
+  box-shadow:none !important;
+}
+@keyframes lup-profile-atlas-coordinate {
+  0%,16% { opacity:0; transform:translateX(21px) scale(.55); }
+  29% { opacity:1; transform:translateX(8px) scale(1); }
+  48% { opacity:.52; transform:translateX(-10px) scale(.72); }
+  62%,100% { opacity:0; transform:translateX(-24px) scale(.45); }
+}
+@media (max-width:360px) {
+  .profile-page .profile-signal-group-heading small { font-size:10px !important; }
+  .profile-page .profile-signal { grid-template-columns:27px minmax(0,1fr) !important; gap:8px !important; min-height:64px !important; padding:10px 9px !important; }
+  .profile-page .profile-signal-icon { width:24px !important; height:24px !important; }
+  .profile-page .profile-signal-icon .material-icons { font-size:14px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-signal-grid::after { animation:none !important; opacity:.68 !important; }
+}
