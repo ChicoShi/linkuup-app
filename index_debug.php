@@ -89,6 +89,7 @@ $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
   <link rel="stylesheet" href="css/lup-venue-final.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-online-core.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-mira.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-location-tabs.css<?=$v?>">
 
 </head>
 
