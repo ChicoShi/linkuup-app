@@ -32,6 +32,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var initialRoomsPromise = null;
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
+	var categoryRailDetached = false;
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
 	var categorySelectionSerial = 0;
@@ -593,10 +594,28 @@ angular.module('LUP').config(function($routeProvider) {
 		categoryRefreshTimer = $timeout(function() {
 			categoryRefreshTimer = null;
 			$scope.refreshCategoryFilter();
-		// Give a finishing horizontal gesture one small frame to settle.  Rebuilding
-		// Slick while it is still translating its track can leave the rail paused
-		// until the next tap.
-		}, 56);
+		}, 16);
+	};
+
+	var detachCategoryRail = function() {
+		var $slick = getSlick();
+		if (!$slick.length || !$slick.hasClass('slick-initialized')) {
+			return;
+		}
+		try {
+			// Keep an old category's card from flashing while Angular replaces the
+			// slide collection below. The fresh rail removes this state on init.
+			$slick.addClass('lup-category-refreshing');
+			// Detach before Angular replaces ng-repeat cards.  Replacing children
+			// inside a live Slick track was the source of the brief wrong-card flash
+			// and the sluggish category taps.
+			$slick.slick('unslick');
+			slickedEvents = false;
+			categoryRailDetached = true;
+		}
+		catch (error) {
+			console.warn('LinkUUp: could not prepare the category rail.', error);
+		}
 	};
 
 	$scope.selectCategory = function(categories) {
@@ -647,9 +666,11 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!categories.length && fullCataloguePromise && !$scope.data.fullCatalogue) {
 			return;
 		}
-		// Keep the active rail alive until the scheduled refresh confirms Slick has
-		// finished its current horizontal movement. Unslicking during that movement
-		// was the intermittent short freeze after fast swipe-and-tap sequences.
+		// Once the complete catalogue is active, every category change is a local
+		// filter. Detach Slick first, then let Angular replace its card elements.
+		if ($scope.data.fullCatalogue && $scope.data.rooms === $scope.data.fullCatalogue) {
+			detachCategoryRail();
+		}
 		$scope.updateVisibleRooms();
 		// The first explicit category loads the full catalogue once.  If the
 		// visitor changed tabs while that request was in flight, the catalogue is
@@ -673,13 +694,12 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!$slick.length || !$scope.data.rooms.length) {
 			return;
 		}
+		if (categoryRailDetached) {
+			categoryRailDetached = false;
+			return $scope.slick(true);
+		}
 		if (!$slick.hasClass('slick-initialized')) {
 			return $scope.slick();
-		}
-		var slickState = $slick.slick('getSlick');
-		if (slickState && slickState.animating) {
-			scheduleCategoryRefresh();
-			return;
 		}
 		try {
 			// Recreate from Angular's current visible list.  This is intentionally
