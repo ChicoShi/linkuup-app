@@ -8898,3 +8898,79 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .profile-signal:nth-child(2n) { border-left:0 !important; }
 .profile-page .profile-signal::before { display:none !important; content:none !important; }
 .profile-page .profile-signal:hover { background:rgba(128,191,230,.035) !important; }
+
+/* Floating profile constellation: information points remain precise, while a
+   single slow signal gives the whole page a living direction. */
+.profile-page .profile-information.profile-signal-board {
+  padding-top:14px !important;
+  padding-bottom:45px !important;
+}
+.profile-page .profile-information.profile-signal-board::before {
+  top:5px !important;
+  right:0 !important;
+  bottom:0 !important;
+  left:0 !important;
+  opacity:1 !important;
+  background:
+    radial-gradient(ellipse 38% 12% at 79% 16%,rgba(133,208,247,.14),transparent 70%),
+    radial-gradient(ellipse 49% 15% at 23% 78%,rgba(155,118,235,.10),transparent 72%) !important;
+}
+.profile-page .profile-information.profile-signal-board::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  z-index:0 !important;
+  top:47px !important;
+  right:18% !important;
+  width:5px !important;
+  height:5px !important;
+  border:0 !important;
+  border-radius:50% !important;
+  background:#d6f6ff !important;
+  box-shadow:0 0 0 4px rgba(106,203,247,.07),0 0 17px rgba(120,211,255,.82) !important;
+  opacity:.24 !important;
+  animation:lup-profile-constellation-signal 17s ease-in-out infinite !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal-group { margin-bottom:32px !important; }
+.profile-page .profile-signal-group::after { display:none !important; content:none !important; }
+.profile-page .profile-signal-group-heading { height:29px !important; padding-left:5px !important; }
+.profile-page .profile-signal-group-heading small { color:#b9d2e6 !important; font-size:8px !important; line-height:29px !important; }
+.profile-page .profile-signal-grid {
+  gap:17px 26px !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-grid::before { display:none !important; content:none !important; }
+.profile-page .profile-signal {
+  min-height:58px !important;
+  padding:4px 2px !important;
+  border:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal:nth-child(n+3),
+.profile-page .profile-signal:nth-child(2n) { border:0 !important; background:transparent !important; }
+.profile-page .profile-signal:hover { background:transparent !important; }
+.profile-page .profile-signal-icon {
+  align-self:center !important;
+  width:34px !important;
+  height:34px !important;
+  background:linear-gradient(145deg,rgba(117,203,245,.20),rgba(86,101,186,.08)) !important;
+  box-shadow:inset 0 1px 0 rgba(246,253,255,.16),0 8px 18px rgba(0,9,27,.14) !important;
+}
+.profile-page .profile-signal-copy small { color:#8faac2 !important; font-size:8px !important; }
+.profile-page .profile-signal-copy strong { margin-top:3px !important; color:#f3f8ff !important; font-size:13px !important; }
+@keyframes lup-profile-constellation-signal {
+  0%,14% { opacity:0; transform:translate3d(0,0,0) scale(.5); }
+  31% { opacity:.78; transform:translate3d(-48px,68px,0) scale(1); }
+  52% { opacity:.25; transform:translate3d(-94px,155px,0) scale(.66); }
+  72%,100% { opacity:0; transform:translate3d(-132px,240px,0) scale(.4); }
+}
+@media (max-width:360px) {
+  .profile-page .profile-signal-grid { gap:13px 15px !important; }
+  .profile-page .profile-signal { min-height:54px !important; }
+  .profile-page .profile-signal-icon { width:29px !important; height:29px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-information.profile-signal-board::after { animation:none !important; opacity:.48 !important; }
+}
