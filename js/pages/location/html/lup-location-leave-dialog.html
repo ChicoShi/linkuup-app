@@ -1,0 +1,22 @@
+<md-dialog aria-label="Location Chat trennen?">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Location Chat trennen?</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()" aria-label="Im Chat bleiben">
+          <i class="material-icons">close</i>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <p>Möchtest du beim Verlassen dieses Ortes auch den Location Chat verlassen?</p>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button ng-click="cancel()">Im Chat bleiben</md-button>
+      <md-button class="md-raised md-primary" ng-click="ok()">Chat trennen</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

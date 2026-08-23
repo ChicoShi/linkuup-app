@@ -55,6 +55,7 @@
 						</div>
 						<div class="distrat">
 							<div class="distance" ng-if="room.showDistance()"><p><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><span>{{room.displayDistance()}}</span></a></p></div>
+							<button type="button" class="room-qr-trigger" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
 						</div>
 					</div>
 					<section class="chatbutton" layout="column" ng-class="{'chatbutton--locked': !room.inChatRange()}">

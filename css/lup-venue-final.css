@@ -109,6 +109,8 @@
 .venue-view.location-category-country { --venue-accent:#8ec9ff; --venue-glow:rgba(94,175,243,.26); }
 .venue-title h1 { overflow-wrap:anywhere; word-break:break-word; }
 .venue-map-portal--regional { width:calc(100% - 32px); padding:14px 14px 14px 11px; font:inherit; text-align:left; cursor:pointer; }
+.venue-qr-trigger { display:flex; align-items:center; justify-content:center; gap:7px; width:calc(100% - 32px); min-height:42px; margin:0 16px 12px; border:1px solid color-mix(in srgb,var(--venue-accent) 34%,rgba(210,235,255,.16)); border-radius:13px; background:rgba(15,22,42,.74); color:#f5f9ff; cursor:pointer; font:inherit; font-size:12px; font-weight:800; letter-spacing:.04em; }
+.venue-qr-trigger .material-icons { color:var(--venue-accent); font-size:21px; }
 
 /* The voices entry is a single, calm doorway into the local conversation. */
 .venue-actions { overflow:visible !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }

@@ -205,6 +205,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
     padding: 0px 20px 5px 0;
     text-decoration:none;
 }
+.room-qr-trigger {
+	float: right;
+	width: 32px;
+	height: 30px;
+	margin: 2px 0 0;
+	padding: 0;
+	border: 0;
+	border-radius: 9px;
+	background: rgba(255,255,255,.1);
+	color: #fff;
+	cursor: pointer;
+}
+.room-qr-trigger .material-icons { font-size: 19px; }
 
 .roominfo .rating .jk-rating-stars-container {
     float: left;

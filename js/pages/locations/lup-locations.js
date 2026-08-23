@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
@@ -342,6 +342,17 @@ angular.module('LUP').config(function($routeProvider) {
 		// Chat and Online still enforce the location radius in the detail view.
 		RoomSrvc.CACHE[room.id()] = room;
 		$scope.gotoRoom(room);
+	};
+
+	$scope.showRoomQRCode = function(room, event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		var roomId = room.id();
+		var url = LUP_CONFIG.server + 'linkuup;qrforroom;room_id;' + roomId + '.html?_lang=en';
+		var target = window.location.href.split('#')[0] + '#!/location/' + roomId;
+		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
 	};
 
 	$scope.slick = function(nofocus) {
