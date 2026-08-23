@@ -65,8 +65,9 @@ angular.module('LUP')
 	ErrorSrvc.populateScope = function($scope, response) {
 		let text = "Fehler!";
 		let title = t('form_error_title');
+		let data = null;
 		try {
-			var data = JSON.parse(response);
+			data = JSON.parse(response);
 		} catch (e) {
 			text = response;
 		}
@@ -85,7 +86,7 @@ angular.module('LUP')
 			title = form.form_title;
 		} catch (e) {
 		}
-		if (data.form.top) {
+		if (data && data.form && data.form.top) {
 			text += data.form.top;
 		}
 		return ErrorSrvc.showError(text, title);
@@ -147,8 +148,16 @@ angular.module('LUP')
 		if (response === undefined) {
 			return ErrorSrvc.showError(t('err_no_connection'), title);
 		}
-		response = JSON.parse(response);
-		return ErrorSrvc.showError(response.json.error, title);
+		try {
+			response = JSON.parse(response);
+			return ErrorSrvc.showError(response.json.error, title);
+		}
+		catch (error) {
+			// A legacy server can still return plain text even when the caller
+			// expected JSON. Preserve that useful message instead of throwing a
+			// second client-side exception on top of it.
+			return ErrorSrvc.websocketError(response);
+		}
 	};
 	
 	ErrorSrvc.websocketFormError = function(response, title) {
@@ -158,7 +167,10 @@ angular.module('LUP')
 	
 	ErrorSrvc.websocketMaybeJSONError = function(response, title) {
 		console.log("ErrorSrvc.websocketMaybeJSONError()", response);
-		if (response[0]=='{') {
+		if (response === undefined || response === null) {
+			return ErrorSrvc.websocketError(response);
+		}
+		if (String(response)[0]=='{') {
 			return ErrorSrvc.websocketJSONError(response, title);
 		} else {
 			return ErrorSrvc.websocketError(response, title);

@@ -34,6 +34,10 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.profile = new GDO_Profile();
 	$scope.data.profileGroups = [];
+	// The personal text remains the profile's first impression. Voluntary
+	// details live one deliberate interaction deeper, so a profile never reads
+	// like an account form on first open.
+	$scope.data.profileDetailsOpen = false;
 	// Gallery data belongs to one profile. Keeping it while the user switches
 	// tabs prevents an empty-grid flash and needless websocket round trips.
 	$scope.data.galleryLoadedFor = null;
@@ -228,8 +232,58 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
 		$scope.data.profile = profile;
-		$scope.data.profileGroups = $scope.buildProfileGroups(profile);
+		$scope.rebuildProfileGroups();
+		// Profile values and their human labels arrive through two independent
+		// endpoints. If the settings catalogue was still loading, the old code
+		// rendered anonymous/empty cards and never revisited them.
+		if (!SettingsSrvc.CACHE) {
+			SettingsSrvc.withConfig().then(function() {
+				$scope.rebuildProfileGroups();
+			}, angular.noop);
+		}
 	};
+
+	$scope.rebuildProfileGroups = function() {
+		$scope.data.profileGroups = $scope.buildProfileGroups($scope.data.profile);
+	};
+
+	$scope.toggleProfileDetails = function() {
+		$scope.data.profileDetailsOpen = !$scope.data.profileDetailsOpen;
+	};
+
+	$scope.profileFieldVisibility = function(field) {
+		if (!field || field.private || field.acl === 'acl_noone' || field.acl === 'acl_hidden') {
+			return 'private';
+		}
+		if (field.acl === 'acl_friends' || field.acl === 'acl_friend_friends') {
+			return 'friends';
+		}
+		if (field.acl === 'acl_members') {
+			return 'members';
+		}
+		// Existing installations sometimes have no per-field ACL in old profile
+		// frames. Those values are already server-approved, so treat them as the
+		// open state rather than showing a false private indicator.
+		return 'public';
+	};
+
+	$scope.profileFieldVisibilityLabel = function(field) {
+		var visibility = field && field.visibility || 'public';
+		return {
+			public: 'PROFILE_VISIBILITY_PUBLIC',
+			members: 'PROFILE_VISIBILITY_MEMBERS',
+			friends: 'PROFILE_VISIBILITY_FRIENDS',
+			private: 'PROFILE_FIELD_PRIVATE',
+		}[visibility] || 'PROFILE_VISIBILITY_PUBLIC';
+	};
+
+	$scope.$on('lup-profile-setting-saved', function(event, setting) {
+		// Only the signed-in person's profile can be affected by Settings. Reload
+		// its server-filtered public data so privacy changes are reflected too.
+		if ($scope.data.user && $scope.data.user.isSelf() && setting) {
+			$scope.loadInformation();
+		}
+	});
 
 	$scope.moduleLabel = function(module) {
 		return 'module_' + String(module).toLowerCase();
@@ -254,12 +308,21 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 		});
 		var groups = {};
+		var profileLabels = {
+			gender: 'SETTING_LABEL_GENDER', lup_status: 'SETTING_LABEL_STATUS',
+			lup_state: 'SETTING_LABEL_STATE', lup_city: 'SETTING_LABEL_CITY',
+			lup_eyecolor: 'SETTING_LABEL_EYE_COLOR', lup_height: 'SETTING_LABEL_HEIGHT',
+			lup_interest: 'SETTING_LABEL_INTEREST', lup_sexo: 'SETTING_LABEL_ORIENTATION',
+			lup_has_pet: 'SETTING_LABEL_PET', lup_drinks: 'SETTING_LABEL_DRINKS',
+			lup_smokes: 'SETTING_LABEL_SMOKES', lup_sporty: 'SETTING_LABEL_SPORT',
+			lup_religion: 'SETTING_LABEL_RELIGION'
+		};
 		var cache = SettingsSrvc.CACHE || {};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
 				var placement = fieldOrder[key];
-				if (!placement) {
+				if (!placement || !setting) {
 					continue;
 				}
 				// Legacy display helpers initialise a few optional enums with "0".
@@ -268,11 +331,20 @@ angular.module('LUP').config(function($routeProvider) {
 				if (profile.EMPTY[key]) {
 					continue;
 				}
-				var hasValue = Object.prototype.hasOwnProperty.call(profile.JSON, key);
-				var error = profile.ERRORS[key];
-				// Only values and meaningful ACL errors deserve a row. Empty settings
-				// are intentionally omitted from the public profile.
-				if (!hasValue && !error) {
+				var value = (profile.JSON || {})[key];
+				// Do not turn an absent optional enum (often represented as 0 by a
+				// legacy endpoint) into an empty profile card.
+				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
+				var error = (profile.ERRORS || {})[key];
+				// Visitors never see private facts. Their owner, however, needs one
+				// quiet confirmation that the field exists and is currently locked.
+				// This keeps privacy understandable without exposing the value.
+				var isPrivateForOwner = !!error && $scope.data.user.isSelf();
+				if (error && !isPrivateForOwner) {
+					continue;
+				}
+				// Empty settings are intentionally omitted from the profile.
+				if (!hasValue && !isPrivateForOwner) {
 					continue;
 				}
 				var section = profileSections[placement.section];
@@ -286,11 +358,17 @@ angular.module('LUP').config(function($routeProvider) {
 					key: key,
 					sort: placement.sort,
 					setting: setting,
-					value: profile.JSON[key],
+					label: profileLabels[key] || setting.label || key,
+					value: value,
 					error: error,
+					private: isPrivateForOwner,
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.
 					acl: profile.ACL[key],
+					visibility: $scope.profileFieldVisibility({
+						acl: profile.ACL[key],
+						private: isPrivateForOwner,
+					}),
 				});
 			}
 		}
@@ -324,6 +402,19 @@ angular.module('LUP').config(function($routeProvider) {
 			lup_religion: 'self_improvement'
 		};
 		return icons[key] || 'tune';
+	};
+
+	// A profile fact has one stable visual family wherever it appears. The same
+	// tone drives its icon and its quiet underline, so the eye can recognise a
+	// kind of information without adding another explanatory badge.
+	$scope.profileFieldTone = function(key) {
+		var tones = {
+			gender: 'sky', lup_status: 'violet', lup_state: 'teal', lup_city: 'blue',
+			lup_eyecolor: 'ice', lup_height: 'blue', lup_interest: 'violet',
+			lup_sexo: 'rose', lup_has_pet: 'amber', lup_drinks: 'gold',
+			lup_smokes: 'coral', lup_sporty: 'mint', lup_religion: 'lilac'
+		};
+		return tones[key] || 'sky';
 	};
 
 	$scope.countryURL = function(user) {
@@ -394,6 +485,11 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.showGallery = function(forceReload) {
 		console.log('GalleryCtrl.showGallery()');
 		if ($scope.data.galleryLoading) {
+			// An upload can finish while the initial gallery request is still in
+			// flight. Remember the refresh instead of returning stale image data.
+			if (forceReload) {
+				$scope.data.galleryReloadAfterLoad = true;
+			}
 			return $scope.data.galleryRequest;
 		}
 		if (!forceReload &&
@@ -409,6 +505,14 @@ angular.module('LUP').config(function($routeProvider) {
 			finally(function() {
 				$scope.data.galleryLoading = false;
 				$scope.data.galleryRequest = null;
+				if ($scope.data.galleryReloadAfterLoad) {
+					$scope.data.galleryReloadAfterLoad = false;
+					// Run this in the next digest turn so the finished request cannot
+					// be mistaken for the reload request.
+					$timeout(function() {
+						$scope.showGallery(true);
+					}, 0, false);
+				}
 			});
 		return $scope.data.galleryRequest;
 	};

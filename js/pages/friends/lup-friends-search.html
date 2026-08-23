@@ -1,16 +1,19 @@
 
-<div class="search-input-wrap" ng-controller="SearchFriendsCtrl">
-<i class="material-icons qrcode-dummy" ng-click="showQRCode()">qr_code_2</i>
-<i class="material-icons friend-search-mark" aria-hidden="true">person_search</i>
+<div class="friends-search-zone" ng-controller="SearchFriendsCtrl">
+<div class="search-input-wrap">
+  <i class="material-icons friend-search-mark" aria-hidden="true">person_search</i>
   <input
    type="text"
    class="search-input"
    placeholder="{{'SEARCH_NEW_FRIENDS'|translate}}"
    ng-keyup="searchFriends(data.friendsearch)"
    ng-model="data.friendsearch" />
+  <button class="qrcode-dummy" type="button" ng-click="showQRCode()" aria-label="{{'QR_FRIEND_DIALOG_TITLE'|translate}}">
+    <i class="material-icons">qr_code_2</i>
+  </button>
 </div>
 
-<md-list ng-if="data.friendsearchusers.length">
+<md-list class="friend-search-results" ng-if="data.friendsearchusers.length">
     <md-list-item class="md-2-line" ng-repeat="user in data.friendsearchusers" class="no-right">
       <lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
       <div class="md-list-item-text" layout="column">
@@ -32,3 +35,4 @@
     </md-list-item>
   
 </md-list>
+</div>

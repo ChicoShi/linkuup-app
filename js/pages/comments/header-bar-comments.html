@@ -1,7 +1,7 @@
 <md-toolbar class="lup-top-bar">
   <div class="md-toolbar-tools">
   
-    <i class="material-icons" ng-click="openLeft()">menu</i>
+    <i class="material-icons menutop" ng-click="openLeft()">menu</i>
   
 	<md-button class="md-icon-button" aria-label="Zurück zur Location" ng-click="gotoLocation()">
 		<i class="material-icons">arrow_back</i>
@@ -18,7 +18,7 @@
 
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
 
-    <lup-avatar ng-user="data.user" ng-click="gotoOwnProfile()"></lup-avatar>
+    <lup-avatar ng-user="data.ownUser" ng-click="gotoOwnProfile()"></lup-avatar>
 
   </div>
 </md-toolbar>

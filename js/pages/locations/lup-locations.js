@@ -32,6 +32,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var initialRoomsPromise = null;
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
+	var categoryRebuildTimer = null;
 	var categoryRailDetached = false;
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
@@ -157,6 +158,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (categoryRefreshTimer) {
 			$timeout.cancel(categoryRefreshTimer);
+		}
+		if (categoryRebuildTimer) {
+			$timeout.cancel(categoryRebuildTimer);
 		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
@@ -324,7 +328,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$timeout(function() {
 			$scope.slick(true);
 			settleHorizontalRail();
-		}, 0);
+		}, 16);
 	};
 	
 	$scope.maybeGotoRoom = function(room, event) {
@@ -441,9 +445,13 @@ angular.module('LUP').config(function($routeProvider) {
 			// made the location cards jump and feel choppy on touch screens.
 			waitForAnimate: true,
 			edgeFriction: 0.22,
-			speed: 210,
-			cssEase: 'cubic-bezier(.22,.78,.24,1)',
-			touchThreshold: 4,
+			// A short, compositor-only glide: it feels like moving through photos,
+			// while waitForAnimate still prevents a second gesture from tearing a card.
+			useCSS: true,
+			useTransform: true,
+			speed: 190,
+			cssEase: 'cubic-bezier(.16,1,.3,1)',
+			touchThreshold: 6,
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
@@ -585,7 +593,7 @@ angular.module('LUP').config(function($routeProvider) {
 		return $scope.data.category.join(',') === categories.join(',');
 	};
 
-	var scheduleCategoryRefresh = function() {
+	var scheduleCategoryRefresh = function(selectionSerial) {
 		// A user can tap across several category chips faster than Slick can
 		// animate.  Coalesce that burst: only the final choice is rendered.
 		if (categoryRefreshTimer) {
@@ -593,8 +601,11 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		categoryRefreshTimer = $timeout(function() {
 			categoryRefreshTimer = null;
-			$scope.refreshCategoryFilter();
-		}, 0);
+			if (selectionSerial !== undefined && selectionSerial !== categorySelectionSerial) {
+				return;
+			}
+			$scope.refreshCategoryFilter(selectionSerial);
+		}, 16);
 	};
 
 	var detachCategoryRail = function() {
@@ -624,6 +635,10 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		var selectionSerial = ++categorySelectionSerial;
+		if (categoryRebuildTimer) {
+			$timeout.cancel(categoryRebuildTimer);
+			categoryRebuildTimer = null;
+		}
 		var needsFullCatalogue = categories.length && !$scope.data.fullCatalogue;
 		// The chip reacts immediately, but the old rail keeps its DOM until the
 		// complete catalogue is ready. Updating ng-repeat inside a live Slick
@@ -685,10 +700,13 @@ angular.module('LUP').config(function($routeProvider) {
 		// Let Angular update slide classes, then always use the same Slick path.
 		// Previously "Alle" and the other categories used competing recovery
 		// paths, which could leave the filter bar visually active but inert.
-		scheduleCategoryRefresh();
+		scheduleCategoryRefresh(selectionSerial);
 	};
 
-	$scope.refreshCategoryFilter = function() {
+	$scope.refreshCategoryFilter = function(selectionSerial) {
+		if (selectionSerial !== undefined && selectionSerial !== categorySelectionSerial) {
+			return;
+		}
 		restoreSelectedRoom(selectedRoomId(), true);
 		var $slick = getSlick();
 		if (!$slick.length || !$scope.data.rooms.length) {
@@ -707,7 +725,14 @@ angular.module('LUP').config(function($routeProvider) {
 			$slick.addClass('lup-category-refreshing');
 			$slick.slick('unslick');
 			slickedEvents = false;
-			$timeout(function() {
+			if (categoryRebuildTimer) {
+				$timeout.cancel(categoryRebuildTimer);
+			}
+			categoryRebuildTimer = $timeout(function() {
+				categoryRebuildTimer = null;
+				if (selectionSerial !== undefined && selectionSerial !== categorySelectionSerial) {
+					return;
+				}
 				$scope.slick(true);
 				settleHorizontalRail();
 			}, 0);

@@ -66,6 +66,12 @@ angular.module('LUP').config(function($routeProvider) {
 		failedComments: function(error) {
 			console.log("CommentsCtrl$comments.failedComments()", error);
 			this.loading = false;
+			// An empty response is a normal initial state for locations that have
+			// not received a comment yet.  Do not interrupt the voices view with a
+			// modal literally displaying "undefined".
+			if (error === undefined || error === null || error === 'undefined') {
+				return;
+			}
 			return ErrorSrvc.showError(error, 'LinkUUp');
 		},
 	};
@@ -89,11 +95,11 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.savedComment = function() {
 		console.log('CommentsCtrl.savedComment()');
-		ErrorSrvc.showMessage($translate.instant('MSG_THX_VOTE'), $translate.instant('MSGT_THX')).
-			then(function() {
-				CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
-				$scope.reloadComments();
-			});
+		// Reload immediately. Waiting for the thank-you dialog to be closed made a
+		// freshly written comment appear missing even though it was saved already.
+		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
+		$scope.reloadComments();
+		return ErrorSrvc.showMessage($translate.instant('MSG_THX_VOTE'), $translate.instant('MSGT_THX'));
 	};
 	
 	$scope.deleteComment = function(comment) {

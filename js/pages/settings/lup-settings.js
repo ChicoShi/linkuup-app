@@ -46,6 +46,48 @@ angular.module('LUP').config(function($routeProvider) {
 		Contact: 'contact',
 	};
 	const SECTION_ORDER = {identity: 10, local: 20, privacy: 30, contact: 40};
+	/* The settings endpoint is intentionally generic and a few older modules
+	 * return no display label at all.  A blank title turns a real setting into a
+	 * confusing anonymous control.  Keep the user-facing profile vocabulary in
+	 * one place and fall back to a readable name for future backend settings. */
+	const SETTING_LABELS = {
+		language: 'language',
+		gender: 'SETTING_LABEL_GENDER',
+		color: 'SETTING_LABEL_PROFILE_COLOUR',
+		timezone: 'SETTING_LABEL_TIMEZONE',
+		country_of_living: 'country_of_living',
+		country_of_origin: 'country_of_origin',
+		friend_who: 'friend_who',
+		friends_show: 'friends_show',
+		birthday: 'SETTING_LABEL_BIRTHDAY',
+		age_visible: 'age_visible',
+		announce_my_birthday: 'announce_my_birthday',
+		announce_me_birthdays: 'announce_me_birthdays',
+		whatsapp_number: 'whatsapp_number',
+		gallery_acl: 'SETTING_LABEL_GALLERY_VISIBILITY',
+		about_me: 'SETTING_LABEL_ABOUT_ME',
+		lup_status: 'SETTING_LABEL_STATUS',
+		lup_state: 'SETTING_LABEL_STATE',
+		lup_city: 'SETTING_LABEL_CITY',
+		lup_eyecolor: 'SETTING_LABEL_EYE_COLOR',
+		lup_height: 'SETTING_LABEL_HEIGHT',
+		lup_interest: 'SETTING_LABEL_INTEREST',
+		lup_sexo: 'SETTING_LABEL_ORIENTATION',
+		lup_has_pet: 'SETTING_LABEL_PET',
+		lup_drinks: 'SETTING_LABEL_DRINKS',
+		lup_smokes: 'SETTING_LABEL_SMOKES',
+		lup_sporty: 'SETTING_LABEL_SPORT',
+		lup_religion: 'SETTING_LABEL_RELIGION'
+	};
+
+	$scope.settingDisplayLabel = function(setting) {
+		if (!setting) { return ''; }
+		if (SETTING_LABELS[setting.name]) { return SETTING_LABELS[setting.name]; }
+		if (setting.label && setting.label !== setting.name) { return setting.label; }
+		return String(setting.name || '').replace(/^lup_/, '').replace(/_/g, ' ').replace(/\b\w/g, function(letter) {
+			return letter.toUpperCase();
+		});
+	};
 
 	$scope.moduleLabel = function(module) {
 		return 'module_' + module.toLowerCase();
@@ -57,6 +99,22 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.sectionHint = function(section) {
 		return 'SETTINGS_SECTION_' + section.toUpperCase() + '_HINT';
+	};
+
+	$scope.settingIcon = function(setting) {
+		var icons = {
+			about_me: 'edit_note', gender: 'person_outline', color: 'palette',
+			lup_status: 'chat_bubble_outline', lup_city: 'location_city', lup_state: 'map',
+			lup_eyecolor: 'visibility', lup_height: 'height', lup_interest: 'auto_awesome',
+			lup_sexo: 'favorite_outline', lup_has_pet: 'pets', lup_drinks: 'local_bar',
+			lup_smokes: 'smoke_free', lup_sporty: 'directions_run', lup_religion: 'self_improvement',
+			language: 'translate', timezone: 'schedule', country_of_living: 'home',
+			country_of_origin: 'public', birthday: 'cake', age_visible: 'visibility',
+			announce_my_birthday: 'celebration', announce_me_birthdays: 'campaign',
+			friend_who: 'person_add', friends_show: 'group', gallery_acl: 'photo_library',
+			whatsapp_number: 'chat'
+		};
+		return icons[setting && setting.name] || 'tune';
 	};
 
 	$scope.isDateSetting = function(setting) {
@@ -101,6 +159,26 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.inputType = function(setting) {
 		return setting.renderer && setting.renderer.input_type || 'text';
+	};
+
+	// Keep emojis intentional: they enrich the personal text fields without
+	// turning every practical account setting into a decorative control.
+	$scope.hasEmojiPicker = function(setting) {
+		return !!setting && ['about_me', 'lup_status'].indexOf(setting.name) >= 0;
+	};
+
+	$scope.emojiChoices = function(setting) {
+		return setting && setting.name === 'lup_status'
+			? ['✨', '📍', '☕', '🎵', '🌙', '💬']
+			: ['✨', '😊', '📍', '🎵', '☕', '🌙', '💬', '🌿'];
+	};
+
+	$scope.appendEmoji = function(setting, emoji, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving || !emoji) { return; }
+		var value = String(setting.value || '');
+		setting.value = value + (value && !/\s$/.test(value) ? ' ' : '') + emoji;
+		$scope.changeSetting(setting);
 	};
 
 	$scope.countryStyle = function(country) {
@@ -174,6 +252,7 @@ angular.module('LUP').config(function($routeProvider) {
 							(READ_ONLY_SETTINGS[module] && READ_ONLY_SETTINGS[module][key])) { continue; }
 						setting.module = setting.module || module;
 						setting.name = setting.name || key;
+						setting.displayLabel = $scope.settingDisplayLabel(setting);
 						setting.options = setting.options || {};
 						setting.renderer = GDTRendererSrvc.forSetting(setting);
 						var selected = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
@@ -217,16 +296,74 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 	
-	$scope.changeSetting = function(setting) {
+	$scope.changeSetting = function(setting, visibilityOnly) {
+		if (!setting || setting.saving) {
+			return;
+		}
+		// Leaving a text field to open its visibility menu also fires blur. That
+		// used to submit an unchanged value first and show a false error after the
+		// actual visibility update had already succeeded.
+		var inputType = setting.renderer && setting.renderer.input_type;
+		if (!visibilityOnly && inputType !== 'date' && inputType !== 'time' && inputType !== 'datetime-local' &&
+			String(setting.value === undefined || setting.value === null ? '' : setting.value) === String(setting.initialValue === undefined || setting.initialValue === null ? '' : setting.initialValue) &&
+			setting.acl === setting.initialACL) {
+			return;
+		}
 		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
-		SettingsSrvc.changeSetting(setting, setting.value, setting.acl).then(function() {
+		setting.saving = true;
+		SettingsSrvc.changeSetting(setting, setting.value, setting.acl, visibilityOnly).then(function() {
 			setting.initialValue = setting.value;
 			setting.initialACL = setting.acl;
 		}, function(gwsMessage) {
 			setting.value = setting.initialValue;
 			setting.acl = setting.initialACL;
 			ErrorSrvc.showError(gwsMessage, 'Settings');
+		})['finally'](function() {
+			setting.saving = false;
 		});
+	};
+
+	$scope.changeVisibility = function(setting) {
+		// Keep visibility as a deliberate, field-bound action. It must never be
+		// interpreted as the next row's value control on compact mobile layouts.
+		if (setting.acl === setting.initialACL) {
+			return;
+		}
+		$scope.changeSetting(setting, true);
+	};
+
+	$scope.visibilityLabel = function(setting) {
+		return setting && (setting.acl || setting.initialACL) || 'acl_all';
+	};
+
+	$scope.toggleVisibility = function(setting, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving) { return; }
+		setting.visibilityOpen = !setting.visibilityOpen;
+	};
+
+	$scope.selectVisibility = function(setting, relation, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving || !relation) { return; }
+		setting.acl = relation;
+		setting.visibilityOpen = false;
+		$scope.changeVisibility(setting);
+	};
+
+	$scope.toggleProfileVisibility = function(event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		var setting = $scope.data.profileVisibility;
+		if (!setting || setting.saving) { return; }
+		setting.visibilityOpen = !setting.visibilityOpen;
+	};
+
+	$scope.selectProfileVisibility = function(relation, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		var setting = $scope.data.profileVisibility;
+		if (!setting || setting.saving || !relation) { return; }
+		setting.value = relation;
+		setting.visibilityOpen = false;
+		$scope.changeSetting(setting);
 	};
 
 	/* Native date/time controls do not consistently emit a useful blur event on

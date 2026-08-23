@@ -1,4 +1,4 @@
-<section layout="row" flex class="comments-template location-reviews-page">
+<section layout="row" flex class="location-page comments-template location-reviews-page">
     <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
 	<md-content layout="column" flex>
 
@@ -14,11 +14,17 @@
 		</section>
 
 		<!-- One clear action: the star card opens the rating and comment dialog. -->
-		<section class="reviews-scoreboard" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="{{'LUP_REVIEWS_RATE_ARIA'|translate}}">
-			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>{{'LUP_REVIEWS_OUT_OF_FIVE'|translate}}</span></div>
-			<div class="reviews-stars"><jk-rating-stars max-rating="5" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} {{'LUP_REVIEWS_VOTES'|translate}}</small></div>
+		<section class="reviews-scoreboard" ng-class="'vote-tier-' + ratingTier(data.room.rating())" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="{{'LUP_REVIEWS_RATE_ARIA'|translate}}">
+			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>{{'LUP_REVIEWS_OUT_OF_TEN'|translate}}</span></div>
+			<div class="reviews-stars"><jk-rating-stars max-rating="10" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} {{'LUP_REVIEWS_VOTES'|translate}}</small></div>
 			<i class="material-icons">chevron_right</i>
 		</section>
+
+		<button class="reviews-compose" type="button" ng-click="onVoteDialog($event)">
+			<i class="material-icons">edit_note</i>
+			<span><b>{{'LUP_REVIEWS_COMPOSE'|translate}}</b><small>{{'LUP_REVIEWS_COMPOSE_COPY'|translate}}</small></span>
+			<i class="material-icons">arrow_forward</i>
+		</button>
 
 		<md-list flex class="md-dense reviews-list">
 
@@ -31,9 +37,9 @@
 				<lup-avatar ng-user="comment.user()" ng-click="gotoProfile(comment.user());"></lup-avatar>
 				<div class="md-list-item-text">
 				  <h4 class="lup-comment-text" ng-bind-html="comment.text()"></h4>
-				  <div class="review-comment-rating" ng-if="comment.rating()">
-					<i class="material-icons" ng-repeat="star in [1,2,3,4,5]" ng-class="{'is-rated': comment.rating() >= star}">star</i>
-					<span>{{comment.rating()}} / 5</span>
+				  <div class="review-comment-rating" ng-if="comment.rating()" ng-class="'vote-tier-' + ratingTier(comment.rating())">
+					<i class="material-icons" ng-repeat="star in [1,2,3,4,5,6,7,8,9,10]" ng-class="{'is-rated': comment.rating() >= star}">star</i>
+					<span>{{comment.rating()}} / 10</span>
 				  </div>
 				  <p class="lup-comment-date"
 				   translate="COMMENTED_AT"
@@ -41,9 +47,11 @@
 				   translate-value-date="{{comment.displayDate()}}"></p>
 				</div>
 				<div class="md-secondary">
-				  <i class="material-icons"
+				  <button class="review-delete" type="button"
 				   ng-if="hasPermission('staff') || comment.isOwn()"
-				   ng-click="deleteComment(comment)">delete</i>
+				   ng-click="deleteComment(comment)" aria-label="{{'LUP_REVIEWS_DELETE'|translate}}">
+				   <i class="material-icons">delete_outline</i><span>{{'LUP_REVIEWS_DELETE'|translate}}</span>
+				  </button>
 				</div>
 			</md-list-item>
 

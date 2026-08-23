@@ -1,24 +1,29 @@
-<md-dialog aria-label="{{'ROOM_VOTE'|translate}}" class="lup-comment-dialog">
+<md-dialog aria-label="{{'ROOM_VOTE'|translate}}" class="lup-comment-dialog vote-dialog" ng-class="'vote-tier-' + scope.ratingTier(data.rating)">
   <form ng-cloak>
     <md-toolbar>
       <div class="md-toolbar-tools">
-		<h2>Deine Stimme zählt</h2>
+		<div class="vote-dialog-title"><span>{{'LUP_VOTE_EYEBROW'|translate}}</span><h2>{{'LUP_VOTE_TITLE'|translate}}</h2></div>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
+		<button class="vote-dialog-close" type="button" ng-click="cancel()" aria-label="{{'BTN_CANCEL'|translate}}">
 			<i class="material-icons">close</i>
-        </md-button>
+		</button>
       </div>
     </md-toolbar>
 
     <md-dialog-content>
       <div class="md-dialog-content" layout="column">
 
-		<div class="vote-dialog-intro"><i class="material-icons">local_activity</i><p>Wie war dein Besuch? Gib dem Ort deine ehrliche Bewertung.</p></div>
-		<p class="vote-dialog-note" ng-if="data.comment">Du kannst deine bisherige Stimme jederzeit aktualisieren. Pro Ort bleibt ein Kommentar von dir sichtbar.</p>
-        <jk-rating-stars max-rating="5" rating="data.rating" reset-allowed="false"></jk-rating-stars>
+		<div class="vote-dialog-intro"><span class="vote-dialog-mark"><i class="material-icons">forum</i></span><p>{{'LUP_VOTE_COPY'|translate}}</p></div>
+		<p class="vote-dialog-note" ng-if="data.comment">{{'LUP_VOTE_UPDATE_NOTE'|translate}}</p>
+		<section class="vote-rating-panel">
+		  <div class="vote-rating-head"><span>{{'LUP_VOTE_RATING'|translate}}</span><b>{{data.rating || 0}}<small>/ 10</small></b></div>
+		  <jk-rating-stars max-rating="10" rating="data.rating" reset-allowed="false"></jk-rating-stars>
+		  <div class="vote-rating-scale" aria-hidden="true"><span>ehrlich</span><span>besonders</span></div>
+		</section>
       
         <md-input-container flex>
-          <textarea ng-model="data.comment" rows="4" placeholder="Was hat dir hier gefallen?" style="width: 100%;" flex>
+		  <label>{{'LUP_VOTE_COMMENT'|translate}}</label>
+          <textarea ng-model="data.comment" rows="4" placeholder="{{'LUP_VOTE_PLACEHOLDER'|translate}}" style="width: 100%;" flex>
           </textarea>
         </md-input-container>
       
@@ -27,7 +32,7 @@
 
     <md-dialog-actions layout="row">
       <md-button ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button>
-		<md-button class="vote-save" ng-click="vote()">Stimme abgeben</md-button>
+		<md-button class="vote-save" ng-click="vote()">{{'LUP_VOTE_SUBMIT'|translate}}</md-button>
     </md-dialog-actions>
 
   </form>

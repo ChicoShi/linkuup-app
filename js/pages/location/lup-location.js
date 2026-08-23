@@ -217,6 +217,15 @@ angular.module('LUP').config(function($routeProvider) {
 		return Math.max(0, Number(room && room.JSON && room.JSON.room_cuddles) || 0);
 	};
 
+	$scope.ratingTier = function(rating) {
+		rating = Number(rating) || 0;
+		if (rating >= 10) { return 'crystal'; }
+		if (rating >= 8) { return 'azure'; }
+		if (rating >= 5) { return 'gold'; }
+		if (rating >= 3) { return 'amber'; }
+		return 'ember';
+	};
+
 	//////////////////
 	// --- Vote --- //
 	//////////////////
@@ -314,7 +323,11 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.chatVisible = function() {
 		console.log('LocationCtrl.chatVisible()', $scope.data.room);
-		if (!$scope.inChatRange() || $scope.data.room.isSelfInRoom() || $scope.data.chatJoining) {
+		// The room payload can briefly still show the own avatar after a route or
+		// websocket transition.  That visual state is not proof of a live server
+		// membership. Re-join idempotently so the server remains authoritative and
+		// a visible composer can never point at a room that was already parted.
+		if (!$scope.inChatRange() || $scope.data.chatJoining) {
 			return;
 		}
 		$scope.data.chatJoining = true;
@@ -384,7 +397,14 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.$on('$destroy', function() {
-		// Leaving a location page also means leaving its live-presence room.
+		// Switching between Location, Chat and Online recreates this controller in
+		// Angular. That is still the same physical place, so it must not emit PART
+		// between the join and the first typed message.
+		var sameLocationView = new RegExp('^/location/' + $scope.data.room.id() + '(?:/(?:chat|visitors))?$').test($location.path());
+		if (sameLocationView) {
+			return;
+		}
+		// Navigating away really does mean leaving the live-presence room.
 		// The server broadcasts the part event, removing the mini avatar at once.
 		if (ChatSrvc.CHATROOM && ChatSrvc.CHATROOM.id() === $scope.data.room.id()) {
 			ChatSrvc.part($scope.data.room);

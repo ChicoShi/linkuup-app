@@ -1511,14 +1511,16 @@ md-list.usernavigation .presence-actions .usericon {
 .nearby .slickit { overflow: visible; }
 .nearby .slick-list { overflow: hidden; }
 .nearby .slick-slide .lup-room-slide {
-  transition-duration: .52s, .42s, .46s;
-  will-change: transform, opacity, filter;
+  transition-duration: .36s, .28s;
+  /* The rail is used continuously. Keep its compositor work to properties
+     that remain smooth on older phones as well as desktop browsers. */
+  will-change: transform, opacity;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-category-hero {
-  animation: lup-place-arrive-right .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-place-arrive-right .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-backward .slick-current .room-category-hero {
-  animation: lup-place-arrive-left .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-place-arrive-left .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .distrat,
 .nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
@@ -1526,23 +1528,23 @@ md-list.usernavigation .presence-actions .usericon {
 .nearby .slickit.lup-swipe-backward .slick-current .distrat,
 .nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
 .nearby .slickit.lup-swipe-backward .slick-current .chatbutton {
-  animation: lup-place-detail-rise .42s cubic-bezier(.16,.8,.25,1) both;
+  animation: lup-place-detail-rise .26s cubic-bezier(.16,.8,.25,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat { animation-delay: .12s; }
+.nearby .slickit.lup-swipe-backward .slick-current .distrat { animation-delay: .05s; }
 .nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview { animation-delay: .19s; }
+.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview { animation-delay: .08s; }
 .nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation-delay: .26s; }
+.nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation-delay: .11s; }
 @keyframes lup-place-arrive-right {
-  0% { opacity: .08; transform: translate3d(52px,12px,0) rotate(3deg) scale(.88); filter: saturate(.7); }
-  68% { opacity: 1; transform: translate3d(-5px,-3px,0) rotate(-.5deg) scale(1.025); filter: saturate(1.08); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .18; transform: translate3d(24px,6px,0) rotate(1deg) scale(.96); }
+  72% { opacity: 1; transform: translate3d(-2px,-1px,0) rotate(0) scale(1.008); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-place-arrive-left {
-  0% { opacity: .08; transform: translate3d(-52px,12px,0) rotate(-3deg) scale(.88); filter: saturate(.7); }
-  68% { opacity: 1; transform: translate3d(5px,-3px,0) rotate(.5deg) scale(1.025); filter: saturate(1.08); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .18; transform: translate3d(-24px,6px,0) rotate(-1deg) scale(.96); }
+  72% { opacity: 1; transform: translate3d(2px,-1px,0) rotate(0) scale(1.008); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-place-detail-rise {
   from { opacity: 0; transform: translateY(15px) scale(.96); }
@@ -1561,23 +1563,22 @@ md-list.usernavigation .presence-actions .usericon {
 
 /* The complete location panel joins the swipe: large frame first, then its children. */
 .nearby .slick-slide .roominfo {
-  transform: translateY(12px) scale(.925);
+  transform: translateY(7px) scale(.965);
   transform-origin: 50% 46%;
   opacity: .5;
-  transition: transform .52s cubic-bezier(.16,.82,.24,1), opacity .34s ease, filter .42s ease;
+  transition: transform .36s cubic-bezier(.16,.82,.24,1), opacity .28s ease;
 }
 .nearby .slick-slide.slick-current .roominfo {
   transform: none;
   opacity: 1;
-  filter: none;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .roominfo,
 .nearby .slickit.lup-swipe-backward .slick-current .roominfo {
-  animation: lup-location-stage .58s cubic-bezier(.14,.84,.2,1) both;
+  animation: lup-location-stage .36s cubic-bezier(.18,.78,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
 .nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit {
-  animation: lup-location-seal .62s cubic-bezier(.16,.82,.24,1) both;
+  animation: lup-location-seal .38s cubic-bezier(.16,.82,.24,1) both;
 }
 .nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
 .nearby .slickit.lup-swipe-backward .slick-current .room-presence-count {
@@ -1588,9 +1589,9 @@ md-list.usernavigation .presence-actions .usericon {
   animation: lup-location-chip .38s cubic-bezier(.18,.8,.28,1) .33s both;
 }
 @keyframes lup-location-stage {
-  0% { opacity: .15; transform: translateY(26px) scale(.82); filter: brightness(.72) saturate(.72); }
-  70% { opacity: 1; transform: translateY(-3px) scale(1.022); filter: brightness(1.04) saturate(1.06); }
-  100% { opacity: 1; transform: none; filter: none; }
+  0% { opacity: .22; transform: translateY(14px) scale(.93); }
+  70% { opacity: 1; transform: translateY(-2px) scale(1.012); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes lup-location-seal {
   0% { opacity: 0; transform: translateY(18px) scale(.48) rotate(-15deg); }
@@ -6228,6 +6229,35 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-information.profile-about-single { padding-top:0 !important; }
 .profile-page .gallery-grid { padding-top:0 !important; }
 
+/* Angular Material's dynamic-height mode animates the entire profile height
+   for 500 ms. Switching from a long About section to a short gallery then
+   forces the scroll container upward mid-animation. Keep the active panel in
+   normal document flow and animate only its content surface. */
+.profile-page .information-tabs:not(.md-dynamic-height) md-tabs-content-wrapper {
+  position:relative !important;
+  top:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  min-height:0 !important;
+  overflow:visible !important;
+}
+.profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active {
+  position:relative !important;
+  bottom:auto !important;
+  overflow:hidden !important;
+}
+.profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active > div {
+  animation:lup-profile-panel-arrive .22s cubic-bezier(.2,.8,.25,1) both;
+}
+@keyframes lup-profile-panel-arrive {
+  from { opacity:.58; transform:translate3d(0,6px,0); }
+  to { opacity:1; transform:translate3d(0,0,0); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .information-tabs:not(.md-dynamic-height) md-tab-content.md-active > div { animation:none; }
+}
+
 /* Gallery entry: an elegant empty album slot instead of a technical upload
    field. It stays clearly actionable without competing with real photos. */
 .profile-page .gallery-add-tile { position:relative; gap:9px; border:1px solid rgba(195,187,231,.16); border-radius:17px; background:radial-gradient(circle at 50% 28%,rgba(149,125,237,.17),transparent 31%),linear-gradient(145deg,rgba(49,50,73,.70),rgba(24,26,40,.82)); box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 10px 20px rgba(0,0,0,.13); color:#d6d0e6; }
@@ -6679,6 +6709,232 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (max-width:480px) { .friends-map-pin { top:20%; right:-1%; width:42px; height:42px; }.friends-map-pin .material-icons { font-size:23px; }.friends-route-light { top:31%; right:7%; }.friends-route-one { top:27%; right:-44%; width:89%; } }
 @media (prefers-reduced-motion:reduce) { .friends-route-light,.friends-map-pin { animation:none; } }
 
+/* Friends v3: one calm connection lane. The people remain the focus; search
+   and actions are deliberately compact so the top of the phone is not crowded. */
+.friends-page .lup-top-bar {
+  background:rgba(15,20,33,.84) !important;
+  border-bottom-color:rgba(206,222,255,.08) !important;
+  box-shadow:none !important;
+}
+.friends-page .friends-search-zone,
+.friends-page .friends-shell {
+  width:min(92%,680px);
+  box-sizing:border-box;
+}
+.friends-page .friends-search-zone {
+  position:relative;
+  z-index:1;
+  margin:18px auto 0;
+}
+.friends-page .search-input-wrap {
+  width:100%;
+  min-height:48px;
+  margin:0;
+  padding:4px 5px 4px 13px;
+  border:1px solid rgba(198,216,255,.12);
+  border-radius:15px;
+  background:rgba(12,17,29,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.friends-page .search-input-wrap:focus-within {
+  border-color:rgba(147,191,255,.43);
+  background:rgba(18,25,42,.58);
+  box-shadow:0 0 0 3px rgba(96,156,243,.08),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.friends-page .search-input-wrap .friend-search-mark {
+  width:22px;
+  color:rgba(190,218,255,.72);
+  font-size:18px;
+}
+.friends-page .search-input-wrap .search-input {
+  min-height:38px;
+  padding:0 2px;
+  color:#f1f4ff;
+  font-size:14px;
+  font-weight:620;
+}
+.friends-page .search-input-wrap .search-input::placeholder { color:rgba(191,200,224,.70); }
+.friends-page .search-input-wrap .qrcode-dummy {
+  order:3;
+  display:grid;
+  place-items:center;
+  width:36px;
+  height:36px;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  box-shadow:none;
+  color:#aebfff;
+  cursor:pointer;
+  transition:color .18s ease,background .18s ease,transform .18s ease;
+}
+.friends-page .search-input-wrap .qrcode-dummy:hover,
+.friends-page .search-input-wrap .qrcode-dummy:focus-visible {
+  background:rgba(131,153,242,.15);
+  color:#e4e9ff;
+  outline:0;
+  transform:translateY(-1px);
+}
+.friends-page .search-input-wrap .qrcode-dummy .material-icons { font-size:20px; }
+.friends-page .friends-shell { margin:18px auto 34px; }
+.friends-page .friends-overview {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:16px;
+  margin:0 2px 12px;
+  padding:0 2px 13px;
+  border-bottom:1px solid rgba(198,216,255,.13);
+}
+.friends-page .friends-overview-copy { display:grid; gap:3px; min-width:0; }
+.friends-page .friends-overview-eyebrow {
+  color:#91c6ef;
+  font-size:9px;
+  font-weight:820;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.friends-page .friends-overview strong {
+  overflow:hidden;
+  color:#f4f6ff;
+  font-size:clamp(19px,5vw,25px);
+  font-weight:760;
+  letter-spacing:-.045em;
+  line-height:1.03;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.friends-page .friends-overview-description {
+  overflow:hidden;
+  color:#aeb5ca;
+  font-size:11px;
+  line-height:1.35;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.friends-page .friends-overview-count {
+  display:grid;
+  justify-items:end;
+  gap:1px;
+  min-width:55px;
+  padding:0 0 1px;
+  color:#bfc9e7;
+  text-align:right;
+}
+.friends-page .friends-overview-count b {
+  color:#e5e8ff;
+  font-size:22px;
+  font-weight:720;
+  letter-spacing:-.065em;
+  line-height:1;
+}
+.friends-page .friends-overview-count small {
+  color:#92a1c3;
+  font-size:8px;
+  font-weight:760;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.friends-page .friends-list {
+  overflow:hidden;
+  width:100%;
+  margin:0;
+  padding:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-bottom:1px solid rgba(198,216,255,.10);
+  border-radius:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.018),rgba(126,109,193,.028),rgba(255,255,255,.012));
+  box-shadow:none;
+}
+.friends-page .friends-list .md-subheader { display:none; }
+.friends-page .lup-user-list { display:block; }
+.friends-page .lup-user-list md-list-item.friend-card,
+.friends-page .friend-search-results md-list-item {
+  min-height:69px;
+  margin:0;
+  padding:9px 5px;
+  border:0;
+  border-bottom:1px solid rgba(198,216,255,.09);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transition:background .18s ease,transform .18s ease;
+}
+.friends-page .lup-user-list md-list-item.friend-card:last-child,
+.friends-page .friend-search-results md-list-item:last-child { border-bottom:0; }
+.friends-page .lup-user-list md-list-item.friend-card:hover,
+.friends-page .friend-search-results md-list-item:hover {
+  transform:none;
+  border-color:rgba(198,216,255,.09);
+  background:linear-gradient(90deg,rgba(121,167,238,.09),rgba(137,106,218,.035));
+}
+.friends-page .lup-user-list md-list-item.friend-card .lup-avatar,
+.friends-page .friend-search-results lup-avatar {
+  width:43px;
+  height:43px;
+  margin:0 11px 0 5px;
+  border:1px solid rgba(205,222,255,.18);
+  border-radius:50%;
+  box-shadow:0 5px 15px rgba(0,0,0,.16);
+}
+.friends-page .lup-user-list .username,
+.friends-page .friend-search-results .username {
+  margin:0 0 3px;
+  color:#eef2ff;
+  font-size:14px;
+  font-weight:740;
+}
+.friends-page .lup-user-list .lup-user-status,
+.friends-page .friend-search-results .lup-user-status {
+  margin:0;
+  color:#9fa8bf;
+  font-size:11px;
+}
+.friends-page .lup-user-actions {
+  gap:2px;
+  margin-left:7px;
+  padding-left:7px;
+  border-left:1px solid rgba(198,216,255,.08);
+}
+.friends-page .lup-user-action {
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  box-shadow:none;
+}
+.friends-page .lup-user-action .material-icons { font-size:18px; }
+.friends-page .lup-user-action-message { color:#bfcbff; }
+.friends-page .lup-user-action-message:hover { background:rgba(118,155,238,.15); color:#e1e8ff; }
+.friends-page .lup-user-action-remove { color:#d8a7ba; }
+.friends-page .lup-user-action-remove:hover { border-color:transparent; background:rgba(205,110,143,.12); color:#f0c0d0; }
+.friends-page .friend-search-results {
+  overflow:hidden;
+  width:100%;
+  margin:8px 0 0;
+  padding:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-bottom:1px solid rgba(198,216,255,.10);
+  background:rgba(12,17,29,.32);
+}
+.friends-page .friends-empty {
+  border:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+@media (max-width:380px) {
+  .friends-page .friends-search-zone,.friends-page .friends-shell { width:94%; }
+  .friends-page .friends-overview { gap:10px; }
+  .friends-page .friends-overview-description { max-width:218px; }
+  .friends-page .lup-user-actions { margin-left:3px; padding-left:4px; }
+  .friends-page .lup-user-action { width:31px; height:31px; }
+}
+
 /* Final, deliberately quiet review surface.  The interaction is the focus:
    place, score, voices, then one obvious action to leave a rating. */
 .location-reviews-page > md-content {
@@ -6909,6 +7165,77 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   box-shadow:0 0 8px rgba(160,139,255,.22),0 0 22px rgba(69,177,239,.13) !important;
   transform:rotate(-13deg) !important;
   animation:lup-discovery-signal-trail 15s cubic-bezier(.38,.05,.56,.95) infinite !important;
+}
+
+/* Room navigation: one precise control strip for place, conversation and
+   people. The active area receives the light; the other two stay quiet. */
+.location-page md-tabs md-tabs-wrapper {
+  position:relative !important;
+  margin:0 !important;
+  border:0 !important;
+  border-top:1px solid rgba(188,215,247,.10) !important;
+  border-bottom:1px solid rgba(188,215,247,.11) !important;
+  border-radius:0 !important;
+  background:linear-gradient(100deg,rgba(18,24,42,.97),rgba(27,33,56,.97)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 20px rgba(2,7,20,.13) !important;
+}
+.location-page md-tabs md-tabs-canvas,
+.location-page md-tabs md-pagination-wrapper { height:54px !important; }
+.location-page md-tabs md-tab-item {
+  min-width:0 !important;
+  height:54px !important;
+  min-height:54px !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:#8e9bb0 !important;
+  transition:background 180ms ease,color 180ms ease !important;
+}
+.location-page md-tabs md-tab-item + md-tab-item { border-left:1px solid rgba(190,215,244,.075) !important; }
+.location-page md-tabs md-tab-item .md-tab-label {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  font-size:10px !important;
+  font-weight:820 !important;
+  letter-spacing:.075em !important;
+}
+.location-page md-tabs md-tab-item .md-tab-label::before {
+  width:25px !important;
+  height:25px !important;
+  border:0 !important;
+  border-radius:8px 8px 8px 3px !important;
+  background:rgba(174,205,241,.055) !important;
+  color:#9bb3cf !important;
+  transition:background 180ms ease,color 180ms ease,transform 180ms ease !important;
+}
+.location-page md-tabs md-tab-item.md-active {
+  background:linear-gradient(100deg,rgba(110,125,210,.18),rgba(94,177,230,.09)) !important;
+  box-shadow:inset 0 1px 0 rgba(226,240,255,.10) !important;
+  color:#f2f8ff !important;
+}
+.location-page md-tabs md-tab-item.md-active .md-tab-label::before {
+  background:linear-gradient(145deg,rgba(151,192,255,.28),rgba(113,161,222,.15)) !important;
+  color:#e3f5ff !important;
+  transform:translateY(-1px) !important;
+}
+.location-page md-tabs md-tab-item.md-active::after {
+  right:22% !important;
+  bottom:0 !important;
+  left:22% !important;
+  height:2px !important;
+  border-radius:2px 2px 0 0 !important;
+  background:linear-gradient(90deg,transparent,#c8eaff 48%,transparent) !important;
+  box-shadow:0 0 12px rgba(133,205,255,.62) !important;
+}
+.location-page md-tabs md-tab-item[disabled] { opacity:.36 !important; }
+@media (max-width:360px) {
+  .location-page md-tabs md-tabs-canvas,.location-page md-tabs md-pagination-wrapper { height:50px !important; }
+  .location-page md-tabs md-tab-item { height:50px !important; min-height:50px !important; }
+  .location-page md-tabs md-tab-item .md-tab-label { gap:4px !important; font-size:9px !important; letter-spacing:.045em !important; }
+  .location-page md-tabs md-tab-item .md-tab-label::before { width:22px !important; height:22px !important; font-size:15px !important; }
 }
 .nearby md-content.greybg > * { position:relative; z-index:1; }
 @keyframes lup-discovery-mesh {
@@ -7665,8 +7992,100 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .gallery-add-tile span { display:block; color:#e0efff; font:760 10px/1 Ubuntu,Roboto,Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; text-shadow:0 1px 8px rgba(32,76,142,.30); }
 .profile-page .gallery-add-tile:hover,.profile-page .gallery-add-tile:focus-visible { transform:translateY(-2px); border-color:rgba(213,239,255,.52) !important; background:linear-gradient(145deg,rgba(151,207,255,.22),rgba(139,104,224,.13) 52%,rgba(23,38,67,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 16px 30px rgba(1,8,25,.19),0 0 21px rgba(111,175,247,.12) !important; outline:0; }
 .profile-page .gallery-add-tile:hover .material-icons,.profile-page .gallery-add-tile:focus-visible .material-icons { box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 25px rgba(4,16,43,.23),0 0 15px rgba(172,221,255,.26),inset 0 1px 0 rgba(255,255,255,.50); }
+/* iOS keeps :hover after a tap.  A gallery button must open the picker without
+   pretending to float away from the finger. */
+@media (hover:none), (pointer:coarse) {
+  .profile-page .gallery-add-tile:hover,
+  .profile-page .gallery-add-tile:active { transform:none !important; }
+}
 .profile-page .gallery-empty { display:grid; justify-items:center; gap:8px; margin:10px 12px 28px; padding:30px 18px; border:1px dashed rgba(184,211,255,.18); border-radius:18px; background:rgba(16,24,42,.28); color:#aab9d1; font:650 12px/1.45 Ubuntu,Roboto,Arial,sans-serif; text-align:center; }
 .profile-page .gallery-empty .material-icons { color:#b7dcff; font-size:27px; filter:drop-shadow(0 0 10px rgba(104,183,255,.28)); }
+
+/* The add-photo slot should read as part of the album, not as a second card.
+ * One calm camera-plus mark is enough; real gallery images stay visually first. */
+.profile-page .gallery-add-tile {
+  border:0 !important;
+  border-radius:15px;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none;
+  color:rgba(193,227,255,.78);
+}
+.profile-page .gallery-add-tile::before,
+.profile-page .gallery-add-tile::after {
+  display:block !important;
+  content:'';
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+.profile-page .gallery-add-tile::before {
+  width:5px;
+  height:5px;
+  top:calc(50% - 29px);
+  left:calc(50% + 24px);
+  background:#e9fbff;
+  box-shadow:0 0 9px rgba(133,220,255,.84);
+  animation:gallery-add-glint 3.8s ease-in-out infinite;
+}
+.profile-page .gallery-add-tile::after {
+  width:2px;
+  height:2px;
+  top:calc(50% + 23px);
+  left:calc(50% - 31px);
+  background:rgba(185,225,255,.90);
+  box-shadow:0 0 7px rgba(130,194,255,.75);
+  animation:gallery-add-glint 3.8s ease-in-out 1.2s infinite;
+}
+.profile-page .gallery-add-tile .material-icons {
+  width:auto;
+  height:auto;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:transparent;
+  background:linear-gradient(135deg,#f1fcff 4%,#a7dfff 46%,#9c9cff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-size:42px;
+  line-height:1;
+  filter:drop-shadow(0 0 10px rgba(104,190,255,.34));
+}
+.profile-page .gallery-add-tile:hover,
+.profile-page .gallery-add-tile:focus-visible {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#e3f5ff;
+  transform:scale(1.045);
+}
+.profile-page .gallery-add-tile:hover .material-icons,
+.profile-page .gallery-add-tile:focus-visible .material-icons {
+  box-shadow:none;
+  filter:drop-shadow(0 0 12px rgba(128,205,255,.55));
+}
+@keyframes gallery-add-glint { 0%,100% { opacity:.35; transform:scale(.72); } 48% { opacity:1; transform:scale(1.15); } }
+@media (prefers-reduced-motion:reduce) { .profile-page .gallery-add-tile::before,.profile-page .gallery-add-tile::after { animation:none; } }
+
+/* High Five confirmation: a real encounter gets a clear, composed scan moment
+ * instead of the former generic heart dialog. */
+.lup-cuddles-dialog.highfive-qr-dialog {
+  width:min(91vw,360px) !important;
+  overflow:hidden;
+  border:1px solid rgba(178,222,255,.20) !important;
+  border-radius:26px !important;
+  background:radial-gradient(circle at 50% -7%,rgba(102,183,244,.26),transparent 39%),radial-gradient(circle at 92% 58%,rgba(167,104,202,.13),transparent 33%),linear-gradient(156deg,#172943,#111827 67%,#0d1423) !important;
+  box-shadow:0 25px 66px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+.highfive-qr-dialog-content { padding:27px 22px 23px !important; text-align:center; }
+.highfive-qr-dialog .lup-cuddles-close { border:1px solid rgba(194,224,255,.16); background:rgba(8,17,35,.36); color:#dceeff; }
+.highfive-qr-mark { position:relative; display:grid; place-items:center; width:58px; height:58px; margin:0 auto 10px; border:1px solid rgba(198,234,255,.43); border-radius:50%; background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.40),transparent 24%),linear-gradient(145deg,#5ebce8,#656dd1 66%,#a35f9c); box-shadow:0 0 0 7px rgba(121,202,255,.06),0 13px 29px rgba(6,20,48,.40),inset 0 1px 0 rgba(255,255,255,.42); color:#f4fbff; }
+.highfive-qr-mark > .material-icons:first-child { font-size:30px; text-shadow:0 2px 5px rgba(34,45,104,.42); }.highfive-qr-mark > .material-icons:last-child { position:absolute; right:-4px; bottom:-3px; display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(233,249,255,.58); border-radius:8px; background:#172847; color:#dff5ff; box-shadow:0 5px 13px rgba(4,13,33,.40); font-size:14px; }
+.highfive-qr-eyebrow { display:block; color:#a8dcff; font-size:9px; font-weight:880; letter-spacing:.15em; }.highfive-qr-dialog h2 { margin:5px 0 7px; color:#f2f7ff; font-size:21px; line-height:1.13; }.highfive-qr-dialog p { max-width:278px; margin:0 auto; color:#c2d2e5; font-size:12px; line-height:1.45; }
+.highfive-qr-frame { position:relative; display:grid; place-items:center; width:min(67vw,218px); margin:17px auto 11px; padding:9px; background:linear-gradient(135deg,rgba(95,185,242,.11),rgba(152,103,214,.07)); }.highfive-qr-frame::before,.highfive-qr-frame::after { content:''; position:absolute; width:18px; height:18px; border-color:#b9e9ff; border-style:solid; opacity:.86; pointer-events:none; }.highfive-qr-frame::before { top:0; left:0; border-width:1px 0 0 1px; }.highfive-qr-frame::after { right:0; bottom:0; border-width:0 1px 1px 0; }.highfive-qr-frame .lup-cuddles-qr { padding:8px !important; border:0 !important; border-radius:12px !important; box-shadow:0 9px 22px rgba(0,0,0,.28) !important; }.highfive-qr-frame .lup-cuddles-qr img { display:block; width:min(59vw,188px); height:auto; }
+.highfive-qr-rule { display:flex; align-items:flex-start; justify-content:center; gap:6px; max-width:272px; margin:0 auto; color:#aebfd4; font-size:10px; line-height:1.35; }.highfive-qr-rule .material-icons { flex:0 0 auto; color:#9ee6c5; font-size:15px; }
 
 /* Mobile composer safety: the visible viewport shrinks when a phone keyboard
  * opens. Keep the message stream scrollable and the composer inside that
@@ -8022,7 +8441,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 /* About is a profile card, not an account settings form.  The person gets one
    calm story surface, followed by compact facts grouped by meaning. */
 .profile-page .profile-information.profile-about-single { width:min(100%,680px) !important; margin:0 auto !important; padding:14px 16px 9px !important; background:transparent !important; }
-.profile-page .profile-information.profile-about-single .profile-story-card { min-height:0 !important; margin:0 !important; padding:16px 2px 18px !important; border:0 !important; border-bottom:1px solid rgba(201,218,244,.10) !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card::before,.profile-page .profile-information.profile-about-single .profile-story-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card .md-list-item-text { min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }
+.profile-page .profile-information.profile-about-single .profile-story-card { min-height:0 !important; margin:0 !important; padding:16px 2px 18px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card::before,.profile-page .profile-information.profile-about-single .profile-story-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card .md-list-item-text { min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }
 .profile-page .profile-about-kicker { display:flex; align-items:center; gap:7px; margin:0 0 10px; color:#a9d9ff; font-size:8px; font-weight:850; letter-spacing:.15em; line-height:1; }.profile-page .profile-about-kicker .material-icons { display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(171,222,255,.23); border-radius:8px 8px 8px 3px; background:rgba(99,170,230,.12); color:#c5ecff; font-size:14px; }.profile-page .profile-information.profile-about-single .profile-about-me { max-width:570px; margin:0 !important; color:#e5edf8 !important; font-size:15px !important; font-weight:470 !important; line-height:1.65 !important; text-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-about-empty { margin:8px 0 0 !important; color:#aab9ce !important; font-size:13px !important; font-style:normal !important; }
 .profile-page .profile-information.profile-settings-view { display:block !important; width:min(100%,680px) !important; margin:0 auto !important; padding:9px 16px 30px !important; background:transparent !important; }.profile-page .profile-information.profile-settings-view .profile-settings-group { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:7px 9px !important; margin:0 0 19px !important; }.profile-page .profile-information.profile-settings-view .profile-settings-group > .md-subheader { grid-column:1 / -1 !important; min-height:24px !important; margin:0 !important; padding:4px 1px 6px !important; border:0 !important; background:transparent !important; color:#a8bbd2 !important; font-size:8px !important; font-weight:850 !important; letter-spacing:.14em !important; line-height:1.1 !important; text-transform:uppercase; }
 .profile-page .profile-information.profile-settings-view .profile-detail-card { display:grid !important; grid-template-columns:30px minmax(0,1fr) !important; gap:8px !important; align-items:start !important; min-width:0 !important; min-height:69px !important; height:auto !important; margin:0 !important; padding:10px 9px !important; overflow:hidden !important; border:1px solid rgba(192,215,246,.10) !important; border-radius:14px !important; background:rgba(31,40,61,.36) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.045) !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card:nth-of-type(3n) { background:rgba(45,58,86,.31) !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card .profile-detail-icon { display:grid; place-items:center; width:30px; height:30px; margin:0 !important; border:1px solid rgba(174,220,255,.17); border-radius:10px 10px 10px 4px; background:rgba(100,169,228,.10); color:#bce9ff; }.profile-page .profile-information.profile-settings-view .profile-detail-card .profile-detail-icon .material-icons { font-size:16px; }.profile-page .profile-information.profile-settings-view .profile-detail-card .md-list-item-text { min-width:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card h3 { overflow:hidden; margin:0 0 4px !important; color:#9fb2c9 !important; font-size:8px !important; font-weight:820 !important; letter-spacing:.075em !important; line-height:1.15 !important; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }.profile-page .profile-information.profile-settings-view .profile-detail-card h3::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card p { display:-webkit-box !important; overflow:hidden; margin:0 !important; color:#eaf2ff !important; font-size:11px !important; font-weight:650 !important; line-height:1.32 !important; text-overflow:ellipsis; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.profile-page .profile-information.profile-settings-view .profile-detail-card p .material-icons { margin-right:3px; color:#f0b5c5; font-size:13px; vertical-align:-2px; }.profile-page .profile-information.profile-settings-view .profile-detail-card.profile-setting-denied { border-color:rgba(233,163,188,.14) !important; background:rgba(92,48,67,.18) !important; }
@@ -8036,3 +8455,1144 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @keyframes lup-profile-about-route { 0%,100% { opacity:.25; transform:translate3d(0,0,0) scale(.7); } 46%,54% { opacity:1; transform:translate3d(-43px,20px,0) scale(1.22); } }
 @media (max-width:360px) { .profile-page .profile-about-route { top:12px; right:6px; opacity:.42; transform:scale(.82); transform-origin:top right; }.profile-page .profile-information.profile-about-single .profile-about-me { padding-right:5px; } }
 @media (prefers-reduced-motion:reduce) { .profile-page .profile-about-route > em { animation:none !important; opacity:.55; } .profile-page .profile-information.profile-settings-view .profile-detail-card { transition:none !important; } }
+
+/* Profile facts and account settings share the same promise: every control
+   says what it changes.  Keep them compact enough for a phone, but never
+   squeeze a label into an anonymous or truncated chip. */
+.profile-page .profile-information.profile-settings-view .profile-detail-card h3 {
+  display:-webkit-box !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  -webkit-box-orient:vertical !important;
+  -webkit-line-clamp:2 !important;
+}
+.profile-page .profile-information.profile-settings-view .profile-detail-card {
+  align-content:start !important;
+}
+.lup-settings-list .lup-settings-group {
+  margin:0 0 21px !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader {
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+  margin:14px 4px 8px !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader b {
+  color:#dbeeff !important;
+  font-size:10px !important;
+  font-weight:850 !important;
+  letter-spacing:.11em !important;
+}
+.lup-settings-list .lup-settings-group-heading .md-subheader small {
+  color:#91a8c2 !important;
+  font-size:11px !important;
+  font-weight:520 !important;
+  letter-spacing:0 !important;
+  line-height:1.35 !important;
+  text-transform:none !important;
+}
+.lup-settings-list md-list-item.md-2-line {
+  min-height:72px !important;
+  margin:6px 0 !important;
+  padding:8px 12px !important;
+  border-color:rgba(181,212,245,.12) !important;
+  border-radius:14px !important;
+  background:linear-gradient(115deg,rgba(62,91,139,.18),rgba(22,31,50,.42)) !important;
+}
+.lup-settings-list .md-list-item-text {
+  min-width:0 !important;
+}
+.lup-settings-list .md-list-item-text h3 {
+  overflow:visible !important;
+  margin:0 !important;
+  color:#edf6ff !important;
+  font-size:13px !important;
+  font-weight:760 !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+}
+.lup-settings-list .lup-setting-controls {
+  flex:0 1 52% !important;
+}
+.lup-settings-list .lup-setting-controls > md-select,
+.lup-settings-list .lup-setting-controls > .lup-setting-input {
+  max-width:min(48vw,310px) !important;
+}
+.lup-settings-list .lup-setting-textarea {
+  min-height:151px !important;
+}
+.lup-settings-list .lup-setting-textarea .md-list-item-text {
+  margin-bottom:10px !important;
+}
+.lup-settings-list .lup-setting-input input,
+.lup-settings-list .lup-setting-input textarea {
+  border-color:rgba(161,207,245,.14) !important;
+  border-radius:10px !important;
+  background:rgba(10,18,33,.42) !important;
+}
+@media (max-width:360px) {
+  .lup-settings-list md-list-item.md-2-line { padding:8px 10px !important; }
+  .lup-settings-list .md-list-item-text h3 { font-size:12px !important; }
+  .lup-settings-list .lup-setting-controls { flex-basis:49% !important; gap:5px !important; }
+}
+
+/* Settings are a control room, not a stack of anonymous form rows. Each
+   decision gets one calm surface: its name, its value, then (where relevant)
+   its visibility. This deliberately removes the old nested Material list
+   wrappers that intercepted taps on narrow screens. */
+.settings-page .lup-settings-list { width:min(100%,720px) !important; margin:0 auto !important; padding:15px 14px 42px !important; }
+.settings-page .lup-settings-profile-visibility { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(126px,42%) !important; gap:12px !important; align-items:center !important; margin:13px 0 24px !important; padding:14px !important; border:1px solid rgba(166,215,253,.16) !important; border-radius:17px !important; background:linear-gradient(120deg,rgba(71,128,183,.20),rgba(24,31,52,.50)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important; }
+.settings-page .lup-profile-visibility-choice { position:relative !important; min-width:0 !important; }.settings-page .lup-profile-visibility-choice .lup-visibility-menu { bottom:auto !important; top:calc(100% + 6px) !important; }
+.settings-page .settings-visibility-heading { display:flex !important; gap:10px !important; align-items:center !important; min-width:0 !important; }
+.settings-page .settings-visibility-heading > .material-icons { display:grid !important; place-items:center !important; flex:0 0 32px !important; width:32px !important; height:32px !important; border:1px solid rgba(180,230,255,.20) !important; border-radius:10px 10px 10px 4px !important; background:rgba(102,184,238,.12) !important; color:#c6eeff !important; font-size:17px !important; }
+.settings-page .settings-visibility-heading strong,.settings-page .settings-visibility-heading small { display:block !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.settings-page .settings-visibility-heading strong { color:#edf6ff !important; font-size:12px !important; font-weight:780 !important; }.settings-page .settings-visibility-heading small { margin-top:3px !important; color:#9bb0c9 !important; font-size:10px !important; }
+.settings-page .lup-settings-profile-visibility > md-select,.settings-page .lup-setting-primary-select { min-width:0 !important; width:100% !important; margin:0 !important; padding:7px 8px 4px !important; border:1px solid rgba(188,222,249,.17) !important; border-radius:10px !important; background:rgba(9,17,32,.34) !important; color:#f1f7ff !important; }
+.settings-page .lup-settings-group { margin:0 0 27px !important; }.settings-page .lup-settings-group-heading { display:flex !important; gap:8px !important; align-items:baseline !important; margin:0 3px 9px !important; padding:0 !important; }.settings-page .lup-settings-group-heading small { color:#b4ddf7 !important; font-size:9px !important; font-weight:850 !important; letter-spacing:.14em !important; text-transform:uppercase !important; }.settings-page .lup-settings-group-heading p { overflow:hidden !important; margin:0 !important; color:#8fa4bd !important; font-size:10px !important; line-height:1.3 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+.settings-page .lup-setting-card { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(128px,42%) !important; gap:10px 13px !important; align-items:center !important; margin:7px 0 !important; padding:12px 13px !important; border:1px solid rgba(183,213,245,.11) !important; border-radius:15px !important; background:linear-gradient(112deg,rgba(57,83,128,.17),rgba(17,25,43,.48)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.055) !important; transition:border-color .18s ease,background .18s ease,transform .18s ease !important; }.settings-page .lup-setting-card:hover,.settings-page .lup-setting-card:focus-within { border-color:rgba(141,210,249,.30) !important; background:linear-gradient(112deg,rgba(69,113,168,.27),rgba(24,31,53,.58)) !important; transform:translateY(-1px) !important; }
+.settings-page .lup-setting-card-heading { display:flex !important; gap:9px !important; align-items:center !important; min-width:0 !important; }.settings-page .lup-setting-icon { display:grid !important; place-items:center !important; flex:0 0 30px !important; width:30px !important; height:30px !important; border:1px solid rgba(167,218,252,.16) !important; border-radius:9px 9px 9px 3px !important; background:rgba(89,167,224,.10) !important; color:#c5edff !important; }.settings-page .lup-setting-icon .material-icons { font-size:16px !important; }.settings-page .lup-setting-card-heading h3 { overflow:hidden !important; margin:0 !important; color:#edf5ff !important; font-size:13px !important; font-weight:760 !important; line-height:1.2 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.settings-page .lup-setting-card-heading p { margin:3px 0 0 !important; color:#91a8c1 !important; font-size:9px !important; line-height:1.2 !important; }
+.settings-page .lup-setting-value { display:flex !important; align-items:center !important; justify-content:flex-end !important; min-width:0 !important; }.settings-page .lup-setting-value > md-select,.settings-page .lup-setting-value .lup-setting-input { min-width:0 !important; width:100% !important; max-width:none !important; margin:0 !important; }.settings-page .lup-setting-value md-select { padding:7px 8px 4px !important; border:1px solid rgba(182,216,244,.15) !important; border-radius:10px !important; background:rgba(8,16,31,.37) !important; color:#edf6ff !important; }.settings-page .lup-setting-value .md-select-value { min-width:0 !important; }.settings-page .lup-setting-value .lup-setting-input input,.settings-page .lup-setting-value .lup-setting-input textarea { width:100% !important; margin:0 !important; padding:7px 8px !important; border:1px solid rgba(182,216,244,.15) !important; border-radius:10px !important; background:rgba(8,16,31,.37) !important; color:#edf6ff !important; }.settings-page .lup-setting-value md-switch { margin:0 5px 0 0 !important; }
+.settings-page .lup-setting-visibility { grid-column:1 / -1 !important; display:flex !important; align-items:center !important; justify-content:space-between !important; gap:11px !important; min-height:27px !important; padding-top:8px !important; border-top:1px solid rgba(190,218,245,.08) !important; cursor:default !important; }.settings-page .lup-setting-visibility > span { display:flex !important; align-items:center !important; gap:5px !important; color:#93a9bf !important; font-size:9px !important; font-weight:730 !important; letter-spacing:.04em !important; text-transform:uppercase !important; }.settings-page .lup-setting-visibility .material-icons { color:#b2ddf7 !important; font-size:13px !important; }.settings-page .lup-setting-visibility-choice { position:relative !important; min-width:128px !important; }.settings-page .lup-visibility-trigger { display:flex !important; align-items:center !important; justify-content:space-between !important; gap:7px !important; width:100% !important; min-height:30px !important; padding:6px 8px !important; border:1px solid rgba(155,213,248,.18) !important; border-radius:8px !important; background:rgba(92,145,190,.10) !important; color:#d8efff !important; cursor:pointer !important; font:inherit !important; }.settings-page .lup-visibility-trigger > span { overflow:hidden !important; font-size:10px !important; font-weight:780 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.settings-page .lup-visibility-trigger .material-icons { font-size:15px !important; }.settings-page .lup-visibility-trigger:disabled { opacity:.55 !important; cursor:default !important; }.settings-page .lup-visibility-menu { position:absolute !important; z-index:50 !important; right:0 !important; bottom:calc(100% + 6px) !important; display:grid !important; width:max-content !important; min-width:142px !important; overflow:hidden !important; border:1px solid rgba(171,221,250,.25) !important; border-radius:10px !important; background:#18243b !important; box-shadow:0 14px 30px rgba(1,7,20,.42) !important; }.settings-page .lup-visibility-menu button { min-height:32px !important; padding:6px 11px !important; border:0 !important; border-bottom:1px solid rgba(194,220,247,.08) !important; background:transparent !important; color:#d8e8f8 !important; cursor:pointer !important; font:600 11px/1.2 inherit !important; text-align:left !important; }.settings-page .lup-visibility-menu button:last-child { border-bottom:0 !important; }.settings-page .lup-visibility-menu button:hover,.settings-page .lup-visibility-menu button.is-selected { background:rgba(105,181,229,.17) !important; color:#f5fbff !important; }.settings-page .lup-visibility-menu button.is-selected::after { content:'✓' !important; float:right !important; margin-left:14px !important; color:#9ce8cf !important; }.settings-page .lup-visibility-menu button:disabled { opacity:.36 !important; cursor:default !important; }
+.settings-page .lup-setting-card--textarea { grid-template-columns:1fr !important; }.settings-page .lup-setting-card--textarea .lup-setting-value { justify-content:stretch !important; }.settings-page .lup-setting-card--textarea .lup-setting-input textarea { min-height:92px !important; resize:vertical !important; }
+@media (max-width:420px) { .settings-page .lup-settings-list { padding-right:11px !important; padding-left:11px !important; }.settings-page .lup-settings-profile-visibility,.settings-page .lup-setting-card { grid-template-columns:1fr !important; }.settings-page .lup-settings-profile-visibility > md-select { width:100% !important; }.settings-page .lup-setting-value { justify-content:stretch !important; }.settings-page .lup-setting-visibility { grid-column:auto !important; }.settings-page .lup-settings-group-heading { display:block !important; }.settings-page .lup-settings-group-heading p { margin-top:4px !important; white-space:normal !important; } }
+
+/* LinkUUp settings deck — a quiet route through the parts of a profile.
+   The motion is deliberately ambient: settings are a place to decide, not a
+   place that competes for attention. */
+.settings-page > md-content { position:relative !important; isolation:isolate !important; overflow-x:hidden !important; background:radial-gradient(ellipse at 105% 4%,rgba(77,184,240,.13),transparent 28%),radial-gradient(ellipse at -12% 48%,rgba(112,86,204,.11),transparent 34%),linear-gradient(160deg,#101a2c 0%,#101725 48%,#111a2d 100%) !important; }.settings-page > md-content::before,.settings-page > md-content::after { content:'' !important; position:absolute !important; z-index:0 !important; width:86vw !important; height:31vh !important; border:1px solid rgba(135,209,255,.075) !important; border-radius:50% !important; pointer-events:none !important; }.settings-page > md-content::before { top:115px !important; right:-53vw !important; transform:rotate(-22deg) !important; }.settings-page > md-content::after { bottom:7% !important; left:-54vw !important; border-color:rgba(179,145,247,.065) !important; transform:rotate(19deg) !important; }.settings-page > md-content > :not(.lup-top-bar) { position:relative !important; z-index:1 !important; }
+.settings-page .lup-settings-list { max-width:680px !important; padding-top:9px !important; }.settings-page .settings-hero { position:relative !important; display:grid !important; grid-template-columns:44px minmax(0,1fr) !important; gap:12px !important; align-items:start !important; min-height:105px !important; margin:0 0 16px !important; padding:17px 15px 15px !important; overflow:hidden !important; border:1px solid rgba(169,218,250,.14) !important; border-radius:19px !important; background:linear-gradient(123deg,rgba(60,124,177,.25),rgba(24,33,55,.66) 58%,rgba(87,65,143,.15)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 15px 34px rgba(2,9,28,.18) !important; }.settings-page .settings-hero::before { content:'' !important; position:absolute !important; top:-90px !important; right:-78px !important; width:198px !important; height:198px !important; border:1px solid rgba(170,226,255,.16) !important; border-radius:50% !important; box-shadow:0 0 0 18px rgba(137,198,255,.035),0 0 42px rgba(100,190,250,.08) !important; }.settings-page .settings-hero::after { content:'' !important; position:absolute !important; right:31px !important; bottom:20px !important; width:66px !important; height:1px !important; background:linear-gradient(90deg,transparent,rgba(167,226,255,.80),transparent) !important; box-shadow:0 0 13px rgba(117,208,255,.52) !important; animation:lup-settings-route 7s ease-in-out infinite !important; }.settings-page .settings-hero-route { position:relative !important; z-index:1 !important; display:grid !important; place-items:center !important; width:43px !important; height:43px !important; border:1px solid rgba(191,232,255,.28) !important; border-radius:13px 13px 13px 5px !important; background:linear-gradient(140deg,rgba(111,198,239,.27),rgba(87,88,175,.18)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 20px rgba(11,46,81,.20) !important; color:#dcf7ff !important; }.settings-page .settings-hero-route .material-icons { font-size:22px !important; filter:drop-shadow(0 2px 7px rgba(105,205,255,.52)) !important; }.settings-page .settings-hero > div { position:relative !important; z-index:1 !important; min-width:0 !important; }.settings-page .settings-hero small { color:#b5e0fb !important; font-size:8px !important; font-weight:860 !important; letter-spacing:.16em !important; }.settings-page .settings-hero h1 { margin:5px 0 5px !important; color:#f2f7ff !important; font-size:22px !important; font-weight:790 !important; letter-spacing:-.035em !important; line-height:1.05 !important; }.settings-page .settings-hero p { max-width:370px !important; margin:0 !important; color:#afc0d6 !important; font-size:11px !important; line-height:1.42 !important; }
+.settings-page .lup-settings-profile-visibility { position:relative !important; margin-bottom:29px !important; border-color:rgba(146,213,245,.18) !important; border-radius:15px !important; background:linear-gradient(110deg,rgba(69,130,177,.19),rgba(19,29,49,.43)) !important; }.settings-page .lup-settings-profile-visibility::before { content:'DEIN PROFIL' !important; position:absolute !important; top:-7px !important; left:13px !important; padding:0 6px !important; background:#132039 !important; color:#96cff1 !important; font-size:8px !important; font-weight:850 !important; letter-spacing:.14em !important; }
+.settings-page .lup-settings-group { position:relative !important; margin-bottom:30px !important; padding-left:13px !important; }.settings-page .lup-settings-group::before { content:'' !important; position:absolute !important; top:29px !important; bottom:-18px !important; left:2px !important; width:1px !important; background:linear-gradient(180deg,rgba(127,210,253,.34),rgba(128,155,230,.08),transparent) !important; }.settings-page .lup-settings-group:last-child::before { display:none !important; }.settings-page .lup-settings-group-heading { position:relative !important; margin-left:-13px !important; padding-left:14px !important; }.settings-page .lup-settings-group-heading::before { content:'' !important; position:absolute !important; top:5px !important; left:0 !important; width:5px !important; height:5px !important; border-radius:50% !important; background:#a7e5ff !important; box-shadow:0 0 12px rgba(112,208,255,.83) !important; }.settings-page .lup-settings-group-heading small { color:#c3e9ff !important; }.settings-page .lup-setting-card { position:relative !important; border-color:rgba(170,209,241,.10) !important; border-radius:13px !important; background:linear-gradient(104deg,rgba(57,88,133,.13),rgba(18,27,46,.39)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important; }.settings-page .lup-setting-card:hover,.settings-page .lup-setting-card:focus-within { border-color:rgba(136,215,255,.35) !important; background:linear-gradient(104deg,rgba(61,116,169,.24),rgba(22,31,53,.56)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 9px 20px rgba(1,8,25,.14) !important; }.settings-page .lup-setting-icon { border-color:rgba(164,222,255,.21) !important; background:linear-gradient(140deg,rgba(102,188,233,.19),rgba(105,91,184,.08)) !important; color:#d2f1ff !important; }.settings-page .lup-setting-card:nth-child(2n) .lup-setting-icon { border-color:rgba(208,183,255,.19) !important; background:rgba(146,111,217,.10) !important; color:#e4d7ff !important; }.settings-page .lup-setting-card-heading h3 { font-weight:790 !important; }.settings-page .lup-setting-value md-select,.settings-page .lup-setting-value .lup-setting-input input,.settings-page .lup-setting-value .lup-setting-input textarea { border-color:rgba(164,215,246,.18) !important; background:rgba(7,16,31,.32) !important; }.settings-page .lup-visibility-trigger { border-color:rgba(145,222,255,.26) !important; background:linear-gradient(112deg,rgba(82,159,202,.19),rgba(72,79,145,.17)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important; }.settings-page .lup-visibility-trigger:hover { border-color:rgba(167,231,255,.48) !important; background:linear-gradient(112deg,rgba(93,180,225,.27),rgba(91,89,168,.22)) !important; }.settings-page .lup-visibility-menu { border-color:rgba(150,223,255,.30) !important; background:linear-gradient(150deg,#1b2c49,#19233b) !important; box-shadow:0 17px 39px rgba(1,8,24,.52),inset 0 1px 0 rgba(255,255,255,.09) !important; }
+@keyframes lup-settings-route { 0%,100% { opacity:.18; transform:translateX(-17px); } 44% { opacity:1; transform:translateX(18px); } 62% { opacity:.34; transform:translateX(2px); } }
+@media (max-width:420px) { .settings-page .settings-hero { min-height:99px !important; padding:15px 13px !important; }.settings-page .settings-hero h1 { font-size:20px !important; }.settings-page .lup-settings-group { padding-left:9px !important; }.settings-page .lup-settings-group-heading { margin-left:-9px !important; padding-left:11px !important; } }
+@media (prefers-reduced-motion:reduce) { .settings-page .settings-hero::after { animation:none !important; opacity:.5 !important; } }
+
+/* Public profile signals. These are facts a person deliberately shares, so
+   they read like a compact identity map rather than a settings form. */
+.profile-page .profile-information.profile-signal-board { position:relative !important; display:block !important; width:min(100%,680px) !important; margin:0 auto !important; padding:2px 16px 34px !important; background:transparent !important; }.profile-page .profile-signal-group { position:relative !important; margin:0 0 22px !important; padding:0 !important; }.profile-page .profile-signal-group-heading { display:flex !important; align-items:center !important; gap:8px !important; height:23px !important; margin:0 0 6px !important; padding:0 2px !important; }.profile-page .profile-signal-group-heading > span { width:5px !important; height:5px !important; border-radius:50% !important; background:#9fe6ff !important; box-shadow:0 0 11px rgba(108,208,255,.85) !important; }.profile-page .profile-signal-group-heading small { color:#a4c0d9 !important; font-size:8px !important; font-weight:870 !important; letter-spacing:.15em !important; line-height:1 !important; text-transform:uppercase !important; }.profile-page .profile-signal-grid { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:1px !important; overflow:hidden !important; border:1px solid rgba(173,211,241,.10) !important; border-radius:16px !important; background:rgba(176,214,244,.08) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 12px 26px rgba(2,10,29,.10) !important; }.profile-page .profile-signal { position:relative !important; display:grid !important; grid-template-columns:34px minmax(0,1fr) !important; gap:9px !important; align-items:center !important; min-width:0 !important; min-height:65px !important; margin:0 !important; padding:10px 10px !important; overflow:hidden !important; border:0 !important; border-radius:0 !important; background:linear-gradient(115deg,rgba(52,81,125,.22),rgba(21,30,49,.50)) !important; }.profile-page .profile-signal::after { content:'' !important; position:absolute !important; right:-22px !important; bottom:-31px !important; width:66px !important; height:66px !important; border:1px solid rgba(148,218,255,.075) !important; border-radius:50% !important; pointer-events:none !important; }.profile-page .profile-signal:nth-child(3n) { background:linear-gradient(115deg,rgba(78,66,134,.20),rgba(23,29,51,.52)) !important; }.profile-page .profile-signal-icon { position:relative !important; z-index:1 !important; display:grid !important; place-items:center !important; width:34px !important; height:34px !important; border:1px solid rgba(171,224,255,.20) !important; border-radius:11px 11px 11px 4px !important; background:linear-gradient(145deg,rgba(108,194,234,.17),rgba(100,90,181,.08)) !important; color:#c9efff !important; }.profile-page .profile-signal-icon .material-icons { font-size:17px !important; filter:drop-shadow(0 2px 6px rgba(91,193,255,.28)) !important; }.profile-page .profile-signal-copy { position:relative !important; z-index:1 !important; min-width:0 !important; }.profile-page .profile-signal-copy small,.profile-page .profile-signal-copy strong { display:block !important; overflow:hidden !important; margin:0 !important; text-overflow:ellipsis !important; white-space:nowrap !important; }.profile-page .profile-signal-copy small { color:#91aac3 !important; font-size:8px !important; font-weight:790 !important; letter-spacing:.065em !important; line-height:1.15 !important; text-transform:uppercase !important; }.profile-page .profile-signal-copy strong { margin-top:4px !important; color:#f0f6ff !important; font-size:12px !important; font-weight:720 !important; line-height:1.2 !important; }.profile-page .profile-signal-copy strong .material-icons { margin-right:4px !important; color:#efb2c7 !important; font-size:13px !important; vertical-align:-2px !important; }.profile-page .profile-signal--denied { background:rgba(64,42,62,.28) !important; }.profile-page .profile-signal--denied .profile-signal-icon { border-color:rgba(235,176,197,.16) !important; background:rgba(202,102,136,.10) !important; color:#f3c5d3 !important; }
+@media (max-width:360px) { .profile-page .profile-information.profile-signal-board { padding-right:11px !important; padding-left:11px !important; }.profile-page .profile-signal { grid-template-columns:30px minmax(0,1fr) !important; gap:7px !important; min-height:60px !important; padding:8px !important; }.profile-page .profile-signal-icon { width:30px !important; height:30px !important; }.profile-page .profile-signal-copy strong { font-size:11px !important; } }
+
+/* Retire the old discovery circuit completely.  It used to leave a thin
+   animated divider directly below the category strip on wide displays.  The
+   category controls still keep their own selected-state feedback; only the
+   obsolete bridge into the carousel is gone. */
+.nearby .slickit::before,
+.nearby .slickit::after {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  box-shadow:none !important;
+}
+
+/* The wide discovery canvas keeps its calm moving map points.  The separate
+   diagonal flash was a leftover visual route and could cross the category
+   area on desktop, so it is intentionally retired. */
+.nearby md-content.greybg::after {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  box-shadow:none !important;
+}
+
+/* Profile atlas — a shared profile is a small map of a person, not a pile of
+   settings cards. Each category becomes one connected coordinate surface;
+   the segmented details make it feel constructed without competing with the
+   person's actual words. */
+.profile-page .profile-information.profile-signal-board {
+  width:min(100%,720px) !important;
+  padding:7px 14px 42px !important;
+}
+.profile-page .profile-signal-group {
+  position:relative !important;
+  margin:0 0 25px !important;
+  padding:0 0 0 14px !important;
+}
+.profile-page .profile-signal-group::before {
+  content:'' !important;
+  position:absolute !important;
+  top:25px !important;
+  bottom:-20px !important;
+  left:2px !important;
+  width:1px !important;
+  background:linear-gradient(180deg,rgba(157,226,255,.46),rgba(144,157,255,.13),transparent) !important;
+}
+.profile-page .profile-signal-group:last-child::before { display:none !important; }
+.profile-page .profile-signal-group-heading {
+  position:relative !important;
+  height:27px !important;
+  margin:0 0 8px -14px !important;
+  padding:0 3px 0 14px !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  position:absolute !important;
+  top:9px !important;
+  left:0 !important;
+  width:6px !important;
+  height:6px !important;
+  border:1px solid rgba(222,247,255,.62) !important;
+  background:#aeeaff !important;
+  box-shadow:0 0 0 4px rgba(112,205,255,.08),0 0 14px rgba(111,206,255,.92) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  position:relative !important;
+  padding:5px 9px 5px 0 !important;
+  color:#c8eaff !important;
+  font-size:9px !important;
+  font-weight:880 !important;
+  letter-spacing:.17em !important;
+}
+.profile-page .profile-signal-group-heading small::after {
+  content:'' !important;
+  position:absolute !important;
+  top:50% !important;
+  left:calc(100% + 2px) !important;
+  width:38px !important;
+  height:1px !important;
+  background:linear-gradient(90deg,rgba(161,221,255,.44),transparent) !important;
+}
+.profile-page .profile-signal-grid {
+  position:relative !important;
+  gap:1px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(171,218,250,.17) !important;
+  border-radius:21px 21px 21px 7px !important;
+  background:rgba(140,207,246,.14) !important;
+  box-shadow:0 16px 34px rgba(1,9,27,.17),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+.profile-page .profile-signal-grid::before {
+  content:'' !important;
+  position:absolute !important;
+  z-index:2 !important;
+  top:0 !important;
+  right:7% !important;
+  left:7% !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(211,244,255,.58),transparent) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal {
+  grid-template-columns:38px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:74px !important;
+  padding:12px 12px !important;
+  background:linear-gradient(122deg,rgba(47,79,122,.39),rgba(17,28,49,.72)) !important;
+  transition:transform 190ms ease,background 190ms ease !important;
+}
+.profile-page .profile-signal::before {
+  content:'' !important;
+  position:absolute !important;
+  top:10px !important;
+  right:11px !important;
+  width:16px !important;
+  height:16px !important;
+  border-top:1px solid rgba(174,226,255,.16) !important;
+  border-right:1px solid rgba(174,226,255,.16) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal::after {
+  right:-35px !important;
+  bottom:-45px !important;
+  width:103px !important;
+  height:103px !important;
+  border-color:rgba(142,215,255,.10) !important;
+  background:radial-gradient(circle,rgba(109,184,245,.10),transparent 65%) !important;
+}
+.profile-page .profile-signal:nth-child(3n) {
+  background:linear-gradient(122deg,rgba(74,59,124,.38),rgba(25,27,52,.72)) !important;
+}
+.profile-page .profile-signal:nth-child(4n) {
+  background:linear-gradient(122deg,rgba(61,90,117,.35),rgba(18,30,48,.72)) !important;
+}
+.profile-page .profile-signal--private {
+  background:linear-gradient(122deg,rgba(70,48,89,.36),rgba(24,27,48,.76)) !important;
+}
+.profile-page .profile-signal--private::before {
+  border-color:rgba(227,192,255,.22) !important;
+}
+.profile-page .profile-signal--private .profile-signal-icon {
+  border-color:rgba(222,191,255,.27) !important;
+  background:linear-gradient(145deg,rgba(153,108,210,.21),rgba(81,69,139,.12)) !important;
+  color:#e8d9ff !important;
+}
+.profile-page .profile-signal--private .profile-signal-copy strong,
+.profile-page .profile-signal--private .profile-signal-copy strong .material-icons {
+  color:#dec9f6 !important;
+}
+.profile-page .profile-signal-icon {
+  width:38px !important;
+  height:38px !important;
+  border:1px solid rgba(184,232,255,.30) !important;
+  border-radius:13px 13px 13px 4px !important;
+  background:linear-gradient(145deg,rgba(113,207,246,.29),rgba(105,100,202,.11)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.21),0 7px 17px rgba(1,10,33,.19) !important;
+  color:#d7f5ff !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon { border-color:rgba(216,195,255,.27) !important; background:linear-gradient(145deg,rgba(159,124,232,.24),rgba(88,84,171,.10)) !important; color:#ebe1ff !important; }
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon { border-color:rgba(255,221,157,.24) !important; background:linear-gradient(145deg,rgba(223,170,86,.18),rgba(91,91,161,.10)) !important; color:#fff0c5 !important; }
+.profile-page .profile-signal-icon .material-icons { font-size:19px !important; }
+.profile-page .profile-signal-copy small { color:#a9c0d6 !important; font-size:8px !important; font-weight:820 !important; letter-spacing:.09em !important; }
+.profile-page .profile-signal-copy strong { margin-top:5px !important; color:#f1f8ff !important; font-size:13px !important; font-weight:740 !important; letter-spacing:-.01em !important; }
+.profile-page .profile-signal:hover { transform:translate3d(0,-2px,0) !important; background:linear-gradient(122deg,rgba(65,111,162,.48),rgba(20,35,59,.79)) !important; }
+.profile-page .profile-signal-grid .profile-signal:first-child:last-child { grid-column:1 / -1 !important; }
+@media (max-width:360px) {
+  .profile-page .profile-information.profile-signal-board { padding-right:10px !important; padding-left:10px !important; }
+  .profile-page .profile-signal-group { padding-left:10px !important; }
+  .profile-page .profile-signal-group-heading { margin-left:-10px !important; padding-left:11px !important; }
+  .profile-page .profile-signal { grid-template-columns:33px minmax(0,1fr) !important; gap:8px !important; min-height:67px !important; padding:10px 9px !important; }
+  .profile-page .profile-signal-icon { width:33px !important; height:33px !important; border-radius:11px 11px 11px 3px !important; }
+  .profile-page .profile-signal-icon .material-icons { font-size:17px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-signal { transition:none !important; }
+}
+
+/* Profile atlas, second pass: deliberately remove the repeated “glowing
+   card” language. This is an ink-and-metal LinkUUp passport: one calm
+   surface, engraved dividers and a single travelling coordinate. */
+.profile-page .profile-information.profile-signal-board {
+  max-width:690px !important;
+  padding-top:12px !important;
+}
+.profile-page .profile-signal-group {
+  margin-bottom:30px !important;
+  padding-left:0 !important;
+}
+.profile-page .profile-signal-group::before { display:none !important; }
+.profile-page .profile-signal-group-heading {
+  height:30px !important;
+  margin:0 0 5px !important;
+  padding:0 1px !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  top:12px !important;
+  left:1px !important;
+  width:4px !important;
+  height:4px !important;
+  border:0 !important;
+  background:#b6ecff !important;
+  box-shadow:0 0 9px rgba(124,211,255,.9) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  padding:0 0 0 13px !important;
+  color:#c6d6e9 !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+  letter-spacing:.075em !important;
+  line-height:30px !important;
+  text-transform:none !important;
+}
+.profile-page .profile-signal-group-heading small::first-letter { color:#dff7ff !important; }
+.profile-page .profile-signal-group-heading small::after {
+  top:15px !important;
+  left:calc(100% + 9px) !important;
+  width:58px !important;
+  background:linear-gradient(90deg,rgba(173,210,239,.36),transparent) !important;
+}
+.profile-page .profile-signal-grid {
+  gap:0 !important;
+  border:1px solid rgba(171,198,223,.19) !important;
+  border-radius:5px 5px 19px 5px !important;
+  background:#101a2b !important;
+  box-shadow:0 15px 30px rgba(1,7,19,.18),inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+.profile-page .profile-signal-grid::before {
+  top:auto !important;
+  right:16px !important;
+  bottom:13px !important;
+  left:auto !important;
+  width:58px !important;
+  height:1px !important;
+  background:linear-gradient(90deg,transparent,rgba(148,214,246,.60),transparent) !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal-grid::after {
+  content:'' !important;
+  position:absolute !important;
+  right:36px !important;
+  bottom:11px !important;
+  width:4px !important;
+  height:4px !important;
+  border-radius:50% !important;
+  background:#c7f3ff !important;
+  box-shadow:0 0 10px rgba(137,218,255,.95) !important;
+  animation:lup-profile-atlas-coordinate 10s cubic-bezier(.45,.05,.55,.95) infinite !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal {
+  grid-template-columns:31px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:72px !important;
+  padding:13px 13px 12px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal:nth-child(2n) { background:rgba(255,255,255,.018) !important; }
+.profile-page .profile-signal:nth-child(n+3) { border-top:1px solid rgba(181,204,225,.11) !important; }
+.profile-page .profile-signal:nth-child(2n) { border-left:1px solid rgba(181,204,225,.11) !important; }
+.profile-page .profile-signal::before,
+.profile-page .profile-signal::after { display:none !important; content:none !important; }
+.profile-page .profile-signal:hover {
+  transform:none !important;
+  background:rgba(118,173,216,.075) !important;
+}
+.profile-page .profile-signal-icon {
+  align-self:start !important;
+  width:27px !important;
+  height:27px !important;
+  border:1px solid rgba(180,220,245,.34) !important;
+  border-radius:50% !important;
+  background:transparent !important;
+  box-shadow:inset 0 0 0 3px rgba(142,201,235,.035) !important;
+  color:#b9e6fa !important;
+}
+.profile-page .profile-signal-icon .material-icons {
+  font-size:15px !important;
+  filter:none !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon {
+  border-color:rgba(210,197,255,.32) !important;
+  background:transparent !important;
+  color:#dacdff !important;
+}
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon {
+  border-color:rgba(255,218,159,.31) !important;
+  background:transparent !important;
+  color:#ffe2a4 !important;
+}
+.profile-page .profile-signal-copy small {
+  color:#8299b1 !important;
+  font-size:8px !important;
+  font-weight:800 !important;
+  letter-spacing:.105em !important;
+}
+.profile-page .profile-signal-copy strong {
+  margin-top:5px !important;
+  color:#edf5fc !important;
+  font-size:13px !important;
+  font-weight:650 !important;
+  letter-spacing:0 !important;
+}
+.profile-page .profile-signal--private,
+.profile-page .profile-signal--private:nth-child(2n) { background:rgba(81,56,99,.14) !important; }
+.profile-page .profile-signal--private .profile-signal-icon {
+  border-color:rgba(220,193,248,.28) !important;
+  background:transparent !important;
+  color:#e5d1fb !important;
+  box-shadow:none !important;
+}
+@keyframes lup-profile-atlas-coordinate {
+  0%,16% { opacity:0; transform:translateX(21px) scale(.55); }
+  29% { opacity:1; transform:translateX(8px) scale(1); }
+  48% { opacity:.52; transform:translateX(-10px) scale(.72); }
+  62%,100% { opacity:0; transform:translateX(-24px) scale(.45); }
+}
+@media (max-width:360px) {
+  .profile-page .profile-signal-group-heading small { font-size:10px !important; }
+  .profile-page .profile-signal { grid-template-columns:27px minmax(0,1fr) !important; gap:8px !important; min-height:64px !important; padding:10px 9px !important; }
+  .profile-page .profile-signal-icon { width:24px !important; height:24px !important; }
+  .profile-page .profile-signal-icon .material-icons { font-size:14px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-signal-grid::after { animation:none !important; opacity:.68 !important; }
+}
+
+/* Profile passport: one composed instrument, not a stack of generated cards.
+   The outer frame is the profile's readable boundary; the inner rules carry
+   structure without giving every fact a different background. */
+.profile-page .profile-information.profile-signal-board {
+  position:relative !important;
+  max-width:700px !important;
+  margin:5px auto 38px !important;
+  padding:15px 14px 13px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(169,205,231,.24) !important;
+  border-radius:18px 18px 28px 7px !important;
+  background:
+    linear-gradient(112deg,rgba(47,83,122,.17),transparent 36%),
+    radial-gradient(circle at 88% 11%,rgba(104,179,232,.12),transparent 23%),
+    #0c1627 !important;
+  box-shadow:inset 0 1px 0 rgba(237,249,255,.09),inset 0 -34px 50px rgba(1,7,20,.22),0 18px 40px rgba(1,7,22,.18) !important;
+}
+.profile-page .profile-information.profile-signal-board::before {
+  content:'' !important;
+  position:absolute !important;
+  inset:0 !important;
+  opacity:.42 !important;
+  background-image:linear-gradient(90deg,rgba(164,209,237,.07) 1px,transparent 1px),linear-gradient(rgba(164,209,237,.045) 1px,transparent 1px) !important;
+  background-size:42px 42px !important;
+  mask-image:linear-gradient(120deg,transparent 3%,black 41%,transparent 90%) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-information.profile-signal-board::after {
+  content:'' !important;
+  position:absolute !important;
+  top:10px !important;
+  right:12px !important;
+  bottom:10px !important;
+  width:2px !important;
+  background:linear-gradient(180deg,transparent,rgba(165,227,255,.70) 24%,rgba(174,146,255,.26) 68%,transparent) !important;
+  box-shadow:0 0 15px rgba(111,200,255,.22) !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal-group {
+  position:relative !important;
+  z-index:1 !important;
+  margin:0 0 17px !important;
+}
+.profile-page .profile-signal-group:last-child { margin-bottom:0 !important; }
+.profile-page .profile-signal-group-heading {
+  height:31px !important;
+  margin:0 !important;
+  padding:0 10px !important;
+  border:1px solid rgba(184,216,238,.13) !important;
+  border-bottom:0 !important;
+  border-radius:10px 10px 0 0 !important;
+  background:rgba(5,13,27,.33) !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  position:relative !important;
+  top:auto !important;
+  left:auto !important;
+  width:6px !important;
+  height:6px !important;
+  border:1px solid rgba(210,244,255,.72) !important;
+  border-radius:50% !important;
+  background:#91dbff !important;
+  box-shadow:0 0 11px rgba(110,205,255,.67) !important;
+}
+.profile-page .profile-signal-group-heading small {
+  padding:0 0 0 8px !important;
+  color:#d8e6f2 !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:11px !important;
+  font-weight:600 !important;
+  letter-spacing:.07em !important;
+  line-height:30px !important;
+}
+.profile-page .profile-signal-group-heading small::after { display:none !important; }
+.profile-page .profile-signal-grid {
+  position:relative !important;
+  z-index:1 !important;
+  border:1px solid rgba(184,216,238,.13) !important;
+  border-radius:0 0 13px 13px !important;
+  background:rgba(6,14,28,.38) !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-signal-grid::before {
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:0 !important;
+  width:auto !important;
+  background:linear-gradient(90deg,transparent,rgba(171,223,250,.40),transparent) !important;
+}
+.profile-page .profile-signal-grid::after { display:none !important; }
+.profile-page .profile-signal {
+  grid-template-columns:34px minmax(0,1fr) !important;
+  gap:10px !important;
+  min-height:74px !important;
+  padding:14px 13px !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal:nth-child(2n),
+.profile-page .profile-signal--private:nth-child(2n) { background:rgba(255,255,255,.022) !important; }
+.profile-page .profile-signal:nth-child(n+3) { border-top-color:rgba(181,204,225,.13) !important; }
+.profile-page .profile-signal:nth-child(2n) { border-left-color:rgba(181,204,225,.13) !important; }
+.profile-page .profile-signal-icon {
+  width:32px !important;
+  height:32px !important;
+  border:1px solid rgba(174,222,250,.30) !important;
+  border-radius:10px 10px 10px 3px !important;
+  background:linear-gradient(145deg,rgba(117,200,240,.12),rgba(82,99,177,.05)) !important;
+  box-shadow:inset 0 1px 0 rgba(243,251,255,.10),0 5px 13px rgba(0,8,24,.10) !important;
+  color:#bfeaff !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon { border-color:rgba(209,194,255,.30) !important; color:#e0d5ff !important; }
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon { border-color:rgba(255,218,159,.30) !important; color:#ffe1a4 !important; }
+.profile-page .profile-signal-icon .material-icons { font-size:17px !important; }
+.profile-page .profile-signal-copy small { color:#91a8bd !important; font-size:8px !important; letter-spacing:.11em !important; }
+.profile-page .profile-signal-copy strong { color:#f1f7fc !important; font-size:13px !important; font-weight:680 !important; }
+.profile-page .profile-signal:hover { transform:none !important; background:rgba(117,181,223,.08) !important; }
+@media (max-width:360px) {
+  .profile-page .profile-information.profile-signal-board { margin-right:10px !important; margin-left:10px !important; padding:11px 9px 9px !important; }
+  .profile-page .profile-signal { grid-template-columns:29px minmax(0,1fr) !important; min-height:66px !important; padding:11px 9px !important; }
+  .profile-page .profile-signal-icon { width:28px !important; height:28px !important; border-radius:9px 9px 9px 3px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+
+/* Final profile field: remove the last window-like layers.  The profile is
+   one continuous place; facts are only held together by type, rhythm and a
+   few route marks behind them. */
+.profile-page .user-profile-page {
+  background:
+    radial-gradient(ellipse 105% 38% at 3% 10%,rgba(86,166,233,.20),transparent 67%),
+    radial-gradient(ellipse 92% 42% at 96% 57%,rgba(125,91,212,.16),transparent 69%),
+    radial-gradient(ellipse 90% 31% at 32% 96%,rgba(48,116,190,.12),transparent 68%),
+    linear-gradient(158deg,#111e34 0%,#101a2d 48%,#0d1729 100%) !important;
+}
+.profile-page .profile-information.profile-signal-board {
+  max-width:700px !important;
+  margin:7px auto 42px !important;
+  padding:8px 16px 20px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-information.profile-signal-board::before {
+  top:24px !important;
+  right:3% !important;
+  bottom:0 !important;
+  left:3% !important;
+  opacity:.55 !important;
+  background:
+    linear-gradient(90deg,transparent,rgba(159,222,255,.13),transparent) 15% 0/100% 1px no-repeat,
+    radial-gradient(ellipse at 76% 12%,rgba(100,191,245,.13),transparent 45%) !important;
+  mask-image:none !important;
+}
+.profile-page .profile-information.profile-signal-board::after {
+  top:54px !important;
+  right:8% !important;
+  bottom:16px !important;
+  width:1px !important;
+  opacity:.58 !important;
+  background:linear-gradient(180deg,transparent,rgba(165,227,255,.50) 20%,rgba(174,146,255,.20) 70%,transparent) !important;
+}
+.profile-page .profile-signal-group {
+  margin:0 0 26px !important;
+  padding:0 !important;
+}
+.profile-page .profile-signal-group-heading {
+  height:34px !important;
+  margin:0 !important;
+  padding:0 2px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-group-heading > span {
+  width:5px !important;
+  height:5px !important;
+  border:0 !important;
+  background:#a9e7ff !important;
+}
+.profile-page .profile-signal-group-heading small {
+  padding-left:10px !important;
+  color:#dceafa !important;
+  font-family:Ubuntu,Roboto,Arial,sans-serif !important;
+  font-size:9px !important;
+  font-weight:790 !important;
+  letter-spacing:.145em !important;
+  line-height:34px !important;
+  text-transform:uppercase !important;
+}
+.profile-page .profile-signal-grid {
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-grid::before {
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:0 !important;
+  width:auto !important;
+  opacity:.86 !important;
+}
+.profile-page .profile-signal {
+  min-height:69px !important;
+  padding:12px 6px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal:nth-child(2n),
+.profile-page .profile-signal--private:nth-child(2n) { background:transparent !important; }
+.profile-page .profile-signal:nth-child(n+3) { border-top:1px solid rgba(185,214,234,.15) !important; }
+.profile-page .profile-signal:nth-child(2n) { border-left:1px solid rgba(185,214,234,.15) !important; }
+.profile-page .profile-signal::before { display:block !important; content:'' !important; position:absolute !important; top:14px !important; bottom:14px !important; left:0 !important; width:1px !important; background:linear-gradient(180deg,transparent,rgba(167,225,250,.34),transparent) !important; }
+.profile-page .profile-signal:nth-child(2n)::before { left:auto !important; right:0 !important; opacity:.55 !important; }
+.profile-page .profile-signal-icon {
+  width:31px !important;
+  height:31px !important;
+  border-radius:50% !important;
+  background:rgba(112,188,234,.07) !important;
+  box-shadow:inset 0 0 0 3px rgba(177,227,251,.025),0 0 0 1px rgba(176,224,249,.06) !important;
+}
+.profile-page .profile-signal-icon .material-icons { font-size:16px !important; }
+.profile-page .profile-signal:hover { transform:none !important; background:rgba(128,191,230,.045) !important; }
+.profile-page .profile-signal-copy small { color:#93acc5 !important; }
+.profile-page .profile-signal-copy strong { color:#f1f7ff !important; }
+.profile-page .profile-signal--private { background:rgba(105,76,128,.08) !important; }
+@media (max-width:360px) {
+  .profile-page .profile-information.profile-signal-board { margin-right:0 !important; margin-left:0 !important; padding-right:11px !important; padding-left:11px !important; }
+  .profile-page .profile-signal { min-height:63px !important; padding:10px 4px !important; }
+  .profile-page .profile-signal-icon { width:27px !important; height:27px !important; }
+}
+
+/* Align the fact icons with the five upper profile controls.  The only light
+   left in the facts is a short route glint, never a border pretending to be a
+   table. */
+.profile-page .profile-signal-group::after {
+  content:'' !important;
+  position:absolute !important;
+  z-index:2 !important;
+  top:17px !important;
+  left:46% !important;
+  width:36px !important;
+  height:1px !important;
+  border:0 !important;
+  background:linear-gradient(90deg,transparent,rgba(164,228,255,.74),transparent) !important;
+  box-shadow:0 0 9px rgba(123,206,255,.28) !important;
+  opacity:.72 !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal-group:nth-child(2n)::after { left:auto !important; right:16% !important; width:27px !important; opacity:.48 !important; }
+.profile-page .profile-signal-grid::before,
+.profile-page .profile-signal:nth-child(n+3),
+.profile-page .profile-signal:nth-child(2n),
+.profile-page .profile-signal::before { border:0 !important; background:transparent !important; }
+.profile-page .profile-signal-icon {
+  width:34px !important;
+  height:34px !important;
+  border:1px solid rgba(183,224,250,.26) !important;
+  border-radius:12px 12px 12px 4px !important;
+  background:linear-gradient(145deg,rgba(121,202,241,.16),rgba(85,101,182,.07)) !important;
+  box-shadow:inset 0 1px 0 rgba(245,252,255,.13),0 7px 15px rgba(0,8,24,.12) !important;
+}
+.profile-page .profile-signal:nth-child(3n) .profile-signal-icon { background:linear-gradient(145deg,rgba(165,137,238,.15),rgba(85,101,182,.06)) !important; }
+.profile-page .profile-signal:nth-child(4n) .profile-signal-icon { background:linear-gradient(145deg,rgba(240,188,105,.15),rgba(85,101,182,.05)) !important; }
+.profile-page .profile-signal-icon .material-icons { font-size:18px !important; }
+.profile-page .profile-information.profile-signal-board,
+.profile-page .profile-information.profile-about-single,
+.profile-page .information-tabs,
+.profile-page .information-tabs md-content,
+.profile-page .information-tabs .md-tab-content { background-color:transparent !important; }
+@media (max-width:360px) {
+  .profile-page .profile-signal-icon { width:29px !important; height:29px !important; border-radius:10px 10px 10px 3px !important; }
+  .profile-page .profile-signal-icon .material-icons { font-size:16px !important; }
+}
+
+/* The facts use an open coordinate grid: no enclosing card, only the two
+   axes needed to read a paired profile at a glance. */
+.profile-page .profile-information.profile-signal-board {
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-information.profile-signal-board::after { display:none !important; content:none !important; }
+.profile-page .profile-signal-group-heading { border:0 !important; background:transparent !important; }
+.profile-page .profile-signal-grid {
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-grid::before {
+  display:block !important;
+  top:0 !important;
+  right:auto !important;
+  bottom:0 !important;
+  left:50% !important;
+  width:1px !important;
+  height:auto !important;
+  opacity:1 !important;
+  background:linear-gradient(180deg,transparent,rgba(170,222,248,.18) 8%,rgba(170,222,248,.18) 92%,transparent) !important;
+  box-shadow:0 0 7px rgba(100,192,245,.07) !important;
+}
+.profile-page .profile-signal {
+  background:transparent !important;
+  border:0 !important;
+}
+.profile-page .profile-signal:nth-child(n+3) {
+  border-top:1px solid rgba(170,222,248,.14) !important;
+}
+.profile-page .profile-signal:nth-child(2n) { border-left:0 !important; }
+.profile-page .profile-signal::before { display:none !important; content:none !important; }
+.profile-page .profile-signal:hover { background:rgba(128,191,230,.035) !important; }
+
+/* Floating profile constellation: information points remain precise, while a
+   single slow signal gives the whole page a living direction. */
+.profile-page .profile-information.profile-signal-board {
+  padding-top:14px !important;
+  padding-bottom:45px !important;
+}
+.profile-page .profile-information.profile-signal-board::before {
+  top:5px !important;
+  right:0 !important;
+  bottom:0 !important;
+  left:0 !important;
+  opacity:1 !important;
+  background:
+    radial-gradient(ellipse 38% 12% at 79% 16%,rgba(133,208,247,.14),transparent 70%),
+    radial-gradient(ellipse 49% 15% at 23% 78%,rgba(155,118,235,.10),transparent 72%) !important;
+}
+.profile-page .profile-information.profile-signal-board::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  z-index:0 !important;
+  top:47px !important;
+  right:18% !important;
+  width:5px !important;
+  height:5px !important;
+  border:0 !important;
+  border-radius:50% !important;
+  background:#d6f6ff !important;
+  box-shadow:0 0 0 4px rgba(106,203,247,.07),0 0 17px rgba(120,211,255,.82) !important;
+  opacity:.24 !important;
+  animation:lup-profile-constellation-signal 17s ease-in-out infinite !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-signal-group { margin-bottom:32px !important; }
+.profile-page .profile-signal-group::after { display:none !important; content:none !important; }
+.profile-page .profile-signal-group-heading { height:29px !important; padding-left:5px !important; }
+.profile-page .profile-signal-group-heading small { color:#b9d2e6 !important; font-size:8px !important; line-height:29px !important; }
+.profile-page .profile-signal-grid {
+  gap:17px 26px !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal-grid::before { display:none !important; content:none !important; }
+.profile-page .profile-signal {
+  min-height:58px !important;
+  padding:4px 2px !important;
+  border:0 !important;
+  background:transparent !important;
+}
+.profile-page .profile-signal:nth-child(n+3),
+.profile-page .profile-signal:nth-child(2n) { border:0 !important; background:transparent !important; }
+.profile-page .profile-signal:hover { background:transparent !important; }
+.profile-page .profile-signal-icon {
+  align-self:center !important;
+  width:34px !important;
+  height:34px !important;
+  background:linear-gradient(145deg,rgba(117,203,245,.20),rgba(86,101,186,.08)) !important;
+  box-shadow:inset 0 1px 0 rgba(246,253,255,.16),0 8px 18px rgba(0,9,27,.14) !important;
+}
+.profile-page .profile-signal-copy small { color:#8faac2 !important; font-size:8px !important; }
+.profile-page .profile-signal-copy strong { margin-top:3px !important; color:#f3f8ff !important; font-size:13px !important; }
+@keyframes lup-profile-constellation-signal {
+  0%,14% { opacity:0; transform:translate3d(0,0,0) scale(.5); }
+  31% { opacity:.78; transform:translate3d(-48px,68px,0) scale(1); }
+  52% { opacity:.25; transform:translate3d(-94px,155px,0) scale(.66); }
+  72%,100% { opacity:0; transform:translate3d(-132px,240px,0) scale(.4); }
+}
+@media (max-width:360px) {
+  .profile-page .profile-signal-grid { gap:13px 15px !important; }
+  .profile-page .profile-signal { min-height:54px !important; }
+  .profile-page .profile-signal-icon { width:29px !important; height:29px !important; }
+  .profile-page .profile-signal-copy strong { font-size:11px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-information.profile-signal-board::after { animation:none !important; opacity:.48 !important; }
+}
+
+/* The profile opens like a personal insight, not like a settings drawer. */
+.profile-page .profile-insight-control {
+  position:relative;
+  z-index:2;
+  width:min(100%,680px);
+  margin:2px auto 0;
+  padding:0 16px;
+}
+.profile-page .profile-insight-toggle {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 24px;
+  gap:8px;
+  align-items:center;
+  width:100%;
+  min-height:57px;
+  padding:8px 3px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:#eff8ff;
+  text-align:left;
+}
+.profile-page .profile-insight-toggle::before {
+  content:'';
+  position:absolute;
+  right:5px;
+  bottom:0;
+  left:5px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(159,219,247,.34),transparent);
+  box-shadow:0 0 10px rgba(95,187,242,.11);
+}
+.profile-page .profile-insight-toggle-copy { display:block; min-width:0; }
+.profile-page .profile-insight-toggle-copy small,
+.profile-page .profile-insight-toggle-copy strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.profile-page .profile-insight-toggle-copy small { color:#91abc2; font-size:8px; font-weight:800; letter-spacing:.13em; line-height:1.2; }
+.profile-page .profile-insight-toggle-copy strong { margin-top:3px; color:#eef7ff; font-size:13px; font-weight:690; line-height:1.25; }
+.profile-page .profile-insight-chevron { justify-self:end; color:#a8dcf8; font-size:20px; transition:transform 240ms cubic-bezier(.22,.8,.24,1),color 180ms ease; }
+.profile-page .profile-insight-toggle.is-open .profile-insight-chevron { transform:translateY(-1px); color:#e5f7ff; }
+.profile-page .profile-insight-toggle.is-open::before { background:linear-gradient(90deg,transparent,rgba(191,235,255,.72),transparent); }
+.profile-page .profile-detail-reveal {
+  position:relative;
+  z-index:1;
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  pointer-events:none;
+  transform:translate3d(0,-10px,0);
+  transition:max-height 520ms ease,opacity 250ms ease,transform 420ms cubic-bezier(.22,.8,.24,1);
+}
+.profile-page .profile-detail-reveal.is-open {
+  max-height:1600px;
+  opacity:1;
+  pointer-events:auto;
+  transform:translate3d(0,0,0);
+}
+.profile-page .profile-detail-reveal .profile-signal-board { margin-top:10px !important; }
+@media (max-width:360px) {
+  .profile-page .profile-insight-control { padding-right:11px; padding-left:11px; }
+  .profile-page .profile-insight-toggle { grid-template-columns:minmax(0,1fr) 21px; gap:8px; min-height:52px; }
+  .profile-page .profile-insight-toggle-copy strong { font-size:11px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-detail-reveal,.profile-page .profile-insight-chevron { transition:none; }
+}
+
+/* Each revealed fact is a compact LinkUUp signal.  Its light intensity is
+   literal: bright for everybody, restrained for circles, dim for the owner
+   alone.  The server remains the source of truth for every ACL. */
+.profile-page .profile-detail-reveal .profile-signal-grid {
+  gap:9px 11px !important;
+}
+.profile-page .profile-detail-reveal .profile-signal {
+  grid-template-columns:34px minmax(0,1fr) 19px !important;
+  gap:9px !important;
+  min-height:67px !important;
+  padding:10px 9px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(169,215,244,.16) !important;
+  border-radius:14px 14px 14px 5px !important;
+  background:linear-gradient(145deg,rgba(87,151,207,.10),rgba(11,24,44,.14)) !important;
+  box-shadow:inset 0 1px 0 rgba(244,252,255,.055),0 9px 20px rgba(1,8,24,.08) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  right:-12px !important;
+  bottom:-14px !important;
+  width:46px !important;
+  height:46px !important;
+  border:1px solid rgba(176,231,255,.11) !important;
+  border-radius:50% !important;
+  background:transparent !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--public {
+  border-color:rgba(159,224,252,.31) !important;
+  background:linear-gradient(145deg,rgba(93,177,223,.17),rgba(15,30,53,.16)) !important;
+  box-shadow:inset 0 1px 0 rgba(247,253,255,.10),0 0 18px rgba(100,197,246,.09) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--members { border-color:rgba(178,190,255,.24) !important; }
+.profile-page .profile-detail-reveal .profile-signal--friends { border-color:rgba(255,202,232,.22) !important; }
+.profile-page .profile-detail-reveal .profile-signal--private {
+  border-color:rgba(185,163,209,.13) !important;
+  background:rgba(67,49,86,.15) !important;
+  box-shadow:none !important;
+  opacity:.68 !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon { width:33px !important; height:33px !important; }
+.profile-page .profile-signal-visibility {
+  display:grid;
+  place-items:center;
+  align-self:start;
+  width:18px;
+  height:18px;
+  margin-top:1px;
+  border-radius:50%;
+  background:rgba(139,197,230,.09);
+  color:#9edcf8;
+}
+.profile-page .profile-signal-visibility .material-icons { font-size:12px; }
+.profile-page .profile-signal--public .profile-signal-visibility { background:rgba(143,222,254,.15); color:#d1f3ff; box-shadow:0 0 11px rgba(111,207,252,.42); }
+.profile-page .profile-signal--members .profile-signal-visibility { color:#c8cbff; }
+.profile-page .profile-signal--friends .profile-signal-visibility { color:#ffc4df; }
+.profile-page .profile-signal--private .profile-signal-visibility { background:rgba(187,159,210,.07); color:#c6b7d5; box-shadow:none; }
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-grid { gap:7px !important; }
+  .profile-page .profile-detail-reveal .profile-signal { grid-template-columns:29px minmax(0,1fr) 16px !important; gap:7px !important; min-height:62px !important; padding:9px 7px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon { width:28px !important; height:28px !important; }
+  .profile-page .profile-signal-visibility { width:16px; height:16px; }
+  .profile-page .profile-signal-visibility .material-icons { font-size:11px; }
+}
+
+/* Visibility is written plainly for the profile owner.  It deliberately has
+   no round badge: the field's own icon remains the only large symbol. */
+.profile-page .profile-detail-reveal .profile-signal::after { display:none !important; content:none !important; }
+.profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:12px !important; }
+.profile-page .profile-signal-visibility {
+  position:absolute !important;
+  right:9px !important;
+  bottom:7px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:3px !important;
+  width:auto !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#8fa7bd !important;
+  font-size:7px !important;
+  font-weight:780 !important;
+  letter-spacing:.055em !important;
+  line-height:1 !important;
+  text-transform:uppercase !important;
+}
+.profile-page .profile-signal-visibility .material-icons { color:inherit !important; font-size:11px !important; }
+.profile-page .profile-signal--public .profile-signal-visibility {
+  color:#bbecff !important;
+  text-shadow:0 0 9px rgba(105,206,255,.45) !important;
+}
+.profile-page .profile-signal--members .profile-signal-visibility { color:#c9c9ff !important; }
+.profile-page .profile-signal--friends .profile-signal-visibility { color:#ffc4df !important; }
+.profile-page .profile-signal--private .profile-signal-visibility { color:#a798b2 !important; text-shadow:none !important; }
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:10px !important; }
+  .profile-page .profile-signal-visibility { right:7px !important; bottom:6px !important; font-size:6px !important; }
+  .profile-page .profile-signal-visibility .material-icons { font-size:10px !important; }
+}
+
+/* Visibility is enforced by the server; it is intentionally not repeated as
+   decoration inside the profile insight. */
+.profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:0 !important; }
+.profile-page .profile-signal-visibility { display:none !important; }
+
+/* Profile detail signals: no cards, only a category-coloured light line.
+   The line is an affordance, not a privacy leak: fields the server withholds
+   for a visitor do not exist in this DOM at all. */
+.profile-page .profile-detail-reveal .profile-signal-grid {
+  gap:14px 21px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal {
+  --profile-tone:#a9ddff;
+  --profile-tone-soft:rgba(169,221,255,.18);
+  grid-template-columns:31px minmax(0,1fr) !important;
+  gap:9px !important;
+  min-height:54px !important;
+  padding:4px 2px 13px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal::before { display:none !important; content:none !important; }
+.profile-page .profile-detail-reveal .profile-signal::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  right:1px !important;
+  bottom:0 !important;
+  left:1px !important;
+  width:auto !important;
+  height:1px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,transparent 0%,var(--profile-tone) 16%,var(--profile-tone) 84%,transparent 100%) !important;
+  box-shadow:0 0 8px var(--profile-tone-soft),0 0 18px var(--profile-tone-soft) !important;
+  opacity:.74 !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal:hover { background:transparent !important; }
+.profile-page .profile-detail-reveal .profile-signal-icon {
+  width:31px !important;
+  height:31px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:var(--profile-tone) !important;
+  filter:drop-shadow(0 0 7px var(--profile-tone-soft));
+}
+.profile-page .profile-detail-reveal .profile-signal-icon .material-icons { font-size:20px !important; }
+.profile-page .profile-detail-reveal .profile-signal-copy small { color:var(--profile-tone) !important; opacity:.78; }
+.profile-page .profile-detail-reveal .profile-signal-copy strong { color:#f3f8ff !important; }
+.profile-page .profile-detail-reveal .profile-signal--tone-sky { --profile-tone:#8fd8ff; --profile-tone-soft:rgba(110,205,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-blue { --profile-tone:#8eb9ff; --profile-tone-soft:rgba(113,158,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-ice { --profile-tone:#bceeff; --profile-tone-soft:rgba(145,224,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-teal { --profile-tone:#78e0d0; --profile-tone-soft:rgba(78,218,196,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-violet { --profile-tone:#c1a9ff; --profile-tone-soft:rgba(178,142,255,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-lilac { --profile-tone:#d8b6ff; --profile-tone-soft:rgba(205,159,255,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-rose { --profile-tone:#ffadd0; --profile-tone-soft:rgba(255,142,191,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-amber { --profile-tone:#efc06f; --profile-tone-soft:rgba(226,170,79,.23); }
+.profile-page .profile-detail-reveal .profile-signal--tone-gold { --profile-tone:#ffd67e; --profile-tone-soft:rgba(255,202,91,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-coral { --profile-tone:#f2a18f; --profile-tone-soft:rgba(241,133,111,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-mint { --profile-tone:#8cddb1; --profile-tone-soft:rgba(95,213,146,.20); }
+.profile-page .profile-detail-reveal .profile-signal--private {
+  filter:saturate(.62);
+  opacity:.42 !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--private::after {
+  opacity:.15 !important;
+  box-shadow:none !important;
+}
+
+/* The category glyph is the anchor, never another little card.  Give it enough
+   scale to read immediately; its own coloured light line carries the grouping. */
+.profile-page .profile-detail-reveal .profile-signal {
+  grid-template-columns:36px minmax(0,1fr) !important;
+  gap:10px !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon {
+  display:grid !important;
+  place-items:center !important;
+  width:36px !important;
+  height:36px !important;
+  padding:0 !important;
+  outline:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+  filter:drop-shadow(0 0 5px var(--profile-tone-soft)) drop-shadow(0 0 12px rgba(7,18,38,.24)) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon::before,
+.profile-page .profile-detail-reveal .profile-signal-icon::after {
+  display:none !important;
+  content:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon .material-icons {
+  color:var(--profile-tone) !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  text-shadow:0 0 8px var(--profile-tone-soft) !important;
+}
+/* Older position-based colour variants carried a more specific boxed icon
+   treatment.  The profile now always uses the free glyph + its own glow. */
+.profile-page .profile-detail-reveal .profile-signal .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal:nth-child(3n) .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal:nth-child(4n) .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal--denied .profile-signal-icon {
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:var(--profile-tone) !important;
+}
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-grid { gap:12px 14px !important; }
+  .profile-page .profile-detail-reveal .profile-signal { grid-template-columns:31px minmax(0,1fr) !important; gap:8px !important; min-height:52px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon { width:31px !important; height:31px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon .material-icons { font-size:20px !important; }
+}

@@ -7,7 +7,9 @@
       <i class="material-icons">arrow_back</i>
     </md-button>
 
-    <h2 flex md-truncate>{{data.title|translate}}</h2>
+    <!-- The page itself already carries the clear “Einstellungen” heading.
+         Keep the compact top bar as navigation, not a duplicated title. -->
+    <span flex aria-hidden="true"></span>
 
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
 

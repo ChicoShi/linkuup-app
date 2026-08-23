@@ -3,7 +3,10 @@ angular.module('LUP').config(function($routeProvider, $locationProvider, $transl
 	
 	$translateProvider.useStaticFilesLoader({
 	    prefix: 'locale/locale-',
-	    suffix: '.json'
+	    // Keep visible texts in sync with the same deploy marker as templates.
+	    // Otherwise a browser can render newly added keys as their raw names
+	    // while it still holds an older locale JSON response in its cache.
+	    suffix: '.json?v=' + window.LUP_BUILD
 	});
 	
 	$translateProvider.useSanitizeValueStrategy('escapeParameters');
