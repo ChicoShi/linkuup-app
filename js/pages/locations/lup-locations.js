@@ -73,10 +73,10 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		}, 0);
 	};
-	var syncSelectedRoomFromRail = function(rail) {
+	var nearestRailCard = function(rail) {
 		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
 		if (!cards.length) {
-			return;
+			return null;
 		}
 		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
 		var nearest = null;
@@ -89,6 +89,10 @@ angular.module('LUP').config(function($routeProvider) {
 				nearestDistance = distance;
 			}
 		});
+		return nearest;
+	};
+	var syncSelectedRoomFromRail = function(rail) {
+		var nearest = nearestRailCard(rail);
 		if (!nearest) {
 			return;
 		}
@@ -101,6 +105,15 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.focusRoom(roomIndex);
 			});
 		}
+	};
+	var settleNativeRail = function(rail) {
+		rail.classList.remove('location-rail-dragging');
+		$timeout(function() {
+			var nearest = nearestRailCard(rail);
+			if (nearest) {
+				nearest.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+			}
+		}, 0);
 	};
 	var initialiseNativeRail = function(rail) {
 		if (rail.dataset.lupNativeRail) {
@@ -127,6 +140,7 @@ angular.module('LUP').config(function($routeProvider) {
 			var deltaY = touch.clientY - touchStartY;
 			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
 				draggingHorizontally = true;
+				rail.classList.add('location-rail-dragging');
 			}
 			if (draggingHorizontally) {
 				// Take ownership of horizontal drags so nested card click handlers
@@ -141,6 +155,7 @@ angular.module('LUP').config(function($routeProvider) {
 			touchStartY = null;
 			if (draggingHorizontally) {
 				suppressRoomOpenUntil = Date.now() + 450;
+				settleNativeRail(rail);
 			}
 		}, {passive: true});
 		// Desktop users used Slick's mouse dragging too. Keep the same affordance
@@ -167,6 +182,7 @@ angular.module('LUP').config(function($routeProvider) {
 			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
 				draggingPointer = true;
 				rail.setPointerCapture(event.pointerId);
+				rail.classList.add('location-rail-dragging');
 			}
 			if (draggingPointer) {
 				event.preventDefault();
@@ -177,6 +193,7 @@ angular.module('LUP').config(function($routeProvider) {
 		rail.addEventListener('pointerup', function(event) {
 			if (draggingPointer) {
 				suppressRoomOpenUntil = Date.now() + 500;
+				settleNativeRail(rail);
 			}
 			pointerStartX = null;
 			pointerStartY = null;
