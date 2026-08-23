@@ -323,6 +323,8 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		var d = $q.defer();
 		if (WebsocketSrvc.connected()) {
 
+			console.log(sprintf('Sending CMD %04x', gwsMessage.CMD));
+
 			// Remember sync msg id
 			if (gwsMessage.SYNC > 0) {
 				WebsocketSrvc.SYNC_MSGS[gwsMessage.SYNC] = d;

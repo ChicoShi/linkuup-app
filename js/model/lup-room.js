@@ -120,8 +120,8 @@ function LUPRoom(json) {
 	};
 	
 	this.isUserInRoom = function(user) {
-		var result = this.USERS.indexOf(user) >= 0;
-		console.log('LUPRoom.isInRoom()', result, user);
+		const result = this.USERS.indexOf(user) >= 0;
+		// console.log('LUPRoom.isInRoom()', result, user);
 		return result;
 	};
 	

@@ -157,11 +157,12 @@ function GWS_Message(buffer) {
 	};
 
 	this.cmd = function(cmd) {
+		this.CMD = cmd;
 		return this.write16(cmd);
 	};
 	this.async = function() {
 		this.SYNC = 0;
-		return this.write32()
+		return this;
 	};
 	this.sync = function() {
 		this.BUFFER[0] |= 0x80;
