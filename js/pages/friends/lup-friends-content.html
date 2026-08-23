@@ -5,11 +5,15 @@
 <!-- Begin user list -->
 <section class="friends-shell" flex>
   <div class="friends-overview" ng-if="data.frienduser">
-    <span class="friends-overview-mark" aria-hidden="true"><i class="material-icons">groups</i></span>
-    <div>
-      <strong>{{data.frienduser.isSelf() ? ('FRIENDS'|translate) : data.frienduser.displayName()}}</strong>
-      <span>{{data.pagemenu.nItems}} Verbindung<span ng-if="data.pagemenu.nItems !== 1">en</span></span>
+    <div class="friends-overview-copy">
+      <span class="friends-overview-eyebrow">{{data.frienduser.isSelf() ? ('FRIENDS_EYEBROW'|translate) : ('FRIENDS_PROFILE_EYEBROW'|translate)}}</span>
+      <strong>{{data.frienduser.isSelf() ? ('FRIENDS_TITLE'|translate) : data.frienduser.displayName()}}</strong>
+      <span class="friends-overview-description" ng-if="data.frienduser.isSelf()">{{'FRIENDS_COPY'|translate}}</span>
+      <span class="friends-overview-description" ng-if="!data.frienduser.isSelf()">{{'FRIENDS_PROFILE_COPY'|translate}}</span>
     </div>
+    <span class="friends-overview-count" aria-label="{{data.pagemenu.nItems}} Verbindungen">
+      <b>{{data.pagemenu.nItems}}</b><small>{{'FRIENDS_COUNT'|translate}}</small>
+    </span>
   </div>
 <md-list class="friends-list" flex>
   

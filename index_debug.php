@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-ui224", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-ui240", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -19,7 +19,7 @@ $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
 <head>
   <meta charset="utf-8" />
 	<meta name="google" content="notranslate" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>LinkUUp – Zusammen unterwegs</title>
   <meta name="description" content="LinkUUp bringt Menschen, Orte und gemeinsame Erlebnisse zusammen." />
   <meta name="application-name" content="LinkUUp" />
@@ -104,7 +104,7 @@ $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
   </div>
 
   <script type="text/javascript">
-  window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui224')?>;
+window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui240')?>;
   </script>
 
   <script src="node_modules/jquery/dist/jquery.js<?=$v?>"></script>

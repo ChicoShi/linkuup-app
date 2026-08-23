@@ -98,6 +98,34 @@
 	background: rgba(16,18,29,.40);
 }
 
+.lup-setting-emoji-picker {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	margin-top: 8px;
+}
+
+.lup-setting-emoji-picker button {
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	border: 1px solid rgba(142, 201, 255, .13);
+	border-radius: 9px;
+	background: rgba(255, 255, 255, .035);
+	font-size: 16px;
+	line-height: 1;
+	cursor: pointer;
+	transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+
+.lup-setting-emoji-picker button:hover,
+.lup-setting-emoji-picker button:focus-visible {
+	border-color: rgba(95, 196, 255, .5);
+	background: rgba(76, 174, 255, .13);
+	transform: translateY(-1px) scale(1.07);
+	outline: none;
+}
+
 .lup-settings-list .lup-setting-input input[type="color"] {
 	width: 48px;
 	height: 38px;

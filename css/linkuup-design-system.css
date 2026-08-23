@@ -6709,6 +6709,232 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (max-width:480px) { .friends-map-pin { top:20%; right:-1%; width:42px; height:42px; }.friends-map-pin .material-icons { font-size:23px; }.friends-route-light { top:31%; right:7%; }.friends-route-one { top:27%; right:-44%; width:89%; } }
 @media (prefers-reduced-motion:reduce) { .friends-route-light,.friends-map-pin { animation:none; } }
 
+/* Friends v3: one calm connection lane. The people remain the focus; search
+   and actions are deliberately compact so the top of the phone is not crowded. */
+.friends-page .lup-top-bar {
+  background:rgba(15,20,33,.84) !important;
+  border-bottom-color:rgba(206,222,255,.08) !important;
+  box-shadow:none !important;
+}
+.friends-page .friends-search-zone,
+.friends-page .friends-shell {
+  width:min(92%,680px);
+  box-sizing:border-box;
+}
+.friends-page .friends-search-zone {
+  position:relative;
+  z-index:1;
+  margin:18px auto 0;
+}
+.friends-page .search-input-wrap {
+  width:100%;
+  min-height:48px;
+  margin:0;
+  padding:4px 5px 4px 13px;
+  border:1px solid rgba(198,216,255,.12);
+  border-radius:15px;
+  background:rgba(12,17,29,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+.friends-page .search-input-wrap:focus-within {
+  border-color:rgba(147,191,255,.43);
+  background:rgba(18,25,42,.58);
+  box-shadow:0 0 0 3px rgba(96,156,243,.08),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.friends-page .search-input-wrap .friend-search-mark {
+  width:22px;
+  color:rgba(190,218,255,.72);
+  font-size:18px;
+}
+.friends-page .search-input-wrap .search-input {
+  min-height:38px;
+  padding:0 2px;
+  color:#f1f4ff;
+  font-size:14px;
+  font-weight:620;
+}
+.friends-page .search-input-wrap .search-input::placeholder { color:rgba(191,200,224,.70); }
+.friends-page .search-input-wrap .qrcode-dummy {
+  order:3;
+  display:grid;
+  place-items:center;
+  width:36px;
+  height:36px;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:11px;
+  background:transparent;
+  box-shadow:none;
+  color:#aebfff;
+  cursor:pointer;
+  transition:color .18s ease,background .18s ease,transform .18s ease;
+}
+.friends-page .search-input-wrap .qrcode-dummy:hover,
+.friends-page .search-input-wrap .qrcode-dummy:focus-visible {
+  background:rgba(131,153,242,.15);
+  color:#e4e9ff;
+  outline:0;
+  transform:translateY(-1px);
+}
+.friends-page .search-input-wrap .qrcode-dummy .material-icons { font-size:20px; }
+.friends-page .friends-shell { margin:18px auto 34px; }
+.friends-page .friends-overview {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:16px;
+  margin:0 2px 12px;
+  padding:0 2px 13px;
+  border-bottom:1px solid rgba(198,216,255,.13);
+}
+.friends-page .friends-overview-copy { display:grid; gap:3px; min-width:0; }
+.friends-page .friends-overview-eyebrow {
+  color:#91c6ef;
+  font-size:9px;
+  font-weight:820;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.friends-page .friends-overview strong {
+  overflow:hidden;
+  color:#f4f6ff;
+  font-size:clamp(19px,5vw,25px);
+  font-weight:760;
+  letter-spacing:-.045em;
+  line-height:1.03;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.friends-page .friends-overview-description {
+  overflow:hidden;
+  color:#aeb5ca;
+  font-size:11px;
+  line-height:1.35;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.friends-page .friends-overview-count {
+  display:grid;
+  justify-items:end;
+  gap:1px;
+  min-width:55px;
+  padding:0 0 1px;
+  color:#bfc9e7;
+  text-align:right;
+}
+.friends-page .friends-overview-count b {
+  color:#e5e8ff;
+  font-size:22px;
+  font-weight:720;
+  letter-spacing:-.065em;
+  line-height:1;
+}
+.friends-page .friends-overview-count small {
+  color:#92a1c3;
+  font-size:8px;
+  font-weight:760;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.friends-page .friends-list {
+  overflow:hidden;
+  width:100%;
+  margin:0;
+  padding:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-bottom:1px solid rgba(198,216,255,.10);
+  border-radius:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.018),rgba(126,109,193,.028),rgba(255,255,255,.012));
+  box-shadow:none;
+}
+.friends-page .friends-list .md-subheader { display:none; }
+.friends-page .lup-user-list { display:block; }
+.friends-page .lup-user-list md-list-item.friend-card,
+.friends-page .friend-search-results md-list-item {
+  min-height:69px;
+  margin:0;
+  padding:9px 5px;
+  border:0;
+  border-bottom:1px solid rgba(198,216,255,.09);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transition:background .18s ease,transform .18s ease;
+}
+.friends-page .lup-user-list md-list-item.friend-card:last-child,
+.friends-page .friend-search-results md-list-item:last-child { border-bottom:0; }
+.friends-page .lup-user-list md-list-item.friend-card:hover,
+.friends-page .friend-search-results md-list-item:hover {
+  transform:none;
+  border-color:rgba(198,216,255,.09);
+  background:linear-gradient(90deg,rgba(121,167,238,.09),rgba(137,106,218,.035));
+}
+.friends-page .lup-user-list md-list-item.friend-card .lup-avatar,
+.friends-page .friend-search-results lup-avatar {
+  width:43px;
+  height:43px;
+  margin:0 11px 0 5px;
+  border:1px solid rgba(205,222,255,.18);
+  border-radius:50%;
+  box-shadow:0 5px 15px rgba(0,0,0,.16);
+}
+.friends-page .lup-user-list .username,
+.friends-page .friend-search-results .username {
+  margin:0 0 3px;
+  color:#eef2ff;
+  font-size:14px;
+  font-weight:740;
+}
+.friends-page .lup-user-list .lup-user-status,
+.friends-page .friend-search-results .lup-user-status {
+  margin:0;
+  color:#9fa8bf;
+  font-size:11px;
+}
+.friends-page .lup-user-actions {
+  gap:2px;
+  margin-left:7px;
+  padding-left:7px;
+  border-left:1px solid rgba(198,216,255,.08);
+}
+.friends-page .lup-user-action {
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  box-shadow:none;
+}
+.friends-page .lup-user-action .material-icons { font-size:18px; }
+.friends-page .lup-user-action-message { color:#bfcbff; }
+.friends-page .lup-user-action-message:hover { background:rgba(118,155,238,.15); color:#e1e8ff; }
+.friends-page .lup-user-action-remove { color:#d8a7ba; }
+.friends-page .lup-user-action-remove:hover { border-color:transparent; background:rgba(205,110,143,.12); color:#f0c0d0; }
+.friends-page .friend-search-results {
+  overflow:hidden;
+  width:100%;
+  margin:8px 0 0;
+  padding:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-bottom:1px solid rgba(198,216,255,.10);
+  background:rgba(12,17,29,.32);
+}
+.friends-page .friends-empty {
+  border:0;
+  border-top:1px solid rgba(198,216,255,.10);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+@media (max-width:380px) {
+  .friends-page .friends-search-zone,.friends-page .friends-shell { width:94%; }
+  .friends-page .friends-overview { gap:10px; }
+  .friends-page .friends-overview-description { max-width:218px; }
+  .friends-page .lup-user-actions { margin-left:3px; padding-left:4px; }
+  .friends-page .lup-user-action { width:31px; height:31px; }
+}
+
 /* Final, deliberately quiet review surface.  The interaction is the focus:
    place, score, voices, then one obvious action to leave a rating. */
 .location-reviews-page > md-content {
@@ -7766,8 +7992,100 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .gallery-add-tile span { display:block; color:#e0efff; font:760 10px/1 Ubuntu,Roboto,Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; text-shadow:0 1px 8px rgba(32,76,142,.30); }
 .profile-page .gallery-add-tile:hover,.profile-page .gallery-add-tile:focus-visible { transform:translateY(-2px); border-color:rgba(213,239,255,.52) !important; background:linear-gradient(145deg,rgba(151,207,255,.22),rgba(139,104,224,.13) 52%,rgba(23,38,67,.16)) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.27),0 16px 30px rgba(1,8,25,.19),0 0 21px rgba(111,175,247,.12) !important; outline:0; }
 .profile-page .gallery-add-tile:hover .material-icons,.profile-page .gallery-add-tile:focus-visible .material-icons { box-shadow:0 7px 0 rgba(36,69,130,.30),0 13px 25px rgba(4,16,43,.23),0 0 15px rgba(172,221,255,.26),inset 0 1px 0 rgba(255,255,255,.50); }
+/* iOS keeps :hover after a tap.  A gallery button must open the picker without
+   pretending to float away from the finger. */
+@media (hover:none), (pointer:coarse) {
+  .profile-page .gallery-add-tile:hover,
+  .profile-page .gallery-add-tile:active { transform:none !important; }
+}
 .profile-page .gallery-empty { display:grid; justify-items:center; gap:8px; margin:10px 12px 28px; padding:30px 18px; border:1px dashed rgba(184,211,255,.18); border-radius:18px; background:rgba(16,24,42,.28); color:#aab9d1; font:650 12px/1.45 Ubuntu,Roboto,Arial,sans-serif; text-align:center; }
 .profile-page .gallery-empty .material-icons { color:#b7dcff; font-size:27px; filter:drop-shadow(0 0 10px rgba(104,183,255,.28)); }
+
+/* The add-photo slot should read as part of the album, not as a second card.
+ * One calm camera-plus mark is enough; real gallery images stay visually first. */
+.profile-page .gallery-add-tile {
+  border:0 !important;
+  border-radius:15px;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none;
+  color:rgba(193,227,255,.78);
+}
+.profile-page .gallery-add-tile::before,
+.profile-page .gallery-add-tile::after {
+  display:block !important;
+  content:'';
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+.profile-page .gallery-add-tile::before {
+  width:5px;
+  height:5px;
+  top:calc(50% - 29px);
+  left:calc(50% + 24px);
+  background:#e9fbff;
+  box-shadow:0 0 9px rgba(133,220,255,.84);
+  animation:gallery-add-glint 3.8s ease-in-out infinite;
+}
+.profile-page .gallery-add-tile::after {
+  width:2px;
+  height:2px;
+  top:calc(50% + 23px);
+  left:calc(50% - 31px);
+  background:rgba(185,225,255,.90);
+  box-shadow:0 0 7px rgba(130,194,255,.75);
+  animation:gallery-add-glint 3.8s ease-in-out 1.2s infinite;
+}
+.profile-page .gallery-add-tile .material-icons {
+  width:auto;
+  height:auto;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  color:transparent;
+  background:linear-gradient(135deg,#f1fcff 4%,#a7dfff 46%,#9c9cff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-size:42px;
+  line-height:1;
+  filter:drop-shadow(0 0 10px rgba(104,190,255,.34));
+}
+.profile-page .gallery-add-tile:hover,
+.profile-page .gallery-add-tile:focus-visible {
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#e3f5ff;
+  transform:scale(1.045);
+}
+.profile-page .gallery-add-tile:hover .material-icons,
+.profile-page .gallery-add-tile:focus-visible .material-icons {
+  box-shadow:none;
+  filter:drop-shadow(0 0 12px rgba(128,205,255,.55));
+}
+@keyframes gallery-add-glint { 0%,100% { opacity:.35; transform:scale(.72); } 48% { opacity:1; transform:scale(1.15); } }
+@media (prefers-reduced-motion:reduce) { .profile-page .gallery-add-tile::before,.profile-page .gallery-add-tile::after { animation:none; } }
+
+/* High Five confirmation: a real encounter gets a clear, composed scan moment
+ * instead of the former generic heart dialog. */
+.lup-cuddles-dialog.highfive-qr-dialog {
+  width:min(91vw,360px) !important;
+  overflow:hidden;
+  border:1px solid rgba(178,222,255,.20) !important;
+  border-radius:26px !important;
+  background:radial-gradient(circle at 50% -7%,rgba(102,183,244,.26),transparent 39%),radial-gradient(circle at 92% 58%,rgba(167,104,202,.13),transparent 33%),linear-gradient(156deg,#172943,#111827 67%,#0d1423) !important;
+  box-shadow:0 25px 66px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+.highfive-qr-dialog-content { padding:27px 22px 23px !important; text-align:center; }
+.highfive-qr-dialog .lup-cuddles-close { border:1px solid rgba(194,224,255,.16); background:rgba(8,17,35,.36); color:#dceeff; }
+.highfive-qr-mark { position:relative; display:grid; place-items:center; width:58px; height:58px; margin:0 auto 10px; border:1px solid rgba(198,234,255,.43); border-radius:50%; background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.40),transparent 24%),linear-gradient(145deg,#5ebce8,#656dd1 66%,#a35f9c); box-shadow:0 0 0 7px rgba(121,202,255,.06),0 13px 29px rgba(6,20,48,.40),inset 0 1px 0 rgba(255,255,255,.42); color:#f4fbff; }
+.highfive-qr-mark > .material-icons:first-child { font-size:30px; text-shadow:0 2px 5px rgba(34,45,104,.42); }.highfive-qr-mark > .material-icons:last-child { position:absolute; right:-4px; bottom:-3px; display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(233,249,255,.58); border-radius:8px; background:#172847; color:#dff5ff; box-shadow:0 5px 13px rgba(4,13,33,.40); font-size:14px; }
+.highfive-qr-eyebrow { display:block; color:#a8dcff; font-size:9px; font-weight:880; letter-spacing:.15em; }.highfive-qr-dialog h2 { margin:5px 0 7px; color:#f2f7ff; font-size:21px; line-height:1.13; }.highfive-qr-dialog p { max-width:278px; margin:0 auto; color:#c2d2e5; font-size:12px; line-height:1.45; }
+.highfive-qr-frame { position:relative; display:grid; place-items:center; width:min(67vw,218px); margin:17px auto 11px; padding:9px; background:linear-gradient(135deg,rgba(95,185,242,.11),rgba(152,103,214,.07)); }.highfive-qr-frame::before,.highfive-qr-frame::after { content:''; position:absolute; width:18px; height:18px; border-color:#b9e9ff; border-style:solid; opacity:.86; pointer-events:none; }.highfive-qr-frame::before { top:0; left:0; border-width:1px 0 0 1px; }.highfive-qr-frame::after { right:0; bottom:0; border-width:0 1px 1px 0; }.highfive-qr-frame .lup-cuddles-qr { padding:8px !important; border:0 !important; border-radius:12px !important; box-shadow:0 9px 22px rgba(0,0,0,.28) !important; }.highfive-qr-frame .lup-cuddles-qr img { display:block; width:min(59vw,188px); height:auto; }
+.highfive-qr-rule { display:flex; align-items:flex-start; justify-content:center; gap:6px; max-width:272px; margin:0 auto; color:#aebfd4; font-size:10px; line-height:1.35; }.highfive-qr-rule .material-icons { flex:0 0 auto; color:#9ee6c5; font-size:15px; }
 
 /* Mobile composer safety: the visible viewport shrinks when a phone keyboard
  * opens. Keep the message stream scrollable and the composer inside that
@@ -8123,7 +8441,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 /* About is a profile card, not an account settings form.  The person gets one
    calm story surface, followed by compact facts grouped by meaning. */
 .profile-page .profile-information.profile-about-single { width:min(100%,680px) !important; margin:0 auto !important; padding:14px 16px 9px !important; background:transparent !important; }
-.profile-page .profile-information.profile-about-single .profile-story-card { min-height:0 !important; margin:0 !important; padding:16px 2px 18px !important; border:0 !important; border-bottom:1px solid rgba(201,218,244,.10) !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card::before,.profile-page .profile-information.profile-about-single .profile-story-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card .md-list-item-text { min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }
+.profile-page .profile-information.profile-about-single .profile-story-card { min-height:0 !important; margin:0 !important; padding:16px 2px 18px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card::before,.profile-page .profile-information.profile-about-single .profile-story-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-about-single .profile-story-card .md-list-item-text { min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }
 .profile-page .profile-about-kicker { display:flex; align-items:center; gap:7px; margin:0 0 10px; color:#a9d9ff; font-size:8px; font-weight:850; letter-spacing:.15em; line-height:1; }.profile-page .profile-about-kicker .material-icons { display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(171,222,255,.23); border-radius:8px 8px 8px 3px; background:rgba(99,170,230,.12); color:#c5ecff; font-size:14px; }.profile-page .profile-information.profile-about-single .profile-about-me { max-width:570px; margin:0 !important; color:#e5edf8 !important; font-size:15px !important; font-weight:470 !important; line-height:1.65 !important; text-shadow:none !important; }.profile-page .profile-information.profile-about-single .profile-about-empty { margin:8px 0 0 !important; color:#aab9ce !important; font-size:13px !important; font-style:normal !important; }
 .profile-page .profile-information.profile-settings-view { display:block !important; width:min(100%,680px) !important; margin:0 auto !important; padding:9px 16px 30px !important; background:transparent !important; }.profile-page .profile-information.profile-settings-view .profile-settings-group { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:7px 9px !important; margin:0 0 19px !important; }.profile-page .profile-information.profile-settings-view .profile-settings-group > .md-subheader { grid-column:1 / -1 !important; min-height:24px !important; margin:0 !important; padding:4px 1px 6px !important; border:0 !important; background:transparent !important; color:#a8bbd2 !important; font-size:8px !important; font-weight:850 !important; letter-spacing:.14em !important; line-height:1.1 !important; text-transform:uppercase; }
 .profile-page .profile-information.profile-settings-view .profile-detail-card { display:grid !important; grid-template-columns:30px minmax(0,1fr) !important; gap:8px !important; align-items:start !important; min-width:0 !important; min-height:69px !important; height:auto !important; margin:0 !important; padding:10px 9px !important; overflow:hidden !important; border:1px solid rgba(192,215,246,.10) !important; border-radius:14px !important; background:rgba(31,40,61,.36) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.045) !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card:nth-of-type(3n) { background:rgba(45,58,86,.31) !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card .profile-detail-icon { display:grid; place-items:center; width:30px; height:30px; margin:0 !important; border:1px solid rgba(174,220,255,.17); border-radius:10px 10px 10px 4px; background:rgba(100,169,228,.10); color:#bce9ff; }.profile-page .profile-information.profile-settings-view .profile-detail-card .profile-detail-icon .material-icons { font-size:16px; }.profile-page .profile-information.profile-settings-view .profile-detail-card .md-list-item-text { min-width:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card h3 { overflow:hidden; margin:0 0 4px !important; color:#9fb2c9 !important; font-size:8px !important; font-weight:820 !important; letter-spacing:.075em !important; line-height:1.15 !important; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }.profile-page .profile-information.profile-settings-view .profile-detail-card h3::after { display:none !important; content:none !important; }.profile-page .profile-information.profile-settings-view .profile-detail-card p { display:-webkit-box !important; overflow:hidden; margin:0 !important; color:#eaf2ff !important; font-size:11px !important; font-weight:650 !important; line-height:1.32 !important; text-overflow:ellipsis; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.profile-page .profile-information.profile-settings-view .profile-detail-card p .material-icons { margin-right:3px; color:#f0b5c5; font-size:13px; vertical-align:-2px; }.profile-page .profile-information.profile-settings-view .profile-detail-card.profile-setting-denied { border-color:rgba(233,163,188,.14) !important; background:rgba(92,48,67,.18) !important; }
@@ -8985,8 +9303,8 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 }
 .profile-page .profile-insight-toggle {
   display:grid;
-  grid-template-columns:35px minmax(0,1fr) 24px;
-  gap:10px;
+  grid-template-columns:minmax(0,1fr) 24px;
+  gap:8px;
   align-items:center;
   width:100%;
   min-height:57px;
@@ -9008,18 +9326,6 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
   background:linear-gradient(90deg,transparent,rgba(159,219,247,.34),transparent);
   box-shadow:0 0 10px rgba(95,187,242,.11);
 }
-.profile-page .profile-insight-toggle-icon {
-  display:grid;
-  place-items:center;
-  width:34px;
-  height:34px;
-  border:1px solid rgba(183,224,250,.27);
-  border-radius:12px 12px 12px 4px;
-  background:linear-gradient(145deg,rgba(116,202,242,.19),rgba(88,101,188,.08));
-  box-shadow:inset 0 1px 0 rgba(246,253,255,.16),0 8px 18px rgba(0,8,24,.13);
-  color:#c8edff;
-}
-.profile-page .profile-insight-toggle-icon .material-icons { font-size:18px; }
 .profile-page .profile-insight-toggle-copy { display:block; min-width:0; }
 .profile-page .profile-insight-toggle-copy small,
 .profile-page .profile-insight-toggle-copy strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -9047,8 +9353,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .profile-page .profile-detail-reveal .profile-signal-board { margin-top:10px !important; }
 @media (max-width:360px) {
   .profile-page .profile-insight-control { padding-right:11px; padding-left:11px; }
-  .profile-page .profile-insight-toggle { grid-template-columns:31px minmax(0,1fr) 21px; gap:8px; min-height:52px; }
-  .profile-page .profile-insight-toggle-icon { width:29px; height:29px; border-radius:10px 10px 10px 3px; }
+  .profile-page .profile-insight-toggle { grid-template-columns:minmax(0,1fr) 21px; gap:8px; min-height:52px; }
   .profile-page .profile-insight-toggle-copy strong { font-size:11px; }
 }
 @media (prefers-reduced-motion:reduce) {
@@ -9167,3 +9472,127 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
    decoration inside the profile insight. */
 .profile-page .profile-detail-reveal .profile-signal-copy { padding-bottom:0 !important; }
 .profile-page .profile-signal-visibility { display:none !important; }
+
+/* Profile detail signals: no cards, only a category-coloured light line.
+   The line is an affordance, not a privacy leak: fields the server withholds
+   for a visitor do not exist in this DOM at all. */
+.profile-page .profile-detail-reveal .profile-signal-grid {
+  gap:14px 21px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal {
+  --profile-tone:#a9ddff;
+  --profile-tone-soft:rgba(169,221,255,.18);
+  grid-template-columns:31px minmax(0,1fr) !important;
+  gap:9px !important;
+  min-height:54px !important;
+  padding:4px 2px 13px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal::before { display:none !important; content:none !important; }
+.profile-page .profile-detail-reveal .profile-signal::after {
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  right:1px !important;
+  bottom:0 !important;
+  left:1px !important;
+  width:auto !important;
+  height:1px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,transparent 0%,var(--profile-tone) 16%,var(--profile-tone) 84%,transparent 100%) !important;
+  box-shadow:0 0 8px var(--profile-tone-soft),0 0 18px var(--profile-tone-soft) !important;
+  opacity:.74 !important;
+  pointer-events:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal:hover { background:transparent !important; }
+.profile-page .profile-detail-reveal .profile-signal-icon {
+  width:31px !important;
+  height:31px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:var(--profile-tone) !important;
+  filter:drop-shadow(0 0 7px var(--profile-tone-soft));
+}
+.profile-page .profile-detail-reveal .profile-signal-icon .material-icons { font-size:20px !important; }
+.profile-page .profile-detail-reveal .profile-signal-copy small { color:var(--profile-tone) !important; opacity:.78; }
+.profile-page .profile-detail-reveal .profile-signal-copy strong { color:#f3f8ff !important; }
+.profile-page .profile-detail-reveal .profile-signal--tone-sky { --profile-tone:#8fd8ff; --profile-tone-soft:rgba(110,205,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-blue { --profile-tone:#8eb9ff; --profile-tone-soft:rgba(113,158,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-ice { --profile-tone:#bceeff; --profile-tone-soft:rgba(145,224,255,.22); }
+.profile-page .profile-detail-reveal .profile-signal--tone-teal { --profile-tone:#78e0d0; --profile-tone-soft:rgba(78,218,196,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-violet { --profile-tone:#c1a9ff; --profile-tone-soft:rgba(178,142,255,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-lilac { --profile-tone:#d8b6ff; --profile-tone-soft:rgba(205,159,255,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-rose { --profile-tone:#ffadd0; --profile-tone-soft:rgba(255,142,191,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-amber { --profile-tone:#efc06f; --profile-tone-soft:rgba(226,170,79,.23); }
+.profile-page .profile-detail-reveal .profile-signal--tone-gold { --profile-tone:#ffd67e; --profile-tone-soft:rgba(255,202,91,.21); }
+.profile-page .profile-detail-reveal .profile-signal--tone-coral { --profile-tone:#f2a18f; --profile-tone-soft:rgba(241,133,111,.20); }
+.profile-page .profile-detail-reveal .profile-signal--tone-mint { --profile-tone:#8cddb1; --profile-tone-soft:rgba(95,213,146,.20); }
+.profile-page .profile-detail-reveal .profile-signal--private {
+  filter:saturate(.62);
+  opacity:.42 !important;
+}
+.profile-page .profile-detail-reveal .profile-signal--private::after {
+  opacity:.15 !important;
+  box-shadow:none !important;
+}
+
+/* The category glyph is the anchor, never another little card.  Give it enough
+   scale to read immediately; its own coloured light line carries the grouping. */
+.profile-page .profile-detail-reveal .profile-signal {
+  grid-template-columns:36px minmax(0,1fr) !important;
+  gap:10px !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon {
+  display:grid !important;
+  place-items:center !important;
+  width:36px !important;
+  height:36px !important;
+  padding:0 !important;
+  outline:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+  filter:drop-shadow(0 0 5px var(--profile-tone-soft)) drop-shadow(0 0 12px rgba(7,18,38,.24)) !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon::before,
+.profile-page .profile-detail-reveal .profile-signal-icon::after {
+  display:none !important;
+  content:none !important;
+}
+.profile-page .profile-detail-reveal .profile-signal-icon .material-icons {
+  color:var(--profile-tone) !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  text-shadow:0 0 8px var(--profile-tone-soft) !important;
+}
+/* Older position-based colour variants carried a more specific boxed icon
+   treatment.  The profile now always uses the free glyph + its own glow. */
+.profile-page .profile-detail-reveal .profile-signal .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal:nth-child(3n) .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal:nth-child(4n) .profile-signal-icon,
+.profile-page .profile-detail-reveal .profile-signal--denied .profile-signal-icon {
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:var(--profile-tone) !important;
+}
+@media (max-width:360px) {
+  .profile-page .profile-detail-reveal .profile-signal-grid { gap:12px 14px !important; }
+  .profile-page .profile-detail-reveal .profile-signal { grid-template-columns:31px minmax(0,1fr) !important; gap:8px !important; min-height:52px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon { width:31px !important; height:31px !important; }
+  .profile-page .profile-detail-reveal .profile-signal-icon .material-icons { font-size:20px !important; }
+}

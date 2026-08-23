@@ -5,7 +5,7 @@
          ng-if="data.user.isSelf() && data.user.isMember()"
          ng-controller="GDOUploadCtrl"
          ng-init="initConfig({maxSize: 10485760, success:'onGalleryUploaded'})"
-         flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
+         flow-init="{target: data.galleryAction, withCredentials: true, singleFile: true, simultaneousUploads: 1, fileParameterName: 'gallery_files', testChunks: false, query: {flowField:'gallery_files'}}"
          flow-file-progress="onFlowProgress($file, $flow, $message);"
          flow-file-success="onFlowSuccess($file, $flow, $message);"
          flow-file-removed="onRemoveFile($file, $flow);"
@@ -13,7 +13,7 @@
          flow-files-submitted="onFlowSubmitted($flow);">
       <button type="button" class="gallery-add-tile" flow-btn
         aria-label="{{'GALLERY_ADD_PHOTO'|translate}}">
-        <i class="material-icons">add_a_photo</i><span>{{'GALLERY_ADD_PHOTO'|translate}}</span>
+        <i class="material-icons">add_photo_alternate</i>
       </button>
     </div>
     <button type="button" class="gallery-tile" ng-repeat="image in data.galleryImages track by image.id()"

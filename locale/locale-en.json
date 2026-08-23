@@ -202,6 +202,12 @@
 "FRIEND_DELETE_KEEP": "Keep friendship",
 "FRIEND_DELETE_CONFIRM": "End friendship",
 "FRIEND_DELETE_CONTROL": "You can reconnect with this person at any time later.",
+"FRIENDS_EYEBROW": "YOUR CIRCLE",
+"FRIENDS_PROFILE_EYEBROW": "CONNECTIONS",
+"FRIENDS_TITLE": "Your people",
+"FRIENDS_COPY": "People you stay connected with.",
+"FRIENDS_PROFILE_COPY": "Shared connections at a glance.",
+"FRIENDS_COUNT": "connections",
 "MSGT_SENT_FRIEND_REQUEST": "Friend request",
 "MSGP_SENT_FRIEND_REQUEST": "Your friend request has been sent.",
 

@@ -161,6 +161,26 @@ angular.module('LUP').config(function($routeProvider) {
 		return setting.renderer && setting.renderer.input_type || 'text';
 	};
 
+	// Keep emojis intentional: they enrich the personal text fields without
+	// turning every practical account setting into a decorative control.
+	$scope.hasEmojiPicker = function(setting) {
+		return !!setting && ['about_me', 'lup_status'].indexOf(setting.name) >= 0;
+	};
+
+	$scope.emojiChoices = function(setting) {
+		return setting && setting.name === 'lup_status'
+			? ['✨', '📍', '☕', '🎵', '🌙', '💬']
+			: ['✨', '😊', '📍', '🎵', '☕', '🌙', '💬', '🌿'];
+	};
+
+	$scope.appendEmoji = function(setting, emoji, event) {
+		if (event) { event.preventDefault(); event.stopPropagation(); }
+		if (!setting || setting.saving || !emoji) { return; }
+		var value = String(setting.value || '');
+		setting.value = value + (value && !/\s$/.test(value) ? ' ' : '') + emoji;
+		$scope.changeSetting(setting);
+	};
+
 	$scope.countryStyle = function(country) {
 		return CountrySrvc.flagStyle(country.id);
 	};

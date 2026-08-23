@@ -203,6 +203,12 @@
 "FRIEND_DELETE_KEEP": "Freundschaft behalten",
 "FRIEND_DELETE_CONFIRM": "Freundschaft beenden",
 "FRIEND_DELETE_CONTROL": "Du kannst diese Verbindung später jederzeit neu herstellen.",
+"FRIENDS_EYEBROW": "DEIN KREIS",
+"FRIENDS_PROFILE_EYEBROW": "VERBINDUNGEN",
+"FRIENDS_TITLE": "Deine Leute",
+"FRIENDS_COPY": "Menschen, mit denen du in Kontakt bleibst.",
+"FRIENDS_PROFILE_COPY": "Gemeinsame Verbindungen auf einen Blick.",
+"FRIENDS_COUNT": "Verbindungen",
 "MSGT_SENT_FRIEND_REQUEST": "Freundschaftsanfrage",
 "MSGP_SENT_FRIEND_REQUEST": "Ihre Freundschaftsanfrage wurde versendet.",
 

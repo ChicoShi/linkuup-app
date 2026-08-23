@@ -445,9 +445,13 @@ angular.module('LUP').config(function($routeProvider) {
 			// made the location cards jump and feel choppy on touch screens.
 			waitForAnimate: true,
 			edgeFriction: 0.22,
-			speed: 210,
-			cssEase: 'cubic-bezier(.22,.78,.24,1)',
-			touchThreshold: 4,
+			// A short, compositor-only glide: it feels like moving through photos,
+			// while waitForAnimate still prevents a second gesture from tearing a card.
+			useCSS: true,
+			useTransform: true,
+			speed: 190,
+			cssEase: 'cubic-bezier(.16,1,.3,1)',
+			touchThreshold: 6,
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);

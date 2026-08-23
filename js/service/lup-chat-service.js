@@ -35,8 +35,11 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			gwsMessage.writeString(password||"");
 			return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
 				ChatSrvc.CHATROOM = room;
-			}, function() {
+			}, function(error) {
 				ChatSrvc.CHATROOM = null;
+				// Do not turn a rejected GPS/server join into a false success. The
+				// caller must keep the composer closed until membership is confirmed.
+				return $q.reject(error);
 			});
 			};
 			// Presence is exclusive: moving to another venue always parts the old

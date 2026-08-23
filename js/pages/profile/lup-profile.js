@@ -404,6 +404,19 @@ angular.module('LUP').config(function($routeProvider) {
 		return icons[key] || 'tune';
 	};
 
+	// A profile fact has one stable visual family wherever it appears. The same
+	// tone drives its icon and its quiet underline, so the eye can recognise a
+	// kind of information without adding another explanatory badge.
+	$scope.profileFieldTone = function(key) {
+		var tones = {
+			gender: 'sky', lup_status: 'violet', lup_state: 'teal', lup_city: 'blue',
+			lup_eyecolor: 'ice', lup_height: 'blue', lup_interest: 'violet',
+			lup_sexo: 'rose', lup_has_pet: 'amber', lup_drinks: 'gold',
+			lup_smokes: 'coral', lup_sporty: 'mint', lup_religion: 'lilac'
+		};
+		return tones[key] || 'sky';
+	};
+
 	$scope.countryURL = function(user) {
 		return CountrySrvc.countryURL(user.countryId());
 	};
