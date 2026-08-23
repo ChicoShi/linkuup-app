@@ -57,7 +57,7 @@
           <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4" aria-label="{{setting.displayLabel|translate}}"></textarea>
         </md-input-container>
         <div ng-if="hasEmojiPicker(setting)" class="lup-setting-emoji-picker" aria-label="Emojis einfügen">
-          <button type="button" ng-repeat="emoji in emojiChoices(setting) track by emoji" ng-click="appendEmoji(setting, emoji, $event)" ng-disabled="setting.saving" aria-label="{{emoji}} einfügen">{{emoji}}</button>
+          <button type="button" ng-repeat="emoji in emojiChoices(setting) track by emoji" ng-mousedown="$event.preventDefault()" ng-click="appendEmoji(setting, emoji, $event)" aria-label="{{emoji}} einfügen">{{emoji}}</button>
         </div>
       </div>
 
