@@ -20,7 +20,9 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			return $q.reject("Cannot join blank dummy Room");
 		}
 		console.log('ChatSrvc.join()', room, password);
-		if (room === ChatSrvc.CHATROOM) { // Already in... ignore
+		// Routes and websocket refreshes can recreate the Room object. Presence is
+		// keyed by room id, not by that transient JavaScript object identity.
+		if (ChatSrvc.CHATROOM && room.id() === ChatSrvc.CHATROOM.id()) {
 			console.log('ChatSrvc.join() nothing todo');
 			var defer = $q.defer();
 			defer.resolve();
