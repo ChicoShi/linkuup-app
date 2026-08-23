@@ -31,7 +31,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
     color: #fff;
 }
 
-.slickit {
+.location-rail {
     background: #333;
 }
 
@@ -180,9 +180,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
     margin: 0 7.5%;
 	height:35px;
 }
-.slick-initialized .slick-slide {
-    outline: none;
-}
 .roominfo .distance, .roominfo .rating {
 	width:40%;
     float: left;
@@ -253,10 +250,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
     opacity: 0.5;
 }
 
-/*
-.slick-active .chatbutton button{
-	display:block;
-}*/
 .singlelocation .room-image {
     margin: 0;
 }
@@ -311,16 +304,49 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
     margin: 0 auto;
 }
 
-.slickit.layout-fill{
+.location-rail.layout-fill{
     min-height: auto;
 }
 
-.slickit {
+.location-rail {
 	visibility: hidden;
 }
 
-.slickit.slick-inited {
+.location-rail.location-rail-ready {
 	visibility: visible;
+}
+
+/* Native discovery rail: the browser owns touch scrolling and snapping.
+ * Keeping every Angular card as a real direct child avoids cloned
+ * tracks, lifecycle timers and category/search reinitialisation races. */
+.location-rail {
+	display: flex;
+	overflow-x: auto;
+	overflow-y: hidden;
+	gap: 0;
+	padding: 0 7%;
+	scroll-snap-type: x mandatory;
+	scroll-padding-inline: 7%;
+	-webkit-overflow-scrolling: touch;
+	overscroll-behavior-x: contain;
+	/* Vertical scrolling stays native; horizontal drags are handled above so
+	 * their synthetic click cannot open a location. */
+	touch-action: pan-y;
+	scrollbar-width: none;
+}
+.location-rail::-webkit-scrollbar { display: none; }
+.location-rail .lup-room-slide-outer {
+	flex: 0 0 86%;
+	min-width: 0;
+	scroll-snap-align: center;
+	scroll-snap-stop: always;
+}
+@media (min-width: 760px) {
+	.location-rail {
+		padding-inline: max(7%, calc((100% - 560px) / 2));
+		scroll-padding-inline: max(7%, calc((100% - 560px) / 2));
+	}
+	.location-rail .lup-room-slide-outer { flex-basis: min(560px, 86%); }
 }
 
 /** User bar in locations overview **/

@@ -21,7 +21,7 @@
 			<button type="button" ng-class="{active: isCategoryActive(['12','13','18'])}" ng-click="selectCategory(['12','13','18'])"><i class="material-icons">menu_book</i><span>Kultur<br>&amp; Hilfe</span></button>
 		</div>
 
-		<div class="slickit">
+		<div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">
 			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer"
 					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
 	
