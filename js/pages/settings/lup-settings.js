@@ -175,9 +175,11 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.appendEmoji = function(setting, emoji, event) {
 		if (event) { event.preventDefault(); event.stopPropagation(); }
-		if (!setting || setting.saving || !emoji) { return; }
+		if (!setting || !emoji) { return; }
 		var value = String(setting.value || '');
 		setting.value = value + (value && !/\s$/.test(value) ? ' ' : '') + emoji;
+		// A blur-save may already be in flight when a mobile tap reaches this
+		// handler. changeSetting queues this exact new value instead of losing it.
 		$scope.changeSetting(setting);
 	};
 
@@ -297,7 +299,16 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.changeSetting = function(setting, visibilityOnly) {
-		if (!setting || setting.saving) {
+		if (!setting) {
+			return;
+		}
+		if (setting.saving) {
+			// Never discard fast typing or an emoji tap while the preceding value
+			// is on its way through the WebSocket. A value update outranks a pure
+			// visibility update when both happen in one short interaction.
+			if (!setting.pendingSave || !visibilityOnly) {
+				setting.pendingSave = {visibilityOnly: !!visibilityOnly};
+			}
 			return;
 		}
 		// Leaving a text field to open its visibility menu also fires blur. That
@@ -309,17 +320,25 @@ angular.module('LUP').config(function($routeProvider) {
 			setting.acl === setting.initialACL) {
 			return;
 		}
-		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, setting.value, setting.acl);
+		var savedValue = setting.value;
+		var savedACL = setting.acl;
+		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, savedValue, savedACL);
 		setting.saving = true;
-		SettingsSrvc.changeSetting(setting, setting.value, setting.acl, visibilityOnly).then(function() {
-			setting.initialValue = setting.value;
-			setting.initialACL = setting.acl;
+		SettingsSrvc.changeSetting(setting, savedValue, savedACL, visibilityOnly).then(function() {
+			if (setting.value === savedValue) { setting.initialValue = savedValue; }
+			if (setting.acl === savedACL) { setting.initialACL = savedACL; }
 		}, function(gwsMessage) {
-			setting.value = setting.initialValue;
-			setting.acl = setting.initialACL;
+			// Do not overwrite text that was entered after this request started.
+			if (setting.value === savedValue) { setting.value = setting.initialValue; }
+			if (setting.acl === savedACL) { setting.acl = setting.initialACL; }
 			ErrorSrvc.showError(gwsMessage, 'Settings');
 		})['finally'](function() {
 			setting.saving = false;
+			if (setting.pendingSave) {
+				var pending = setting.pendingSave;
+				setting.pendingSave = null;
+				$scope.changeSetting(setting, pending.visibilityOnly);
+			}
 		});
 	};
 
