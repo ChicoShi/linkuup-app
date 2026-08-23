@@ -4,25 +4,25 @@
 
 <md-input-container class="md-icon-float md-block">
   <label translate="USERNAME"></label>
-  <input name="user_name" ng-model="data.username" type="text">
+  <input name="user_name" ng-model="data.username" type="text" placeholder="{{'USERNAME'|translate}}">
   <div class="error">{{data.errors.user_name}}</div>
 </md-input-container>
 
 <md-input-container class="md-icon-float md-block">
   <label translate="PASSWORD"></label>
-  <input ng-model="data.password" type="password">
+  <input ng-model="data.password" type="password" placeholder="{{'PASSWORD'|translate}}">
   <div class="error">{{data.errors.user_password}}</div>
 </md-input-container>
 
 <md-input-container class="md-icon-float md-block" ng-if="ConfigSrvc.passwordRetype()">
   <label translate="PASSWORD_RETYPE"></label>
-  <input ng-model="data.password_retype" type="password">
+  <input ng-model="data.password_retype" type="password" placeholder="{{'PASSWORD_RETYPE'|translate}}">
   <div class="error">{{data.errors.password_retype}}</div>
 </md-input-container>
 
 <md-input-container class="md-icon-float md-block">
   <label translate="EMAIL"></label>
-  <input ng-model="data.email" type="email">
+  <input ng-model="data.email" type="email" placeholder="{{'EMAIL'|translate}}">
   <div class="error">{{data.errors.user_email}}</div>
 </md-input-container>
 
