@@ -181,17 +181,13 @@ angular.module('LUP').config(function($routeProvider) {
 			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms);
 			return initialRoomsPromise;
 		};
-		if (PositionSrvc.hasPosition(true)) {
+		if (PositionSrvc.hasPosition()) {
 			return load();
 		}
-		// Give a just-started GPS request a short head start. Rendering a large
-		// fallback catalogue and immediately replacing it with nearby rooms was
-		// the visible first-load hitch. The fallback still guarantees discovery
-		// when a browser has no usable position.
-		// A discovery screen must feel present immediately.  GPS may still win
-		// this small race, but it no longer holds the first visible cards back.
-		initialRoomsTimer = $timeout(load, 180);
-		return PositionSrvc.withPosition(true).then(load, angular.noop);
+		// Locations are meaningful only with a real position.  Waiting here also
+		// prevents the former (0,0) fallback from constructing a carousel for the
+		// complete public catalogue before GPS has answered.
+		return PositionSrvc.withPosition().then(load, angular.noop);
 	};
 
 	$scope.init = function(event) {
