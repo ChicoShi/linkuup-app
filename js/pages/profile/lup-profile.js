@@ -251,6 +251,9 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
+		if (!profile) {
+			return;
+		}
 		$scope.data.profile = profile;
 		$scope.rebuildProfileGroups();
 		// Profile values and their human labels arrive through two independent
@@ -310,6 +313,9 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.buildProfileGroups = function(profile) {
+		if (!profile) {
+			return [];
+		}
 		/* “About me” is a public profile, not a mirror of account settings.
 		 * Privacy rules, activity preferences and friendship policies belong in
 		 * Settings.  Only voluntary, person-facing facts are useful to a visitor. */

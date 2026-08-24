@@ -10,8 +10,10 @@ service('ProfileSrvc', function(WebsocketSrvc, TypeSrvc, UserSrvc, SettingsSrvc,
 	ProfileSrvc.withProfile = function(user) {
 		console.log('ProfileSrvc.withProfile()', user);
 		const gwsMessage = new GWS_Message().cmd(0x0901).sync().write32(user.id());
-		return WebsocketSrvc.sendBinary(gwsMessage).
-			then(ProfileSrvc.loadedProfile, WebsocketSrvc.onError);
+		// Keep a failed profile request rejected. Handling it here converted the
+		// rejection into `undefined`, which the profile controller then treated as
+		// a valid profile object.
+		return WebsocketSrvc.sendBinary(gwsMessage).then(ProfileSrvc.loadedProfile);
 	};
 	
 	ProfileSrvc.loadedProfile = function(gwsMessage) {
