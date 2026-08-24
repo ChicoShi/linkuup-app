@@ -670,27 +670,27 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.categoryVisual = function(room) {
 		var visuals = {
-			'1': {icon: 'public', class: 'category-country'},
-			'2': {icon: 'location_city', class: 'category-city'},
-			'3': {icon: 'local_bar', class: 'category-bar'},
-			'4': {icon: 'sports_bar', class: 'category-pub'},
-			'5': {icon: 'local_cafe', class: 'category-cafe'},
-			'6': {icon: 'business', class: 'category-business'},
-			'7': {icon: 'shopping_cart', class: 'category-shop'},
-			'8': {icon: 'account_balance', class: 'category-religion'},
-			'9': {icon: 'content_cut', class: 'category-salon'},
-			'10': {icon: 'map', class: 'category-town'},
-			'11': {icon: 'nightlife', class: 'category-club'},
-			'12': {icon: 'theater_comedy', class: 'category-culture'},
-			'13': {icon: 'sports_soccer', class: 'category-sport'},
-			'14': {icon: 'restaurant', class: 'category-food'},
-			'15': {icon: 'park', class: 'category-outdoors'},
-			'16': {icon: 'school', class: 'category-community'},
-			'17': {icon: 'account_balance', class: 'category-university'},
-			'18': {icon: 'local_hospital', class: 'category-health'},
-			'19': {icon: 'hotel', class: 'category-hotel'},
+			'1': {icon: 'public', class: 'lup-discovery--country'},
+			'2': {icon: 'location_city', class: 'lup-discovery--city'},
+			'3': {icon: 'local_bar', class: 'lup-discovery--bar'},
+			'4': {icon: 'sports_bar', class: 'lup-discovery--pub'},
+			'5': {icon: 'local_cafe', class: 'lup-discovery--cafe'},
+			'6': {icon: 'business', class: 'lup-discovery--business'},
+			'7': {icon: 'shopping_cart', class: 'lup-discovery--shop'},
+			'8': {icon: 'account_balance', class: 'lup-discovery--religion'},
+			'9': {icon: 'content_cut', class: 'lup-discovery--salon'},
+			'10': {icon: 'map', class: 'lup-discovery--town'},
+			'11': {icon: 'nightlife', class: 'lup-discovery--club'},
+			'12': {icon: 'theater_comedy', class: 'lup-discovery--culture'},
+			'13': {icon: 'sports_soccer', class: 'lup-discovery--sport'},
+			'14': {icon: 'restaurant', class: 'lup-discovery--food'},
+			'15': {icon: 'park', class: 'lup-discovery--outdoors'},
+			'16': {icon: 'school', class: 'lup-discovery--education'},
+			'17': {icon: 'account_balance', class: 'lup-discovery--university'},
+			'18': {icon: 'local_hospital', class: 'lup-discovery--health'},
+			'19': {icon: 'hotel', class: 'lup-discovery--hotel'},
 		};
-		return visuals[String(room.category())] || {icon: 'place', class: 'category-default'};
+		return visuals[String(room.category())] || {icon: 'place', class: 'lup-discovery--default'};
 	};
 
 	// Long real-world venue names need a deliberate typographic tier, not a
