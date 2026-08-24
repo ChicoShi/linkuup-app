@@ -584,7 +584,16 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.selectCategory = function(categories) {
 		var categoryKey = categories.join(',');
-		if ($scope.isCategoryActive(categories) && !$scope.data.searchvalue) {
+		if ($scope.isCategoryActive(categories)) {
+			// Repeating the active category is a small navigation shortcut: keep
+			// its filter (and any current search) but return to its first card.
+			if ($scope.data.visibleRooms.length) {
+				$scope.data.currentRoom = $scope.data.visibleRooms[0];
+				$scope.data.currentRoomIndex = 0;
+				$timeout(function() {
+					scrollSelectedRoomIntoView('smooth');
+				}, 0);
+			}
 			return;
 		}
 		var selectionSerial = ++categorySelectionSerial;

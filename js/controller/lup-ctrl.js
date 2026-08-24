@@ -314,26 +314,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			}
 			finished = true;
 			$scope.data.inited = true;
-			// Begin fetching locations before the visitor opens the discovery view.
-			// The locations controller reuses this promise, so the first visit is as
-			// quick as returning from the profile screen without duplicate traffic.
-			RoomSrvc.withRooms().then(function(rooms) {
-				$scope.data.rooms = rooms;
-				// The discovery page may already be open while this background
-				// request resolves. Tell it to initialise its carousel immediately.
-				$rootScope.$broadcast('lup-rooms-ready', rooms);
-				// Keep the first category tap instant.  This deliberately starts only
-				// after the nearby start view is ready, so it never delays the app.
-				$timeout(function() {
-					RoomSrvc.withRooms(true).then(function(allRooms) {
-						$scope.data.fullCatalogue = allRooms;
-					}, function(error) {
-						console.warn('LinkUUp: discovery catalogue preload failed.', error);
-					})['catch']($scope.catchUnknown);
-				}, 900, false);
-			}, function(error) {
-				console.warn('LinkUUp: location preload failed; it will retry on opening the view.', error);
-			})['catch']($scope.catchUnknown);
+			// Location discovery is deliberately started by the first real
+			// gwf-position-changed event below.  WebSocket connection alone has no
+			// coordinates yet, so preloading here only produced a noisy rejected
+			// promise and could race the native location rail.
 			// The app is usable once the authenticated user is available. A stale
 			// optional background task must never keep the whole interface covered
 			// by the loading screen after a data reinstall.

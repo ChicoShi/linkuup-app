@@ -10,17 +10,25 @@ angular.module('LUP')
 			window.navigator.vibrate(ms);
 		}
 	};
+
+	FXSrvc.play = function(name) {
+		if (window.LUPAudio) {
+			return window.LUPAudio.play(name);
+		}
+	};
 	
 	FXSrvc.onChat = function(user, room) {
 		console.log('FXSrvc.onChat()', user, room);
 		if (!user.isSelf()) {
 			FXSrvc.vibrate(100);
+			FXSrvc.play('message');
 		}
 	};
 
 	FXSrvc.onQuery = function(message) {
 		console.log('FXSrvc.onQuery()', message);
 		if (message.toUser().isSelf()) {
+			FXSrvc.play('message');
 			FXSrvc.onNotification();
 		}
 	};
