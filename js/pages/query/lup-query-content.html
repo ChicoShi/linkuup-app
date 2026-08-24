@@ -5,7 +5,7 @@
    style="overflow: scroll;"
    flex id="lup-query-list-{{data.chat.id()}}">
 	<div class="msgline">
-		<div ng-repeat="msg in data.chat.messages" class="lup-msg"
+		<div ng-repeat="msg in data.chat.messages" class="lup-msg" lup-effect="msg.effect"
 		 in-view="$inview&&onMessageRead(msg)"
 		 ng-class="{'lup-own-msg':msg.isOwnMessage(), 'lup-notification-unread':!msg.readMyself()}">
 		  <div class="head">

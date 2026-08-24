@@ -156,6 +156,8 @@ window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui241')?>;
   <script src="config/lup-module.js<?=$v?>"></script>
   <script src="config/lup-config.js<?=$v?>"></script>
 
+  <script src="js/effects/lup-effects.js<?=$v?>"></script>
+  <script src="js/effects/lup-effect.js<?=$v?>"></script>
   <script src="js/directives/compile.js<?=$v?>"></script>
   <script src="js/directives/lup-avatar.js<?=$v?>"></script>
   <script src="js/directives/lup-message-state.js<?=$v?>"></script>

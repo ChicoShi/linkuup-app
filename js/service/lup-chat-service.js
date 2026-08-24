@@ -128,6 +128,7 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			// The sender receives this as a synchronous reply, not as the normal
 			// asynchronous 0x1108 event. Add it locally so own PMs render at once.
 			var sent = ChatSrvc.loadMessage(response);
+			sent.effect = 'blubble';
 			var thread = ChatSrvc.forMessage(sent);
 			thread.addNewMessage(sent);
 			$rootScope.updateNotificationCount();

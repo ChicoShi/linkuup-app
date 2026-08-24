@@ -745,6 +745,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);
 			const message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
+			message.effect = 'blubble';
 			$rootScope.$broadcast('lup-room-message', room, message);
 		}
 	};
@@ -757,6 +758,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.removeUser(user);
 			const message = room.addMessage(time, user, room, $translate.instant('has left'), true);
+			message.effect = 'blubble';
 			$rootScope.$broadcast('lup-room-message', room, message);
 		}
 	};
@@ -802,6 +804,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
 		room.addUser(user);
 		var message = room.addMessage(time, user, room, gwsMessage.readString());
+		message.effect = 'blubble';
 		FXSrvc.onChat(user, room);
 		$rootScope.$broadcast('lup-room-message', room, message);
 	};
@@ -809,6 +812,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.cmd_1108 = function queryMessage(gwsMessage) {
 		console.log('LUPCtrl.queryMessage()', gwsMessage);
 		var message = ChatSrvc.loadMessage(gwsMessage);
+		message.effect = 'blubble';
 		var chat = ChatSrvc.forMessage(message);
 		chat.addNewMessage(message);
 		$rootScope.updateNotificationCount();
