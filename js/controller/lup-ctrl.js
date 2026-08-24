@@ -133,7 +133,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	 */
 	$scope.initConnection = function(count, attempt) {
 		console.log('LUPCtrl.initConnection()');
-		$scope.data.initialUrl = window.location.hash.substr(2);
+		// Preserve the very first protected route (for example a room QR target).
+		// Startup retries and the required login redirect must not replace it with
+		// /login before the user has authenticated.
+		var requestedPath = window.location.hash.substr(2);
+		if (!$scope.data.initialUrl && requestedPath && !/^\/(?:login|signup|recovery|guest-login)(?:\/|$)/.test(requestedPath)) {
+			$scope.data.initialUrl = requestedPath;
+		}
 		$scope.data.inited = false;
 		console.log('LUPCtrl.initConnection()', count, $scope.data.initialUrl);
 		attempt = attempt || 0;
@@ -380,14 +386,14 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		$scope.data.authenticated = window.GWF_USER.authenticated(true);
 		UserSrvc.loggedIn(window.GWF_USER);
 		$rootScope.$broadcast('lup-menu-refresh', window.GWF_USER);
+		var path = $scope.data.initialUrl || '/locations';
+		$scope.data.initialUrl = undefined;
+		$scope.data.authRedirectPending = true;
 		SettingsSrvc.withConfig().then(function(){
-			if ($scope.data.initialUrl?.includes('login') || $scope.data.initialUrl === '/signup') {
-				$scope.data.initialUrl = '/locations';
-			}
-			var path = $scope.data.initialUrl ? $scope.data.initialUrl : '/locations';
-			$scope.data.initialUrl = undefined;
 			console.log('redirects to ' + path);
 			$location.path(path);
+		})['finally'](function() {
+			$scope.data.authRedirectPending = false;
 		});
 	};
 	
@@ -590,7 +596,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			}
 			else if (window.GWF_USER.authenticated(true)) {
 				$scope.passedAuthCheck();
-				$location.path('/locations');
+				// onAuthenticated() is restoring a deep link after login. Do not let
+				// the public login route race it back to the locations overview.
+				if (!$scope.data.authRedirectPending) {
+					$location.path('/locations');
+				}
 			}
 			else if (!$scope.data.authCheck) {
 				// Login, Signup, etc do not authenticate. they are inited here.

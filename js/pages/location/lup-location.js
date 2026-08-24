@@ -474,7 +474,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.onShowQRCode = function() {
 		var roomId = $scope.data.room.id();
 		var url = LUP_CONFIG.server + 'linkuup;qrforroom;room_id;' + roomId + '.html?_lang=en';
-		var target = window.location.href.split('#')[0] + '#!/location/' + roomId;
+		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
 		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
 	}
 

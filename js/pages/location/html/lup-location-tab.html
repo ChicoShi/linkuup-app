@@ -106,9 +106,14 @@
       <h1>{{data.room.name()}}</h1>
       <p>{{data.room.addressDisplay() || 'Ein Ort für echte Begegnungen.'}}</p>
     </div>
-    <button class="venue-hours" type="button" ng-click="showOpenTimes($event)" aria-label="Öffnungszeiten ansehen">
-      <i class="material-icons" ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}">schedule</i>
-    </button>
+    <div class="venue-utility-actions">
+      <button class="venue-hours" type="button" ng-click="showOpenTimes($event)" aria-label="Öffnungszeiten ansehen">
+        <i class="material-icons" ng-class="{'room-open': data.room.isOpen() === true, 'room-closed': data.room.isOpen() === false, 'room-unknown': data.room.isOpen() === null}">schedule</i>
+      </button>
+      <button class="venue-hours venue-room-qr" type="button" ng-click="onShowQRCode()" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}">
+        <i class="material-icons" aria-hidden="true">qr_code_2</i>
+      </button>
+    </div>
   </header>
 
   <a class="venue-map-portal" ng-if="!isRegionalRoom(data.room)" ng-href="{{mapsHref(data.room)}}" target="_blank" rel="noopener">
@@ -117,9 +122,6 @@
     <span class="venue-map-copy"><small>{{'LUP_VENUE_ROUTE_LABEL'|translate}}</small><strong>{{'LUP_VENUE_ROUTE_HEAD'|translate}}</strong><span>{{data.room.addressDisplay() || ('LUP_VENUE_ROUTE_COPY'|translate)}}</span></span>
     <i class="material-icons venue-map-arrow" aria-hidden="true">north_east</i>
   </a>
-  <button class="venue-qr-trigger" type="button" ng-click="onShowQRCode()" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}">
-    <i class="material-icons" aria-hidden="true">qr_code_2</i><span>{{'QR_ROOM_DIALOG_TITLE'|translate}}</span>
-  </button>
   <button class="venue-map-portal venue-map-portal--regional" ng-if="isRegionalRoom(data.room)" type="button" ng-click="showNearbyLocations()">
     <span class="venue-discovery-trace" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
     <span class="venue-map-orbit" aria-hidden="true"><b></b><em></em><i class="material-icons">location_city</i></span>
