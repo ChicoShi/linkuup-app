@@ -11,7 +11,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('QueryCtrl', function($scope, $rootScope, $routeParams,
+}).controller('QueryCtrl', function($scope, $rootScope, $routeParams, $timeout,
 		UserSrvc, ChatSrvc, WebsocketSrvc) {
 	
 	$scope.data.title = 'TITLE_QUERY';
@@ -87,21 +87,27 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	$scope.getList = function() {
-		return window.document.getElementById('lup-query-list-'+$scope.data.user.id());
+		return $scope.data.chat ?
+			window.document.getElementById('lup-query-list-'+$scope.data.chat.id()) : null;
 	};
 
 	$scope.scrollToBottom = function() {
 		console.log('QueryCtrl.scrollToBottom()');
 		var element = $scope.getList();
-		if (element.scrollHeight >= element.clientHeight) {
-			element.scrollTop = element.scrollHeight - element.clientHeight;
+		if (element) {
+			element.scrollTop = element.scrollHeight;
 		}
+	};
+
+	$scope.scrollToBottomAfterRender = function() {
+		return $timeout($scope.scrollToBottom, 0, false);
 	};
 
 	$scope.sendMessage = function() {
 		console.log('QueryCtrl.sendMessage()', $scope.data.user, $scope.data.message);
 		if($scope.data.message){
-			ChatSrvc.sendQuery($scope.data.user, $scope.data.message)['catch']($scope.catchUnknown);
+			ChatSrvc.sendQuery($scope.data.user, $scope.data.message).
+				then($scope.scrollToBottomAfterRender)['catch']($scope.catchUnknown);
 		}
 		jQuery('.chatbottom input').val('');
 		jQuery('.chatbottom button').removeClass('sendmessage');
@@ -121,9 +127,9 @@ angular.module('LUP').config(function($routeProvider) {
 	$rootScope.$on('lup-query-message', function(event, message){
 		var thread = ChatSrvc.forMessage(message);
 		thread.addNewMessage(message);
-		if (thread.user().id() === $scope.data.user.id()) {
+		if (message && message.isOwnMessage() && thread.user().id() === $scope.data.user.id()) {
 			$scope.data.chat = thread;
-			setTimeout($scope.scrollToBottom);
+			$scope.scrollToBottomAfterRender();
 		}
 	});
 

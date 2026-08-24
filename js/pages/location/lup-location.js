@@ -392,7 +392,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.$on-gwf-position-changed', position);
 	});
 	$scope.$on('lup-room-message', function(event, room, message) {
-		if (room && room.id() === $scope.data.room.id()) {
+		if (message && message.isOwnMessage() && room && room.id() === $scope.data.room.id()) {
 			$scope.scrollChatToBottom(false);
 		}
 	});
