@@ -450,9 +450,12 @@ angular.module('LUP').config(function($routeProvider) {
 			// while waitForAnimate still prevents a second gesture from tearing a card.
 			useCSS: true,
 			useTransform: true,
-			speed: 105,
-			cssEase: 'cubic-bezier(.18,.86,.2,1)',
-			touchThreshold: 10,
+			// Fast initial momentum with a short, controlled finish. Together with
+			// swipeToSlide this preserves the distance of a strong flick without
+			// leaving the rail between two real locations.
+			speed: 88,
+			cssEase: 'cubic-bezier(.12,.94,.16,1)',
+			touchThreshold: 14,
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
