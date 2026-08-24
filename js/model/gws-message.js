@@ -77,7 +77,7 @@ function GWS_Message(buffer) {
 			back += String.fromCharCode(code);
 		}
 		back = decodeURIComponent(back.replace(/\+/g, '%20'));
-		console.log('GWS_Message.readString == ' + back);
+		// console.log('GWS_Message.readString == ' + back);
 		return back;
 	};
 	this.readFloat = function(index) {

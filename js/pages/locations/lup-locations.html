@@ -34,7 +34,7 @@
 								<strong class="room-hero-name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 								<span class="room-hero-meta"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
 								<span class="room-top-actions" aria-label="Location-Aktionen">
-									<a class="room-top-action room-top-action--maps" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i></a>
+									<a class="room-top-action room-top-action--maps" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><small ng-if="room.showDistance()">{{room.displayDistance()}}</small></a>
 									<button type="button" class="room-top-action room-top-action--qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
 								</span>
 							</div>

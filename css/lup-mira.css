@@ -76,7 +76,7 @@ md-sidenav {
  * surface for the people currently at the place. */
 .nearby .placeboard .room-category-hero {
 	position: relative !important;
-	padding-right: 106px !important;
+	padding-right: 122px !important;
 }
 
 .nearby .placeboard .room-top-actions {
@@ -89,10 +89,11 @@ md-sidenav {
 }
 
 .nearby .placeboard .room-top-action {
+	position: relative;
 	display: grid;
 	place-items: center;
-	width: 35px;
-	height: 35px;
+	width: 43px;
+	height: 43px;
 	padding: 0;
 	border: 1px solid rgba(190,225,252,.28);
 	border-radius: 11px;
@@ -104,7 +105,18 @@ md-sidenav {
 }
 
 .nearby .placeboard .room-top-action--qr { color: #d9ccff; }
-.nearby .placeboard .room-top-action .material-icons { font-size: 20px; }
+.nearby .placeboard .room-top-action .material-icons { font-size: 23px; }
+.nearby .placeboard .room-top-action--maps small {
+	position: static;
+	margin-top: -4px;
+	color: #e6f6ff;
+	font-size: 8px;
+	font-weight: 800;
+	line-height: 1;
+	white-space: nowrap;
+}
+.nearby .placeboard .room-top-action--maps { grid-template-rows: 24px 10px; }
+.nearby .placeboard .room-top-action--maps > * { transform: translateY(2px); }
 
 .nearby .placeboard > .room-presence-count {
 	display: inline-flex !important;
@@ -139,9 +151,9 @@ md-sidenav {
 }
 
 @media (max-width: 360px) {
-	.nearby .placeboard .room-category-hero { padding-right: 92px !important; }
+	.nearby .placeboard .room-category-hero { padding-right: 104px !important; }
 	.nearby .placeboard .room-top-actions { top: 12px; right: 11px; gap: 5px; }
-	.nearby .placeboard .room-top-action { width: 31px; height: 31px; }
+	.nearby .placeboard .room-top-action { width: 37px; height: 37px; }
 	.nearby .placeboard .room-user-preview {
 		grid-template-columns: repeat(5, 32px);
 		grid-auto-rows: 32px;
