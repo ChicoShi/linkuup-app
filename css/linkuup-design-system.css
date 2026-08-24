@@ -3247,6 +3247,25 @@ md-list.usernavigation .presence-actions .usericon {
   .nearby .room-user-preview .lup-avatar { width:42px; height:42px; margin-left:-16px; }
   .nearby .room-presence-count { padding:4px 5px; font-size:8px; }
 }
+
+/* Private messages animate as one compact bubble: avatar, header and text
+   stay together, while the outer repeat row keeps its full-width alignment. */
+.query-page .chat-msgs .lup-msg > .head {
+  display:flex;
+  width:100%;
+}
+.query-page .chat-msgs .query-message-card {
+  width:fit-content !important;
+  max-width:min(calc(100% - 16px), 560px) !important;
+  flex:0 1 auto !important;
+}
+.query-page .chat-msgs .query-message-content {
+  flex:0 1 auto !important;
+  max-width:calc(100% - 54px);
+}
+.query-page .chat-msgs .lup-own-msg > .head {
+  justify-content:flex-end;
+}
 @media (max-width:600px) {
   .nearby .location-categories button.active::after { height:30px; }
   .nearby .slickit::before { left:12%; right:12%; }

@@ -5,11 +5,11 @@
    style="overflow: scroll;"
    flex id="lup-query-list-{{data.chat.id()}}">
 	<div class="msgline">
-		<div ng-repeat="msg in data.chat.messages" class="lup-msg" lup-effect="msg.effect"
+		<div ng-repeat="msg in data.chat.messages" class="lup-msg"
 		 in-view="$inview&&onMessageRead(msg)"
 		 ng-class="{'lup-own-msg':msg.isOwnMessage(), 'lup-notification-unread':!msg.readMyself()}">
 		  <div class="head">
-			  <article class="query-message-card">
+			  <article class="query-message-card" lup-effect="msg.effect">
 				  <lup-avatar class="query-message-avatar"
                    ng-user="msg.fromUser()"
                    ng-click="gotoProfile(msg.fromUser())"></lup-avatar>

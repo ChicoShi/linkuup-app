@@ -15,8 +15,9 @@ angular.module('LUP').directive('lupEffect', function($timeout) {
 				}
 				cancel = $timeout(function() {
 					cancel = null;
-					// Chat repeaters span the full rail width. Animate the actual
-					// message bubble instead, so it folds into its own middle.
+					// Room-chat repeaters span the full rail width, hence their p.msg
+					// target. Private-message markup puts the directive on its compact
+					// complete bubble/card, so it naturally remains the target here.
 					var target = element[0].querySelector('p.msg') || element[0];
 					window.LUPEffects.run(target, name);
 				}, 0, false);
