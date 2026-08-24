@@ -33,6 +33,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
 	var categoryRebuildTimer = null;
+	var railSnapTimer = null;
 	var categoryRailDetached = false;
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
@@ -161,6 +162,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (categoryRebuildTimer) {
 			$timeout.cancel(categoryRebuildTimer);
+		}
+		if (railSnapTimer) {
+			$timeout.cancel(railSnapTimer);
 		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
@@ -410,6 +414,17 @@ angular.module('LUP').config(function($routeProvider) {
 						$scope.focusSlide($currentSlide);
 					}
 				});
+				// A place selection ends with one short physical settle. It makes a
+				// long swipe feel like a wheel that locks into the chosen location,
+				// without adding a continuous animation while the finger moves.
+				if (railSnapTimer) {
+					$timeout.cancel(railSnapTimer);
+				}
+				$slick.removeClass('lup-rail-snap').addClass('lup-rail-snap');
+				railSnapTimer = $timeout(function() {
+					railSnapTimer = null;
+					$slick.removeClass('lup-rail-snap');
+				}, 180, false);
 			}).on('swipe.lupSlick', function() {
 				// Slick only emits this after it has accepted a horizontal gesture.
 				// The short guard catches the browser click that can follow the drag.
@@ -438,10 +453,10 @@ angular.module('LUP').config(function($routeProvider) {
 			draggable: true,
 			vertical: false,
 			verticalSwiping: false,
-			// One deliberate swipe means exactly one location. With swipeToSlide
-			// enabled a normal phone gesture could skip several city cards, making
-			// much of the catalogue appear to be missing.
-			swipeToSlide: false,
+			// A short swipe selects the next place; a longer drag can travel over
+			// several cards. Slick calculates this from the actual distance and then
+			// locks onto a real card, like a wheel settling into a notch.
+			swipeToSlide: true,
 			// Do not let a second gesture interrupt a running transition. Interrupts
 			// made the location cards jump and feel choppy on touch screens.
 			waitForAnimate: true,
