@@ -8404,6 +8404,26 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @media (max-width:360px) { .query-page .query-contact { gap:7px; margin-left:1px; }.query-page .query-contact .lup-title-avatar,.query-page .query-contact .lup-title-avatar .avatar,.query-page .query-contact .lup-title-avatar img { width:30px !important; height:30px !important; }.query-page .query-contact .lup-title-avatar { flex-basis:30px; }.query-page .query-contact-copy h2 { max-width:34vw; font-size:13px !important; }.query-page .chatbottom { min-height:65px !important; height:65px !important; padding-right:9px !important; padding-left:9px !important; }.query-page .chatbottom input { height:39px !important; }.query-page .chatbottom .chat-button { flex-basis:39px !important; width:39px !important; height:39px !important; } }
 @media (prefers-reduced-motion:reduce) { .query-route-light { animation:none !important; } }
 
+/* Read messages should remain present without competing with the next thing to
+   read.  An unread message is deliberately crisp, using the conversation blue
+   instead of the old muddy gold highlight. */
+.location-chat-surface .lup-msg,
+.query-page .chat-msgs .lup-msg {
+  opacity:.87;
+  transition:opacity 180ms ease;
+}
+.location-chat-surface .lup-msg.lup-notification-unread,
+.query-page .chat-msgs .lup-msg.lup-notification-unread {
+  opacity:1;
+}
+.location-chat-surface .lup-msg.lup-notification-unread .message {
+  background:linear-gradient(112deg,rgba(79,154,213,.22),rgba(100,86,187,.15)) !important;
+  box-shadow:inset 2px 0 0 rgba(143,215,255,.72) !important;
+}
+.query-page .lup-msg.lup-notification-unread .query-message-card {
+  background:linear-gradient(105deg,rgba(78,151,211,.17),rgba(123,94,190,.12)) !important;
+}
+
 /* The location join control is an open doorway, not a generic primary CTA.
    It uses the current place accent, but keeps the surrounding card quiet. */
 .nearby .chatbutton:not(.chatbutton--locked) { width:min(88%,342px) !important; margin:13px auto 0 !important; }

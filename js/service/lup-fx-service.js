@@ -28,17 +28,15 @@ angular.module('LUP')
 	FXSrvc.onQuery = function(message) {
 		console.log('FXSrvc.onQuery()', message);
 		if (message.toUser().isSelf()) {
-			FXSrvc.play('message');
-			FXSrvc.onNotification();
+			FXSrvc.play('privateMessage');
+			FXSrvc.vibrate(500);
 		}
 	};
 	
 	FXSrvc.onNotification = function() {
 		console.log('FXSrvc.onNotification()');
 		FXSrvc.vibrate(500);
-		
-		// TODO: make notification icon in top bar turn red. Can be done with jquery as well
-		
+		FXSrvc.play('event');
 	};
 
 	return FXSrvc;

@@ -4,7 +4,9 @@
 (function(window) {
 	var lastPlayedAt = 0;
 	var sounds = {
-		message: 'js/effects/audio/message-droplet.wav'
+		message: 'js/effects/audio/message-droplet.wav',
+		privateMessage: 'js/effects/audio/private-message.wav',
+		event: 'js/effects/audio/event-spark.wav'
 	};
 
 	window.LUPAudio = {

@@ -14,7 +14,11 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <p>{{'QR_FRIEND_DIALOG_PARAGRAPH'|translate}}</p>
-                <div><img class="qrcode" src="{{data.url}}" /></div>
+                <div>
+                    <a ng-href="{{data.target}}" title="{{'QR_FRIEND_DIALOG_TITLE'|translate}}">
+                        <img class="qrcode" ng-src="{{data.url}}" />
+                    </a>
+                </div>
             </div>
         </md-dialog-content>
 
