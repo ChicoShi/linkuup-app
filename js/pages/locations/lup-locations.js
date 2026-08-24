@@ -400,13 +400,14 @@ angular.module('LUP').config(function($routeProvider) {
 				// sliding a static card sideways.
 				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
 					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
-				// Slick emits this from jQuery, which is outside Angular's digest.
-				// Queue the model update instead of forcing $apply(): the latter can
-				// re-enter a digest while a category/search render is still active.
-				var $nextSlide = slick.$slides.eq(nextSlide);
+			}).on('afterChange.lupSlick', function(event, slick, currentSlide) {
+				// Updating Angular during Slick's transform competes with the browser
+				// on slower phones. The visual move has finished here, so this digest
+				// cannot interrupt the finger-driven animation.
+				var $currentSlide = slick.$slides.eq(currentSlide);
 				$scope.$evalAsync(function() {
 					if (!$scope.$$destroyed) {
-						$scope.focusSlide($nextSlide);
+						$scope.focusSlide($currentSlide);
 					}
 				});
 			}).on('swipe.lupSlick', function() {
@@ -449,8 +450,8 @@ angular.module('LUP').config(function($routeProvider) {
 			// while waitForAnimate still prevents a second gesture from tearing a card.
 			useCSS: true,
 			useTransform: true,
-			speed: 190,
-			cssEase: 'cubic-bezier(.16,1,.3,1)',
+			speed: 160,
+			cssEase: 'cubic-bezier(.2,.82,.2,1)',
 			touchThreshold: 6,
 		});
 		} catch (error) {
@@ -605,7 +606,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return;
 			}
 			$scope.refreshCategoryFilter(selectionSerial);
-		}, 16);
+		}, 72);
 	};
 
 	var detachCategoryRail = function() {
@@ -733,8 +734,10 @@ angular.module('LUP').config(function($routeProvider) {
 				if (selectionSerial !== undefined && selectionSerial !== categorySelectionSerial) {
 					return;
 				}
+				// slick() measures the just-rendered list once. A second delayed
+				// setPosition() here caused an avoidable layout pass immediately
+				// after every category tap on phones.
 				$scope.slick(true);
-				settleHorizontalRail();
 			}, 0);
 		}
 		catch (error) {
