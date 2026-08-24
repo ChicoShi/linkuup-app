@@ -450,9 +450,9 @@ angular.module('LUP').config(function($routeProvider) {
 			// while waitForAnimate still prevents a second gesture from tearing a card.
 			useCSS: true,
 			useTransform: true,
-			speed: 160,
-			cssEase: 'cubic-bezier(.2,.82,.2,1)',
-			touchThreshold: 6,
+			speed: 135,
+			cssEase: 'cubic-bezier(.18,.86,.2,1)',
+			touchThreshold: 5,
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
@@ -606,7 +606,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return;
 			}
 			$scope.refreshCategoryFilter(selectionSerial);
-		}, 72);
+		}, 48);
 	};
 
 	var detachCategoryRail = function() {
