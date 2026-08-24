@@ -100,6 +100,7 @@ function GWS_Message(buffer) {
 		this.INDEX += 8;
 		return value;
 	};
+	this.readTS = function(index) { return this.readDouble(index); };
 	this.readCmd = function() { this.CMD = this.CMD < 0 ? (this.read16() & 0x7FFF) : this.CMD; return this.CMD; };
 	this.readMid = function() { return this.read24(); };
 

@@ -70,3 +70,86 @@ md-sidenav {
 	float: none;
 	margin-top: 13px;
 }
+
+/* Discovery cards: route and room QR belong to the identity header.  The
+ * presence count begins below its bright divider, leaving a true two-row
+ * surface for the people currently at the place. */
+.nearby .placeboard .room-category-hero {
+	position: relative !important;
+	padding-right: 106px !important;
+}
+
+.nearby .placeboard .room-top-actions {
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	display: flex;
+	gap: 7px;
+	z-index: 3;
+}
+
+.nearby .placeboard .room-top-action {
+	display: grid;
+	place-items: center;
+	width: 35px;
+	height: 35px;
+	padding: 0;
+	border: 1px solid rgba(190,225,252,.28);
+	border-radius: 11px;
+	background: rgba(11,21,40,.68);
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.11), 0 7px 14px rgba(0,0,0,.19);
+	color: #c8edff;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.nearby .placeboard .room-top-action--qr { color: #d9ccff; }
+.nearby .placeboard .room-top-action .material-icons { font-size: 20px; }
+
+.nearby .placeboard > .room-presence-count {
+	display: inline-flex !important;
+	margin: 10px 17px 6px !important;
+}
+
+.nearby .placeboard .room-user-preview {
+	position: static !important;
+	display: grid !important;
+	grid-template-columns: repeat(5, 36px);
+	grid-auto-rows: 36px;
+	gap: 7px;
+	width: max-content !important;
+	height: auto !important;
+	min-height: 79px;
+	margin: 0 17px 14px !important;
+	padding: 0 !important;
+}
+
+.nearby .placeboard .room-user-preview .lup-avatar,
+.nearby .placeboard .room-user-preview .more-users {
+	box-sizing: border-box;
+	width: 36px !important;
+	height: 36px !important;
+	margin: 0 !important;
+}
+
+.nearby .placeboard .room-user-preview .more-users {
+	position: static !important;
+	border-color: rgba(183,199,239,.42);
+	background: rgba(61,72,99,.72);
+}
+
+@media (max-width: 360px) {
+	.nearby .placeboard .room-category-hero { padding-right: 92px !important; }
+	.nearby .placeboard .room-top-actions { top: 12px; right: 11px; gap: 5px; }
+	.nearby .placeboard .room-top-action { width: 31px; height: 31px; }
+	.nearby .placeboard .room-user-preview {
+		grid-template-columns: repeat(5, 32px);
+		grid-auto-rows: 32px;
+		gap: 6px;
+		min-height: 70px;
+		margin-right: 12px !important;
+		margin-left: 12px !important;
+	}
+	.nearby .placeboard .room-user-preview .lup-avatar,
+	.nearby .placeboard .room-user-preview .more-users { width: 32px !important; height: 32px !important; }
+}

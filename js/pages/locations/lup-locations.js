@@ -358,6 +358,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.requestLocation = function(room, event) {
+		event.stopPropagation();
 		if (PositionSrvc.hasPosition(true)) {
 			return; // Normal case: keep the route link working.
 		}
@@ -365,7 +366,6 @@ angular.module('LUP').config(function($routeProvider) {
 		// avoids repeated startup dialogs and gives the distance button a clear,
 		// honest purpose until the exact position is available.
 		event.preventDefault();
-		event.stopPropagation();
 		PositionSrvc.probe().then(function(position) {
 			$scope.updatePosition(position);
 			return RoomSrvc.withRooms();
@@ -775,8 +775,9 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.visitorOverflowLabel = function(room) {
-		// Five faces remain recognisable on a phone; the badge represents the rest.
-		var remaining = Math.max(0, (room.USERS || []).length - 5);
+		// Two compact rows keep ten faces recognisable on a phone; the badge
+		// represents everyone beyond the visible preview.
+		var remaining = Math.max(0, (room.USERS || []).length - 10);
 		return remaining > 99 ? '99+' : remaining;
 	};
 

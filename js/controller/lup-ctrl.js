@@ -722,22 +722,26 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	
 	$scope.cmd_1103 = function userJoined(gwsMessage) {
 		console.log('LUPCtrl.userJoined()', gwsMessage.dump());
-		var time = gwsMessage.read32();
-		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
-		var user = UserSrvc.getOrCreate(gwsMessage.read32());
-		room.addUser(user);
-		var message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
-		$rootScope.$broadcast('lup-room-message', room, message);
+		const time = gwsMessage.readTS();
+		const room = RoomSrvc.getRoom(gwsMessage.read32());
+		if (room) {
+			const user = UserSrvc.getOrCreate(gwsMessage.read32());
+			room.addUser(user);
+			const message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
+			$rootScope.$broadcast('lup-room-message', room, message);
+		}
 	};
 	
 	$scope.cmd_1104 = function userLeft(gwsMessage) {
 		console.log('LUPCtrl.userLeft()', gwsMessage.dump());
-		var time = gwsMessage.read32();
-		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
-		var user = UserSrvc.getOrCreate(gwsMessage.read32());
-		room.removeUser(user);
-		var message = room.addMessage(time, user, room, $translate.instant('has left'), true);
-		$rootScope.$broadcast('lup-room-message', room, message);
+		const time = gwsMessage.readTS();
+		const room = RoomSrvc.getRoom(gwsMessage.read32());
+		if (room) {
+			const user = UserSrvc.getOrCreate(gwsMessage.read32());
+			room.removeUser(user);
+			const message = room.addMessage(time, user, room, $translate.instant('has left'), true);
+			$rootScope.$broadcast('lup-room-message', room, message);
+		}
 	};
 	
 	$scope.cmd_1105 = function userList(gwsMessage) {

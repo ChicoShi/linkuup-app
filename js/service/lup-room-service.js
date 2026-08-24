@@ -114,11 +114,15 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		RoomSrvc.CACHE[room.id()] = room;
 		return deferred.resolve(room);
 	};
-	
+
+	RoomSrvc.getRoom = function(roomId) {
+		const room = RoomSrvc.CACHE[roomId] ? RoomSrvc.CACHE[roomId] : null;
+		console.log('RoomSrvc.getRoom()', roomId, room);
+		return room
+	};
+
 	RoomSrvc.getOrCreate = function(roomId) {
-//		console.log('RoomSrvc.getOrCreate()', roomId);
 		if (RoomSrvc.CACHE[roomId]) {
-//			console.log('RoomSrvc.getOrCreate() cached', roomId);
 			return RoomSrvc.CACHE[roomId];
 		}
 		else {

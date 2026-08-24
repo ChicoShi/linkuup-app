@@ -33,7 +33,7 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			var pos = window.GWF_POSITION;
 			var gwsMessage = new GWS_Message().cmd(0x1103);
 			gwsMessage.write32(room.id());
-			gwsMessage.writeFloat(pos.lat).writeFloat(pos.lng)
+			gwsMessage.writeFloat(pos.lat).writeFloat(pos.lng);
 			gwsMessage.writeString(password||"");
 			return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
 				ChatSrvc.CHATROOM = room;

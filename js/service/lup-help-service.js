@@ -52,7 +52,7 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 				if (HelpSrvc.lastKey != key) {
 					HelpSrvc.lastKey = key;
 					DialogSrvc.confirm("js/service/tpl/lup-help-dialog.html", {html:html}).then(
-							HelpSrvc.confirmed.bind(HelpSrvc, key));
+							HelpSrvc.confirmed.bind(HelpSrvc, key), function(){ /* do nothing */ });
 				}
 			}
 		});
