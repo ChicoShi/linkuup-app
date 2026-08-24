@@ -17,7 +17,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.createRoom = function() {
 		console.log('NewLocationCtrl.createRoom()');
-		WebsocketSrvc.sendCommand('lup_create_room', JSON.stringify($scope.data.room)).then($scope.createdRoom);
+		WebsocketSrvc.sendCommand('lup_create_room', JSON.stringify($scope.data.room)).then($scope.createdRoom)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.createdRoom = function() {

@@ -3,6 +3,13 @@ angular.module('LUP').
 service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	
 	var WebsocketSrvc = this;
+	WebsocketSrvc.catchUnknown = function(error) {
+		if ($rootScope.catchUnknown) {
+			return $rootScope.catchUnknown(error);
+		}
+		console.error('LinkUUp: websocket background operation rejected.', error);
+		return ErrorSrvc.websocketMaybeJSONError(error);
+	};
 	
 	WebsocketSrvc.SYNC_MSGS = {};
 	WebsocketSrvc.SOCKET = null;
@@ -92,7 +99,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    	defer.resolve();
 		    	WebsocketSrvc.authenticate().then(function(result){
 					WebsocketSrvc.broadcast('gws-ws-open');
-		    	});
+				})['catch'](WebsocketSrvc.catchUnknown);
 			};
 		    ws.onclose = function() {
 				WebsocketSrvc.CONNECTING = null;

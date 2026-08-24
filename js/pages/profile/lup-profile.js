@@ -51,7 +51,7 @@ angular.module('LUP').config(function($routeProvider) {
 			// an otherwise fully usable profile.
 			UserSrvc.withUser($routeParams.id, true).then(
 				$scope.loadedUser,
-				ErrorSrvc.websocketError);
+				ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 		}
 	};
 	
@@ -117,7 +117,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$timeout(function() {
 				$scope.data.profileUpWorking = false;
 			}, 440);
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profilePullFriends = function() {
@@ -189,7 +189,7 @@ angular.module('LUP').config(function($routeProvider) {
 		return $scope.sendAvatarUploadCommand($file.uniqueIdentifier).then(function(response) {
 			$flow.removeFile($file);
 			return $scope.avatarUploadSuccess(response);
-			}, $scope.avatarUploadFailure);
+			}, $scope.avatarUploadFailure)['catch']($scope.catchUnknown);
 	};
 
 	$scope.sendAvatarUploadCommand = function(flowIdentifier) {
@@ -227,7 +227,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadInformation = function() {
 		console.log('ProfileCtrl.loadInformation()');
 		return ProfileSrvc.withProfile($scope.data.user).then(
-				$scope.loadedInformation, ErrorSrvc.websocketError);
+				$scope.loadedInformation, ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 	};
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
@@ -239,7 +239,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!SettingsSrvc.CACHE) {
 			SettingsSrvc.withConfig().then(function() {
 				$scope.rebuildProfileGroups();
-			}, angular.noop);
+			}, angular.noop)['catch']($scope.catchUnknown);
 		}
 	};
 
@@ -443,8 +443,8 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.gotCourse,
 				function(error) {
 					$scope.data.course.working = false;
-					ErrorSrvc.websocketMaybeJSONError(error);
-				});
+					return ErrorSrvc.websocketMaybeJSONError(error);
+				})['catch']($scope.catchUnknown);
 		}
 	};
 	
@@ -587,14 +587,14 @@ angular.module('LUP').config(function($routeProvider) {
 			image: image,
 		};
 		return DialogSrvc.confirm(dialogURL, dialogData).then(
-				$scope.reallyDeleteGalleryImage.bind($scope, image));
+				$scope.reallyDeleteGalleryImage.bind($scope, image), angular.noop)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.reallyDeleteGalleryImage = function(image) {
 		console.log('GalleryCtrl.deleteGalleryImage()', image);
 		return GallerySrvc.deleteImage(image, $scope.data.gallery).then(
 				$scope.showGallery.bind($scope, true),
-				ErrorSrvc.websocketFormError);
+				ErrorSrvc.websocketFormError)['catch']($scope.catchUnknown);
 	};
 	
 	///////////////////////////
@@ -616,7 +616,7 @@ angular.module('LUP').config(function($routeProvider) {
 		CourseSrvc.getCourseAllowed(user).then(
 				$scope.gotoCourse.bind($scope, user),
 				ErrorSrvc.websocketMaybeJSONError.bind(ErrorSrvc)
-			);
+			)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.gotoUserFriends = function(user) {
@@ -624,7 +624,7 @@ angular.module('LUP').config(function($routeProvider) {
 		FriendSrvc.isFriendListAllowed(user).then(
 				$scope.gotoFriends.bind($scope, user),
 				ErrorSrvc.websocketMaybeJSONError.bind(ErrorSrvc)
-			);
+			)['catch']($scope.catchUnknown);
 	};
 
 	$scope.gotoUserCuddles = function(user) {

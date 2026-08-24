@@ -51,7 +51,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 			if ($scope.data.authenticated) {
 				if (NotificationSrvc.shouldLoadMore()) {
-					NotificationSrvc.loadMore().then(this.loadedMore.bind(this));
+					NotificationSrvc.loadMore().then(this.loadedMore.bind(this))['catch']($scope.catchUnknown);
 				}
 			}
 		},
@@ -120,7 +120,7 @@ angular.module('LUP').config(function($routeProvider) {
 		gwsMessage.write32(data[1]).write32(data[2]);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(
 				$scope.acceptedFriendRequest.bind($scope, data[0]),
-				ErrorSrvc.websocketError);
+				ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.acceptedFriendRequest = function(notificationid, gwsMessage) {
@@ -152,7 +152,7 @@ angular.module('LUP').config(function($routeProvider) {
 		var gwsMessage = new GWS_Message().cmd(0x1142).sync().write32(lupNotification.id());
 		// Send and set success/failure handlers.
 		WebsocketSrvc.sendBinary(gwsMessage).then(
-				$scope.markedRead, WebsocketSrvc.onError);
+				$scope.markedRead, WebsocketSrvc.onError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.markedRead = function(gwsMessage) {
@@ -210,7 +210,7 @@ angular.module('LUP').config(function($routeProvider) {
 			if ($scope.data.loadingChats === null) {
 				$scope.data.loadingChats = true;
 				ChatSrvc.loadChats(window.GWF_USER.id()).
-					then($scope.loadedChats);
+					then($scope.loadedChats)['catch']($scope.catchUnknown);
 			}
 		}
 	};
@@ -226,12 +226,12 @@ angular.module('LUP').config(function($routeProvider) {
 			chat: chat,
 		};
 		var confirmed = $scope.reallyDeleteChat.bind($scope, chat);
-		DialogSrvc.confirm(dialogURL, dialogData).then(confirmed);
+		DialogSrvc.confirm(dialogURL, dialogData).then(confirmed, angular.noop)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.reallyDeleteChat = function(chat) {
 		console.log('NotificationCtrl.reallyDeleteChat()', chat);
-		ChatSrvc.deleteQuery(chat).then($scope.deletedChat.bind($scope, chat));
+		ChatSrvc.deleteQuery(chat).then($scope.deletedChat.bind($scope, chat))['catch']($scope.catchUnknown);
 	};
 
 	$scope.deletedChat = function(chat) {
@@ -280,7 +280,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.deleteNotification = function(lupNotification) {
 		console.log('NotificationCtrl.deleteNotification()', lupNotification);
 		return NotificationSrvc.deleteNotification(lupNotification).then(
-				$scope.deletedNotification, ErrorSrvc.websocketMaybeJSONError);
+				$scope.deletedNotification, ErrorSrvc.websocketMaybeJSONError)['catch']($scope.catchUnknown);
 	};
 
 	$scope.deletedNotification = function(lupNotification) {
@@ -416,7 +416,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.deleteNotificationIndex(id).then(function(){
 				$(that).css('left', 0).css('opacity', '1.0');
 				$scope.swipeDelete = -1;
-			});
+			})['catch']($scope.catchUnknown);
 		};
 		
 		// Direction

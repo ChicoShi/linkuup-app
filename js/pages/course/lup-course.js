@@ -53,7 +53,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('CourseCtrl.loadCourses()', userId);
 		$scope.data.courseUser = GWF_User.ghost();
 		$scope.data.course = [];
-		UserSrvc.withUser(userId).then($scope.loadedUser);
+		UserSrvc.withUser(userId).then($scope.loadedUser)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadedUser = function(user) {
@@ -61,7 +61,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.courseUser = user;
 		CourseSrvc.getCourse(user).then(
 				$scope.loadedCourse,
-				ErrorSrvc.websocketMaybeJSONError);
+				ErrorSrvc.websocketMaybeJSONError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadedCourse = function(gwsMessage) {

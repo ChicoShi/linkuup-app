@@ -28,7 +28,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.user = window.GWF_USER;
 			$scope.data.pagemenu = new GWFPagination();
 			$scope.data.friends = [];
-			UserSrvc.withUser($routeParams.id).then($scope.loadedUser);
+			UserSrvc.withUser($routeParams.id).then($scope.loadedUser)['catch']($scope.catchUnknown);
 			HelpSrvc.showHelp('friends', $translate.instant('HELP_FRIENDS'));
 		}
 	};
@@ -52,7 +52,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadError = function(response) {
 		ErrorSrvc.websocketError(response).then(function(){
 			$scope.gotoReferrer();
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadedFriends = function(gwsMessage) {
@@ -62,7 +62,7 @@ angular.module('LUP').config(function($routeProvider) {
 		while (gwsMessage.hasMore()) {
 			UserSrvc.withUser(gwsMessage.read32()).then(function(friend){
 				$scope.data.friends.push(friend);
-			});
+			})['catch']($scope.catchUnknown);
 		}
 	};
 	
@@ -75,7 +75,7 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	$scope.deleteFriend = function(friend) {
 		console.log("FriendsCtrl.deleteFriend()", friend);
-		FriendSrvc.removeFriend(friend).then($scope.deletedFriend.bind($scope, friend));
+		FriendSrvc.removeFriend(friend).then($scope.deletedFriend.bind($scope, friend))['catch']($scope.catchUnknown);
 	};
 	
 	$scope.deletedFriend = function(friend, gwsMessage) {

@@ -78,7 +78,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.afterLoadedRoom = function() {
 		console.log('CommentsCtrl.afterLoadedRoom()', $scope.data.room);
-		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
+		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment)['catch']($scope.catchUnknown);
 		$scope.reloadComments();
 	};
 
@@ -97,7 +97,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('CommentsCtrl.savedComment()');
 		// Reload immediately. Waiting for the thank-you dialog to be closed made a
 		// freshly written comment appear missing even though it was saved already.
-		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment);
+		CommentSrvc.withOwnComment($scope.data.room).then($scope.loadedOwnComment)['catch']($scope.catchUnknown);
 		$scope.reloadComments();
 		return ErrorSrvc.showMessage($translate.instant('MSG_THX_VOTE'), $translate.instant('MSGT_THX'));
 	};

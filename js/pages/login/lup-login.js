@@ -110,12 +110,12 @@ angular.module('LUP').config(function($routeProvider) {
 			data.email = login;
 			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(login).writeString(data.password).write16(1).writeString("");
 			var sendLogin = function() {
-				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
+				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
 			};
 			if (WebsocketSrvc.connected()) {
 				sendLogin();
 			} else {
-				WebsocketSrvc.withConnection().then(sendLogin, $scope.loginFailure);
+				WebsocketSrvc.withConnection().then(sendLogin, $scope.loginFailure)['catch']($scope.catchUnknown);
 			}
 		};
 		// A location is helpful for nearby places, but must never delay login.
@@ -170,7 +170,7 @@ angular.module('LUP').config(function($routeProvider) {
 				gwsMessage.write16($scope.data.tos?1:0);
 			}
 			return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	////////////////////////////
@@ -190,7 +190,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.afterFacebookLogin = function() {
 		console.log('LoginCtrl.afterFacebookLogin()');
 		LoadingSrvc.addTask('oauth');
-		AuthSrvc.afterFacebookLogin().then($scope.loginSuccess, $scope.loginFailure);
+		AuthSrvc.afterFacebookLogin().then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
 	};
 	window.afterFacebookLogin = $scope.afterFacebookLogin;
 
@@ -244,7 +244,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.afterInstagram = function(token) {
 		console.log('LoginCtrl.afterInstagram()', token);
 		var gwsMessage = new GWS_Message().cmd(0x0112).sync().writeString(token);
-		WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
+		WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
 	};
 
 

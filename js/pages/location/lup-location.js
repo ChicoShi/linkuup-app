@@ -47,7 +47,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.user = GWF_USER;
-			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom);
+			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom)['catch']($scope.catchUnknown);
 			$scope.data.topComments = $scope.data.topComments || [CommentSrvc.BLANK_COMMENT()];
 			HelpSrvc.showHelp('help_location', $translate.instant('HELP_LOCATION'));
 		}
@@ -138,7 +138,7 @@ angular.module('LUP').config(function($routeProvider) {
 		 * now waits for that one decisive position result; range protection stays
 		 * exactly as strict once a position is known or denied. */
 		if (requestedTab === 1 && !PositionSrvc.hasPosition()) {
-			PositionSrvc.probe().then(applyTab, applyTab);
+			PositionSrvc.probe().then(applyTab, applyTab)['catch']($scope.catchUnknown);
 		}
 		else {
 			applyTab();
@@ -146,11 +146,11 @@ angular.module('LUP').config(function($routeProvider) {
 
 		$scope.loadTopComments();
 		CommentSrvc.withOwnComment($scope.data.room).
-			then($scope.loadedOwnComment);
+			then($scope.loadedOwnComment)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadTopComments = function() {
-		return CommentSrvc.withTopComments($scope.data.room).then($scope.loadedTopComments);
+		return CommentSrvc.withTopComments($scope.data.room).then($scope.loadedTopComments)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadedOwnComment = function(gwsMessage) {
@@ -168,7 +168,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.saveComment = function() {
 		console.log('LocationCtrl.saveComment()');
 		CommentSrvc.saveComment($scope.data.room, $scope.data.commentInput).
-			then($scope.savedComment, ErrorSrvc.websocketFormError);
+			then($scope.savedComment, ErrorSrvc.websocketFormError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.savedComment = function() {
@@ -185,7 +185,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return CommentSrvc.withOwnComment($scope.data.room);
 		}).then($scope.loadedOwnComment).then(function() {
 			return ErrorSrvc.showMessage("Deine Stimme wurde aktualisiert.", "Danke");
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	$scope.loadedTopComments = function(topComments) {
@@ -275,7 +275,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.commentInput = commentText;
 		return $scope.onVoteRoom(rating).then(function() {
 			return CommentSrvc.saveComment($scope.data.room, commentText);
-		}).then($scope.savedComment, ErrorSrvc.websocketError);
+		}).then($scope.savedComment, ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 	};
 	
 
@@ -283,7 +283,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.onVoteRoom()', rating);
 		var roomId = $scope.data.room.id();
 		var gwsMessage = new GWS_Message().cmd(0x1120).sync().write32(roomId).write8(rating);
-		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError);
+		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.onVoted = function(gwsMessage) {
@@ -308,7 +308,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return DialogSrvc.openHTMLDialog(
 					'<p>Bitte erlaube den Standort im Browser, damit Entfernung und Chat-Radius geprüft werden können.</p>',
 					'Standort aktivieren');
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		if (room.inChatRange()) {
 			return $scope.chatVisible();
@@ -336,7 +336,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.scrollChatToBottom(true);
 		}).finally(function() {
 			$scope.data.chatJoining = false;
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	// The top "Chat" control is always a valid way to inspect a location's
@@ -433,7 +433,7 @@ angular.module('LUP').config(function($routeProvider) {
 			leaveHandled = true;
 			leaveDialogOpen = false;
 			$location.url(nextPath);
-		});
+		})['catch']($scope.catchUnknown);
 	});
 	$scope.$on('$destroy', function() {
 		// Switching between Location, Chat and Online recreates this controller in

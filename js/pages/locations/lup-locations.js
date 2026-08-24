@@ -278,7 +278,7 @@ angular.module('LUP').config(function($routeProvider) {
 				$timeout.cancel(initialRoomsTimer);
 				initialRoomsTimer = null;
 			}
-			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms);
+			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms)['catch']($scope.catchUnknown);
 			return initialRoomsPromise;
 		};
 		if (PositionSrvc.hasPosition()) {
@@ -287,7 +287,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// Locations are meaningful only with a real position.  Waiting here also
 		// prevents the former (0,0) fallback from constructing a carousel for the
 		// complete public catalogue before GPS has answered.
-		return PositionSrvc.withPosition().then(load, angular.noop);
+		return PositionSrvc.withPosition().then(load, angular.noop)['catch']($scope.catchUnknown);
 	};
 
 	$scope.init = function(event) {
@@ -313,7 +313,7 @@ angular.module('LUP').config(function($routeProvider) {
 			var promise = loadInitialRooms();
 			promise['finally'](function(){
 				LoadingSrvc.removeTask('ws_rooms');
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		else {
 			$scope.gotRooms($scope.data.rooms);
@@ -373,7 +373,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return RoomSrvc.withRooms();
 		}).then($scope.gotRooms, function(error) {
 			console.warn('LinkUUp: location permission was not granted.', error);
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.gotRooms = function(rooms) {
@@ -620,7 +620,7 @@ angular.module('LUP').config(function($routeProvider) {
 				if (selectionSerial === categorySelectionSerial) {
 					$scope.data.categoryLoading = false;
 				}
-			});
+			})['catch']($scope.catchUnknown);
 			return;
 		}
 		// If "Alle" is selected while that optional request is still pending,
@@ -740,7 +740,7 @@ angular.module('LUP').config(function($routeProvider) {
 				}
 			}, function(error) {
 				console.warn('LinkUUp: full location catalogue could not be loaded for search.', error);
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		if (searchBaseRooms) {
 			var restoreRooms = $scope.data.category.length && $scope.data.fullCatalogue ?

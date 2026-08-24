@@ -130,7 +130,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: false,
-		});
+		})['catch'](angular.noop);
 
 		return defer.promise;
 	};

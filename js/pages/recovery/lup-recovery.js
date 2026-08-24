@@ -42,7 +42,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		return WebsocketSrvc.sendBinary(gwsMessage).then(
 				$scope.recoverySuccess,
-				$scope.recoveryFailure);
+				$scope.recoveryFailure)['catch']($scope.catchUnknown);
 	};
 
 	$scope.recoverySuccess = function(data) {

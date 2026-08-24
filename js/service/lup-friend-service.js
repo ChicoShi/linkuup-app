@@ -59,7 +59,8 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 			friend: friend,
 		};
 		DialogSrvc.confirm(dialogURL, dialogData).then(
-				FriendSrvc.reallyRemoveFriend.bind(FriendSrvc, friend, defer));
+				FriendSrvc.reallyRemoveFriend.bind(FriendSrvc, friend, defer),
+				defer.reject.bind(defer));
 		return defer.promise;
 	};
 	

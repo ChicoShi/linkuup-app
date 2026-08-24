@@ -18,13 +18,13 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('CuddlesCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.cuddles = [];
-			UserSrvc.withUser($routeParams.id).then($scope.loadedUser, ErrorSrvc.websocketMaybeJSONError);
+			UserSrvc.withUser($routeParams.id).then($scope.loadedUser, ErrorSrvc.websocketMaybeJSONError)['catch']($scope.catchUnknown);
 		}
 	};
 
 	$scope.loadedUser = function(user) {
 		$scope.data.cuddleUser = user;
-		return CuddleSrvc.getUserCuddles(user).then($scope.loadedCuddles, $scope.cuddlesUnavailable);
+		return CuddleSrvc.getUserCuddles(user).then($scope.loadedCuddles, $scope.cuddlesUnavailable)['catch']($scope.catchUnknown);
 	};
 
 	/* Older/local websocket backends do not yet expose the encounter-history

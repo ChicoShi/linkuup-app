@@ -17,7 +17,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	LUPNotification.RoomSrvc = RoomSrvc;
 	LUPNotification.UserSrvc = UserSrvc;
 	LUPComment.t = window.t = $translate.instant;
-	LUP_Query.UserSrvc = UserSrvc;
+	LUP_QueryThread.UserSrvc = UserSrvc;
 	LUP_QueryMessage.UserSrvc = UserSrvc;
 	
 	window.LUPSERVICE = {
@@ -31,6 +31,18 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 
 	// Hook DialogSrvc in main scope
 	$scope.DialogSrvc = DialogSrvc;
+
+	/** Last-resort handler for asynchronous UI work without a specific recovery. */
+	$rootScope.catchUnknown = $scope.catchUnknown = function(error) {
+		if (error === undefined || error === null || error === '') {
+			console.warn('LinkUUp: ignored empty asynchronous rejection.');
+			return $q.resolve();
+		}
+		console.error('LinkUUp: unhandled asynchronous rejection.', error);
+		var text = error && error.data ? error.data : error;
+		return ErrorSrvc.websocketMaybeJSONError(text)['catch'](angular.noop);
+	};
+	LUPNotification.catchUnknown = $scope.catchUnknown;
 	
 	// Hook media queries into main scope
 	$scope.$mdMedia = $mdMedia;
@@ -103,7 +115,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			if (response === 'ok') {
 				$scope.gotoRoom(room);
 			}
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	/////////////////
@@ -230,9 +242,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			var categories = CategorySrvc.withCategories();
 			categories['catch']($scope.failedCategories);
 			// All at once
-			$q.all([connection, types, enums, config, settings, categories]).then(
+		$q.all([connection, types, enums, config, settings, categories]).then(
 					$scope.initedConnection,
-					$scope.fatalError);
+					$scope.fatalError)['catch']($scope.catchUnknown);
 		}
 	};
 
@@ -254,9 +266,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.failedConnection = function(error) {
 		console.log('LUPCtrl.failedConnection()', error);
 		return ErrorSrvc.showError($translate.instant('err_websocket_connection'), 'Connection').then(function() {
-			$scope.fatalError().
-				then($scope.gotoLogin);
-		});
+			return $scope.fatalError().then($scope.gotoLogin);
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.failedTimezone = function(error) {
@@ -318,11 +329,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 						$scope.data.fullCatalogue = allRooms;
 					}, function(error) {
 						console.warn('LinkUUp: discovery catalogue preload failed.', error);
-					});
+					})['catch']($scope.catchUnknown);
 				}, 900, false);
 			}, function(error) {
 				console.warn('LinkUUp: location preload failed; it will retry on opening the view.', error);
-			});
+			})['catch']($scope.catchUnknown);
 			// The app is usable once the authenticated user is available. A stale
 			// optional background task must never keep the whole interface covered
 			// by the loading screen after a data reinstall.
@@ -333,7 +344,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		UserSrvc.withUser(window.GWF_USER.id(), true).then(finish, function(error) {
 			console.warn('LUP: Could not refresh the current user; continuing with the authenticated session.', error);
 			finish();
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	/////////////////
@@ -367,7 +378,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		ErrorSrvc.showError('Connection Failed', 'Websocket').then(function() {
 //			$scope.gotoLogin();
 			setTimeout($scope.initConnection, 500);
-		});
+		})['catch']($scope.catchUnknown);
 	});
 	
 	/**
@@ -394,7 +405,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			$location.path(path);
 		})['finally'](function() {
 			$scope.data.authRedirectPending = false;
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	//////////////////////
@@ -441,7 +452,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoVisitors = function(room) { return $scope.goto("/location/"+room.id()+'/visitors'); };
 	$scope.gotoRoomComments = function(room) { return $scope.goto('/location/'+room.id()+'/comments'); };
 	$scope.gotoAccount = function() { return $scope.goto("/account"); };
-	$scope.gotoQuery = function(user) { return $scope.goto("/query/"+user.id()); };
+	$scope.gotoQuery = function(user) { return $scope.goto("/query/user/"+user.id()); };
+	$scope.gotoQueryThread = function(thread) { return $scope.goto("/query/thread/"+thread.id()); };
 	$scope.gotoProfile = function(user) { return $scope.goto("/profile/"+user.id()); };
 	$scope.gotoProfileId = function(userId) { return $scope.goto("/profile/"+userId); };
 	$scope.gotoFriends = function(user) { return $scope.goto("/friends/"+user.id()); };
@@ -488,7 +500,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			$scope.clearCache();
 			$scope.data.authenticated = false;
 			$scope.gotoLogin();
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.clearCache = function() {
@@ -574,7 +586,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 				$rootScope.$broadcast('lup-rooms-ready', rooms);
 			}, function(error) {
 				console.warn('LinkUUp: nearby location refresh failed.', error);
-			});
+			})['catch']($scope.catchUnknown);
 		}, 250);
 	};
 	
@@ -693,11 +705,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.$on('lup-inited', function(event) {
 		console.log('LUPCtrl$lup-inited()', event);
 		NotificationSrvc.queryUnreadNotificationCount().then(
-				$scope.updateNotificationCount);
+				$scope.updateNotificationCount)['catch']($scope.catchUnknown);
 		if (window.GWF_USER.isAuthed()) {
 			$rootScope.updateFriendsCount();
 			ChatSrvc.loadChats(window.GWF_USER.id()).then(
-					$scope.updateNotificationCount);
+					$scope.updateNotificationCount)['catch']($scope.catchUnknown);
 		}
 	});
 	
@@ -721,7 +733,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.friendRequest()', gwsMessage.dump());
 		UserSrvc.withUser(gwsMessage.read32()).then(function(user){
 			alert('You got a friend request from ' + user.displayName());
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	
@@ -827,7 +839,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (notification && notification.type() === 'join') {
 			var ready = notification.resolved;
 			if (ready && angular.isFunction(ready.then)) {
-				ready.then($scope.showFriendArrival);
+				ready.then($scope.showFriendArrival)['catch']($scope.catchUnknown);
 			}
 		}
 		// Update cache

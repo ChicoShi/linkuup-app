@@ -147,7 +147,7 @@ window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui241')?>;
   <script src="js/model/gws-message.js<?=$v?>"></script>
   <script src="js/model/lup-room.js<?=$v?>"></script>
   <script src="js/model/lup-room-visit.js<?=$v?>"></script>
-  <script src="js/model/lup-query.js<?=$v?>"></script>
+  <script src="js/model/lup-query-thread.js<?=$v?>"></script>
   <script src="js/model/lup-query-message.js<?=$v?>"></script>
   <script src="js/model/lup-notification.js<?=$v?>"></script>
   <script src="js/model/lup-gallery.js<?=$v?>"></script>

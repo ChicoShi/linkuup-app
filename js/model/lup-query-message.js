@@ -5,6 +5,7 @@ function LUP_QueryMessage(json) {
 	this.JSON = json||{};
 	
 	this.id = function() { return this.JSON.lupqm_id; };
+	this.threadId = function() { return this.JSON.lupqm_thread; };
 	this.fromId = function() { return this.JSON.lupqm_from; };
 	this.fromUser = function() { return LUP_QueryMessage.UserSrvc.getOrCreate(this.fromId()); };
 	this.toId = function() { return this.JSON.lupqm_to; };
