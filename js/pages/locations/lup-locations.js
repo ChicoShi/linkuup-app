@@ -40,8 +40,10 @@ angular.module('LUP').config(function($routeProvider) {
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
 	var nativeRailScrollTimer = null;
-	$scope.data.currentRoom = null;
-	$scope.data.currentRoomIndex = -1;
+	// The selected room belongs to the shared app state, not one concrete
+	// LocationsCtrl instance. Preserve it when returning from a room detail.
+	$scope.data.currentRoom = $scope.data.currentRoom || null;
+	$scope.data.currentRoomIndex = $scope.data.currentRoomIndex === undefined ? -1 : $scope.data.currentRoomIndex;
 
 	// During a route transition Angular can keep a retiring view in the DOM for
 	// one digest. Prefer the active rail which already owns cards; `.last()`
@@ -407,6 +409,8 @@ angular.module('LUP').config(function($routeProvider) {
 		// card is authoritative after selecting a category.
 		// Chat and Online still enforce the location radius in the detail view.
 		RoomSrvc.CACHE[room.id()] = room;
+		$scope.data.currentRoom = room;
+		$scope.data.currentRoomIndex = $scope.data.visibleRooms.indexOf(room);
 		$scope.gotoRoom(room);
 	};
 
