@@ -8,32 +8,25 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 }).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
-		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc) {
+		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
 	$scope.data.rooms = $scope.data.rooms || [];
-	// Slick must only ever receive the cards which are actually visible.  Its
-	// own slickFilter() changes the slide collection while an animation can
-	// still be running; after a few category changes that was the source of the
-	// occasional jump, blank card or stuck horizontal rail.
+	// The rail contains only the currently visible cards. Keeping that list as
+	// Angular data prevents category and search results from fighting the DOM.
 	$scope.data.visibleRooms = $scope.data.visibleRooms || [];
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
 	$scope.data.category = Array.isArray($scope.data.category) ? $scope.data.category : [];
 	// These flags belong to this concrete screen instance. Keeping them on the
-	// shared root data object made a return from profile/course reuse stale Slick
+	// shared root data object made a return from profile/course reuse stale rail
 	// state from a destroyed view.
-	var slickedEvents = false;
 	var locationsRoomsRendered = false;
 	var locationsInitialized = false;
-	var slickStartAttempts = 0;
-	var slickRetryTimer = null;
 	var initialRoomsTimer = null;
 	var initialRoomsRequested = false;
 	var initialRoomsPromise = null;
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
-	var categoryRebuildTimer = null;
-	var categoryRailDetached = false;
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
 	var categorySelectionSerial = 0;
@@ -42,87 +35,197 @@ angular.module('LUP').config(function($routeProvider) {
 	// Only the first fix selects the nearest room automatically; later updates
 	// must not pull a visitor away from their deliberate selection.
 	var nearestRoomInitiallySelected = false;
-	// Mobile browsers may emit a click on the card immediately after Slick has
+	// Mobile browsers may emit a click on the card immediately after the rail has
 	// completed a horizontal drag. Keep taps working, but discard that trailing
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
-	$scope.data.currentRoom = null;
-	$scope.data.currentRoomIndex = -1;
+	var nativeRailScrollTimer = null;
+	// The selected room belongs to the shared app state, not one concrete
+	// LocationsCtrl instance. Preserve it when returning from a room detail.
+	$scope.data.currentRoom = $scope.data.currentRoom || null;
+	$scope.data.currentRoomIndex = $scope.data.currentRoomIndex === undefined ? -1 : $scope.data.currentRoomIndex;
 
 	// During a route transition Angular can keep a retiring view in the DOM for
 	// one digest. Prefer the active rail which already owns cards; `.last()`
 	// alone can otherwise select the leaving, empty view and make the live rail
 	// appear to have timed out.
-	var getSlick = function() {
-		var $rails = window.jQuery('ng-view .slickit').filter(function() {
+	var getRail = function() {
+		var $rails = window.jQuery('ng-view .location-rail').filter(function() {
 			return !window.jQuery(this).closest('.ng-leave').length;
 		});
 		var $withSlides = $rails.filter(function() {
 			return window.jQuery(this).children('.lup-room-slide-outer').length ||
-				window.jQuery(this).find('.slick-slide').length;
+				window.jQuery(this).find('.lup-room-slide-outer').length;
 		});
 		return ($withSlides.length ? $withSlides : $rails).last();
 	};
-	var revealRailFallback = function() {
-		getSlick().addClass('slick-inited lup-slick-fallback');
-		LoadingSrvc.removeTask('slick_rooms');
+	var getLocationRail = function() {
+		return getRail().get(0);
 	};
-	var retrySlick = function(nofocus) {
-		if ($scope.$$destroyed) {
+	var scrollSelectedRoomIntoView = function(behavior) {
+		$timeout(function() {
+			var rail = getLocationRail();
+			if (!rail || !$scope.data.currentRoom) {
+				return;
+			}
+			var roomId = String($scope.data.currentRoom.id());
+			var card = rail.querySelector('.lup-room-slide-outer[data-room-id="' + roomId + '"]');
+			if (card) {
+				card.scrollIntoView({behavior: behavior || 'auto', block: 'nearest', inline: 'center'});
+			}
+		}, 0);
+	};
+	var nearestRailCard = function(rail) {
+		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
+		if (!cards.length) {
+			return null;
+		}
+		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+		var nearest = null;
+		var nearestDistance = Infinity;
+		Array.prototype.forEach.call(cards, function(card) {
+			var rect = card.getBoundingClientRect();
+			var distance = Math.abs((rect.left + rect.width / 2) - center);
+			if (distance < nearestDistance) {
+				nearest = card;
+				nearestDistance = distance;
+			}
+		});
+		return nearest;
+	};
+	var syncSelectedRoomFromRail = function(rail) {
+		var nearest = nearestRailCard(rail);
+		if (!nearest) {
 			return;
 		}
-		// ng-repeat is rendered after the WebSocket/GPS callbacks have completed
-		// their current digest.  On slower phones that can outlast the former
-		// 600 ms retry window even though visibleRooms already contains cards.
-		// Match the page's loading safety window instead of falsely falling back
-		// to a vertical rail while Angular is still attaching the slides.
-		if (slickStartAttempts++ >= 64) {
-			console.warn('LinkUUp: location rail did not receive slides in time.');
-			revealRailFallback();
+		var roomId = String(nearest.getAttribute('data-room-id'));
+		var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
+			return String(room.id()) === roomId;
+		});
+		if (roomIndex >= 0 && roomIndex !== $scope.data.currentRoomIndex) {
+			$scope.$evalAsync(function() {
+				$scope.focusRoom(roomIndex);
+			});
+		}
+	};
+	var settleNativeRail = function(rail) {
+		rail.classList.remove('location-rail-dragging');
+		$timeout(function() {
+			var nearest = nearestRailCard(rail);
+			if (nearest) {
+				nearest.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+			}
+		}, 0);
+	};
+	var initialiseNativeRail = function(rail) {
+		if (rail.dataset.lupNativeRail) {
 			return;
 		}
-		if (slickRetryTimer) {
-			$timeout.cancel(slickRetryTimer);
-		}
-		slickRetryTimer = $timeout(function() {
-			slickRetryTimer = null;
-			$scope.slick(nofocus);
-		}, 50);
+		rail.dataset.lupNativeRail = '1';
+		var touchStartX = null;
+		var touchStartY = null;
+		var touchStartScrollLeft = 0;
+		var draggingHorizontally = false;
+		rail.addEventListener('touchstart', function(event) {
+			var touch = event.touches[0];
+			touchStartX = touch ? touch.clientX : null;
+			touchStartY = touch ? touch.clientY : null;
+			touchStartScrollLeft = rail.scrollLeft;
+			draggingHorizontally = false;
+		}, {passive: true});
+		rail.addEventListener('touchmove', function(event) {
+			var touch = event.touches[0];
+			if (touchStartX === null || !touch) {
+				return;
+			}
+			var deltaX = touch.clientX - touchStartX;
+			var deltaY = touch.clientY - touchStartY;
+			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+				draggingHorizontally = true;
+				rail.classList.add('location-rail-dragging');
+			}
+			if (draggingHorizontally) {
+				// Take ownership of horizontal drags so nested card click handlers
+				// cannot turn a short swipe into opening the location.
+				event.preventDefault();
+				rail.scrollLeft = touchStartScrollLeft - deltaX;
+				suppressRoomOpenUntil = Date.now() + 450;
+			}
+		}, {passive: false});
+		rail.addEventListener('touchend', function() {
+			touchStartX = null;
+			touchStartY = null;
+			if (draggingHorizontally) {
+				suppressRoomOpenUntil = Date.now() + 450;
+				settleNativeRail(rail);
+			}
+		}, {passive: true});
+		// Desktop users used Slick's mouse dragging too. Keep the same affordance
+		// for every PointerEvent-capable browser without involving a slider plugin.
+		var pointerStartX = null;
+		var pointerStartY = null;
+		var pointerStartScrollLeft = 0;
+		var draggingPointer = false;
+		rail.addEventListener('pointerdown', function(event) {
+			if (event.pointerType === 'touch') {
+				return; // The touch fallback above owns this gesture.
+			}
+			pointerStartX = event.clientX;
+			pointerStartY = event.clientY;
+			pointerStartScrollLeft = rail.scrollLeft;
+			draggingPointer = false;
+		});
+		rail.addEventListener('pointermove', function(event) {
+			if (pointerStartX === null) {
+				return;
+			}
+			var deltaX = event.clientX - pointerStartX;
+			var deltaY = event.clientY - pointerStartY;
+			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
+				draggingPointer = true;
+				rail.setPointerCapture(event.pointerId);
+				rail.classList.add('location-rail-dragging');
+			}
+			if (draggingPointer) {
+				event.preventDefault();
+				rail.scrollLeft = pointerStartScrollLeft - deltaX;
+				suppressRoomOpenUntil = Date.now() + 500;
+			}
+		});
+		rail.addEventListener('pointerup', function(event) {
+			if (draggingPointer) {
+				suppressRoomOpenUntil = Date.now() + 500;
+				settleNativeRail(rail);
+			}
+			pointerStartX = null;
+			pointerStartY = null;
+			if (rail.hasPointerCapture(event.pointerId)) {
+				rail.releasePointerCapture(event.pointerId);
+			}
+		});
+		rail.addEventListener('scroll', function() {
+			if (nativeRailScrollTimer) {
+				$timeout.cancel(nativeRailScrollTimer);
+			}
+			nativeRailScrollTimer = $timeout(function() {
+				nativeRailScrollTimer = null;
+				syncSelectedRoomFromRail(rail);
+			}, 70);
+		}, {passive: true});
 	};
-
-	// The discovery surface is a rail, never a vertically stacked feed.  Browser
-	// resizing (especially device emulation) can make Slick recalculate its track;
-	// explicitly restore the horizontal geometry instead of allowing a raw list.
+	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
 	var railSettleTimer = null;
-	var restoreHorizontalRail = function(rebuild) {
-		var $slick = getSlick();
-		if (!$slick.length) {
-			return;
-		}
-		if ($slick.hasClass('slick-initialized')) {
-			try {
-				// DevTools device emulation changes the measured width in one jump.
-				// Slick keeps stale slide widths unless it is explicitly refreshed.
-				if (rebuild) {
-					$slick.slick('refresh');
-				}
-				$slick.slick('setPosition').addClass('slick-inited');
-			}
-			catch (error) {
-				console.warn('LinkUUp: could not restore the location rail.', error);
-			}
-		}
-		else if ($scope.data.rooms.length) {
-			$scope.slick(true);
+	var restoreHorizontalRail = function() {
+		if ($scope.data.rooms.length) {
+			$scope.initialiseRail();
 		}
 	};
 	// A sidenav and route change briefly render the new page at its old width.
-	// Let that transition settle, then make Slick measure the real viewport again.
+	// Let that transition settle, then restore the selected native card.
 	var settleHorizontalRail = function() {
 		// Several old delayed relayouts used to fire after each category tap.
-		// That repeatedly interrupted Slick while the user was swiping. Keep one
-		// final measurement after Angular has painted the changed card set.
+		// Keep one final selection restore after Angular has painted the changed set.
 		if (railSettleTimer) {
 			$timeout.cancel(railSettleTimer);
 		}
@@ -144,6 +247,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+		if (nativeRailScrollTimer) {
+			$timeout.cancel(nativeRailScrollTimer);
+		}
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
 		}
@@ -153,14 +259,8 @@ angular.module('LUP').config(function($routeProvider) {
 		if (initialRoomsTimer) {
 			$timeout.cancel(initialRoomsTimer);
 		}
-		if (slickRetryTimer) {
-			$timeout.cancel(slickRetryTimer);
-		}
 		if (categoryRefreshTimer) {
 			$timeout.cancel(categoryRefreshTimer);
-		}
-		if (categoryRebuildTimer) {
-			$timeout.cancel(categoryRebuildTimer);
 		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
@@ -178,20 +278,16 @@ angular.module('LUP').config(function($routeProvider) {
 				$timeout.cancel(initialRoomsTimer);
 				initialRoomsTimer = null;
 			}
-			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms);
+			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms)['catch']($scope.catchUnknown);
 			return initialRoomsPromise;
 		};
-		if (PositionSrvc.hasPosition(true)) {
+		if (PositionSrvc.hasPosition()) {
 			return load();
 		}
-		// Give a just-started GPS request a short head start. Rendering a large
-		// fallback catalogue and immediately replacing it with nearby rooms was
-		// the visible first-load hitch. The fallback still guarantees discovery
-		// when a browser has no usable position.
-		// A discovery screen must feel present immediately.  GPS may still win
-		// this small race, but it no longer holds the first visible cards back.
-		initialRoomsTimer = $timeout(load, 180);
-		return PositionSrvc.withPosition(true).then(load, angular.noop);
+		// Locations are meaningful only with a real position.  Waiting here also
+		// prevents the former (0,0) fallback from constructing a carousel for the
+		// complete public catalogue before GPS has answered.
+		return PositionSrvc.withPosition().then(load, angular.noop)['catch']($scope.catchUnknown);
 	};
 
 	$scope.init = function(event) {
@@ -201,7 +297,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (locationsInitialized) {
 			// Angular recreated this view after navigating back from the sidebar.
-			// The room data is still cached, but its Slick DOM is new and must be
+			// The room data is still cached, but its rail DOM is new and must be
 			// built again; otherwise the discovery view appears broken or stacked.
 			if ($scope.data.rooms.length) {
 				$timeout(function() { $scope.gotRooms($scope.data.rooms); }, 0);
@@ -217,7 +313,7 @@ angular.module('LUP').config(function($routeProvider) {
 			var promise = loadInitialRooms();
 			promise['finally'](function(){
 				LoadingSrvc.removeTask('ws_rooms');
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		else {
 			$scope.gotRooms($scope.data.rooms);
@@ -226,7 +322,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// the whole discovery page behind the global loading curtain forever.
 		$timeout(function() {
 			LoadingSrvc.stopTask('ws_rooms');
-			LoadingSrvc.stopTask('slick_rooms');
+			LoadingSrvc.stopTask('location_rail');
 		}, 3200);
 	};
 	$scope.$on('lup-inited', $scope.init);
@@ -240,17 +336,12 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!locationsInitialized || !roomId) {
 			return;
 		}
-		// Sorting must never throw the visitor back to the first card. Resolve the
-		// previously selected room in the freshly filtered rail and return Slick to
-		// that card after Angular and Slick have consumed the reordered list.
+		// Sorting must never throw the visitor back to the first card.
 		$timeout(function() {
 			if (!restoreSelectedRoom(roomId, false)) {
 				return; // It is intentionally hidden by the active category/search.
 			}
-			var $slick = getSlick();
-			if ($slick.hasClass('slick-initialized')) {
-				$slick.slick('slickGoTo', $scope.data.currentRoomIndex, true);
-			}
+			scrollSelectedRoomIntoView('auto');
 		}, 40);
 	});
 	$scope.$on('gwf-position-changed', function() {
@@ -258,8 +349,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// screen receives an Angular render immediately when GPS arrives, even if
 		// it was opened from the sidenav while the first probe was pending.
 		if (sortAndSelectNearestRoom()) {
-			// The existing Slick slide collection still reflects the pre-GPS order.
-			// Rebuild it once after Angular has applied the sorted ng-repeat list.
+			// Restore the selected card after Angular has applied the sorted list.
 			$timeout(function() {
 				$scope.refreshCategoryFilter();
 				settleHorizontalRail();
@@ -270,6 +360,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.requestLocation = function(room, event) {
+		event.stopPropagation();
 		if (PositionSrvc.hasPosition(true)) {
 			return; // Normal case: keep the route link working.
 		}
@@ -277,56 +368,30 @@ angular.module('LUP').config(function($routeProvider) {
 		// avoids repeated startup dialogs and gives the distance button a clear,
 		// honest purpose until the exact position is available.
 		event.preventDefault();
-		event.stopPropagation();
 		PositionSrvc.probe().then(function(position) {
 			$scope.updatePosition(position);
 			return RoomSrvc.withRooms();
 		}).then($scope.gotRooms, function(error) {
 			console.warn('LinkUUp: location permission was not granted.', error);
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.gotRooms = function(rooms) {
 		var roomId = selectedRoomId();
 		// Both the page and the background preload can observe the same promise.
-		// Render that result once; Slick otherwise performs needless work and can
-		// keep its visibility guard active longer than necessary.
-		var $slick = getSlick();
-		if (locationsRoomsRendered && $scope.data.rooms === rooms &&
-			$slick.length && $slick.hasClass('slick-initialized')) {
+		if (locationsRoomsRendered && $scope.data.rooms === rooms) {
 			$scope.updateVisibleRooms();
 			sortAndSelectNearestRoom();
 			return $scope.refreshCategoryFilter();
-		}
-		var roomSetChanged = $scope.data.rooms !== rooms;
-		// Slick only knows the slides that existed when it was initialised. When
-		// a category expands discovery from nearby rooms to the full catalogue,
-		// rebuild the rail once so distant results cannot be silently omitted.
-		if (roomSetChanged && $slick.length && $slick.hasClass('slick-initialized')) {
-			try {
-				$slick.slick('unslick');
-				slickedEvents = false;
-			}
-			catch (error) {
-				console.warn('LinkUUp: could not rebuild the location rail.', error);
-			}
 		}
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		sortAndSelectNearestRoom();
 		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
 		locationsRoomsRendered = true;
-		slickStartAttempts = 0;
-		if (slickRetryTimer) {
-			$timeout.cancel(slickRetryTimer);
-			slickRetryTimer = null;
-		}
-		LoadingSrvc.addTask('slick_rooms');
-		// Angular renders the repeated rooms asynchronously. Never reveal the
-		// raw repeated cards as a vertical list while that render is catching up:
-		// retry the horizontal carousel until it has real slides to initialise.
+		LoadingSrvc.addTask('location_rail');
 		$timeout(function() {
-			$scope.slick(true);
+			$scope.initialiseRail();
 			settleHorizontalRail();
 		}, 16);
 	};
@@ -340,133 +405,40 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		console.log('LocationsCtrl.maybeGotoRoom()', room);
-		// Slick indexes its filtered slides, while data.rooms keeps the complete
-		// list. Comparing a visible room with currentRoom can therefore reject a
-		// valid tap after selecting a category. The clicked card is authoritative.
+		// data.rooms keeps the complete list while the rail is filtered. The clicked
+		// card is authoritative after selecting a category.
 		// Chat and Online still enforce the location radius in the detail view.
 		RoomSrvc.CACHE[room.id()] = room;
+		$scope.data.currentRoom = room;
+		$scope.data.currentRoomIndex = $scope.data.visibleRooms.indexOf(room);
 		$scope.gotoRoom(room);
 	};
 
-	$scope.slick = function(nofocus) {
-		console.log('LocationsCtrl.slick()');
-		var $slick = getSlick();
-		if (!$slick.length) {
-			LoadingSrvc.removeTask('slick_rooms');
-			return;
+	$scope.showRoomQRCode = function(room, event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
 		}
-		// Once Slick has started, it wraps the original direct cards in
-		// .slick-list/.slick-track.  Check that state before inspecting direct
-		// children, otherwise every later relayout mistakes a working carousel
-		// for an empty ng-repeat and eventually hides it behind the timeout path.
-		if ($slick.hasClass('slick-initialized')) {
-			try {
-				$slick.slick('setPosition');
-			}
-			catch (error) {
-				console.warn('LinkUUp: could not relayout the location rail.', error);
-			}
-			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
-			LoadingSrvc.removeTask('slick_rooms');
-			return;
-		}
-		if (!$slick.children('.lup-room-slide-outer').length) {
-			// An empty category/search result is a valid state, not a failed
-			// Angular render.  Retrying it produced a misleading timeout warning
-			// after every empty result and left the loading task visible.
-			if (!$scope.data.visibleRooms.length) {
-				$slick.addClass('slick-inited lup-slick-fallback');
-				LoadingSrvc.removeTask('slick_rooms');
-				return;
-			}
-			retrySlick(nofocus);
-			return;
-		}
+		var roomId = room.id();
+		var url = LUP_CONFIG.server + 'linkuup.qrforroom.room_id.' + roomId + '.html?_lang=en';
+		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
+		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
+	};
 
-		if (!slickedEvents) {
-			slickedEvents = true;
-			$slick.off('.lupSlick').on('init.lupSlick', function(){
-				console.log('slickit.onInit()');
-				if ($scope.data.currentRoomIndex >= 0) {
-					setTimeout(function(){
-						getSlick().slick('slickGoTo', $scope.data.currentRoomIndex, true);
-					}, 10);
-				}
-				getSlick().addClass('slick-inited').removeClass('lup-category-refreshing');
-				LoadingSrvc.removeTask('slick_rooms');
-			}).on('beforeChange.lupSlick', function(event, slick, currentSlide, nextSlide) {
-				// Give every change of place a clear direction. The CSS uses this
-				// lightweight state to stage the destination rather than merely
-				// sliding a static card sideways.
-				$slick.removeClass('lup-swipe-forward lup-swipe-backward')
-					.addClass(nextSlide > currentSlide ? 'lup-swipe-forward' : 'lup-swipe-backward');
-			}).on('afterChange.lupSlick', function(event, slick, currentSlide) {
-				// Updating Angular during Slick's transform competes with the browser
-				// on slower phones. The visual move has finished here, so this digest
-				// cannot interrupt the finger-driven animation.
-				var $currentSlide = slick.$slides.eq(currentSlide);
-				$scope.$evalAsync(function() {
-					if (!$scope.$$destroyed) {
-						$scope.focusSlide($currentSlide);
-					}
-				});
-			}).on('swipe.lupSlick', function() {
-				// Slick only emits this after it has accepted a horizontal gesture.
-				// The short guard catches the browser click that can follow the drag.
-				suppressRoomOpenUntil = Date.now() + 350;
-			});
-		}
-		
-		try {
-		$slick.slick({
-			arrows: false,
-			// Preserve the proven card itself.  Slick only reserves a narrow
-			// preview lane for the neighbouring real places, making the swipe
-			// direction visible without stretching any card internals.
-			centerMode: true,
-			centerPadding: '8%',
-			slidesToShow: 1,
-			slidesToScroll: 1,
-			focusOnSelect: false,
-			mobileFirst: true,
-			variableWidth: false,
-			// Keep the physical slide list stable; reaching either end simply lets
-			// the user swipe back through the same complete, ordered catalogue.
-			infinite: false,
-			swipe: true,
-			touchMove: true,
-			draggable: true,
-			vertical: false,
-			verticalSwiping: false,
-			// A short swipe selects the next place; a longer drag can travel over
-			// several cards. Slick calculates this from the actual distance and then
-			// locks onto a real card, like a wheel settling into a notch.
-			swipeToSlide: true,
-			// Do not let a second gesture interrupt a running transition. Interrupts
-			// made the location cards jump and feel choppy on touch screens.
-			waitForAnimate: true,
-			edgeFriction: 0.22,
-			// A short, compositor-only glide: it feels like moving through photos,
-			// while waitForAnimate still prevents a second gesture from tearing a card.
-			useCSS: true,
-			useTransform: true,
-			// Fast initial momentum with a short, controlled finish. Together with
-			// swipeToSlide this preserves the distance of a strong flick without
-			// leaving the rail between two real locations.
-			speed: 88,
-			cssEase: 'cubic-bezier(.12,.94,.16,1)',
-			touchThreshold: 14,
-		});
-		} catch (error) {
-			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
-			revealRailFallback();
+	$scope.initialiseRail = function() {
+		var rail = getLocationRail();
+		if (!rail) {
+			LoadingSrvc.removeTask('location_rail');
 			return;
 		}
-		
-		// $timeout, route events and WebSocket callbacks already enter Angular.
-		// Do not call $apply() here: Slick can initialise during an active digest.
-		// The beforeChange handler above uses $evalAsync() for the one external
-		// jQuery callback that updates scope data.
+		// This name remains temporarily because the surrounding data flow calls it,
+		// but it now only prepares the native rail. No plugin state, cloning or
+		// reinitialisation is involved.
+		initialiseNativeRail(rail);
+		rail.classList.add('location-rail-ready');
+		rail.classList.remove('lup-category-refreshing');
+		LoadingSrvc.removeTask('location_rail');
+		scrollSelectedRoomIntoView('auto');
 	};
 	
 	$scope.focusRoom = function(roomIndex) {
@@ -588,8 +560,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return room.id() === $scope.data.currentRoom.id();
 			});
 		}
-		// Tell the caller whether Slick must rebuild its slide collection after
-		// Angular has rendered the newly sorted list.
+		// Tell the caller whether the rendered list changed order.
 		return reordered;
 	};
 
@@ -598,8 +569,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	var scheduleCategoryRefresh = function(selectionSerial) {
-		// A user can tap across several category chips faster than Slick can
-		// animate.  Coalesce that burst: only the final choice is rendered.
+		// Coalesce a quick category burst: only the final choice is rendered.
 		if (categoryRefreshTimer) {
 			$timeout.cancel(categoryRefreshTimer);
 		}
@@ -609,48 +579,30 @@ angular.module('LUP').config(function($routeProvider) {
 				return;
 			}
 			$scope.refreshCategoryFilter(selectionSerial);
-		}, 48);
-	};
-
-	var detachCategoryRail = function() {
-		var $slick = getSlick();
-		if (!$slick.length || !$slick.hasClass('slick-initialized')) {
-			return;
-		}
-		try {
-			// Keep an old category's card from flashing while Angular replaces the
-			// slide collection below. The fresh rail removes this state on init.
-			$slick.addClass('lup-category-refreshing');
-			// Detach before Angular replaces ng-repeat cards.  Replacing children
-			// inside a live Slick track was the source of the brief wrong-card flash
-			// and the sluggish category taps.
-			$slick.slick('unslick');
-			slickedEvents = false;
-			categoryRailDetached = true;
-		}
-		catch (error) {
-			console.warn('LinkUUp: could not prepare the category rail.', error);
-		}
+		}, 16);
 	};
 
 	$scope.selectCategory = function(categories) {
 		var categoryKey = categories.join(',');
-		if ($scope.isCategoryActive(categories) && !$scope.data.searchvalue) {
+		if ($scope.isCategoryActive(categories)) {
+			// Repeating the active category is a small navigation shortcut: keep
+			// its filter (and any current search) but return to its first card.
+			if ($scope.data.visibleRooms.length) {
+				$scope.data.currentRoom = $scope.data.visibleRooms[0];
+				$scope.data.currentRoomIndex = 0;
+				$timeout(function() {
+					scrollSelectedRoomIntoView('smooth');
+				}, 0);
+			}
 			return;
 		}
 		var selectionSerial = ++categorySelectionSerial;
-		if (categoryRebuildTimer) {
-			$timeout.cancel(categoryRebuildTimer);
-			categoryRebuildTimer = null;
-		}
 		var needsFullCatalogue = categories.length && !$scope.data.fullCatalogue;
-		// The chip reacts immediately, but the old rail keeps its DOM until the
-		// complete catalogue is ready. Updating ng-repeat inside a live Slick
-		// track was the source of the short wrong-location flash on category taps.
+		// The chip reacts immediately; Angular replaces direct native rail cards.
 		$scope.data.category = categories.slice(0);
 		if (needsFullCatalogue) {
 			$scope.data.categoryLoading = true;
-			var $currentRail = getSlick();
+			var $currentRail = getRail();
 			if ($currentRail.length) {
 				$currentRail.addClass('lup-category-refreshing');
 			}
@@ -677,18 +629,13 @@ angular.module('LUP').config(function($routeProvider) {
 				if (selectionSerial === categorySelectionSerial) {
 					$scope.data.categoryLoading = false;
 				}
-			});
+			})['catch']($scope.catchUnknown);
 			return;
 		}
 		// If "Alle" is selected while that optional request is still pending,
 		// the existing local rail already is the desired view. Leave it alone.
 		if (!categories.length && fullCataloguePromise && !$scope.data.fullCatalogue) {
 			return;
-		}
-		// Once the complete catalogue is active, every category change is a local
-		// filter. Detach Slick first, then let Angular replace its card elements.
-		if ($scope.data.fullCatalogue && $scope.data.rooms === $scope.data.fullCatalogue) {
-			detachCategoryRail();
 		}
 		$scope.updateVisibleRooms();
 		// The first explicit category loads the full catalogue once.  If the
@@ -701,9 +648,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.gotRooms($scope.data.fullCatalogue);
 			return;
 		}
-		// Let Angular update slide classes, then always use the same Slick path.
-		// Previously "Alle" and the other categories used competing recovery
-		// paths, which could leave the filter bar visually active but inert.
+		// Let Angular paint the filtered direct children before restoring selection.
 		scheduleCategoryRefresh(selectionSerial);
 	};
 
@@ -712,41 +657,15 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		restoreSelectedRoom(selectedRoomId(), true);
-		var $slick = getSlick();
-		if (!$slick.length || !$scope.data.rooms.length) {
+		if (!$scope.data.rooms.length) {
 			return;
 		}
-		if (categoryRailDetached) {
-			categoryRailDetached = false;
-			return $scope.slick(true);
-		}
-		if (!$slick.hasClass('slick-initialized')) {
-			return $scope.slick();
-		}
-		try {
-			// Recreate from Angular's current visible list.  This is intentionally
-			// one clean rebuild, not Slick's incremental filter/unfilter path.
-			$slick.addClass('lup-category-refreshing');
-			$slick.slick('unslick');
-			slickedEvents = false;
-			if (categoryRebuildTimer) {
-				$timeout.cancel(categoryRebuildTimer);
+		$timeout(function() {
+			if (selectionSerial === undefined || selectionSerial === categorySelectionSerial) {
+				$scope.initialiseRail();
+				settleHorizontalRail();
 			}
-			categoryRebuildTimer = $timeout(function() {
-				categoryRebuildTimer = null;
-				if (selectionSerial !== undefined && selectionSerial !== categorySelectionSerial) {
-					return;
-				}
-				// slick() measures the just-rendered list once. A second delayed
-				// setPosition() here caused an avoidable layout pass immediately
-				// after every category tap on phones.
-				$scope.slick(true);
-			}, 0);
-		}
-		catch (error) {
-			console.warn('LinkUUp: category filter could not refresh the carousel.', error);
-			$slick.addClass('slick-inited').removeClass('lup-category-refreshing');
-		}
+		}, 0);
 	};
 
 	$scope.categoryVisual = function(room) {
@@ -806,7 +725,7 @@ angular.module('LUP').config(function($routeProvider) {
 		};
 		// Searching is an explicit discovery action. Load the public catalogue
 		// once, then filter it locally for every keystroke. This keeps category
-		// state intact and avoids a WebSocket request/Slick rebuild per character.
+		// state intact and avoids a WebSocket request/rail rebuild per character.
 		if (query) {
 			if (!searchBaseRooms) {
 				searchBaseRooms = $scope.data.rooms;
@@ -830,7 +749,7 @@ angular.module('LUP').config(function($routeProvider) {
 				}
 			}, function(error) {
 				console.warn('LinkUUp: full location catalogue could not be loaded for search.', error);
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		if (searchBaseRooms) {
 			var restoreRooms = $scope.data.category.length && $scope.data.fullCatalogue ?
@@ -869,8 +788,9 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.visitorOverflowLabel = function(room) {
-		// Five faces remain recognisable on a phone; the badge represents the rest.
-		var remaining = Math.max(0, (room.USERS || []).length - 5);
+		// Two compact rows keep ten faces recognisable on a phone; the badge
+		// represents everyone beyond the visible preview.
+		var remaining = Math.max(0, (room.USERS || []).length - 10);
 		return remaining > 99 ? '99+' : remaining;
 	};
 

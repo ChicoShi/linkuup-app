@@ -28,7 +28,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.likes = [];
 			$scope.data.user = window.GWF_USER;
 			$scope.data.pagemenu = new GWFPagination();
-			UserSrvc.withUser($routeParams.id).then($scope.loadedUser);
+			UserSrvc.withUser($routeParams.id).then($scope.loadedUser)['catch']($scope.catchUnknown);
 			HelpSrvc.showHelp('likes', $translate.instant('HELP_LIKES'));
 		}
 	};

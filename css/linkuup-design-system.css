@@ -3247,6 +3247,25 @@ md-list.usernavigation .presence-actions .usericon {
   .nearby .room-user-preview .lup-avatar { width:42px; height:42px; margin-left:-16px; }
   .nearby .room-presence-count { padding:4px 5px; font-size:8px; }
 }
+
+/* Private messages animate as one compact bubble: avatar, header and text
+   stay together, while the outer repeat row keeps its full-width alignment. */
+.query-page .chat-msgs .lup-msg > .head {
+  display:flex;
+  width:100%;
+}
+.query-page .chat-msgs .query-message-card {
+  width:fit-content !important;
+  max-width:min(calc(100% - 16px), 560px) !important;
+  flex:0 1 auto !important;
+}
+.query-page .chat-msgs .query-message-content {
+  flex:0 1 auto !important;
+  max-width:calc(100% - 54px);
+}
+.query-page .chat-msgs .lup-own-msg > .head {
+  justify-content:flex-end;
+}
 @media (max-width:600px) {
   .nearby .location-categories button.active::after { height:30px; }
   .nearby .slickit::before { left:12%; right:12%; }
@@ -6911,6 +6930,10 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .friends-page .lup-user-action-message:hover { background:rgba(118,155,238,.15); color:#e1e8ff; }
 .friends-page .lup-user-action-remove { color:#d8a7ba; }
 .friends-page .lup-user-action-remove:hover { border-color:transparent; background:rgba(205,110,143,.12); color:#f0c0d0; }
+.friends-page .lup-user-action-friend { color:#a9e8c7; }
+.friends-page .lup-user-action-friend:hover { background:rgba(91,193,142,.16); color:#d8ffea; }
+.friends-page .lup-user-action-friend-pending { color:#f0ca8a; }
+.friends-page .lup-user-action-friend-pending:hover { background:rgba(218,166,82,.15); color:#ffe1ae; }
 .friends-page .friend-search-results {
   overflow:hidden;
   width:100%;
@@ -8404,6 +8427,26 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 @keyframes lup-query-route-light { 0%,100% { transform:translate3d(0,0,0); opacity:.18; } 47%,53% { transform:translate3d(-76px,30px,0); opacity:.73; } }
 @media (max-width:360px) { .query-page .query-contact { gap:7px; margin-left:1px; }.query-page .query-contact .lup-title-avatar,.query-page .query-contact .lup-title-avatar .avatar,.query-page .query-contact .lup-title-avatar img { width:30px !important; height:30px !important; }.query-page .query-contact .lup-title-avatar { flex-basis:30px; }.query-page .query-contact-copy h2 { max-width:34vw; font-size:13px !important; }.query-page .chatbottom { min-height:65px !important; height:65px !important; padding-right:9px !important; padding-left:9px !important; }.query-page .chatbottom input { height:39px !important; }.query-page .chatbottom .chat-button { flex-basis:39px !important; width:39px !important; height:39px !important; } }
 @media (prefers-reduced-motion:reduce) { .query-route-light { animation:none !important; } }
+
+/* Read messages should remain present without competing with the next thing to
+   read.  An unread message is deliberately crisp, using the conversation blue
+   instead of the old muddy gold highlight. */
+.location-chat-surface .lup-msg,
+.query-page .chat-msgs .lup-msg {
+  opacity:.87;
+  transition:opacity 180ms ease;
+}
+.location-chat-surface .lup-msg.lup-notification-unread,
+.query-page .chat-msgs .lup-msg.lup-notification-unread {
+  opacity:1;
+}
+.location-chat-surface .lup-msg.lup-notification-unread .message {
+  background:linear-gradient(112deg,rgba(79,154,213,.22),rgba(100,86,187,.15)) !important;
+  box-shadow:inset 2px 0 0 rgba(143,215,255,.72) !important;
+}
+.query-page .lup-msg.lup-notification-unread .query-message-card {
+  background:linear-gradient(105deg,rgba(78,151,211,.17),rgba(123,94,190,.12)) !important;
+}
 
 /* The location join control is an open doorway, not a generic primary CTA.
    It uses the current place accent, but keeps the surrounding card quiet. */

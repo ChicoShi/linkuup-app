@@ -67,8 +67,6 @@ $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
   <link rel="stylesheet" href="node_modules/angular-material/angular-material<?=$min?>.css<?=$v?>">
   <link rel="stylesheet" href="node_modules/md-color-picker/dist/mdColorPicker<?=$min?>.css<?=$v?>">
   <link rel="stylesheet" href="node_modules/angular-jk-rating-stars/dist/jk-rating-stars<?=$min?>.css<?=$v?>">
-  <link rel="stylesheet" href="node_modules/slick-carousel/slick/slick<?=$min?>.css<?=$v?>">
-  <link rel="stylesheet" href="node_modules/slick-carousel/slick/slick-theme<?=$min?>.css<?=$v?>">
   <link rel="stylesheet" href="node_modules/unitegallery/dist/css/unite-gallery.css<?=$v?>">
 
   <link rel="stylesheet" href="css/lup3.css<?=$v?>">
@@ -110,7 +108,6 @@ window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui241')?>;
   <script src="node_modules/jquery/dist/jquery.js<?=$v?>"></script>
   <script src="js/3p/jquery-visible.js<?=$v?>"></script>
   <script src="node_modules/jquery.finger/dist/jquery.finger.js<?=$v?>"></script>
-  <script src="node_modules/slick-carousel/slick/slick.min.js<?=$v?>"></script>
 
   <script src="node_modules/moment/min/moment-with-locales.min.js<?=$v?>"></script>
   <script src="node_modules/moment-timezone/builds/moment-timezone-with-data.js<?=$v?>"></script>
@@ -150,7 +147,7 @@ window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui241')?>;
   <script src="js/model/gws-message.js<?=$v?>"></script>
   <script src="js/model/lup-room.js<?=$v?>"></script>
   <script src="js/model/lup-room-visit.js<?=$v?>"></script>
-  <script src="js/model/lup-query.js<?=$v?>"></script>
+  <script src="js/model/lup-query-thread.js<?=$v?>"></script>
   <script src="js/model/lup-query-message.js<?=$v?>"></script>
   <script src="js/model/lup-notification.js<?=$v?>"></script>
   <script src="js/model/lup-gallery.js<?=$v?>"></script>
@@ -159,6 +156,9 @@ window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui241')?>;
   <script src="config/lup-module.js<?=$v?>"></script>
   <script src="config/lup-config.js<?=$v?>"></script>
 
+  <script src="js/effects/lup-effects.js<?=$v?>"></script>
+  <script src="js/effects/lup-audio.js<?=$v?>"></script>
+  <script src="js/effects/lup-effect.js<?=$v?>"></script>
   <script src="js/directives/compile.js<?=$v?>"></script>
   <script src="js/directives/lup-avatar.js<?=$v?>"></script>
   <script src="js/directives/lup-message-state.js<?=$v?>"></script>

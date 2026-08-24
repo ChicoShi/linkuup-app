@@ -21,10 +21,10 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.categories = Object.keys(categories).map(function(id) {
 				return categories[id];
 			});
-		});
+		})['catch']($scope.catchUnknown);
 		PositionSrvc.probe()['catch'](function() {
-			ErrorSrvc.showError($translate.instant('ERR_GPS_REQUIRED'), $translate.instant('TITLE_ADD_ROOM'));
-		});
+			return ErrorSrvc.showError($translate.instant('ERR_GPS_REQUIRED'), $translate.instant('TITLE_ADD_ROOM'));
+		})['catch']($scope.catchUnknown);
 	};
 
 	$scope.create = function() {

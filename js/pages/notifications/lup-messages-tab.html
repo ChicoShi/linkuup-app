@@ -16,26 +16,26 @@
     
     <md-list-item
      class="md-2-line inbox-thread-card"
-     ng-click="gotoQuery(query.user)" aria-label="Privatnachricht öffnen"
+     ng-click="gotoQueryThread(query)" aria-label="Privatnachricht öffnen"
      ng-repeat="query in sortedQueries()"
      on-long-press="deleteChat(query)"
      ng-class="{'lup-notification-unread':query.unreadCount()>0}">
      
       <div class="inbox-thread-avatar">
-        <lup-avatar ng-user="query.user" ng-click="$event.stopPropagation(); gotoProfile(query.user)"></lup-avatar>
+        <lup-avatar ng-user="query.user()" ng-click="$event.stopPropagation(); gotoProfile(query.user())"></lup-avatar>
         <span class="inbox-thread-live" ng-if="query.unreadCount()>0" aria-hidden="true"></span>
       </div>
 
       <div class="md-list-item-text inbox-thread-copy">
         <div class="inbox-thread-titleline">
-          <h4>{{query.user.displayName()}}</h4>
+          <h4>{{query.user().displayName()}}</h4>
           <span class="inbox-thread-unread" ng-if="query.unreadCount()>0">{{query.unreadCount()}}</span>
         </div>
         <p>{{query.lastText()}}</p>
       </div>
 
       <button class="inbox-thread-open" type="button"
-       ng-click="$event.stopPropagation(); gotoQuery(query.user)" aria-label="Privatnachricht öffnen">
+       ng-click="$event.stopPropagation(); gotoQueryThread(query)" aria-label="Privatnachricht öffnen">
         <i class="material-icons">forum</i>
       </button>
       

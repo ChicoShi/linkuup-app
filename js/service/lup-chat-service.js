@@ -10,7 +10,6 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	ChatSrvc.UNREAD = 0;
 	ChatSrvc.CHATS_LOADED = false;
 	ChatSrvc.CHATS_LOADING = null;
-	window.LUP_Query.StorageSrvc = StorageSrvc;
 	
 	/**
 	 * Join a channel
@@ -33,7 +32,7 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			var pos = window.GWF_POSITION;
 			var gwsMessage = new GWS_Message().cmd(0x1103);
 			gwsMessage.write32(room.id());
-			gwsMessage.writeFloat(pos.lat).writeFloat(pos.lng)
+			gwsMessage.writeFloat(pos.lat).writeFloat(pos.lng);
 			gwsMessage.writeString(password||"");
 			return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
 				ChatSrvc.CHATROOM = room;
@@ -72,39 +71,66 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	// Query //
 	///////////
 	ChatSrvc.forMessage = function(message) {
-		console.log('ChatSrvc.forMessage()', message);
-		return ChatSrvc.forOtherUser(message.fromUser(), message.toUser());
+		var thread = ChatSrvc.forThreadId(message.threadId());
+		if (!thread) {
+			thread = new LUP_QueryThread({
+				lupqt_id: message.threadId(),
+				lupqt_user_a: message.fromId(),
+				lupqt_user_b: message.toId(),
+				lupqt_updated: message.sent(),
+				lupqt_last_text: message.text()
+			});
+			ChatSrvc.QUERIES.push(thread);
+		}
+		return thread;
 	};
-	
-	ChatSrvc.forOtherUser = function(from, to) {
-		console.log('ChatSrvc.forOtherUser()', from, to);
-		var user = from.isSelf() ? to : from;
-		return ChatSrvc.forUser(user);
+
+	ChatSrvc.forThreadId = function(threadId) {
+		for (var i in ChatSrvc.QUERIES) {
+			if (String(ChatSrvc.QUERIES[i].id()) === String(threadId)) {
+				return ChatSrvc.QUERIES[i];
+			}
+		}
+		return null;
 	};
 
 	ChatSrvc.forUser = function(user) {
-		var query;
+		var thread = null;
 		for (var i in ChatSrvc.QUERIES) {
-			query = ChatSrvc.QUERIES[i];
-			if (query.user == user) {
-				return query;
+			var candidate = ChatSrvc.QUERIES[i];
+			if (candidate.user().id() === user.id() && (!thread || candidate.updated() > thread.updated())) {
+				thread = candidate;
 			}
 		}
-		query = new LUP_Query(user);
-		ChatSrvc.QUERIES.push(query);
-		return query;
+		return thread;
+	};
+
+	ChatSrvc.draftForUser = function(user) {
+		var ownId = Number(window.GWF_USER.id());
+		var otherId = Number(user.id());
+		return new LUP_QueryThread({
+			lupqt_id: 0,
+			lupqt_user_a: Math.min(ownId, otherId),
+			lupqt_user_b: Math.max(ownId, otherId),
+			lupqt_updated: 0,
+			lupqt_last_text: ''
+		});
 	};
 	ChatSrvc.sendQuery = function(user, message) {
 		console.log('ChatSrvc.sendQuery()', user, message);
-		var gwsMessage = new GWS_Message().cmd(0x1108);
+		// The sender inserts the authoritative stored message from this reply.
+		// Without a sync id sendBinary() resolves immediately with undefined,
+		// so loadMessage() would try to read a frame that does not exist.
+		var gwsMessage = new GWS_Message().cmd(0x1108).sync();
 		gwsMessage.write32(user.id());
 		gwsMessage.writeString(message);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
 			// The sender receives this as a synchronous reply, not as the normal
 			// asynchronous 0x1108 event. Add it locally so own PMs render at once.
 			var sent = ChatSrvc.loadMessage(response);
-			var chat = ChatSrvc.forMessage(sent);
-			chat.addNewMessage(sent);
+			sent.effect = 'blubble';
+			var thread = ChatSrvc.forMessage(sent);
+			thread.addNewMessage(sent);
 			$rootScope.updateNotificationCount();
 			$rootScope.$broadcast('lup-query-message', sent);
 			return sent;
@@ -191,11 +217,18 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	ChatSrvc.loadedChats = function(response) {
 		console.log('ChatSrvc.loadedChats()', response);
 		while(response.hasMore()) {
-			var message = ChatSrvc.loadMessage(response);
-			var chat = ChatSrvc.forOtherUser(message.fromUser(), message.toUser());
-			chat.addMessage(message);
+			var thread = ChatSrvc.loadThread(response);
+			if (!ChatSrvc.forThreadId(thread.id())) {
+				ChatSrvc.QUERIES.push(thread);
+			}
 		}
 		return ChatSrvc.QUERIES;
+	};
+
+	ChatSrvc.loadThread = function(response) {
+		var thread = new LUP_QueryThread();
+		TypeSrvc.parseBinaryGDO(response, "GDO\\LinkUUp\\LUP_QueryThread", thread);
+		return thread;
 	};
 	
 	ChatSrvc.getMessage = function(messageId) {
@@ -219,34 +252,32 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		return message;
 	};
 	
-	ChatSrvc.loadMoreMessages = function(chat) {
-		console.log('ChatSrvc.loadMoreMessages()', chat);
-		console.log('ChatSrvc.loadMoreMessages()', chat.firstDate(), chat.loadingState);
-		var date = chat.firstDate();
-		if (chat.loadingState === date) {
-			return $q.resolve(null);
+	ChatSrvc.loadThreadMessages = function(thread) {
+		if (!thread || !thread.id()) {
+			return $q.resolve(thread);
 		}
-		chat.loadingState = date;
+		if (thread.loading) {
+			return thread.loading;
+		}
 		var gwsMessage = new GWS_Message().cmd(0x110B).sync();
-		gwsMessage.write32(chat.user.id());
-		gwsMessage.write32(date);
-		var success = ChatSrvc.loadedMessages.bind(ChatSrvc, chat);
-		return WebsocketSrvc.sendBinary(gwsMessage).then(success);
-	};
-
-	ChatSrvc.loadedMessages = function(chat, response) {
-		console.log('ChatSrvc.loadedMessages()', chat, response);
-		while(response.hasMore()) {
-			var message = ChatSrvc.loadMessage(response);
-			chat.addMessage(message);
-		}
-		return chat;
+		gwsMessage.write32(thread.id());
+		thread.loading = WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			while (response.hasMore()) {
+				thread.addMessage(ChatSrvc.loadMessage(response));
+			}
+			thread.loading = null;
+			return thread;
+		}, function(error) {
+			thread.loading = null;
+			return $q.reject(error);
+		});
+		return thread.loading;
 	};
 	
 	ChatSrvc.deleteQuery = function(chat) {
 		console.log('ChatSrvc.deleteQuery()', chat);
 		var gwsMessage = new GWS_Message().cmd(0x110C).sync();
-		gwsMessage.write32(chat.user.id());
+		gwsMessage.write32(chat.id());
 		var success = ChatSrvc.deletedQuery.bind(ChatSrvc, chat);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(success);
 	};

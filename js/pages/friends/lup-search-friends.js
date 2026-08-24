@@ -1,6 +1,7 @@
 "use strict";
 angular.module('LUP').controller('SearchFriendsCtrl', function($scope,
-		UserSrvc) {
+		UserSrvc, FriendSrvc) {
+	$scope.FriendSrvc = FriendSrvc;
 	
 	$scope.data.friendsearch = '';
 	$scope.data.friendsearchusers = [];
@@ -9,7 +10,7 @@ angular.module('LUP').controller('SearchFriendsCtrl', function($scope,
 		console.log('SearchFriendsCtrl.searchFriends()', query);
 		$scope.data.friendsearchusers = [];
 		if (query) {
-			UserSrvc.searchUsers(query).then($scope.gotNewFriends, $scope.gotNewFriendsError);
+			UserSrvc.searchUsers(query).then($scope.gotNewFriends, $scope.gotNewFriendsError)['catch']($scope.catchUnknown);
 		}
 	};
 	

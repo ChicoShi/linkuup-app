@@ -42,6 +42,7 @@ service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrv
 				lup_interest: EnumSrvc.interestToEnum(gwsMessage.read16()),
 				relationship: EnumSrvc.relationshipToEnum(gwsMessage.read16()),
 				relation_pending: gwsMessage.read8(),
+				relation_incoming: gwsMessage.read8(),
 				user_country: gwsMessage.readString(),
 				lup_friends: gwsMessage.read32(),
 				lup_status: gwsMessage.readString(),

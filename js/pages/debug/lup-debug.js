@@ -212,7 +212,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (navigator.clipboard && navigator.clipboard.writeText) {
 			navigator.clipboard.writeText(text).then(function() {
 				ErrorSrvc.showMessage('Debug snapshot copied.');
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		else {
 			window.prompt('Copy debug snapshot:', text);
@@ -236,7 +236,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.partAllRooms = function() {
 		var rooms = RoomSrvc.getRoomsForUser(window.GWF_USER);
 		for (var i in rooms) {
-			RoomSrvc.part(rooms[i]).then($scope.updateRooms);
+			RoomSrvc.part(rooms[i]).then($scope.updateRooms)['catch']($scope.catchUnknown);
 		}
 	};
 
@@ -245,7 +245,7 @@ angular.module('LUP').config(function($routeProvider) {
 		WebsocketSrvc.sendBinary(gwsMessage).then(function(gwsMessage){
 			var text = JSON.parse(gwsMessage);
 			ErrorSrvc.showMessage('<h3>Server</h3><pre>'+JSON.stringify(text, null, 2)+'</pre>');
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	$scope.logStorage = function() {

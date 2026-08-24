@@ -21,7 +21,7 @@
 			<button type="button" ng-class="{active: isCategoryActive(['12','13','18'])}" ng-click="selectCategory(['12','13','18'])"><i class="material-icons">menu_book</i><span>Kultur<br>&amp; Hilfe</span></button>
 		</div>
 
-		<div class="slickit">
+		<div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">
 			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer"
 					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
 	
@@ -33,28 +33,28 @@
 								<span class="room-category-name">{{room.categoryName()}}</span>
 								<strong class="room-hero-name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 								<span class="room-hero-meta"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
+								<span class="room-top-actions" aria-label="Location-Aktionen">
+									<a class="room-top-action room-top-action--maps" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><small ng-if="room.showDistance()">{{room.displayDistance()}}</small></a>
+									<button type="button" class="room-top-action room-top-action--qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
+								</span>
 							</div>
 						</div>
 						
 						<!-- The hero above is the single place identity.  Keeping the old
 						     duplicate room heading out of the card makes the swipe view
 						     readable on phones with long location names. -->
+						<span class="room-presence-count" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
+							<i class="material-icons">groups</i><b>{{visitorCountLabel(room)}}</b><span>gerade hier</span>
+						</span>
 						<div class="info room-user-preview" aria-label="Gäste an diesem Ort">
 							<lup-avatar
-							 ng-repeat="user in sortedVisitors(room) | limitTo: 5"
+							 ng-repeat="user in sortedVisitors(room) | limitTo: 10"
 							 ng-click="gotoProfile(user)"
 							 ng-user="user"></lup-avatar>
 							
-							<span class="more-users" ng-if="room.USERS.length>5" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
+							<span class="more-users" ng-if="room.USERS.length>10" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">
 							  <b>+{{visitorOverflowLabel(room)}}</b>
 							</span>
-							<span class="room-presence-count" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
-								<i class="material-icons">groups</i><b>{{visitorCountLabel(room)}}</b><span>gerade hier</span>
-							</span>
-						
-						</div>
-						<div class="distrat">
-							<div class="distance" ng-if="room.showDistance()"><p><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)"><i class="material-icons">location_on</i><span>{{room.displayDistance()}}</span></a></p></div>
 						</div>
 					</div>
 					<section class="chatbutton" layout="column" ng-class="{'chatbutton--locked': !room.inChatRange()}">

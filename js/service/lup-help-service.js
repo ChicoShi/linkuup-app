@@ -52,10 +52,17 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 				if (HelpSrvc.lastKey != key) {
 					HelpSrvc.lastKey = key;
 					DialogSrvc.confirm("js/service/tpl/lup-help-dialog.html", {html:html}).then(
-							HelpSrvc.confirmed.bind(HelpSrvc, key));
+							HelpSrvc.confirmed.bind(HelpSrvc, key), angular.noop)['catch'](HelpSrvc.catchUnknown);
 				}
 			}
-		});
+		})['catch'](HelpSrvc.catchUnknown);
+	};
+
+	HelpSrvc.catchUnknown = function(error) {
+		if ($rootScope.catchUnknown) {
+			return $rootScope.catchUnknown(error);
+		}
+		return ErrorSrvc.websocketMaybeJSONError(error);
 	};
 	
 	HelpSrvc.confirmed = function(key) {

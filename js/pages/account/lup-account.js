@@ -31,10 +31,10 @@ angular.module('LUP').config(function($routeProvider) {
 			HelpSrvc.showHelp('account', $translate.instant('HELP_ACCOUNT'));
 			CountrySrvc.withCountries().then(function(countries){
 				$scope.data.countries = countries;
-			});
+			})['catch']($scope.catchUnknown);
 			TimezoneSrvc.withTimezones().then(function(timezones){
 				$scope.data.timezones = timezones;
-			});
+			})['catch']($scope.catchUnknown);
 		}
 	};
 	$scope.resetForm = function() {
@@ -104,7 +104,7 @@ angular.module('LUP').config(function($routeProvider) {
 				console.log(response);
 				ErrorSrvc.populateScope($scope, response);
 				$scope.resetForm();
-			});
+			})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.savedAccount = function(gwsMessage) {
@@ -116,7 +116,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 			ErrorSrvc.showMessage(message, $translate.instant('MSGT_ACCOUNT'));
 		}
-		UserSrvc.refresh().then($scope.resetForm);
+		UserSrvc.refresh().then($scope.resetForm)['catch']($scope.catchUnknown);
 	};
 
 	////////////////////

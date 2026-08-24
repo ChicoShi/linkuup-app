@@ -77,7 +77,7 @@ function GWS_Message(buffer) {
 			back += String.fromCharCode(code);
 		}
 		back = decodeURIComponent(back.replace(/\+/g, '%20'));
-		console.log('GWS_Message.readString == ' + back);
+		// console.log('GWS_Message.readString == ' + back);
 		return back;
 	};
 	this.readFloat = function(index) {
@@ -100,6 +100,7 @@ function GWS_Message(buffer) {
 		this.INDEX += 8;
 		return value;
 	};
+	this.readTS = function(index) { return this.readDouble(index); };
 	this.readCmd = function() { this.CMD = this.CMD < 0 ? (this.read16() & 0x7FFF) : this.CMD; return this.CMD; };
 	this.readMid = function() { return this.read24(); };
 
@@ -157,11 +158,12 @@ function GWS_Message(buffer) {
 	};
 
 	this.cmd = function(cmd) {
+		this.CMD = cmd;
 		return this.write16(cmd);
 	};
 	this.async = function() {
 		this.SYNC = 0;
-		return this.write32()
+		return this;
 	};
 	this.sync = function() {
 		this.BUFFER[0] |= 0x80;

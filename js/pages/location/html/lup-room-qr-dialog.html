@@ -14,7 +14,9 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <p>{{'QR_ROOM_DIALOG_PARAGRAPH'|translate}}</p>
-                <div><img class="qrcode" src="{{data.url}}" /></div>
+				<a class="room-qr-test-link" ng-href="{{data.target}}" title="Ort öffnen">
+					<img class="qrcode" src="{{data.url}}" />
+				</a>
             </div>
         </md-dialog-content>
 

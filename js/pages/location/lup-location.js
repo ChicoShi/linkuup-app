@@ -47,7 +47,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.user = GWF_USER;
-			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom);
+			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom)['catch']($scope.catchUnknown);
 			$scope.data.topComments = $scope.data.topComments || [CommentSrvc.BLANK_COMMENT()];
 			HelpSrvc.showHelp('help_location', $translate.instant('HELP_LOCATION'));
 		}
@@ -137,8 +137,8 @@ angular.module('LUP').config(function($routeProvider) {
 		 * while the browser is still resolving GPS.  A requested chat/online tab
 		 * now waits for that one decisive position result; range protection stays
 		 * exactly as strict once a position is known or denied. */
-		if (requestedTab === 1 && !PositionSrvc.hasPosition(true)) {
-			PositionSrvc.probe().then(applyTab, applyTab);
+		if (requestedTab === 1 && !PositionSrvc.hasPosition()) {
+			PositionSrvc.probe().then(applyTab, applyTab)['catch']($scope.catchUnknown);
 		}
 		else {
 			applyTab();
@@ -146,11 +146,11 @@ angular.module('LUP').config(function($routeProvider) {
 
 		$scope.loadTopComments();
 		CommentSrvc.withOwnComment($scope.data.room).
-			then($scope.loadedOwnComment);
+			then($scope.loadedOwnComment)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadTopComments = function() {
-		return CommentSrvc.withTopComments($scope.data.room).then($scope.loadedTopComments);
+		return CommentSrvc.withTopComments($scope.data.room).then($scope.loadedTopComments)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.loadedOwnComment = function(gwsMessage) {
@@ -168,7 +168,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.saveComment = function() {
 		console.log('LocationCtrl.saveComment()');
 		CommentSrvc.saveComment($scope.data.room, $scope.data.commentInput).
-			then($scope.savedComment, ErrorSrvc.websocketFormError);
+			then($scope.savedComment, ErrorSrvc.websocketFormError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.savedComment = function() {
@@ -185,7 +185,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return CommentSrvc.withOwnComment($scope.data.room);
 		}).then($scope.loadedOwnComment).then(function() {
 			return ErrorSrvc.showMessage("Deine Stimme wurde aktualisiert.", "Danke");
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	$scope.loadedTopComments = function(topComments) {
@@ -275,7 +275,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.commentInput = commentText;
 		return $scope.onVoteRoom(rating).then(function() {
 			return CommentSrvc.saveComment($scope.data.room, commentText);
-		}).then($scope.savedComment, ErrorSrvc.websocketError);
+		}).then($scope.savedComment, ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 	};
 	
 
@@ -283,7 +283,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.onVoteRoom()', rating);
 		var roomId = $scope.data.room.id();
 		var gwsMessage = new GWS_Message().cmd(0x1120).sync().write32(roomId).write8(rating);
-		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError);
+		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError)['catch']($scope.catchUnknown);
 	};
 	
 	$scope.onVoted = function(gwsMessage) {
@@ -299,7 +299,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// A location check only makes sense with a real browser position. Ask at
 		// the moment the person actually enters the chat; this is a user gesture,
 		// so Chromium can show a fresh permission prompt after an F5 reload.
-		if (!PositionSrvc.hasPosition(true)) {
+		if (!PositionSrvc.hasPosition()) {
 			return PositionSrvc.probe().then(function(position) {
 				return $scope.updatePosition(position);
 			}).then(function() {
@@ -308,7 +308,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return DialogSrvc.openHTMLDialog(
 					'<p>Bitte erlaube den Standort im Browser, damit Entfernung und Chat-Radius geprüft werden können.</p>',
 					'Standort aktivieren');
-			});
+			})['catch']($scope.catchUnknown);
 		}
 		if (room.inChatRange()) {
 			return $scope.chatVisible();
@@ -336,7 +336,7 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.scrollChatToBottom(true);
 		}).finally(function() {
 			$scope.data.chatJoining = false;
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	// The top "Chat" control is always a valid way to inspect a location's
@@ -392,16 +392,58 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.$on-gwf-position-changed', position);
 	});
 	$scope.$on('lup-room-message', function(event, room, message) {
-		if (room && room.id() === $scope.data.room.id()) {
+		if (message && message.isOwnMessage() && room && room.id() === $scope.data.room.id()) {
 			$scope.scrollChatToBottom(false);
 		}
+	});
+	var leaveHandled = false;
+	var leaveDialogOpen = false;
+	var isSameLocationPath = function(path) {
+		return new RegExp('^/location/' + $scope.data.room.id() + '(?:/(?:chat|visitors))?$').test(path);
+	};
+	var routeFromUrl = function(url) {
+		var marker = '#!';
+		var index = url.indexOf(marker);
+		return index >= 0 ? url.substring(index + marker.length) : '';
+	};
+	$scope.$on('$locationChangeStart', function(event, nextUrl) {
+		var room = $scope.data.room;
+		if (leaveHandled || leaveDialogOpen || !room || !room.id() ||
+			!ChatSrvc.CHATROOM || ChatSrvc.CHATROOM.id() !== room.id()) {
+			return;
+		}
+		var nextPath = routeFromUrl(nextUrl);
+		if (!nextPath || isSameLocationPath(nextPath)) {
+			return;
+		}
+		event.preventDefault();
+		leaveDialogOpen = true;
+		// Leaving a venue is different from changing its tabs.  Let the visitor
+		// deliberately choose whether their presence should be removed now.
+		DialogSrvc.confirm('js/pages/location/html/lup-location-leave-dialog.html', {}).then(function() {
+			leaveHandled = true;
+			leaveDialogOpen = false;
+			return ChatSrvc.part(room).finally(function() {
+				$location.url(nextPath);
+			});
+		}, function() {
+			// "Im Chat bleiben": mark this before navigating. The LocationCtrl is
+			// destroyed by that navigation and must not turn a declined dialog into
+			// an implicit PART.
+			leaveHandled = true;
+			leaveDialogOpen = false;
+			$location.url(nextPath);
+		})['catch']($scope.catchUnknown);
 	});
 	$scope.$on('$destroy', function() {
 		// Switching between Location, Chat and Online recreates this controller in
 		// Angular. That is still the same physical place, so it must not emit PART
 		// between the join and the first typed message.
-		var sameLocationView = new RegExp('^/location/' + $scope.data.room.id() + '(?:/(?:chat|visitors))?$').test($location.path());
+		var sameLocationView = isSameLocationPath($location.path());
 		if (sameLocationView) {
+			return;
+		}
+		if (leaveHandled) {
 			return;
 		}
 		// Navigating away really does mean leaving the live-presence room.
@@ -437,8 +479,10 @@ angular.module('LUP').config(function($routeProvider) {
 	// --- QR-Code --- //
 	/////////////////////
 	$scope.onShowQRCode = function() {
-		let url = LUP_CONFIG.server + 'linkuup;qrforroom;room_id;'+$scope.data.room.id()+'.html?_lang=en';
-		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url});
+		var roomId = $scope.data.room.id();
+		var url = LUP_CONFIG.server + 'linkuup.qrforroom.room_id.' + roomId + '.html?_lang=en';
+		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
+		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
 	}
 
 	///////////////////////

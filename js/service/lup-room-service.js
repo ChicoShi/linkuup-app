@@ -114,11 +114,15 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		RoomSrvc.CACHE[room.id()] = room;
 		return deferred.resolve(room);
 	};
-	
+
+	RoomSrvc.getRoom = function(roomId) {
+		const room = RoomSrvc.CACHE[roomId] ? RoomSrvc.CACHE[roomId] : null;
+		console.log('RoomSrvc.getRoom()', roomId, room);
+		return room
+	};
+
 	RoomSrvc.getOrCreate = function(roomId) {
-//		console.log('RoomSrvc.getOrCreate()', roomId);
 		if (RoomSrvc.CACHE[roomId]) {
-//			console.log('RoomSrvc.getOrCreate() cached', roomId);
 			return RoomSrvc.CACHE[roomId];
 		}
 		else {
@@ -185,6 +189,12 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {
+		// Discovery is location based. Do not silently substitute a global room
+		// catalogue when the browser has not supplied a real GPS position: that is
+		// both expensive for the carousel and misleading for a nearby view.
+		if (!PositionSrvc.hasPosition()) {
+			return $q.reject('GPS position required for locations.');
+		}
 		if (includeAll && RoomSrvc.ALL_ROOMS) {
 			return $q.when(RoomSrvc.ALL_ROOMS);
 		}
@@ -219,17 +229,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 				defer.resolve(rooms);
 			}, defer.reject);
 		};
-		// Do not make the location catalogue depend on the browser's GPS dialog
-		// or its retry timeout. A known position is used immediately; otherwise
-		// the server receives (0,0) and returns the public discovery list.
+		// The backend applies every room's visibility radius and orders the result
+		// from this concrete position.  There is deliberately no (0,0) discovery
+		// fallback; callers wait for GPS instead of rendering every public room.
 		var position = PositionSrvc.CURRENT;
-		if (!includeAll && PositionSrvc.hasPosition(true)) {
-			loadRooms(position);
-		}
-		else {
-			console.warn('LinkUUp: loading full location catalogue.');
-			loadRooms({lat: 0, lng: 0});
-		}
+		loadRooms(position);
 		return defer.promise;
 	};
 

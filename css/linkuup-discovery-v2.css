@@ -28,6 +28,7 @@
 .nearby .placeboard .room-hero-name {
   padding-bottom:3px !important;
   line-height:1.08 !important;
+  overflow: visible;
 }
 .nearby .placeboard .room-category-orbit { width:70px !important; height:70px !important; margin-bottom:12px !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 12px 27px color-mix(in srgb,var(--lup-place-glow,#559fff) 33%,transparent) !important; }
 .nearby .placeboard .room-category-orbit .material-icons { font-size:36px !important; }

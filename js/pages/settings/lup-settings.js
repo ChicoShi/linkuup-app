@@ -291,10 +291,10 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.countries = results[0];
 				$scope.data.timezones = TimezoneSrvc.options();
 			})['catch'](function(error) {
-				ErrorSrvc.showError(error, 'Settings');
+				return ErrorSrvc.showError(error, 'Settings');
 			})['finally'](function() {
 				$scope.settingsLoading = false;
-			});
+			})['catch']($scope.catchUnknown);
 		}
 	};
 	
@@ -339,7 +339,7 @@ angular.module('LUP').config(function($routeProvider) {
 				setting.pendingSave = null;
 				$scope.changeSetting(setting, pending.visibilityOnly);
 			}
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	$scope.changeVisibility = function(setting) {

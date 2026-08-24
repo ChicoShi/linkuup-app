@@ -17,7 +17,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	LUPNotification.RoomSrvc = RoomSrvc;
 	LUPNotification.UserSrvc = UserSrvc;
 	LUPComment.t = window.t = $translate.instant;
-	LUP_Query.UserSrvc = UserSrvc;
+	LUP_QueryThread.UserSrvc = UserSrvc;
 	LUP_QueryMessage.UserSrvc = UserSrvc;
 	
 	window.LUPSERVICE = {
@@ -31,6 +31,18 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 
 	// Hook DialogSrvc in main scope
 	$scope.DialogSrvc = DialogSrvc;
+
+	/** Last-resort handler for asynchronous UI work without a specific recovery. */
+	$rootScope.catchUnknown = $scope.catchUnknown = function(error) {
+		if (error === undefined || error === null || error === '') {
+			console.warn('LinkUUp: ignored empty asynchronous rejection.');
+			return $q.resolve();
+		}
+		console.error('LinkUUp: unhandled asynchronous rejection.', error);
+		var text = error && error.data ? error.data : error;
+		return ErrorSrvc.websocketMaybeJSONError(text)['catch'](angular.noop);
+	};
+	LUPNotification.catchUnknown = $scope.catchUnknown;
 	
 	// Hook media queries into main scope
 	$scope.$mdMedia = $mdMedia;
@@ -103,7 +115,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			if (response === 'ok') {
 				$scope.gotoRoom(room);
 			}
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	/////////////////
@@ -133,7 +145,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	 */
 	$scope.initConnection = function(count, attempt) {
 		console.log('LUPCtrl.initConnection()');
-		$scope.data.initialUrl = window.location.hash.substr(2);
+		// Preserve the very first protected route (for example a room QR target).
+		// Startup retries and the required login redirect must not replace it with
+		// /login before the user has authenticated.
+		var requestedPath = window.location.hash.substr(2);
+		if (!$scope.data.initialUrl && requestedPath && !/^\/(?:login|signup|recovery|guest-login)(?:\/|$)/.test(requestedPath)) {
+			$scope.data.initialUrl = requestedPath;
+		}
 		$scope.data.inited = false;
 		console.log('LUPCtrl.initConnection()', count, $scope.data.initialUrl);
 		attempt = attempt || 0;
@@ -224,9 +242,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			var categories = CategorySrvc.withCategories();
 			categories['catch']($scope.failedCategories);
 			// All at once
-			$q.all([connection, types, enums, config, settings, categories]).then(
+		$q.all([connection, types, enums, config, settings, categories]).then(
 					$scope.initedConnection,
-					$scope.fatalError);
+					$scope.fatalError)['catch']($scope.catchUnknown);
 		}
 	};
 
@@ -248,9 +266,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.failedConnection = function(error) {
 		console.log('LUPCtrl.failedConnection()', error);
 		return ErrorSrvc.showError($translate.instant('err_websocket_connection'), 'Connection').then(function() {
-			$scope.fatalError().
-				then($scope.gotoLogin);
-		});
+			return $scope.fatalError().then($scope.gotoLogin);
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.failedTimezone = function(error) {
@@ -297,26 +314,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			}
 			finished = true;
 			$scope.data.inited = true;
-			// Begin fetching locations before the visitor opens the discovery view.
-			// The locations controller reuses this promise, so the first visit is as
-			// quick as returning from the profile screen without duplicate traffic.
-			RoomSrvc.withRooms().then(function(rooms) {
-				$scope.data.rooms = rooms;
-				// The discovery page may already be open while this background
-				// request resolves. Tell it to initialise its carousel immediately.
-				$rootScope.$broadcast('lup-rooms-ready', rooms);
-				// Keep the first category tap instant.  This deliberately starts only
-				// after the nearby start view is ready, so it never delays the app.
-				$timeout(function() {
-					RoomSrvc.withRooms(true).then(function(allRooms) {
-						$scope.data.fullCatalogue = allRooms;
-					}, function(error) {
-						console.warn('LinkUUp: discovery catalogue preload failed.', error);
-					});
-				}, 900, false);
-			}, function(error) {
-				console.warn('LinkUUp: location preload failed; it will retry on opening the view.', error);
-			});
+			// Location discovery is deliberately started by the first real
+			// gwf-position-changed event below.  WebSocket connection alone has no
+			// coordinates yet, so preloading here only produced a noisy rejected
+			// promise and could race the native location rail.
 			// The app is usable once the authenticated user is available. A stale
 			// optional background task must never keep the whole interface covered
 			// by the loading screen after a data reinstall.
@@ -327,7 +328,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		UserSrvc.withUser(window.GWF_USER.id(), true).then(finish, function(error) {
 			console.warn('LUP: Could not refresh the current user; continuing with the authenticated session.', error);
 			finish();
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	/////////////////
@@ -361,7 +362,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		ErrorSrvc.showError('Connection Failed', 'Websocket').then(function() {
 //			$scope.gotoLogin();
 			setTimeout($scope.initConnection, 500);
-		});
+		})['catch']($scope.catchUnknown);
 	});
 	
 	/**
@@ -380,15 +381,15 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		$scope.data.authenticated = window.GWF_USER.authenticated(true);
 		UserSrvc.loggedIn(window.GWF_USER);
 		$rootScope.$broadcast('lup-menu-refresh', window.GWF_USER);
+		var path = $scope.data.initialUrl || '/locations';
+		$scope.data.initialUrl = undefined;
+		$scope.data.authRedirectPending = true;
 		SettingsSrvc.withConfig().then(function(){
-			if ($scope.data.initialUrl?.includes('login') || $scope.data.initialUrl === '/signup') {
-				$scope.data.initialUrl = '/locations';
-			}
-			var path = $scope.data.initialUrl ? $scope.data.initialUrl : '/locations';
-			$scope.data.initialUrl = undefined;
 			console.log('redirects to ' + path);
 			$location.path(path);
-		});
+		})['finally'](function() {
+			$scope.data.authRedirectPending = false;
+		})['catch']($scope.catchUnknown);
 	};
 	
 	//////////////////////
@@ -435,7 +436,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoVisitors = function(room) { return $scope.goto("/location/"+room.id()+'/visitors'); };
 	$scope.gotoRoomComments = function(room) { return $scope.goto('/location/'+room.id()+'/comments'); };
 	$scope.gotoAccount = function() { return $scope.goto("/account"); };
-	$scope.gotoQuery = function(user) { return $scope.goto("/query/"+user.id()); };
+	$scope.gotoQuery = function(user) { return $scope.goto("/query/user/"+user.id()); };
+	$scope.gotoQueryThread = function(thread) { return $scope.goto("/query/thread/"+thread.id()); };
 	$scope.gotoProfile = function(user) { return $scope.goto("/profile/"+user.id()); };
 	$scope.gotoProfileId = function(userId) { return $scope.goto("/profile/"+userId); };
 	$scope.gotoFriends = function(user) { return $scope.goto("/friends/"+user.id()); };
@@ -482,7 +484,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			$scope.clearCache();
 			$scope.data.authenticated = false;
 			$scope.gotoLogin();
-		});
+		})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.clearCache = function() {
@@ -568,13 +570,18 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 				$rootScope.$broadcast('lup-rooms-ready', rooms);
 			}, function(error) {
 				console.warn('LinkUUp: nearby location refresh failed.', error);
-			});
+			})['catch']($scope.catchUnknown);
 		}, 250);
 	};
 	
 	$scope.$on('gwf-position-changed', function(event, pos) {
 		console.log('LUPCtrl.$on-gwf-position-changed()', pos);
-		$scope.updatePosition(pos);
+		var update = $scope.updatePosition(pos);
+		if (update) {
+			update['catch'](function(error) {
+				console.warn('LinkUUp: background position update failed.', error);
+			});
+		}
 		$scope.refreshRoomsForPosition();
 	});
 	
@@ -590,7 +597,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			}
 			else if (window.GWF_USER.authenticated(true)) {
 				$scope.passedAuthCheck();
-				$location.path('/locations');
+				// onAuthenticated() is restoring a deep link after login. Do not let
+				// the public login route race it back to the locations overview.
+				if (!$scope.data.authRedirectPending) {
+					$location.path('/locations');
+				}
 			}
 			else if (!$scope.data.authCheck) {
 				// Login, Signup, etc do not authenticate. they are inited here.
@@ -678,11 +689,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.$on('lup-inited', function(event) {
 		console.log('LUPCtrl$lup-inited()', event);
 		NotificationSrvc.queryUnreadNotificationCount().then(
-				$scope.updateNotificationCount);
+				$scope.updateNotificationCount)['catch']($scope.catchUnknown);
 		if (window.GWF_USER.isAuthed()) {
 			$rootScope.updateFriendsCount();
 			ChatSrvc.loadChats(window.GWF_USER.id()).then(
-					$scope.updateNotificationCount);
+					$scope.updateNotificationCount)['catch']($scope.catchUnknown);
 		}
 	});
 	
@@ -706,28 +717,34 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.friendRequest()', gwsMessage.dump());
 		UserSrvc.withUser(gwsMessage.read32()).then(function(user){
 			alert('You got a friend request from ' + user.displayName());
-		});
+		})['catch']($scope.catchUnknown);
 	};
 
 	
 	$scope.cmd_1103 = function userJoined(gwsMessage) {
 		console.log('LUPCtrl.userJoined()', gwsMessage.dump());
-		var time = gwsMessage.read32();
-		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
-		var user = UserSrvc.getOrCreate(gwsMessage.read32());
-		room.addUser(user);
-		var message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
-		$rootScope.$broadcast('lup-room-message', room, message);
+		const time = gwsMessage.readTS();
+		const room = RoomSrvc.getRoom(gwsMessage.read32());
+		if (room) {
+			const user = UserSrvc.getOrCreate(gwsMessage.read32());
+			room.addUser(user);
+			const message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
+			message.effect = 'blubble';
+			$rootScope.$broadcast('lup-room-message', room, message);
+		}
 	};
 	
 	$scope.cmd_1104 = function userLeft(gwsMessage) {
 		console.log('LUPCtrl.userLeft()', gwsMessage.dump());
-		var time = gwsMessage.read32();
-		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
-		var user = UserSrvc.getOrCreate(gwsMessage.read32());
-		room.removeUser(user);
-		var message = room.addMessage(time, user, room, $translate.instant('has left'), true);
-		$rootScope.$broadcast('lup-room-message', room, message);
+		const time = gwsMessage.readTS();
+		const room = RoomSrvc.getRoom(gwsMessage.read32());
+		if (room) {
+			const user = UserSrvc.getOrCreate(gwsMessage.read32());
+			room.removeUser(user);
+			const message = room.addMessage(time, user, room, $translate.instant('has left'), true);
+			message.effect = 'blubble';
+			$rootScope.$broadcast('lup-room-message', room, message);
+		}
 	};
 	
 	$scope.cmd_1105 = function userList(gwsMessage) {
@@ -771,6 +788,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
 		room.addUser(user);
 		var message = room.addMessage(time, user, room, gwsMessage.readString());
+		message.effect = 'blubble';
 		FXSrvc.onChat(user, room);
 		$rootScope.$broadcast('lup-room-message', room, message);
 	};
@@ -778,6 +796,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.cmd_1108 = function queryMessage(gwsMessage) {
 		console.log('LUPCtrl.queryMessage()', gwsMessage);
 		var message = ChatSrvc.loadMessage(gwsMessage);
+		message.effect = 'blubble';
 		var chat = ChatSrvc.forMessage(message);
 		chat.addNewMessage(message);
 		$rootScope.updateNotificationCount();
@@ -808,7 +827,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (notification && notification.type() === 'join') {
 			var ready = notification.resolved;
 			if (ready && angular.isFunction(ready.then)) {
-				ready.then($scope.showFriendArrival);
+				ready.then($scope.showFriendArrival)['catch']($scope.catchUnknown);
 			}
 		}
 		// Update cache

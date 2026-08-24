@@ -10,6 +10,12 @@ function LUPNotification() {
 	this.q = function() { return LUPNotification['$q']; };
 	this.us = function() { return LUPNotification.UserSrvc; };
 	this.rs = function() { return LUPNotification.RoomSrvc; };
+	this.catchUnknown = function(error) {
+		if (LUPNotification.catchUnknown) {
+			return LUPNotification.catchUnknown(error);
+		}
+		console.error('LinkUUp: notification resolver rejected before LUPCtrl was ready.', error);
+	};
 
 	// Notification raw data
 	this.id = function() { return this.JSON.note_id; };
@@ -20,7 +26,10 @@ function LUPNotification() {
 	this.read = function() { return !!this.read_at(); }
 	this.unread = function() { return !this.read_at(); }
 	
-	this.displayDate = function() { return moment(this.created(), 'X').format(window.t('FMT_LONG')); };
+	// GDT_Timestamp is decoded by the binary type service as JavaScript
+	// milliseconds. Moment's X parser expects Unix seconds and would inflate
+	// event dates into the far future.
+	this.displayDate = function() { return moment(this.created()).format(window.t('FMT_LONG')); };
 	
 	// Helper
 	this.type = function() { return this.data().type; };
@@ -63,7 +72,7 @@ function LUPNotification() {
 			that.friend = values[0];
 			that.room = values[1];
 			return that;
-		});
+		})['catch'](this.catchUnknown);
 		return this.resolved;
 	};
 	
@@ -76,7 +85,7 @@ function LUPNotification() {
 		this.q().all([Quser, Qroom]).then(function(values){
 			that.friend = values[0];
 			that.room = values[1];
-		});
+		})['catch'](this.catchUnknown);
 	};
 	
 	this.resolveFriendRequest = function() {
@@ -89,7 +98,7 @@ function LUPNotification() {
 			var fid = that.data().friend;
 			that.frqid = ""+nid+","+uid+","+fid;
 			that.friend = friend;
-		});
+		})['catch'](this.catchUnknown);
 	};
 
 	this.resolveFriendRequested = function() {
@@ -98,7 +107,7 @@ function LUPNotification() {
 		var that = this;
 		this.us().withUser(this.data().friend).then(function(friend){
 			that.friend = friend;
-		});
+		})['catch'](this.catchUnknown);
 	};
 
 	/**
@@ -119,14 +128,14 @@ function LUPNotification() {
 				that.friend = users[0] === GWF_USER ? users[1] : users[0];
 				that.other = GWF_USER;
 				if (that.recaching) {
-					that.us().withUser(that.friend.id(), true); // Recache friend
+					that.us().withUser(that.friend.id(), true)['catch'](that.catchUnknown); // Recache friend
 				}
 			}
 			else {
 				that.other = users[0].isFriend() ? users[0] : users[1];
 				that.friend = users[0].isFriend() ? users[1] : users[0];
 			}
-		});
+		})['catch'](this.catchUnknown);
 	};
 	
 	/**
@@ -147,13 +156,13 @@ function LUPNotification() {
 				that.friend = users[0] === GWF_USER ? users[1] : users[0];
 				that.other = GWF_USER;
 				if (that.recaching) {
-					that.us().withUser(that.friend.id(), true); // Recache friend
+					that.us().withUser(that.friend.id(), true)['catch'](that.catchUnknown); // Recache friend
 				}
 			}
 			else {
 				that.other = users[0].isFriend() ? users[0] : users[1];
 				that.friend = users[0].isFriend() ? users[1] : users[0];
 			}
-		});
+		})['catch'](this.catchUnknown);
 	};
 }

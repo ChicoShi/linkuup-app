@@ -189,6 +189,9 @@
 "QUERY_PLACEHOLDER": "Write a message …",
 "QUERY_ACTIVE": "ACTIVE CONVERSATION",
 "PROFILE_ACTION_MESSAGE": "Message",
+"PROFILE_ACTION_ADD_FRIEND": "Add friend",
+"PROFILE_ACTION_FRIEND_PENDING": "Request sent",
+"PROFILE_ACTION_FRIENDS": "Friends",
 "PROFILE_ABOUT_KICKER": "YOUR SNAPSHOT",
 "MSG_NO_PRIVATE_MESSAGES": "You have not exchanged any private messages yet.",
 "SUBHEADER_FRIENDS": "{{user}} got {{count}} friend(s)",
@@ -510,5 +513,11 @@
 "PROFILE_FIELD_PRIVATE": "Visible only to you",
 "PROFILE_VISIBILITY_PUBLIC": "Visible to everyone",
 "PROFILE_VISIBILITY_MEMBERS": "Visible to members",
-"PROFILE_VISIBILITY_FRIENDS": "Visible to friends"
+	"PROFILE_VISIBILITY_FRIENDS": "Visible to friends",
+	"PROFILE_FRIENDS_MENU_TITLE": "Friendship",
+	"PROFILE_FRIENDS_MENU_COPY": "What would you like to do?",
+	"PROFILE_ACTION_CANCEL_FRIEND_REQUEST": "Withdraw request",
+	"PROFILE_ACTION_ACCEPT_FRIEND_REQUEST": "Accept request",
+	"PROFILE_ACTION_DENY_FRIEND_REQUEST": "Decline request",
+	"PROFILE_ACTION_REMOVE_FRIEND": "End friendship"
 }
