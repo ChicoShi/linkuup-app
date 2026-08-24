@@ -420,7 +420,7 @@ angular.module('LUP').config(function($routeProvider) {
 			event.stopPropagation();
 		}
 		var roomId = room.id();
-		var url = LUP_CONFIG.server + 'linkuup;qrforroom;room_id;' + roomId + '.html?_lang=en';
+		var url = LUP_CONFIG.server + 'linkuup.qrforroom.room_id.' + roomId + '.html?_lang=en';
 		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
 		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
 	};

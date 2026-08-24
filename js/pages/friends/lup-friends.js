@@ -95,7 +95,7 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	$scope.showQRCode = function() {
 		const user = $scope.data.ownUser;
-		const url = LUP_CONFIG.server + 'linkuup;qrforprofile;user_id;' + user.id() + '.html?lang=en';
+		const url = LUP_CONFIG.server + 'linkuup.qrforprofile.user_id.' + user.id() + '.html?lang=en';
 		const target = window.location.href.split('#')[0] + '#!/profile/' + user.id();
 		return DialogSrvc.confirm('js/pages/friends/lup-friends-qr-dialog.html', {url: url, target: target});
 	}
