@@ -20,6 +20,18 @@
         <p class="username">{{ user.displayName(); }}</p>
         <p class="lup-user-status">{{ user.status(); }}</p>
       </div>
+      <div class="lup-user-actions">
+        <button class="lup-user-action lup-user-action-friend" type="button"
+          ng-if="!user.isSelf() && user.isMember() && data.ownUser && data.ownUser.isMember() && !user.isFriend() && !user.JSON.relation_pending"
+          ng-click="FriendSrvc.addFriend(user)" title="{{'PROFILE_ACTION_ADD_FRIEND'|translate}}" aria-label="{{'PROFILE_ACTION_ADD_FRIEND'|translate}}">
+          <i class="material-icons">person_add_alt_1</i>
+        </button>
+        <button class="lup-user-action lup-user-action-friend lup-user-action-friend-pending" type="button"
+          ng-if="!user.isSelf() && user.isMember() && data.ownUser && data.ownUser.isMember() && !user.isFriend() && user.JSON.relation_pending"
+          ng-click="FriendSrvc.cancelFriendRequest(user)" title="{{'PROFILE_ACTION_FRIEND_PENDING'|translate}}" aria-label="{{'PROFILE_ACTION_FRIEND_PENDING'|translate}}">
+          <i class="material-icons">hourglass_top</i>
+        </button>
+      </div>
 <!--       <div> -->
 <!--         <i -->
 <!--          class="md-secondary usericon likeuser" -->

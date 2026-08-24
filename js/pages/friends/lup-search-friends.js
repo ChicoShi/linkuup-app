@@ -1,6 +1,7 @@
 "use strict";
 angular.module('LUP').controller('SearchFriendsCtrl', function($scope,
-		UserSrvc) {
+		UserSrvc, FriendSrvc) {
+	$scope.FriendSrvc = FriendSrvc;
 	
 	$scope.data.friendsearch = '';
 	$scope.data.friendsearchusers = [];

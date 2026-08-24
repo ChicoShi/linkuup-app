@@ -190,6 +190,9 @@
 "QUERY_PLACEHOLDER": "Nachricht schreiben …",
 "QUERY_ACTIVE": "AKTIVES GESPRÄCH",
 "PROFILE_ACTION_MESSAGE": "Nachricht",
+"PROFILE_ACTION_ADD_FRIEND": "Freund werden",
+"PROFILE_ACTION_FRIEND_PENDING": "Anfrage offen",
+"PROFILE_ACTION_FRIENDS": "Freunde",
 "PROFILE_ABOUT_KICKER": "DEIN EINBLICK",
 "MSG_NO_PRIVATE_MESSAGES": "Du hast noch keine privaten Nachrichten ausgetauscht.",
 "SUBHEADER_FRIENDS": "{{user}} hat {{count}} Freund(e)",
@@ -526,5 +529,11 @@
 "PROFILE_FIELD_PRIVATE": "Nur für dich sichtbar",
 "PROFILE_VISIBILITY_PUBLIC": "Für alle sichtbar",
 "PROFILE_VISIBILITY_MEMBERS": "Für Mitglieder sichtbar",
-"PROFILE_VISIBILITY_FRIENDS": "Nur für Freunde sichtbar"
+	"PROFILE_VISIBILITY_FRIENDS": "Nur für Freunde sichtbar",
+	"PROFILE_FRIENDS_MENU_TITLE": "Freundschaft",
+	"PROFILE_FRIENDS_MENU_COPY": "Was möchtest du tun?",
+	"PROFILE_ACTION_CANCEL_FRIEND_REQUEST": "Anfrage zurückziehen",
+	"PROFILE_ACTION_ACCEPT_FRIEND_REQUEST": "Anfrage annehmen",
+	"PROFILE_ACTION_DENY_FRIEND_REQUEST": "Anfrage ablehnen",
+	"PROFILE_ACTION_REMOVE_FRIEND": "Freundschaft kündigen"
 }

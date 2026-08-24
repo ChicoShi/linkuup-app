@@ -134,6 +134,31 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 
 		return defer.promise;
 	};
+
+	// A compact chooser for contextual actions. Unlike confirm(), it returns the
+	// chosen action so callers can keep relationship logic out of templates.
+	DialogSrvc.menu = function(templateUrl, data) {
+		var defer = $q.defer();
+		function DialogController($scope, $mdDialog) {
+			$scope.data = data;
+			$scope.choose = function(action) {
+				defer.resolve(action);
+				$mdDialog.cancel();
+			};
+			$scope.cancel = function() {
+				defer.reject();
+				$mdDialog.cancel();
+			};
+		}
+		DialogSrvc.show({
+			controller: ['$scope', '$mdDialog', DialogController],
+			templateUrl: DialogSrvc.versionedTemplate(templateUrl),
+			parent: angular.element(document.body),
+			targetEvent: window.event,
+			clickOutsideToClose: true,
+		})['catch'](angular.noop);
+		return defer.promise;
+	};
 	
 	return DialogSrvc;
 });

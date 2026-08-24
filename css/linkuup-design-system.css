@@ -6911,6 +6911,10 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .friends-page .lup-user-action-message:hover { background:rgba(118,155,238,.15); color:#e1e8ff; }
 .friends-page .lup-user-action-remove { color:#d8a7ba; }
 .friends-page .lup-user-action-remove:hover { border-color:transparent; background:rgba(205,110,143,.12); color:#f0c0d0; }
+.friends-page .lup-user-action-friend { color:#a9e8c7; }
+.friends-page .lup-user-action-friend:hover { background:rgba(91,193,142,.16); color:#d8ffea; }
+.friends-page .lup-user-action-friend-pending { color:#f0ca8a; }
+.friends-page .lup-user-action-friend-pending:hover { background:rgba(218,166,82,.15); color:#ffe1ae; }
 .friends-page .friend-search-results {
   overflow:hidden;
   width:100%;

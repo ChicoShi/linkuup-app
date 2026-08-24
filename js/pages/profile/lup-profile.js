@@ -121,37 +121,57 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.profilePullLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profilePullFriends = function() {
-		var user = $scope.data.user;
-		if (!user) {
-			return;
-		}
-		// Friend lists are private by default. The Friends marker on another
-		// profile is therefore a deliberate relationship gesture, not a route
-		// into a list the visitor may not see.
-		if (user.isSelf()) {
-			return $scope.gotoUserFriends(user);
-		}
-		if (!user.isMember() || !$scope.data.ownUser || !$scope.data.ownUser.isMember()) {
-			return;
-		}
-		if (user.isFriend()) {
-			return FriendSrvc.removeFriend(user);
-		}
-		if (user.JSON.relation_pending) {
-			return FriendSrvc.cancelFriendRequest(user);
-		}
-		return FriendSrvc.addFriend(user);
+		return $scope.openFriendMenu();
 	};
 	$scope.profilePullCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	$scope.profilePullMessage = function() { return $scope.openQuery($scope.data.user); };
+	$scope.profileFriendActionKey = function() {
+		var user = $scope.data.user;
+		if (!user || user.isSelf()) {
+			return 'FRIENDS';
+		}
+		if (user.isFriend()) {
+			return 'PROFILE_ACTION_FRIENDS';
+		}
+		return user.JSON.relation_pending ? 'PROFILE_ACTION_FRIEND_PENDING' : 'PROFILE_ACTION_ADD_FRIEND';
+	};
+	$scope.profileFriendActionIcon = function() {
+		var user = $scope.data.user;
+		if (!user || user.isSelf() || user.isFriend()) {
+			return 'groups';
+		}
+		return user.JSON.relation_pending ? 'hourglass_top' : 'person_add_alt_1';
+	};
 	// A short tap remains navigation. Pulling is the deliberate gesture; it can
 	// perform a distinct action (the Up) without hiding any profile overview.
 	$scope.profileOpenLocations = function() { return $scope.gotoUserCourse($scope.data.user); };
 	$scope.profileOpenUps = function() { return $scope.gotoLikes($scope.data.user); };
 	$scope.profileOpenFriends = function() {
-		if ($scope.data.user && $scope.data.user.isSelf()) {
-			return $scope.gotoUserFriends($scope.data.user);
-		}
+		return $scope.openFriendMenu();
+	};
+	$scope.openFriendMenu = function() {
+		var user = $scope.data.user;
+		if (!user) { return; }
+		var ownUser = $scope.data.ownUser;
+		var available = user.isSelf() || (user.isMember() && ownUser && ownUser.isMember());
+		var data = {
+			user: user,
+			canManage: available && !user.isSelf(),
+			isSelf: user.isSelf(),
+			isFriend: user.isFriend(),
+			outgoing: !!user.JSON.relation_pending,
+			incoming: !!user.JSON.relation_incoming,
+		};
+		return DialogSrvc.menu('js/pages/profile/lup-profile-friends-dialog.html', data).then(function(action) {
+			switch (action) {
+			case 'view': return $scope.gotoUserFriends(user);
+			case 'request': return FriendSrvc.addFriend(user);
+			case 'cancel': return FriendSrvc.cancelFriendRequest(user);
+			case 'accept': return FriendSrvc.acceptFriendRequest(user);
+			case 'deny': return FriendSrvc.denyFriendRequest(user);
+			case 'remove': return FriendSrvc.removeFriend(user);
+			}
+		}, angular.noop)['catch']($scope.catchUnknown);
 	};
 	$scope.profileOpenCuddles = function() { return $scope.gotoUserCuddles($scope.data.user); };
 	$scope.profileOpenMessage = function() { return $scope.openQuery($scope.data.user); };
@@ -318,6 +338,10 @@ angular.module('LUP').config(function($routeProvider) {
 			lup_religion: 'SETTING_LABEL_RELIGION'
 		};
 		var cache = SettingsSrvc.CACHE || {};
+		// A fresh profile response is normally a GDO_Profile, but the HTTP
+		// settings refresh can briefly hand us its plain transport object first.
+		// Missing metadata means "not explicitly empty", not a fatal profile.
+		var empty = profile.EMPTY || {};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
@@ -328,7 +352,7 @@ angular.module('LUP').config(function($routeProvider) {
 				// Legacy display helpers initialise a few optional enums with "0".
 				// The profile frame still knows that they were actually absent, and
 				// an absent field must not turn into a visible "not specified" row.
-				if (profile.EMPTY[key]) {
+				if (empty[key]) {
 					continue;
 				}
 				var value = (profile.JSON || {})[key];

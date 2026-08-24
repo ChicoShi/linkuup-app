@@ -38,6 +38,27 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 			return response;
 		}, ErrorSrvc.websocketJSONError);
 	};
+
+	FriendSrvc.acceptFriendRequest = function(user) {
+		console.log('FriendSrvc.acceptFriendRequest()', user);
+		var gwsMessage = new GWS_Message().cmd(0x1132).sync()
+			.write32(user.id()).write32(window.GWF_USER.id());
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			UserSrvc.gotUserMessage(response);
+			user.JSON.relation_incoming = 0;
+			return response;
+		}, ErrorSrvc.websocketJSONError);
+	};
+
+	FriendSrvc.denyFriendRequest = function(user) {
+		console.log('FriendSrvc.denyFriendRequest()', user);
+		var gwsMessage = new GWS_Message().cmd(0x1137).sync().write32(user.id());
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+			UserSrvc.gotUserMessage(response);
+			user.JSON.relation_incoming = 0;
+			return response;
+		}, ErrorSrvc.websocketJSONError);
+	};
 	
 	FriendSrvc.cannnotAddFriend = function(response) {
 		console.log('FriendSrvc.cannnotAddFriend()', response);
