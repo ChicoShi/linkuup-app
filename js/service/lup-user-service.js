@@ -53,6 +53,9 @@ service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrv
 				lup_query_received: gwsMessage.read32(),
 				lup_visits: gwsMessage.read32(),
 				lup_cuddles: gwsMessage.read32(),
+				// Older backends end after the trophy counters. The title is purely
+				// decorative, so retain a safe local fallback during rolling deploys.
+				lup_role: gwsMessage.hasMore() ? gwsMessage.readString() : '',
 			};
 		}
 	};

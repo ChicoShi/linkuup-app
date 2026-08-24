@@ -255,6 +255,12 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		$scope.data.profile = profile;
+		// The colour belongs to the profile response because its visibility is
+		// user-controlled. Keep a display-only copy on the cached user for the
+		// header badge; it grants no privilege and is never sent back to GWS.
+		if ($scope.data.user) {
+			$scope.data.user.update({profile_color: (profile.JSON || {}).color || ''});
+		}
 		$scope.rebuildProfileGroups();
 		// Profile values and their human labels arrive through two independent
 		// endpoints. If the settings catalogue was still loading, the old code
@@ -312,6 +318,18 @@ angular.module('LUP').config(function($routeProvider) {
 		return 'module_' + String(module).toLowerCase();
 	};
 
+	$scope.profileRole = function(user) {
+		if (!user) { return 'PROFILE_ROLE_MEMBER'; }
+		if (user.JSON.lup_role) { return user.JSON.lup_role; }
+		if (user.isVIP()) { return 'PROFILE_ROLE_VIP'; }
+		return user.isGuest() ? 'PROFILE_ROLE_GUEST' : 'PROFILE_ROLE_MEMBER';
+	};
+
+	$scope.profileRoleStyle = function(user) {
+		var color = user && user.JSON && user.JSON.profile_color;
+		return color ? {backgroundColor: color, borderColor: color} : {};
+	};
+
 	$scope.buildProfileGroups = function(profile) {
 		if (!profile) {
 			return [];
@@ -320,7 +338,7 @@ angular.module('LUP').config(function($routeProvider) {
 		 * Privacy rules, activity preferences and friendship policies belong in
 		 * Settings.  Only voluntary, person-facing facts are useful to a visitor. */
 		var profileSections = {
-			User: {label: 'PROFILE_SECTION_BASICS', sort: 10, fields: ['gender']},
+			User: {label: 'PROFILE_SECTION_BASICS', sort: 10, fields: ['gender', 'country_of_origin', 'color']},
 			LinkUUp: {label: 'PROFILE_SECTION_LOCAL', sort: 20, fields: ['lup_status', 'lup_state', 'lup_city']},
 			About: {label: 'PROFILE_SECTION_ABOUT', sort: 30, fields: [
 				'lup_eyecolor', 'lup_height', 'lup_interest', 'lup_sexo',
@@ -335,7 +353,8 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 		var groups = {};
 		var profileLabels = {
-			gender: 'SETTING_LABEL_GENDER', lup_status: 'SETTING_LABEL_STATUS',
+			gender: 'SETTING_LABEL_GENDER', country_of_origin: 'country_of_origin', color: 'SETTING_LABEL_PROFILE_COLOUR',
+			lup_status: 'SETTING_LABEL_STATUS',
 			lup_state: 'SETTING_LABEL_STATE', lup_city: 'SETTING_LABEL_CITY',
 			lup_eyecolor: 'SETTING_LABEL_EYE_COLOR', lup_height: 'SETTING_LABEL_HEIGHT',
 			lup_interest: 'SETTING_LABEL_INTEREST', lup_sexo: 'SETTING_LABEL_ORIENTATION',
@@ -418,6 +437,8 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.profileFieldIcon = function(key) {
 		var icons = {
 			gender: 'person_outline',
+			country_of_origin: 'public',
+			color: 'color_lens',
 			lup_status: 'chat_bubble_outline',
 			lup_state: 'explore',
 			lup_city: 'location_city',
@@ -439,7 +460,8 @@ angular.module('LUP').config(function($routeProvider) {
 	// kind of information without adding another explanatory badge.
 	$scope.profileFieldTone = function(key) {
 		var tones = {
-			gender: 'sky', lup_status: 'violet', lup_state: 'teal', lup_city: 'blue',
+			gender: 'sky', country_of_origin: 'teal', color: 'violet',
+			lup_status: 'violet', lup_state: 'teal', lup_city: 'blue',
 			lup_eyecolor: 'ice', lup_height: 'blue', lup_interest: 'violet',
 			lup_sexo: 'rose', lup_has_pet: 'amber', lup_drinks: 'gold',
 			lup_smokes: 'coral', lup_sporty: 'mint', lup_religion: 'lilac'

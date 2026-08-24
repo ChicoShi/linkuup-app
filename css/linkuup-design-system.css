@@ -964,7 +964,7 @@ md-list .md-list-item-text .username,
 .profile-page .avatar-bg { padding: 72px 14px 82px; background: radial-gradient(circle at 50% 5%, rgba(122,92,255,.25), transparent 53%); }
 .profile-page .profile-identity { position: relative; z-index: 3; margin-top: 16px; text-align: center; }
 .profile-page .profile-identity h2 { color: #faf9ff; font-size: clamp(20px, 5vw, 25px); letter-spacing: -.02em; text-shadow: 0 4px 18px rgba(0,0,0,.28); }
-.profile-page .profile-identity span { color: #d7d0ef; border-color: rgba(202,190,255,.33); background: rgba(122,92,255,.12); }
+.profile-page .profile-identity .profile-role { display:inline-block; padding:5px 11px; border:1px solid rgba(202,190,255,.33); border-radius:999px; background:rgba(122,92,255,.34); box-shadow:0 5px 15px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.24); color:#fff; font-size:11px; font-weight:800; letter-spacing:.035em; text-shadow:0 1px 2px rgba(0,0,0,.38); }
 .profile-page .profile-information { width: min(94%, 680px); margin: 14px auto 28px; }
 .profile-page .profile-information .md-list-item-text { margin: 5px; padding: 13px 14px; min-height: 70px; border: 1px solid rgba(255,255,255,.09); border-radius: 14px; background: linear-gradient(135deg, rgba(122,92,255,.12), rgba(255,255,255,.04)); box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 8px 18px rgba(0,0,0,.13); }
 .profile-page .profile-information .full .md-list-item-text { border-color: rgba(174,157,255,.26); background: linear-gradient(135deg, rgba(122,92,255,.23), rgba(43,157,244,.09)); }
