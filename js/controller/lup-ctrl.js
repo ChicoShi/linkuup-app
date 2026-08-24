@@ -580,7 +580,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	
 	$scope.$on('gwf-position-changed', function(event, pos) {
 		console.log('LUPCtrl.$on-gwf-position-changed()', pos);
-		$scope.updatePosition(pos);
+		var update = $scope.updatePosition(pos);
+		if (update) {
+			update['catch'](function(error) {
+				console.warn('LinkUUp: background position update failed.', error);
+			});
+		}
 		$scope.refreshRoomsForPosition();
 	});
 	

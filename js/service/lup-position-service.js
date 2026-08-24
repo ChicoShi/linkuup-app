@@ -81,9 +81,13 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		}
 		else {
 			PositionSrvc.PROBING = defer.promise;
-			defer.promise['finally'](function() {
+			var clearProbe = function() {
 				PositionSrvc.PROBING = null;
-			});
+			};
+		// Keep the original probe promise for callers. This bookkeeping branch
+		// must resolve on both outcomes, otherwise a rejected GPS probe creates
+		// an unrelated unhandled Angular rejection.
+			defer.promise.then(clearProbe, clearProbe);
 			PositionSrvc.MAX_TRY = 0;
 			PositionSrvc.sendProbe(defer);
 		}

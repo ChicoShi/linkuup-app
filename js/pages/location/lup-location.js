@@ -421,8 +421,15 @@ angular.module('LUP').config(function($routeProvider) {
 		// Leaving a venue is different from changing its tabs.  Let the visitor
 		// deliberately choose whether their presence should be removed now.
 		DialogSrvc.confirm('js/pages/location/html/lup-location-leave-dialog.html', {}).then(function() {
-			return ChatSrvc.part(room);
-		}, angular.noop).finally(function() {
+			leaveHandled = true;
+			leaveDialogOpen = false;
+			return ChatSrvc.part(room).finally(function() {
+				$location.url(nextPath);
+			});
+		}, function() {
+			// "Im Chat bleiben": mark this before navigating. The LocationCtrl is
+			// destroyed by that navigation and must not turn a declined dialog into
+			// an implicit PART.
 			leaveHandled = true;
 			leaveDialogOpen = false;
 			$location.url(nextPath);
