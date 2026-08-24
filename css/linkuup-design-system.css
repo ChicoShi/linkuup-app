@@ -7827,14 +7827,6 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .nearby .slickit,.nearby .slickit .slick-list { transform:translateZ(0); backface-visibility:hidden; }
 .nearby .slickit .slick-track { will-change:transform; backface-visibility:hidden; }
 .nearby .slickit .slick-track { transition-timing-function:cubic-bezier(.18,.86,.2,1) !important; }
-@keyframes lup-rail-lock {
-  0% { transform:translate3d(0,0,0) scaleX(.992); }
-  58% { transform:translate3d(0,0,0) scaleX(1.004); }
-  100% { transform:translate3d(0,0,0) scaleX(1); }
-}
-.nearby .slickit.lup-rail-snap .slick-list {
-  animation:lup-rail-lock 180ms cubic-bezier(.2,.88,.22,1) both;
-}
 .nearby .slickit.lup-category-refreshing .roominfo::after,
 .nearby .slickit.lup-category-refreshing .room-category-orbit,
 .nearby .slickit.lup-category-refreshing .room-presence-count::before { animation:none !important; }
@@ -7842,7 +7834,7 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .nearby .slickit.lup-category-refreshing .slick-list { opacity:0 !important; pointer-events:none; }
 .nearby .slickit.lup-category-refreshing .lup-room-slide-outer { opacity:0 !important; pointer-events:none; }
 
-@media (prefers-reduced-motion:reduce) { .nearby .slickit .slick-track,.nearby .location-categories button { will-change:auto; }.nearby .slickit.lup-rail-snap .slick-list { animation:none; } }
+@media (prefers-reduced-motion:reduce) { .nearby .slickit .slick-track,.nearby .location-categories button { will-change:auto; } }
 
 /* Small cleanup pass: settings have no decorative colour rail, and the
    profile statistics sit directly on the page rather than in a second frame. */

@@ -33,7 +33,6 @@ angular.module('LUP').config(function($routeProvider) {
 	var fullCataloguePromise = null;
 	var categoryRefreshTimer = null;
 	var categoryRebuildTimer = null;
-	var railSnapTimer = null;
 	var categoryRailDetached = false;
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
@@ -162,9 +161,6 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		if (categoryRebuildTimer) {
 			$timeout.cancel(categoryRebuildTimer);
-		}
-		if (railSnapTimer) {
-			$timeout.cancel(railSnapTimer);
 		}
 		angular.element(window).off('resize.lupLocations orientationchange.lupLocations');
 	});
@@ -414,17 +410,6 @@ angular.module('LUP').config(function($routeProvider) {
 						$scope.focusSlide($currentSlide);
 					}
 				});
-				// A place selection ends with one short physical settle. It makes a
-				// long swipe feel like a wheel that locks into the chosen location,
-				// without adding a continuous animation while the finger moves.
-				if (railSnapTimer) {
-					$timeout.cancel(railSnapTimer);
-				}
-				$slick.removeClass('lup-rail-snap').addClass('lup-rail-snap');
-				railSnapTimer = $timeout(function() {
-					railSnapTimer = null;
-					$slick.removeClass('lup-rail-snap');
-				}, 180, false);
 			}).on('swipe.lupSlick', function() {
 				// Slick only emits this after it has accepted a horizontal gesture.
 				// The short guard catches the browser click that can follow the drag.
@@ -465,9 +450,9 @@ angular.module('LUP').config(function($routeProvider) {
 			// while waitForAnimate still prevents a second gesture from tearing a card.
 			useCSS: true,
 			useTransform: true,
-			speed: 135,
+			speed: 105,
 			cssEase: 'cubic-bezier(.18,.86,.2,1)',
-			touchThreshold: 5,
+			touchThreshold: 10,
 		});
 		} catch (error) {
 			console.warn('LinkUUp carousel unavailable; showing the place rail without carousel behaviour.', error);
