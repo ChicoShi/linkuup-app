@@ -19,9 +19,7 @@
   
     <ng-include class="inc-top-profile" src="'js/pages/profile/header-bar-profile.html?v='+V"></ng-include>
       
-    <!-- CONTENT -->
-    <div ng-if="data.user.isVIP()" class="lup-profile-premium">premium</div>
-    
+	<!-- CONTENT -->
     <!-- Other's avatar -->
 	<div class="avatar-bg" ng-class="{'profile-online': data.user && data.user.isSelf() && data.authenticated}">
 		<div class="avatar" ng-if="!canUploadProfile()">
@@ -49,7 +47,7 @@
 		</div>
 		<div class="profile-identity" ng-if="data.user">
 			<h2>{{data.user.displayName()}}</h2>
-			<span>LinkUUp Mitglied</span>
+			<span class="profile-role" ng-style="profileRoleStyle(data.user)">{{profileRole(data.user)|translate}}</span>
 		</div>
 	</div>
 		
