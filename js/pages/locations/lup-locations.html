@@ -28,16 +28,14 @@
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
 					<article class="lup-discovery-card" ng-class="[categoryVisual(room).class, {'lup-discovery-card--live': room.inChatRange()}]">
 						<div class="lup-discovery-card__hero" ng-click="maybeGotoRoom(room, $event)">
-							<div class="lup-discovery-card__actions" aria-label="Location-Aktionen">
-								<a class="lup-discovery-card__action lup-discovery-card__action--maps" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)">
-									<i class="material-icons">location_on</i><small ng-if="room.showDistance()">{{room.displayDistance()}}</small>
-								</a>
-								<button type="button" class="lup-discovery-card__action lup-discovery-card__action--qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
-							</div>
-							<div class="lup-discovery-card__symbol"><i class="material-icons">{{categoryVisual(room).icon}}</i></div>
 							<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
 							<strong class="lup-discovery-card__name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 							<span class="lup-discovery-card__place"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
+							<a class="lup-discovery-card__anchor" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)">
+								<span class="lup-discovery-card__anchor-line" aria-hidden="true"></span>
+								<span class="lup-discovery-card__symbol"><i class="material-icons">{{categoryVisual(room).icon}}</i></span>
+								<span class="lup-discovery-card__distance"><i class="material-icons">near_me</i><strong ng-if="room.showDistance()">{{room.displayDistance()}}</strong><strong ng-if="!room.showDistance()">Ort öffnen</strong><small>Route ansehen</small></span>
+							</a>
 						</div>
 						<div class="lup-discovery-card__presence">
 							<button type="button" class="lup-discovery-card__presence-label" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
@@ -48,14 +46,15 @@
 								<button type="button" class="lup-discovery-card__more" ng-if="room.USERS.length>10" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">+{{visitorOverflowLabel(room)}}</button>
 							</div>
 						</div>
+						<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange()}">
+							<button type="button" class="lup-discovery-entry__qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
+							<button type="button" ng-if="room.inChatRange()" ng-click="gotoChat(room)" aria-label="{{'JOIN_CHAT'|translate}}">
+								<span class="lup-discovery-entry__pulse" aria-hidden="true"><i class="material-icons">forum</i></span>
+								<span>{{'JOIN_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i>
+							</button>
+							<div ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
+						</section>
 					</article>
-					<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange()}">
-						<button type="button" ng-if="room.inChatRange()" ng-click="gotoChat(room)" aria-label="{{'JOIN_CHAT'|translate}}">
-							<span class="lup-discovery-entry__pulse" aria-hidden="true"><i class="material-icons">forum</i></span>
-							<span>{{'JOIN_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i>
-						</button>
-						<div ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
-					</section>
 	
 				</div>
 	
