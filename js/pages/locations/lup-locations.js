@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
+}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog, $q,
 		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
@@ -40,6 +40,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
 	var nativeRailScrollTimer = null;
+	var nativeRailFrame = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
 	$scope.data.currentRoom = $scope.data.currentRoom || null;
@@ -61,6 +62,36 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	var getLocationRail = function() {
 		return getRail().get(0);
+	};
+	// Each visible card receives a continuous depth value from the actual scroll
+	// position. This is deliberately requestAnimationFrame-driven and writes
+	// only compositor-friendly custom properties: a fast finger swipe stays one
+	// flowing movement instead of becoming a sequence of discrete slider steps.
+	var updateRailDepth = function(rail) {
+		nativeRailFrame = null;
+		if (!rail || !rail.clientWidth) {
+			return;
+		}
+		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+		var span = Math.max(rail.clientWidth * .72, 1);
+		Array.prototype.forEach.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'), function(card) {
+			var rect = card.getBoundingClientRect();
+			var offset = ((rect.left + rect.width / 2) - center) / span;
+			var distance = Math.min(1, Math.abs(offset));
+			card.style.setProperty('--lup-rail-scale', (1 - distance * .115).toFixed(3));
+			card.style.setProperty('--lup-rail-lift', (distance * 13).toFixed(2) + 'px');
+			card.style.setProperty('--lup-rail-tilt', (-Math.max(-1, Math.min(1, offset)) * 5.5).toFixed(2) + 'deg');
+			card.style.setProperty('--lup-rail-opacity', (1 - distance * .35).toFixed(3));
+			card.classList.toggle('lup-room-slide-current', distance < .18);
+		});
+	};
+	var scheduleRailDepth = function(rail) {
+		if (nativeRailFrame !== null) {
+			return;
+		}
+		nativeRailFrame = window.requestAnimationFrame(function() {
+			updateRailDepth(rail);
+		});
 	};
 	var scrollSelectedRoomIntoView = function(behavior) {
 		$timeout(function() {
@@ -204,6 +235,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		});
 		rail.addEventListener('scroll', function() {
+			scheduleRailDepth(rail);
 			if (nativeRailScrollTimer) {
 				$timeout.cancel(nativeRailScrollTimer);
 			}
@@ -250,6 +282,10 @@ angular.module('LUP').config(function($routeProvider) {
 		if (nativeRailScrollTimer) {
 			$timeout.cancel(nativeRailScrollTimer);
 		}
+		if (nativeRailFrame !== null) {
+			window.cancelAnimationFrame(nativeRailFrame);
+			nativeRailFrame = null;
+		}
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
 		}
@@ -278,16 +314,33 @@ angular.module('LUP').config(function($routeProvider) {
 				$timeout.cancel(initialRoomsTimer);
 				initialRoomsTimer = null;
 			}
-			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms)['catch']($scope.catchUnknown);
+			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms, function(error) {
+				// The view can be constructed a moment before WebSocket auth completes.
+				// That attempt is intentionally retried on the subsequent init event,
+				// rather than leaving an empty Locations screen for the entire session.
+				initialRoomsRequested = false;
+				initialRoomsPromise = null;
+				return $q.reject(error);
+			})['catch']($scope.catchUnknown);
 			return initialRoomsPromise;
 		};
-		if (PositionSrvc.hasPosition()) {
+		if (PositionSrvc.hasPosition(true)) {
 			return load();
 		}
 		// Locations are meaningful only with a real position.  Waiting here also
 		// prevents the former (0,0) fallback from constructing a carousel for the
 		// complete public catalogue before GPS has answered.
 		return PositionSrvc.withPosition().then(load, angular.noop)['catch']($scope.catchUnknown);
+	};
+	var requestInitialRooms = function() {
+		LoadingSrvc.addTask('ws_rooms');
+		var promise = loadInitialRooms();
+		if (promise) {
+			promise['finally'](function() {
+				LoadingSrvc.removeTask('ws_rooms');
+			})['catch']($scope.catchUnknown);
+		}
+		return promise;
 	};
 
 	$scope.init = function(event) {
@@ -302,6 +355,9 @@ angular.module('LUP').config(function($routeProvider) {
 			if ($scope.data.rooms.length) {
 				$timeout(function() { $scope.gotRooms($scope.data.rooms); }, 0);
 			}
+			else if (!initialRoomsRequested) {
+				requestInitialRooms();
+			}
 			return;
 		}
 		locationsInitialized = true;
@@ -309,11 +365,7 @@ angular.module('LUP').config(function($routeProvider) {
 		HelpSrvc.showHelp('help_locations', $translate.instant('HELP_LOCATIONS'));
 		if (!$scope.data.rooms.length) {
 			$scope.data.user = window.GWF_USER;
-			LoadingSrvc.addTask('ws_rooms');
-			var promise = loadInitialRooms();
-			promise['finally'](function(){
-				LoadingSrvc.removeTask('ws_rooms');
-			})['catch']($scope.catchUnknown);
+			requestInitialRooms();
 		}
 		else {
 			$scope.gotRooms($scope.data.rooms);
@@ -437,6 +489,7 @@ angular.module('LUP').config(function($routeProvider) {
 		initialiseNativeRail(rail);
 		rail.classList.add('location-rail-ready');
 		rail.classList.remove('lup-category-refreshing');
+		scheduleRailDepth(rail);
 		LoadingSrvc.removeTask('location_rail');
 		scrollSelectedRoomIntoView('auto');
 	};

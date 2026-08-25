@@ -137,7 +137,7 @@ angular.module('LUP').config(function($routeProvider) {
 		 * while the browser is still resolving GPS.  A requested chat/online tab
 		 * now waits for that one decisive position result; range protection stays
 		 * exactly as strict once a position is known or denied. */
-		if (requestedTab === 1 && !PositionSrvc.hasPosition()) {
+		if (requestedTab === 1 && !PositionSrvc.hasPosition(true)) {
 			PositionSrvc.probe().then(applyTab, applyTab)['catch']($scope.catchUnknown);
 		}
 		else {
@@ -299,7 +299,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// A location check only makes sense with a real browser position. Ask at
 		// the moment the person actually enters the chat; this is a user gesture,
 		// so Chromium can show a fresh permission prompt after an F5 reload.
-		if (!PositionSrvc.hasPosition()) {
+		if (!PositionSrvc.hasPosition(true)) {
 			return PositionSrvc.probe().then(function(position) {
 				return $scope.updatePosition(position);
 			}).then(function() {

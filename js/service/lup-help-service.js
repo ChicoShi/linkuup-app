@@ -34,7 +34,11 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 	
 	HelpSrvc.gotReads = function(result) {
 		console.log('HelpSrvc.gotReads()', result);
-		HelpSrvc.READ = JSON.parse(result);
+		// A newly created account has no help rows. Some database drivers encode
+		// that empty result as `null`; the client contract is always an array so
+		// first use of a screen can never prevent the rest of its initialization.
+		var reads = JSON.parse(result || '[]');
+		HelpSrvc.READ = Array.isArray(reads) ? reads : [];
 		return HelpSrvc.READ;
 	};
 	
@@ -47,6 +51,11 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 	HelpSrvc.showHelp = function(key, html) {
 		console.log('HelpSrvc.showHelp()', key);
 		HelpSrvc.withReads().then(function(helps){
+			// A disconnected first WebSocket attempt is reported as undefined by
+			// the generic error adapter. Help is optional, so it must never block a
+			// screen from loading while the socket finishes authenticating.
+			helps = Array.isArray(helps) ? helps : [];
+			HelpSrvc.READ = helps;
 			console.log('HelpSrvc.showHelp() old: ', helps);
 			if (helps.indexOf(key) === -1) {
 				if (HelpSrvc.lastKey != key) {
