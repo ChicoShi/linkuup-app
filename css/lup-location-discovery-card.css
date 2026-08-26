@@ -67,3 +67,22 @@
 .lup-discovery-card--door-opening::before { z-index:10; background:linear-gradient(90deg,rgba(2,5,10,.96),rgba(5,10,18,.94) 65%,rgba(10,19,31,.64)); box-shadow:inset -28px 0 42px rgba(0,0,0,.72); opacity:1; transform:scaleX(1); transform-origin:right center; }
 @keyframes lup-discovery-door-latch { 0% { transform:translate3d(0,var(--lup-up-pull,0px),0); } 42% { transform:translate3d(0,39px,0) rotate(8deg); } 100% { transform:translate3d(0,0,0); } }
 @media (prefers-reduced-motion:reduce) { .lup-discovery-door__handle,.lup-discovery-card > * { transition:none; }.lup-discovery-door.is-door-latched .lup-discovery-door__handle { animation:none; } }
+
+/* One connected door mechanism: the QR seal is the pivot, not a second button
+   sitting beside an unrelated chat control. */
+.lup-discovery-entry { grid-template-columns:64px minmax(0,1fr); min-height:68px; margin-bottom:25px; }
+.lup-discovery-entry__qr { z-index:3; width:58px; height:58px; border-radius:50%; color:color-mix(in srgb,var(--discovery-accent) 88%,#fff); box-shadow:inset 0 2px 0 rgba(255,255,255,.30),0 0 0 7px color-mix(in srgb,var(--discovery-accent) 5%,transparent),0 0 24px color-mix(in srgb,var(--discovery-accent) 22%,transparent); }
+.lup-discovery-entry__qr .material-icons { font-size:24px; }
+.lup-discovery-entry__qr::after { top:50%; left:53px; width:34px; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 88%,#effcff),color-mix(in srgb,var(--discovery-accent) 26%,transparent)); }
+.lup-discovery-door { z-index:2; min-height:58px !important; padding:0 !important; overflow:visible; gap:0 !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
+.lup-discovery-door::before { position:absolute; top:29px; left:-39px; width:96px; height:1px; content:''; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 84%,#effcff),color-mix(in srgb,var(--discovery-accent) 32%,transparent)); box-shadow:0 0 11px var(--discovery-glow); }
+.lup-discovery-door__handle { z-index:1; width:116px; height:58px; flex:0 0 116px; transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(0deg); transform-origin:-35px 29px; transition:transform 170ms cubic-bezier(.25,.76,.24,1),filter 170ms ease; }
+.lup-discovery-door__neck { top:25px; left:-39px; width:57px; height:9px; border-width:2px; border-right:0; border-radius:13px 0 0 13px; }
+.lup-discovery-door__neck::before { top:-7px; left:-9px; width:16px; height:16px; }
+.lup-discovery-door__grip { top:13px; left:13px; width:77px; height:23px; border-width:3px; border-bottom-width:4px; border-radius:4px 23px 23px 12px; transform:skewX(-13deg); }
+.lup-discovery-door.is-pulling .lup-discovery-door__handle { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(24deg); filter:brightness(1.18); }
+.lup-discovery-door.is-door-latched .lup-discovery-door__handle { animation:lup-discovery-door-pivot 420ms cubic-bezier(.2,.92,.26,1); }
+.lup-discovery-door__copy { position:absolute; z-index:4; top:34px; left:-61px; width:59px; overflow:hidden; color:#f4feff; font-size:6px; font-weight:900; letter-spacing:.035em; line-height:1.02; pointer-events:none; text-align:center; text-shadow:0 1px 4px rgba(0,0,0,.75); text-transform:uppercase; white-space:normal; }
+.lup-discovery-door > .material-icons { position:absolute; right:12px; color:color-mix(in srgb,var(--discovery-accent) 68%,#c4ffd7) !important; }
+@keyframes lup-discovery-door-pivot { 0% { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(0deg); } 42% { transform:translate3d(0,35px,0) rotate(30deg); } 100% { transform:translate3d(0,0,0) rotate(0deg); } }
+@media (max-width:360px) { .lup-discovery-entry { grid-template-columns:58px minmax(0,1fr); margin-bottom:20px; }.lup-discovery-entry__qr { width:52px; height:52px; }.lup-discovery-door__handle { transform-origin:-31px 26px; }.lup-discovery-door__copy { left:-55px; width:54px; font-size:5.5px; } }
