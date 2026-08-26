@@ -5881,8 +5881,8 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @media (prefers-reduced-motion: reduce) { .lup-user-action { transition:none; } }
 
 /* The yellow Up marker is a small pull mechanism, not a third button below
-   the profile. Dragging its visible bolt down gives one intentional Up and it
-   returns to its normal resting position after the server request settles. */
+   the profile. Dragging the shared-moment marker gives one intentional Up and
+   it returns to its normal resting position after the server request settles. */
 .profile-page .user-top-information .profile-up-pull {
   appearance:none;
   -webkit-appearance:none;

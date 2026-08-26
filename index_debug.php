@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-ui293", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-ui294", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -103,7 +103,7 @@ $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
   </div>
 
 <script type="text/javascript">
-window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui293')?>;
+window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui294')?>;
 // Local development only: the desktop has no usable GPS provider.  Keep the
 // complete discovery and radius flow testable around Braunschweig without
 // changing production behaviour or inventing a position in the live app.

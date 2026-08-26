@@ -14,7 +14,7 @@
 		    <p ng-if="data.totalUps">{{'UPS_TOTAL_COPY'|translate:{count:data.totalUps} }}</p>
 		    <p ng-if="!data.totalUps">{{'UPS_EMPTY_INTRO'|translate}}</p>
 		  </div>
-		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">bolt</i><b></b></div>
+		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">group</i><b></b></div>
 		</section>
 
 		<section class="ups-favorite" ng-if="data.topUpGiver" aria-label="{{'UPS_FAVORITE_TITLE'|translate}}">
@@ -27,7 +27,7 @@
 		</section>
 
 		<section class="ups-empty-preview" ng-if="!data.topUpGiver">
-		  <i class="material-icons" aria-hidden="true">front_hand</i>
+		  <i class="material-icons" aria-hidden="true">group</i>
 		  <div><strong>{{'UPS_EMPTY_TITLE'|translate}}</strong><span>{{'UPS_EMPTY_COPY'|translate}}</span></div>
 		</section>
 
