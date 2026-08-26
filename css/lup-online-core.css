@@ -49,6 +49,12 @@
 }
 @media (max-width:360px) { .location-page md-list.usernavigation.location-online-view .online-room-header { grid-template-columns:32px minmax(0,1fr) auto !important; gap:7px !important; min-height:53px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark { width:32px !important; height:32px !important; }.location-page md-list.usernavigation.location-online-view .online-room-header .presence-live-mark .material-icons { font-size:18px !important; } }
 
+/* The avatar image owns the full circle in the live roster.  Do not let the
+   legacy gender-colour fallback peek through at the upper-left edge. */
+.location-page md-list.usernavigation.location-online-view .presence-person .presence-avatar {
+  background:transparent !important;
+}
+
 /* Chat and Online are one room: the message stream lives on the same quiet
  * surface, while text and the composer supply the hierarchy. */
 .location-page .location-chat-surface {

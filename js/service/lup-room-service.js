@@ -192,7 +192,7 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		// Discovery is location based. Do not silently substitute a global room
 		// catalogue when the browser has not supplied a real GPS position: that is
 		// both expensive for the carousel and misleading for a nearby view.
-		if (!PositionSrvc.hasPosition()) {
+		if (!PositionSrvc.hasPosition(true)) {
 			return $q.reject('GPS position required for locations.');
 		}
 		if (includeAll && RoomSrvc.ALL_ROOMS) {

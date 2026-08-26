@@ -7,7 +7,7 @@ angular.module('LUP').config(function($routeProvider) {
 			authCheck: true,
 		},
 	});
-}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog,
+}).controller('LocationsCtrl', function($scope, $location, $translate, $timeout, $mdDialog, $q,
 		LoadingSrvc, WebsocketSrvc, PositionSrvc, RoomSrvc, AuthSrvc, HelpSrvc, UserSrvc, ErrorSrvc, DialogSrvc) {
 	
 	$scope.data.title = "Entdecken";
@@ -40,10 +40,13 @@ angular.module('LUP').config(function($routeProvider) {
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
 	var nativeRailScrollTimer = null;
+	var nativeRailFrame = null;
+	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
 	$scope.data.currentRoom = $scope.data.currentRoom || null;
 	$scope.data.currentRoomIndex = $scope.data.currentRoomIndex === undefined ? -1 : $scope.data.currentRoomIndex;
+	$scope.data.doorOpeningRoomId = null;
 
 	// During a route transition Angular can keep a retiring view in the DOM for
 	// one digest. Prefer the active rail which already owns cards; `.last()`
@@ -61,6 +64,36 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	var getLocationRail = function() {
 		return getRail().get(0);
+	};
+	// Each visible card receives a continuous depth value from the actual scroll
+	// position. This is deliberately requestAnimationFrame-driven and writes
+	// only compositor-friendly custom properties: a fast finger swipe stays one
+	// flowing movement instead of becoming a sequence of discrete slider steps.
+	var updateRailDepth = function(rail) {
+		nativeRailFrame = null;
+		if (!rail || !rail.clientWidth) {
+			return;
+		}
+		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+		var span = Math.max(rail.clientWidth * .72, 1);
+		Array.prototype.forEach.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'), function(card) {
+			var rect = card.getBoundingClientRect();
+			var offset = ((rect.left + rect.width / 2) - center) / span;
+			var distance = Math.min(1, Math.abs(offset));
+			card.style.setProperty('--lup-rail-scale', (1 - distance * .115).toFixed(3));
+			card.style.setProperty('--lup-rail-lift', (distance * 13).toFixed(2) + 'px');
+			card.style.setProperty('--lup-rail-tilt', (-Math.max(-1, Math.min(1, offset)) * 5.5).toFixed(2) + 'deg');
+			card.style.setProperty('--lup-rail-opacity', (1 - distance * .35).toFixed(3));
+			card.classList.toggle('lup-room-slide-current', distance < .18);
+		});
+	};
+	var scheduleRailDepth = function(rail) {
+		if (nativeRailFrame !== null) {
+			return;
+		}
+		nativeRailFrame = window.requestAnimationFrame(function() {
+			updateRailDepth(rail);
+		});
 	};
 	var scrollSelectedRoomIntoView = function(behavior) {
 		$timeout(function() {
@@ -204,6 +237,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		});
 		rail.addEventListener('scroll', function() {
+			scheduleRailDepth(rail);
 			if (nativeRailScrollTimer) {
 				$timeout.cancel(nativeRailScrollTimer);
 			}
@@ -250,6 +284,10 @@ angular.module('LUP').config(function($routeProvider) {
 		if (nativeRailScrollTimer) {
 			$timeout.cancel(nativeRailScrollTimer);
 		}
+		if (nativeRailFrame !== null) {
+			window.cancelAnimationFrame(nativeRailFrame);
+			nativeRailFrame = null;
+		}
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
 		}
@@ -278,16 +316,33 @@ angular.module('LUP').config(function($routeProvider) {
 				$timeout.cancel(initialRoomsTimer);
 				initialRoomsTimer = null;
 			}
-			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms)['catch']($scope.catchUnknown);
+			initialRoomsPromise = RoomSrvc.withRooms().then($scope.gotRooms, function(error) {
+				// The view can be constructed a moment before WebSocket auth completes.
+				// That attempt is intentionally retried on the subsequent init event,
+				// rather than leaving an empty Locations screen for the entire session.
+				initialRoomsRequested = false;
+				initialRoomsPromise = null;
+				return $q.reject(error);
+			})['catch']($scope.catchUnknown);
 			return initialRoomsPromise;
 		};
-		if (PositionSrvc.hasPosition()) {
+		if (PositionSrvc.hasPosition(true)) {
 			return load();
 		}
 		// Locations are meaningful only with a real position.  Waiting here also
 		// prevents the former (0,0) fallback from constructing a carousel for the
 		// complete public catalogue before GPS has answered.
 		return PositionSrvc.withPosition().then(load, angular.noop)['catch']($scope.catchUnknown);
+	};
+	var requestInitialRooms = function() {
+		LoadingSrvc.addTask('ws_rooms');
+		var promise = loadInitialRooms();
+		if (promise) {
+			promise['finally'](function() {
+				LoadingSrvc.removeTask('ws_rooms');
+			})['catch']($scope.catchUnknown);
+		}
+		return promise;
 	};
 
 	$scope.init = function(event) {
@@ -302,6 +357,9 @@ angular.module('LUP').config(function($routeProvider) {
 			if ($scope.data.rooms.length) {
 				$timeout(function() { $scope.gotRooms($scope.data.rooms); }, 0);
 			}
+			else if (!initialRoomsRequested) {
+				requestInitialRooms();
+			}
 			return;
 		}
 		locationsInitialized = true;
@@ -309,11 +367,7 @@ angular.module('LUP').config(function($routeProvider) {
 		HelpSrvc.showHelp('help_locations', $translate.instant('HELP_LOCATIONS'));
 		if (!$scope.data.rooms.length) {
 			$scope.data.user = window.GWF_USER;
-			LoadingSrvc.addTask('ws_rooms');
-			var promise = loadInitialRooms();
-			promise['finally'](function(){
-				LoadingSrvc.removeTask('ws_rooms');
-			})['catch']($scope.catchUnknown);
+			requestInitialRooms();
 		}
 		else {
 			$scope.gotRooms($scope.data.rooms);
@@ -422,8 +476,27 @@ angular.module('LUP').config(function($routeProvider) {
 		var roomId = room.id();
 		var url = LUP_CONFIG.server + 'linkuup.qrforroom.room_id.' + roomId + '.html?_lang=en';
 		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
-		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
+		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target, room: room});
 	};
+
+	// Entering a room is the one deliberate transition on the discovery card.
+	// The short delay gives the physical door gesture time to close before the
+	// route changes; tapping the handle remains equivalent to pulling it.
+	$scope.enterChatDoor = function(room) {
+		if (!room || !room.inChatRange() || $scope.data.doorOpeningRoomId) {
+			return;
+		}
+		$scope.data.doorOpeningRoomId = room.id();
+		doorEntryTimer = $timeout(function() {
+			$scope.data.doorOpeningRoomId = null;
+			$scope.gotoChat(room);
+		}, 330, false);
+	};
+	$scope.$on('$destroy', function() {
+		if (doorEntryTimer) {
+			$timeout.cancel(doorEntryTimer);
+		}
+	});
 
 	$scope.initialiseRail = function() {
 		var rail = getLocationRail();
@@ -437,6 +510,7 @@ angular.module('LUP').config(function($routeProvider) {
 		initialiseNativeRail(rail);
 		rail.classList.add('location-rail-ready');
 		rail.classList.remove('lup-category-refreshing');
+		scheduleRailDepth(rail);
 		LoadingSrvc.removeTask('location_rail');
 		scrollSelectedRoomIntoView('auto');
 	};
@@ -565,6 +639,17 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.isCategoryActive = function(categories) {
+		// With an explicit filter the selected filter remains authoritative. With
+		// "Alle" the rail itself is the context: highlight the category of the
+		// card currently centred by the native swipe instead of leaving "Alle"
+		// lit while a bar, club or university is on screen.
+		if (!$scope.data.category.length) {
+			if (!categories.length) {
+				return !$scope.data.currentRoom;
+			}
+			return !!$scope.data.currentRoom &&
+				categories.indexOf(String($scope.data.currentRoom.category())) >= 0;
+		}
 		return $scope.data.category.join(',') === categories.join(',');
 	};
 
@@ -670,27 +755,27 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.categoryVisual = function(room) {
 		var visuals = {
-			'1': {icon: 'public', class: 'category-country'},
-			'2': {icon: 'location_city', class: 'category-city'},
-			'3': {icon: 'local_bar', class: 'category-bar'},
-			'4': {icon: 'sports_bar', class: 'category-pub'},
-			'5': {icon: 'local_cafe', class: 'category-cafe'},
-			'6': {icon: 'business', class: 'category-business'},
-			'7': {icon: 'shopping_cart', class: 'category-shop'},
-			'8': {icon: 'account_balance', class: 'category-religion'},
-			'9': {icon: 'content_cut', class: 'category-salon'},
-			'10': {icon: 'map', class: 'category-town'},
-			'11': {icon: 'nightlife', class: 'category-club'},
-			'12': {icon: 'theater_comedy', class: 'category-culture'},
-			'13': {icon: 'sports_soccer', class: 'category-sport'},
-			'14': {icon: 'restaurant', class: 'category-food'},
-			'15': {icon: 'park', class: 'category-outdoors'},
-			'16': {icon: 'school', class: 'category-community'},
-			'17': {icon: 'account_balance', class: 'category-university'},
-			'18': {icon: 'local_hospital', class: 'category-health'},
-			'19': {icon: 'hotel', class: 'category-hotel'},
+			'1': {icon: 'public', class: 'lup-discovery--country'},
+			'2': {icon: 'location_city', class: 'lup-discovery--city'},
+			'3': {icon: 'local_bar', class: 'lup-discovery--bar'},
+			'4': {icon: 'sports_bar', class: 'lup-discovery--pub'},
+			'5': {icon: 'local_cafe', class: 'lup-discovery--cafe'},
+			'6': {icon: 'business', class: 'lup-discovery--business'},
+			'7': {icon: 'shopping_cart', class: 'lup-discovery--shop'},
+			'8': {icon: 'account_balance', class: 'lup-discovery--religion'},
+			'9': {icon: 'content_cut', class: 'lup-discovery--salon'},
+			'10': {icon: 'map', class: 'lup-discovery--town'},
+			'11': {icon: 'nightlife', class: 'lup-discovery--club'},
+			'12': {icon: 'theater_comedy', class: 'lup-discovery--culture'},
+			'13': {icon: 'sports_soccer', class: 'lup-discovery--sport'},
+			'14': {icon: 'restaurant', class: 'lup-discovery--food'},
+			'15': {icon: 'park', class: 'lup-discovery--outdoors'},
+			'16': {icon: 'school', class: 'lup-discovery--education'},
+			'17': {icon: 'account_balance', class: 'lup-discovery--university'},
+			'18': {icon: 'local_hospital', class: 'lup-discovery--health'},
+			'19': {icon: 'hotel', class: 'lup-discovery--hotel'},
 		};
-		return visuals[String(room.category())] || {icon: 'place', class: 'category-default'};
+		return visuals[String(room.category())] || {icon: 'place', class: 'lup-discovery--default'};
 	};
 
 	// Long real-world venue names need a deliberate typographic tier, not a
