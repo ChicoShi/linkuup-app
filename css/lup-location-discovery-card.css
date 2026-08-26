@@ -183,3 +183,11 @@
 /* Keep route and distance as one landmark; lower it without disturbing entry controls. */
 .lup-discovery-card__anchor { transform:translate3d(0,16px,0); }
 @media (max-width:360px) { .lup-discovery-card__anchor { transform:translate3d(0,12px,0); } }
+
+/* Final optical alignment: QR and the matching chat/lock marker share one
+   axis, lifted slightly from the lower edge and offset from the card centre. */
+.lup-discovery-entry { margin-right:9px; margin-bottom:38px; margin-left:42px; }
+.lup-discovery-entry__qr { transform:translate3d(0,4px,0); }
+.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active { transform:translate3d(0,4px,0); }
+.lup-discovery-entry__locked { transform:translate3d(0,4px,0); }
+@media (max-width:360px) { .lup-discovery-entry { margin-right:7px; margin-bottom:30px; margin-left:31px; }.lup-discovery-entry__qr,.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active,.lup-discovery-entry__locked { transform:translate3d(0,3px,0); } }
