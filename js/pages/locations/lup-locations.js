@@ -639,6 +639,17 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.isCategoryActive = function(categories) {
+		// With an explicit filter the selected filter remains authoritative. With
+		// "Alle" the rail itself is the context: highlight the category of the
+		// card currently centred by the native swipe instead of leaving "Alle"
+		// lit while a bar, club or university is on screen.
+		if (!$scope.data.category.length) {
+			if (!categories.length) {
+				return !$scope.data.currentRoom;
+			}
+			return !!$scope.data.currentRoom &&
+				categories.indexOf(String($scope.data.currentRoom.category())) >= 0;
+		}
 		return $scope.data.category.join(',') === categories.join(',');
 	};
 
