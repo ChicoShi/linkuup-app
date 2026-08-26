@@ -13,10 +13,14 @@
 
         <md-dialog-content>
             <div class="md-dialog-content">
+				<span class="qr-dialog-eyebrow">{{'QR_ROOM_DIALOG_EYEBROW'|translate}}</span>
+				<strong class="qr-dialog-place" ng-if="data.room">{{data.room.name()}}</strong>
                 <p>{{'QR_ROOM_DIALOG_PARAGRAPH'|translate}}</p>
 				<a class="room-qr-test-link" ng-href="{{data.target}}" title="Ort öffnen">
 					<img class="qrcode" src="{{data.url}}" />
 				</a>
+				<span class="qr-dialog-scan"><i class="material-icons">center_focus_strong</i>{{'QR_ROOM_DIALOG_SCAN'|translate}}</span>
+				<p class="qr-dialog-note"><i class="material-icons">verified_user</i>{{'QR_ROOM_DIALOG_NOTE'|translate}}</p>
             </div>
         </md-dialog-content>
 
