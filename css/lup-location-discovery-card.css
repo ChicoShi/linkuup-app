@@ -28,7 +28,7 @@
 .lup-discovery-card__symbol { margin-top:0; }
 .lup-discovery-card__distance { bottom:3px; left:24px; }
 .lup-discovery-card__presence { min-height:70px; padding-top:14px; padding-bottom:10px; }
-.lup-discovery-card__presence-label { transform:translateY(23px); }
+.lup-discovery-card__presence-label { transform:translateY(31px); }
 @keyframes lup-discovery-identity-signal { 0%,100% { opacity:.40; transform:scaleY(.72); } 46% { opacity:.95; transform:scaleY(1); } 62% { opacity:.62; transform:scaleY(.86); } }
-@media (max-width:360px) { .lup-discovery-card__anchor { min-height:156px; }.lup-discovery-card__distance { left:17px; }.lup-discovery-card__presence-label { transform:translateY(16px); } }
+@media (max-width:360px) { .lup-discovery-card__anchor { min-height:156px; }.lup-discovery-card__distance { left:17px; }.lup-discovery-card__presence-label { transform:translateY(22px); } }
 @media (prefers-reduced-motion:reduce) { .lup-discovery-card__identity::before { animation:none; } }
