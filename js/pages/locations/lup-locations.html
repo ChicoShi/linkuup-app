@@ -53,7 +53,6 @@
 							<button type="button" class="lup-discovery-entry__qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
 							<button type="button" class="lup-discovery-entry__chat lup-discovery-gateway" ng-if="room.inChatRange()" ng-click="enterChatDoor(room)" aria-label="{{'JOIN_CHAT'|translate}}">
 								<span class="lup-discovery-gateway__mark" aria-hidden="true"><span class="lup-discovery-gateway__rail"></span><span class="lup-discovery-gateway__core"><i class="material-icons">forum</i></span><span class="lup-discovery-gateway__rail"></span></span>
-								<span class="lup-discovery-gateway__label">{{'JOIN_CHAT'|translate}}</span>
 							</button>
 							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()" title="{{'CHAT_TOO_FAR'|translate}}" aria-label="{{'CHAT_TOO_FAR'|translate}}"><span class="lup-discovery-entry__lock" aria-hidden="true"><i class="material-icons">lock</i></span></div>
 						</section>
