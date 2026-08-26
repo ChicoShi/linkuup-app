@@ -2,28 +2,50 @@
   <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
   <md-content class="settings-content" flex>
     <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
-    <form name="addRoomForm" class="settings-form" ng-submit="create()" novalidate>
-      <h2>{{'TITLE_ADD_ROOM'|translate}}</h2>
-      <p>{{'INFO_ADD_ROOM_GPS'|translate}}</p>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_NAME'|translate}}</label>
-        <input ng-model="data.room.name" maxlength="64" required autofocus>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_CATEGORY'|translate}}</label>
-        <md-select ng-model="data.room.category" required>
-          <md-option ng-repeat="category in data.categories" ng-value="category.cat_id">{{category.cat_name}}</md-option>
-        </md-select>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_INFO'|translate}}</label>
-        <textarea ng-model="data.room.info" maxlength="512" rows="3"></textarea>
-      </md-input-container>
-      <div class="lup-radius-input">
-        <label>{{'LABEL_ROOM_RADIUS'|translate}}: {{data.room.radius}} m</label>
-        <md-slider ng-model="data.room.radius" min="150" max="500" step="10" aria-label="{{'LABEL_ROOM_RADIUS'|translate}}"></md-slider>
-      </div>
-      <md-button class="md-raised md-primary" type="submit" ng-disabled="addRoomForm.$invalid">{{'BTN_CREATE_ROOM'|translate}}</md-button>
+    <form name="addRoomForm" class="add-room-form" ng-submit="create()" novalidate>
+      <header class="add-room-hero">
+        <span class="add-room-hero__mark"><i class="material-icons">add_location_alt</i></span>
+        <div>
+          <small>NEUER ORT</small>
+          <h1>{{'TITLE_ADD_ROOM'|translate}}</h1>
+          <p>{{'INFO_ADD_ROOM_GPS'|translate}}</p>
+        </div>
+      </header>
+
+      <section class="add-room-position" ng-class="{'is-ready': data.locationReady}">
+        <span class="add-room-position__pin"><i class="material-icons">my_location</i></span>
+        <div><small>STANDORT</small><strong ng-if="data.locationReady">Dein aktueller GPS-Punkt wird verwendet</strong><strong ng-if="!data.locationReady">GPS-Standort wird ermittelt …</strong></div>
+        <i class="material-icons add-room-position__state" ng-if="data.locationReady">verified</i>
+      </section>
+
+      <section class="add-room-section" aria-label="Ort benennen">
+        <span class="add-room-section__label">1 · ORT BESCHREIBEN</span>
+        <md-input-container class="md-block">
+          <label>{{'LABEL_ROOM_NAME'|translate}}</label>
+          <input ng-model="data.room.name" maxlength="64" required autofocus>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>{{'LABEL_ROOM_CATEGORY'|translate}}</label>
+          <md-select ng-model="data.room.category" required>
+            <md-option ng-repeat="category in data.categories" ng-value="category.cat_id">{{category.cat_name}}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block add-room-description">
+          <label>{{'LABEL_ROOM_INFO'|translate}}</label>
+          <textarea ng-model="data.room.info" maxlength="512" rows="3"></textarea>
+        </md-input-container>
+      </section>
+
+      <section class="add-room-radius" aria-label="Chatradius wählen">
+        <div class="add-room-radius__head"><span>2 · {{'LABEL_ROOM_RADIUS'|translate}}</span><strong>{{data.room.radius}} m</strong></div>
+        <p>Der Raum gilt nur rund um diesen GPS-Punkt. Kleine Orte brauchen einen kleineren Radius.</p>
+        <div class="add-room-radius__presets" role="group" aria-label="Schnellauswahl Radius">
+          <button type="button" ng-repeat="radius in data.radiusPresets" ng-class="{'is-active': data.room.radius === radius}" ng-click="setRadius(radius)">{{radius}} m</button>
+        </div>
+        <md-slider ng-model="data.room.radius" min="10" max="500" step="10" aria-label="{{'LABEL_ROOM_RADIUS'|translate}}"></md-slider>
+      </section>
+
+      <button class="add-room-submit" type="submit" ng-disabled="addRoomForm.$invalid || !data.locationReady"><i class="material-icons">add_location_alt</i><span>{{'BTN_CREATE_ROOM'|translate}}</span><i class="material-icons">arrow_forward</i></button>
     </form>
   </md-content>
 </section>
