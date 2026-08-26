@@ -5991,10 +5991,10 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .profile-page .profile-stat-pull .profile-stat-pull-lever .material-icons { margin:0; color:inherit; font-size:24px; text-shadow:0 1px 0 rgba(0,0,0,.18); }
 .profile-page .profile-stat-pull.stat-locations .profile-stat-pull-lever { background:linear-gradient(145deg,#9c7bff,#635fc7); }
 .profile-page .profile-stat-pull.stat-ups .profile-stat-pull-lever { background:linear-gradient(145deg,#f3c65d,#cf8351); color:#fff5c5; box-shadow:0 8px 0 rgba(133,76,38,.42),0 14px 22px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.34); }
-/* UP is a shared moment, not an anonymous like: two people plus one small
-   connection spark. High Five remains the separate QR-confirmed gesture. */
+/* UP is a shared moment, not an anonymous like. High Five remains the
+   separate QR-confirmed gesture. */
 .profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever .material-icons { font-size:23px; transform:translateY(0); text-shadow:0 2px 7px rgba(101,53,22,.32); }
-.profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever::after { position:absolute; top:-5px; right:-5px; display:grid; width:14px; height:14px; margin:0; place-items:center; content:'✦'; border:1px solid rgba(255,241,187,.74); border-radius:50%; background:#e9a94d; box-shadow:0 0 0 3px rgba(246,198,90,.12),0 0 10px rgba(255,205,100,.56); color:#fff9dc; font-size:8px; font-weight:900; line-height:1; opacity:1; }
+.profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever::after { display:none; }
 .profile-page .profile-stat-pull.stat-friends .profile-stat-pull-lever { background:linear-gradient(145deg,#62c6f7,#4676cf); }
 .profile-page .profile-stat-pull.stat-cuddles .profile-stat-pull-lever { background:linear-gradient(145deg,#ff9bb4,#cd5f93); }
 .profile-page .profile-stat-pull.is-pulling .profile-stat-pull-lever { box-shadow:0 3px 0 rgba(38,39,83,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.30); filter:brightness(1.06); }
