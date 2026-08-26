@@ -35,7 +35,7 @@
 
 /* The room action is a threshold, not a generic rounded button. */
 .lup-discovery-entry { grid-template-columns:48px minmax(0,1fr); min-height:55px; }
-.lup-discovery-entry::before { right:0; bottom:1px; left:54px; background:linear-gradient(90deg,rgba(125,228,170,.78),color-mix(in srgb,var(--discovery-accent) 30%,transparent),transparent); box-shadow:0 0 13px rgba(125,228,170,.20); }
+.lup-discovery-entry::before { display:none; }
 .lup-discovery-entry__chat,.lup-discovery-entry__locked { position:relative; display:flex !important; min-height:46px !important; padding:0 11px 1px !important; align-items:center; gap:9px !important; border:0 !important; border-left:1px solid rgba(125,228,170,.62) !important; border-radius:0 13px 13px 0 !important; background:linear-gradient(90deg,rgba(125,228,170,.13),rgba(125,228,170,.035) 68%,transparent) !important; color:#e6fff0 !important; cursor:pointer !important; font-size:11px !important; font-weight:850 !important; letter-spacing:.055em !important; text-transform:uppercase; transition:transform 180ms ease,background 180ms ease,box-shadow 180ms ease; }
 .lup-discovery-entry__chat::after { width:17px; height:1px; margin-left:auto; content:''; background:#a4f3bf; box-shadow:0 0 10px rgba(125,228,170,.75); transition:width 180ms ease; }
 .lup-discovery-entry__chat:hover,.lup-discovery-entry__chat:focus-visible { background:linear-gradient(90deg,rgba(125,228,170,.21),rgba(125,228,170,.06) 68%,transparent) !important; box-shadow:inset 11px 0 18px -17px rgba(125,228,170,.85),0 0 18px rgba(125,228,170,.08); }
