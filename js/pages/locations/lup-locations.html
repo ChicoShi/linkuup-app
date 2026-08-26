@@ -27,10 +27,12 @@
 	
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
 					<article class="lup-discovery-card" ng-class="[categoryVisual(room).class, {'lup-discovery-card--live': room.inChatRange()}]">
-						<div class="lup-discovery-card__hero" ng-click="maybeGotoRoom(room, $event)">
-							<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
-							<strong class="lup-discovery-card__name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
-							<span class="lup-discovery-card__place"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
+						<div class="lup-discovery-card__hero">
+							<button type="button" class="lup-discovery-card__identity" ng-click="maybeGotoRoom(room, $event)" aria-label="Ort öffnen: {{room.name()}}">
+								<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
+								<strong class="lup-discovery-card__name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
+								<span class="lup-discovery-card__place"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
+							</button>
 							<a class="lup-discovery-card__anchor" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)">
 								<span class="lup-discovery-card__anchor-line" aria-hidden="true"></span>
 								<span class="lup-discovery-card__symbol"><i class="material-icons">{{categoryVisual(room).icon}}</i></span>
