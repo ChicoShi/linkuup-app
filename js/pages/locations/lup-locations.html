@@ -33,6 +33,7 @@
 								<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
 								<strong class="lup-discovery-card__name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
 								<span class="lup-discovery-card__place"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
+								<span class="lup-discovery-card__open-mark" aria-hidden="true"><i class="material-icons">arrow_outward</i></span>
 							</button>
 							<a class="lup-discovery-card__anchor" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)">
 								<span class="lup-discovery-card__anchor-line" aria-hidden="true"></span>

@@ -191,3 +191,13 @@
 .lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active { transform:translate3d(0,4px,0); }
 .lup-discovery-entry__locked { transform:translate3d(0,4px,0); }
 @media (max-width:360px) { .lup-discovery-entry { margin-right:7px; margin-bottom:30px; margin-left:31px; }.lup-discovery-entry__qr,.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active,.lup-discovery-entry__locked { transform:translate3d(0,3px,0); } }
+
+/* Location name is the primary destination; the map is a compact route aid. */
+.lup-discovery-card__identity { padding-right:38px; }
+.lup-discovery-card__open-mark { position:absolute; top:28px; right:0; display:grid; width:27px; height:27px; place-items:center; border:1px solid color-mix(in srgb,var(--discovery-accent) 40%,transparent); border-radius:10px 10px 10px 3px; background:color-mix(in srgb,var(--discovery-accent) 10%,rgba(7,15,28,.22)); box-shadow:0 0 13px color-mix(in srgb,var(--discovery-accent) 10%,transparent); color:color-mix(in srgb,var(--discovery-accent) 86%,#effcff); }
+.lup-discovery-card__open-mark .material-icons { font-size:16px; }
+.lup-discovery-card__anchor { min-height:148px; }
+.lup-discovery-card__symbol { width:64px; height:64px; box-shadow:inset 0 1px 0 rgba(255,255,255,.31),0 0 0 7px color-mix(in srgb,var(--discovery-accent) 4%,transparent),0 0 25px var(--discovery-glow); }
+.lup-discovery-card__symbol::after { inset:-11px -10px -14px -13px; }
+.lup-discovery-card__symbol .material-icons { font-size:34px; }
+@media (max-width:360px) { .lup-discovery-card__identity { padding-right:33px; }.lup-discovery-card__open-mark { top:25px; width:24px; height:24px; }.lup-discovery-card__open-mark .material-icons { font-size:14px; }.lup-discovery-card__anchor { min-height:132px; }.lup-discovery-card__symbol { width:57px; height:57px; }.lup-discovery-card__symbol .material-icons { font-size:31px; } }
