@@ -60,8 +60,13 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 			if (helps.indexOf(key) === -1) {
 				if (HelpSrvc.lastKey != key) {
 					HelpSrvc.lastKey = key;
+					// A hint is onboarding, not a question. Remember it as soon as it is
+					// shown so closing the dialog never makes the same hint return on
+					// every visit to chat, avatar or profile.
+					helps.push(key);
+					HelpSrvc.confirmed(key);
 					DialogSrvc.confirm("js/service/tpl/lup-help-dialog.html", {html:html}).then(
-							HelpSrvc.confirmed.bind(HelpSrvc, key), angular.noop)['catch'](HelpSrvc.catchUnknown);
+						angular.noop, angular.noop)['catch'](HelpSrvc.catchUnknown);
 				}
 			}
 		})['catch'](HelpSrvc.catchUnknown);
@@ -78,7 +83,9 @@ service('HelpSrvc', function($rootScope, $q, WebsocketSrvc, DialogSrvc, ErrorSrv
 		console.log('HelpSrvc.confirmed()', key);
 		var gwsMessage = new GWS_Message().cmd(0x1191).sync().writeString(key);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(){
-			HelpSrvc.READ.push(key);
+			if (HelpSrvc.READ.indexOf(key) === -1) {
+				HelpSrvc.READ.push(key);
+			}
 		}, ErrorSrvc.websocketMaybeJSONError);
 	};
 	
