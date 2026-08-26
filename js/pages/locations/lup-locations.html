@@ -54,7 +54,7 @@
 							<button type="button" class="lup-discovery-entry__chat lup-discovery-door" ng-if="room.inChatRange()" lup-pull-action="enterChatDoor(room)" lup-pull-open="enterChatDoor(room)" lup-pull-effect="is-door-latched" aria-label="{{'JOIN_CHAT'|translate}}">
 								<span class="lup-discovery-door__handle" aria-hidden="true"><span class="lup-discovery-door__neck"></span><span class="lup-discovery-door__grip"></span><span class="lup-discovery-door__copy">{{'JOIN_CHAT'|translate}}</span></span>
 							</button>
-							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
+							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()" title="{{'CHAT_TOO_FAR'|translate}}" aria-label="{{'CHAT_TOO_FAR'|translate}}"><span class="lup-discovery-entry__lock" aria-hidden="true"><i class="material-icons">lock</i></span></div>
 						</section>
 					</article>
 	
