@@ -143,3 +143,37 @@
 .lup-discovery-door.is-pulling .lup-discovery-door__handle { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); }
 .lup-discovery-entry__locked { position:relative; top:-11px; }
 @media (max-width:360px) { .lup-discovery-entry { margin-bottom:66px; }.lup-discovery-door__grip { min-width:86px; width:calc(100% - 53px); }.lup-discovery-door__copy { font-size:7.5px; letter-spacing:.08em; } }
+
+/* Room gateway: a clear, quiet entry point instead of a faux door handle.
+   QR remains its own action; the conversation entry has no copy inside its light. */
+.lup-discovery-entry { grid-template-columns:74px minmax(0,1fr); min-height:88px; margin-bottom:88px; }
+.lup-discovery-entry__qr { transform:translate3d(0,-8px,0); }
+.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active {
+	position:relative;
+	display:grid !important;
+	min-height:74px !important;
+	padding:0 !important;
+	align-self:center;
+	justify-items:center !important;
+	gap:5px !important;
+	border:0 !important;
+	border-radius:0 !important;
+	background:transparent !important;
+	box-shadow:none !important;
+	color:#e9fff1 !important;
+	outline:0 !important;
+	-webkit-tap-highlight-color:transparent;
+}
+.lup-discovery-gateway::before,.lup-discovery-gateway::after,.lup-discovery-gateway > .material-icons { display:none !important; }
+.lup-discovery-gateway__mark { position:relative; display:grid; width:min(176px,74vw); height:39px; grid-template-columns:1fr 42px 1fr; align-items:center; column-gap:9px; }
+.lup-discovery-gateway__rail { display:block; height:1px; background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--discovery-accent) 88%,#eaffff)); box-shadow:0 0 10px var(--discovery-glow); }
+.lup-discovery-gateway__rail:last-child { background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 88%,#eaffff),transparent); }
+.lup-discovery-gateway__core { position:relative; display:grid; width:39px; height:39px; place-items:center; border:1px solid color-mix(in srgb,var(--discovery-accent) 82%,#ecffff); border-radius:50%; background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.32),transparent 24%),color-mix(in srgb,var(--discovery-accent) 24%,rgba(9,19,33,.68)); box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 0 0 6px color-mix(in srgb,var(--discovery-accent) 5%,transparent),0 0 17px var(--discovery-glow); color:#efffff; }
+.lup-discovery-gateway__core::after { position:absolute; inset:-8px; content:''; border:1px solid color-mix(in srgb,var(--discovery-accent) 40%,transparent); border-radius:50%; opacity:.72; animation:lup-discovery-gateway-pulse 2.8s ease-out infinite; }
+.lup-discovery-gateway__core .material-icons { font-size:18px; text-shadow:0 2px 5px rgba(0,0,0,.48); }
+.lup-discovery-gateway__label { color:color-mix(in srgb,var(--discovery-accent) 66%,#e8fff0); font-size:8px; font-weight:850; letter-spacing:.14em; line-height:1; text-transform:uppercase; }
+.lup-discovery-gateway:active .lup-discovery-gateway__core { transform:scale(.92); filter:brightness(1.15); }
+.lup-discovery-card__door-leaf { display:none !important; }
+@keyframes lup-discovery-gateway-pulse { 0% { opacity:.78; transform:scale(.72); } 78%,100% { opacity:0; transform:scale(1.52); } }
+@media (max-width:360px) { .lup-discovery-entry { grid-template-columns:65px minmax(0,1fr); min-height:78px; margin-bottom:66px; }.lup-discovery-gateway__mark { width:min(145px,70vw); grid-template-columns:1fr 35px 1fr; column-gap:7px; }.lup-discovery-gateway__core { width:34px; height:34px; }.lup-discovery-gateway__label { font-size:7px; } }
+@media (prefers-reduced-motion:reduce) { .lup-discovery-gateway__core::after { animation:none; } }
