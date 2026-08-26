@@ -179,3 +179,7 @@
 @keyframes lup-discovery-gateway-pulse { 0% { opacity:.78; transform:scale(.72); } 78%,100% { opacity:0; transform:scale(1.52); } }
 @media (max-width:360px) { .lup-discovery-entry { grid-template-columns:65px minmax(0,1fr); min-height:78px; margin-bottom:21px; }.lup-discovery-entry__qr { transform:translate3d(0,6px,0); }.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active { transform:translate3d(0,6px,0); }.lup-discovery-entry__locked { transform:translate3d(0,6px,0); }.lup-discovery-gateway__mark { width:min(145px,70vw); grid-template-columns:1fr 35px 1fr; column-gap:7px; }.lup-discovery-gateway__core { width:34px; height:34px; }.lup-discovery-gateway__label { font-size:7px; } }
 @media (prefers-reduced-motion:reduce) { .lup-discovery-gateway__core::after { animation:none; } }
+
+/* Keep route and distance as one landmark; lower it without disturbing entry controls. */
+.lup-discovery-card__anchor { transform:translate3d(0,16px,0); }
+@media (max-width:360px) { .lup-discovery-card__anchor { transform:translate3d(0,12px,0); } }
