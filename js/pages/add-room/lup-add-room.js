@@ -9,7 +9,13 @@ angular.module('LUP').config(function($routeProvider) {
 		CategorySrvc, PositionSrvc, RoomSrvc, WebsocketSrvc, ErrorSrvc) {
 	$scope.data.title = 'TITLE_ADD_ROOM';
 	$scope.data.categories = [];
-	$scope.data.room = { name: '', category: '', info: '', radius: 150 };
+	$scope.data.room = { name: '', category: '', info: '', radius: 50 };
+	$scope.data.radiusPresets = [10, 25, 50, 100, 150, 250];
+	$scope.data.locationReady = false;
+
+	$scope.setRadius = function(radius) {
+		$scope.data.room.radius = radius;
+	};
 
 	$scope.init = function() {
 		if (!window.GWF_USER.isVIP()) {
@@ -22,7 +28,10 @@ angular.module('LUP').config(function($routeProvider) {
 				return categories[id];
 			});
 		})['catch']($scope.catchUnknown);
-		PositionSrvc.probe()['catch'](function() {
+		PositionSrvc.probe().then(function() {
+			$scope.data.locationReady = PositionSrvc.hasPosition(true);
+		})['catch'](function() {
+			$scope.data.locationReady = false;
 			return ErrorSrvc.showError($translate.instant('ERR_GPS_REQUIRED'), $translate.instant('TITLE_ADD_ROOM'));
 		})['catch']($scope.catchUnknown);
 	};
