@@ -130,3 +130,16 @@
 .lup-discovery-entry__lock { display:grid; width:42px; height:42px; place-items:center; background:transparent; color:color-mix(in srgb,var(--discovery-accent) 88%,#effcff); }
 .lup-discovery-entry__lock .material-icons { color:inherit !important; font-size:28px; filter:drop-shadow(0 0 7px color-mix(in srgb,var(--discovery-accent) 56%,transparent)); }
 @media (max-width:360px) { .lup-discovery-entry { margin-bottom:36px; margin-left:25px; }.lup-discovery-entry__lock { width:38px; height:38px; } }
+
+/* Final handle direction: a single tubular light, not an outlined button. */
+.lup-discovery-entry { margin-bottom:60px; }
+.lup-discovery-entry__qr { transform:translate3d(0,-11px,0); }
+.lup-discovery-door { position:relative; top:-11px; min-height:68px !important; }
+.lup-discovery-door__handle { height:68px; transform-origin:-41px 34px; }
+.lup-discovery-door__grip { top:39px; left:4px; width:calc(100% - 68px); min-width:104px; height:4px; border:0; border-radius:999px; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 96%,#effcff),color-mix(in srgb,var(--discovery-accent) 56%,#eafcff)); box-shadow:0 0 7px var(--discovery-glow),0 0 15px color-mix(in srgb,var(--discovery-accent) 34%,transparent); transform:none; }
+.lup-discovery-door__grip::before { position:absolute; top:-5px; left:-5px; width:13px; height:13px; content:''; border-radius:50%; background:color-mix(in srgb,var(--discovery-accent) 90%,#effcff); box-shadow:0 0 10px var(--discovery-glow); }
+.lup-discovery-door__grip::after { position:absolute; top:-10px; right:-17px; width:23px; height:23px; content:''; border:3px solid color-mix(in srgb,var(--discovery-accent) 82%,#effcff); border-left:0; border-radius:0 18px 18px 0; box-shadow:0 0 10px var(--discovery-glow); }
+.lup-discovery-door__copy { top:15px; left:3px; width:calc(100% - 55px); color:#f7fbff; font-size:9px; font-weight:850; letter-spacing:.12em; text-align:left; text-shadow:0 1px 6px rgba(0,0,0,.86); }
+.lup-discovery-door.is-pulling .lup-discovery-door__handle { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); }
+.lup-discovery-entry__locked { position:relative; top:-11px; }
+@media (max-width:360px) { .lup-discovery-entry { margin-bottom:44px; }.lup-discovery-door__grip { min-width:86px; width:calc(100% - 53px); }.lup-discovery-door__copy { font-size:7.5px; letter-spacing:.08em; } }
