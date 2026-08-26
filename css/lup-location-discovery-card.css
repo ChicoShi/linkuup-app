@@ -102,3 +102,20 @@
 .lup-discovery-door__copy { top:29px; left:38px; width:calc(100% - 88px); overflow:visible; color:#f6fff9; font-size:10px; font-weight:900; letter-spacing:.075em; line-height:1; pointer-events:none; text-align:center; text-shadow:0 1px 5px rgba(0,0,0,.78); white-space:nowrap; }
 .lup-discovery-door > .material-icons { right:17px; font-size:18px; }
 @media (max-width:360px) { .lup-discovery-entry { grid-template-columns:65px minmax(0,1fr); min-height:78px; margin-bottom:27px; }.lup-discovery-entry__qr { width:58px; height:58px; }.lup-discovery-door__handle { transform-origin:-36px 34px; }.lup-discovery-door__neck { left:-43px; }.lup-discovery-door__copy { left:31px; width:calc(100% - 70px); font-size:8.5px; }.lup-discovery-door__grip { min-width:92px; left:14px; } }
+
+/* Resolve the first door experiment: one clear handle, an opaque QR knob and
+   a real opening leaf. No dark overlay and no floating label. */
+.lup-discovery-entry__qr { background:radial-gradient(circle at 31% 24%,rgba(255,255,255,.35),transparent 24%),#132744; border-color:color-mix(in srgb,var(--discovery-accent) 82%,#eafbff); box-shadow:inset 0 2px 0 rgba(255,255,255,.34),0 0 0 7px color-mix(in srgb,var(--discovery-accent) 7%,transparent),0 0 26px color-mix(in srgb,var(--discovery-accent) 30%,transparent); }
+.lup-discovery-entry__qr::after,.lup-discovery-door::before,.lup-discovery-door__neck { display:none; }
+.lup-discovery-door { background:transparent !important; }
+.lup-discovery-door__handle { width:100%; height:74px; transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); transform-origin:-41px 37px; }
+.lup-discovery-door__grip { top:17px; left:5px; width:calc(100% - 54px); min-width:118px; height:29px; border:3px solid color-mix(in srgb,var(--discovery-accent) 84%,#f4fcff); border-left:0; border-bottom-width:5px; border-radius:0 28px 28px 0; background:linear-gradient(180deg,color-mix(in srgb,var(--discovery-accent) 13%,transparent),rgba(9,18,31,.18)); box-shadow:0 0 13px var(--discovery-glow),inset 0 2px 0 rgba(255,255,255,.30); transform:skewX(-11deg); }
+.lup-discovery-door__copy { top:29px; left:24px; width:calc(100% - 78px); color:#f8fffb; font-size:10px; font-weight:900; letter-spacing:.07em; line-height:1; text-align:center; text-shadow:0 1px 5px rgba(0,0,0,.88); white-space:nowrap; }
+.lup-discovery-door.is-pulling .lup-discovery-door__handle { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); filter:brightness(1.16); }
+.lup-discovery-card__door-leaf { position:absolute; z-index:20; inset:0; display:block; pointer-events:none; opacity:0; border-left:2px solid color-mix(in srgb,var(--discovery-accent) 85%,#edfcff); background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 35%,rgba(14,28,48,.88)),rgba(21,38,62,.32) 58%,rgba(255,255,255,.04)); box-shadow:inset -18px 0 28px rgba(0,0,0,.20),0 0 22px var(--discovery-glow); transform:perspective(900px) rotateY(0deg); transform-origin:left center; }
+.lup-discovery-card--door-opening > :not(.lup-discovery-card__door-leaf) { opacity:1; transform:none; }
+.lup-discovery-card--door-opening::before { z-index:auto; background:linear-gradient(118deg,color-mix(in srgb,var(--discovery-accent) 12%,transparent),transparent 35%,rgba(255,255,255,.018) 70%,transparent); box-shadow:none; opacity:1; transform:none; }
+.lup-discovery-card--door-opening .lup-discovery-card__door-leaf { animation:lup-discovery-door-open 330ms cubic-bezier(.24,.76,.24,1) forwards; }
+@keyframes lup-discovery-door-open { 0% { opacity:.93; transform:perspective(900px) rotateY(0deg); } 100% { opacity:0; transform:perspective(900px) rotateY(-86deg); } }
+@media (max-width:360px) { .lup-discovery-door__grip { left:4px; min-width:94px; width:calc(100% - 45px); }.lup-discovery-door__copy { left:15px; width:calc(100% - 58px); font-size:8.5px; } }
+@media (prefers-reduced-motion:reduce) { .lup-discovery-card--door-opening .lup-discovery-card__door-leaf { animation:none; opacity:0; } }

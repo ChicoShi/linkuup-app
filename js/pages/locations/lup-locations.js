@@ -490,7 +490,7 @@ angular.module('LUP').config(function($routeProvider) {
 		doorEntryTimer = $timeout(function() {
 			$scope.data.doorOpeningRoomId = null;
 			$scope.gotoChat(room);
-		}, 420, false);
+		}, 330, false);
 	};
 	$scope.$on('$destroy', function() {
 		if (doorEntryTimer) {
