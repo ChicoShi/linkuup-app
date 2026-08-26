@@ -5995,6 +5995,25 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
    separate QR-confirmed gesture. */
 .profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever .material-icons { font-size:23px; transform:translateY(0); text-shadow:0 2px 7px rgba(101,53,22,.32); }
 .profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever::after { display:none; }
+
+/* Visits / rank: an extension of the profile's personal route, not a separate
+   trophy screen. Keep the data and ranking logic, soften the old game-card UI. */
+.course-page { max-width:720px; padding-top:14px; background:radial-gradient(ellipse 72% 36% at 50% -8%,rgba(105,93,208,.15),transparent 72%),radial-gradient(circle at 96% 25%,rgba(72,172,224,.08),transparent 25%),transparent; }
+.course-hero { gap:12px; min-height:76px; border-color:rgba(180,207,255,.13); border-radius:19px; background:linear-gradient(112deg,rgba(38,51,84,.72),rgba(18,25,43,.73) 68%,rgba(43,34,75,.58)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 11px 24px rgba(0,0,0,.12); }
+.course-hero-mark { flex-basis:48px; width:48px; height:48px; border:1px solid rgba(179,213,255,.35); border-radius:15px 15px 15px 5px; background:linear-gradient(145deg,rgba(115,168,237,.50),rgba(102,84,190,.40)); box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 7px 16px rgba(10,17,48,.24); color:#eaf7ff; }
+.course-hero-mark .material-icons { font-size:25px; }
+.course-hero h2 { font-size:22px; letter-spacing:-.035em; }
+.course-overview { border-radius:15px; background:rgba(8,14,27,.43); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
+.course-overview > div { min-height:64px; background:rgba(27,36,59,.62); }
+.course-overview .course-goal { background:linear-gradient(105deg,rgba(77,129,208,.22),rgba(101,78,171,.17)); }
+.course-ranking-note { margin-top:9px; padding:0 3px; color:#aebbd2; }
+.course-timeline::before { background:linear-gradient(rgba(158,207,255,.48),rgba(124,103,218,.07)); }
+.course-stop { border-color:rgba(177,207,247,.11); border-radius:16px; background:linear-gradient(108deg,rgba(59,81,133,.18),rgba(19,27,47,.49) 68%); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
+.course-stop:first-child { border-color:rgba(177,216,255,.22); background:linear-gradient(108deg,rgba(78,116,187,.25),rgba(27,31,56,.54) 68%); }
+.course-stop-count { border-left-color:rgba(188,218,255,.08); }
+.course-stop-count strong { color:#e8f4ff; }
+.course-empty { border-style:solid; border-color:rgba(175,207,255,.14); background:linear-gradient(145deg,rgba(48,65,105,.20),rgba(15,22,40,.42)); }
+@media (max-width:420px) { .course-page { padding-top:12px; }.course-hero { min-height:72px; }.course-hero-mark { flex-basis:44px; width:44px; height:44px; }.course-hero-mark .material-icons { font-size:23px; }.course-hero h2 { font-size:20px; }.course-stop { border-radius:15px; } }
 .profile-page .profile-stat-pull.stat-friends .profile-stat-pull-lever { background:linear-gradient(145deg,#62c6f7,#4676cf); }
 .profile-page .profile-stat-pull.stat-cuddles .profile-stat-pull-lever { background:linear-gradient(145deg,#ff9bb4,#cd5f93); }
 .profile-page .profile-stat-pull.is-pulling .profile-stat-pull-lever { box-shadow:0 3px 0 rgba(38,39,83,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.30); filter:brightness(1.06); }
