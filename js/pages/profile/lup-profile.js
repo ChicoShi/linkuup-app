@@ -724,6 +724,9 @@ angular.module('LUP').directive('lupPullAction', function($timeout) {
 			var setPull = function(value) {
 				pull = Math.max(0, Math.min(maximum, value));
 				element.css('--lup-up-pull', pull + 'px');
+				// Consumers may use this optional angle for a true pivot motion. The
+				// existing profile levers only read the distance value above.
+				element.css('--lup-pull-angle', ((pull / maximum) * 26).toFixed(2) + 'deg');
 				element.toggleClass('is-pulling', pull > 2);
 			};
 			var release = function(event) {

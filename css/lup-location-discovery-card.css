@@ -86,3 +86,19 @@
 .lup-discovery-door > .material-icons { position:absolute; right:12px; color:color-mix(in srgb,var(--discovery-accent) 68%,#c4ffd7) !important; }
 @keyframes lup-discovery-door-pivot { 0% { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(0deg); } 42% { transform:translate3d(0,35px,0) rotate(30deg); } 100% { transform:translate3d(0,0,0) rotate(0deg); } }
 @media (max-width:360px) { .lup-discovery-entry { grid-template-columns:58px minmax(0,1fr); margin-bottom:20px; }.lup-discovery-entry__qr { width:52px; height:52px; }.lup-discovery-door__handle { transform-origin:-31px 26px; }.lup-discovery-door__copy { left:-55px; width:54px; font-size:5.5px; } }
+
+/* Larger, resolved door geometry: QR and the entry label no longer compete. */
+.lup-discovery-entry { grid-template-columns:74px minmax(0,1fr); min-height:88px; margin-bottom:36px; }
+.lup-discovery-entry__qr { width:66px; height:66px; align-self:center; }
+.lup-discovery-entry__qr .material-icons { font-size:27px; }
+.lup-discovery-entry__qr::after { left:61px; width:42px; }
+.lup-discovery-door { min-height:74px !important; align-self:center; }
+.lup-discovery-door::before { top:37px; left:-48px; width:112px; }
+.lup-discovery-door__handle { width:100%; height:74px; flex:1 1 auto; transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); transform-origin:-41px 37px; }
+.lup-discovery-door__neck { top:32px; left:-48px; width:70px; height:10px; border-radius:15px 0 0 15px; }
+.lup-discovery-door__neck::before { top:-8px; left:-10px; width:18px; height:18px; }
+.lup-discovery-door__grip { top:18px; left:17px; width:calc(100% - 61px); min-width:112px; height:27px; border-width:3px; border-bottom-width:5px; border-radius:5px 28px 28px 14px; }
+.lup-discovery-door.is-pulling .lup-discovery-door__handle { transform:translate3d(0,var(--lup-up-pull,0px),0) rotate(var(--lup-pull-angle,0deg)); }
+.lup-discovery-door__copy { top:29px; left:38px; width:calc(100% - 88px); overflow:visible; color:#f6fff9; font-size:10px; font-weight:900; letter-spacing:.075em; line-height:1; pointer-events:none; text-align:center; text-shadow:0 1px 5px rgba(0,0,0,.78); white-space:nowrap; }
+.lup-discovery-door > .material-icons { right:17px; font-size:18px; }
+@media (max-width:360px) { .lup-discovery-entry { grid-template-columns:65px minmax(0,1fr); min-height:78px; margin-bottom:27px; }.lup-discovery-entry__qr { width:58px; height:58px; }.lup-discovery-door__handle { transform-origin:-36px 34px; }.lup-discovery-door__neck { left:-43px; }.lup-discovery-door__copy { left:31px; width:calc(100% - 70px); font-size:8.5px; }.lup-discovery-door__grip { min-width:92px; left:14px; } }
