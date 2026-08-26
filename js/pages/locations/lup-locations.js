@@ -41,10 +41,12 @@ angular.module('LUP').config(function($routeProvider) {
 	var suppressRoomOpenUntil = 0;
 	var nativeRailScrollTimer = null;
 	var nativeRailFrame = null;
+	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
 	$scope.data.currentRoom = $scope.data.currentRoom || null;
 	$scope.data.currentRoomIndex = $scope.data.currentRoomIndex === undefined ? -1 : $scope.data.currentRoomIndex;
+	$scope.data.doorOpeningRoomId = null;
 
 	// During a route transition Angular can keep a retiring view in the DOM for
 	// one digest. Prefer the active rail which already owns cards; `.last()`
@@ -476,6 +478,25 @@ angular.module('LUP').config(function($routeProvider) {
 		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
 		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
 	};
+
+	// Entering a room is the one deliberate transition on the discovery card.
+	// The short delay gives the physical door gesture time to close before the
+	// route changes; tapping the handle remains equivalent to pulling it.
+	$scope.enterChatDoor = function(room) {
+		if (!room || !room.inChatRange() || $scope.data.doorOpeningRoomId) {
+			return;
+		}
+		$scope.data.doorOpeningRoomId = room.id();
+		doorEntryTimer = $timeout(function() {
+			$scope.data.doorOpeningRoomId = null;
+			$scope.gotoChat(room);
+		}, 420, false);
+	};
+	$scope.$on('$destroy', function() {
+		if (doorEntryTimer) {
+			$timeout.cancel(doorEntryTimer);
+		}
+	});
 
 	$scope.initialiseRail = function() {
 		var rail = getLocationRail();

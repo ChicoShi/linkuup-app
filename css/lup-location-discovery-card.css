@@ -46,3 +46,24 @@
 .lup-discovery-entry__locked { border-left-color:color-mix(in srgb,var(--discovery-accent) 38%,#61728a) !important; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 7%,transparent),transparent 75%) !important; color:#aebdce !important; cursor:default !important; font-size:9px !important; letter-spacing:.065em !important; }
 .lup-discovery-entry__locked .material-icons { color:color-mix(in srgb,var(--discovery-accent) 72%,#bfd7eb) !important; }
 @media (prefers-reduced-motion:reduce) { .lup-discovery-entry__chat { transition:none; } }
+
+/* Room door: the QR seal is the knob; a short downward pull on the curved
+   handle closes the location surface before the actual chat route opens. */
+.lup-discovery-entry__qr { width:42px; height:42px; border-radius:50%; background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.27),transparent 26%),color-mix(in srgb,var(--discovery-accent) 22%,rgba(8,15,29,.50)); box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 0 0 5px color-mix(in srgb,var(--discovery-accent) 5%,transparent),0 0 17px color-mix(in srgb,var(--discovery-accent) 12%,transparent); }
+.lup-discovery-entry__qr::after { position:absolute; top:50%; left:40px; width:17px; height:1px; content:''; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 74%,#effcff),transparent); box-shadow:0 0 8px var(--discovery-glow); }
+.lup-discovery-door { min-height:54px !important; padding-left:4px !important; gap:11px !important; border-left:0 !important; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 12%,transparent),rgba(125,228,170,.045) 67%,transparent) !important; touch-action:none; user-select:none; -webkit-user-select:none; }
+.lup-discovery-door::after { display:none; }
+.lup-discovery-door__handle { position:relative; display:block; width:69px; height:33px; flex:0 0 69px; transform:translate3d(0,var(--lup-up-pull,0px),0); transform-origin:14px 12px; transition:transform 150ms ease; }
+.lup-discovery-door__neck { position:absolute; top:14px; left:4px; width:18px; height:8px; border:2px solid color-mix(in srgb,var(--discovery-accent) 78%,#f2fbff); border-right:0; border-radius:11px 0 0 11px; box-shadow:0 0 9px var(--discovery-glow),inset 0 1px 0 rgba(255,255,255,.42); }
+.lup-discovery-door__neck::before { position:absolute; top:-6px; left:-9px; width:14px; height:14px; content:''; border:2px solid color-mix(in srgb,var(--discovery-accent) 78%,#f2fbff); border-radius:50%; background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.46),color-mix(in srgb,var(--discovery-accent) 30%,#16243b)); box-shadow:0 0 10px var(--discovery-glow); }
+.lup-discovery-door__grip { position:absolute; top:5px; left:20px; width:43px; height:20px; border:3px solid color-mix(in srgb,var(--discovery-accent) 78%,#f5fcff); border-bottom-width:4px; border-radius:3px 18px 18px 11px; box-shadow:0 0 10px var(--discovery-glow),inset 0 2px 0 rgba(255,255,255,.36); transform:skewX(-13deg); }
+.lup-discovery-door.is-pulling .lup-discovery-door__handle { filter:brightness(1.13); }
+.lup-discovery-door.is-door-latched .lup-discovery-door__handle { animation:lup-discovery-door-latch 420ms cubic-bezier(.2,.92,.26,1); }
+.lup-discovery-door__copy { min-width:0; color:#e9fff1; text-shadow:0 0 13px rgba(125,228,170,.25); }
+.lup-discovery-door > .material-icons { margin-left:auto; color:#b9ffd0 !important; opacity:.9; transform:translateX(0); transition:transform 180ms ease; }
+.lup-discovery-door:hover > .material-icons,.lup-discovery-door:focus-visible > .material-icons { transform:translateX(4px); }
+.lup-discovery-card > * { transition:opacity 300ms ease,transform 420ms cubic-bezier(.25,.76,.24,1); }
+.lup-discovery-card--door-opening > * { opacity:0; transform:translate3d(-16px,0,0); }
+.lup-discovery-card--door-opening::before { z-index:10; background:linear-gradient(90deg,rgba(2,5,10,.96),rgba(5,10,18,.94) 65%,rgba(10,19,31,.64)); box-shadow:inset -28px 0 42px rgba(0,0,0,.72); opacity:1; transform:scaleX(1); transform-origin:right center; }
+@keyframes lup-discovery-door-latch { 0% { transform:translate3d(0,var(--lup-up-pull,0px),0); } 42% { transform:translate3d(0,39px,0) rotate(8deg); } 100% { transform:translate3d(0,0,0); } }
+@media (prefers-reduced-motion:reduce) { .lup-discovery-door__handle,.lup-discovery-card > * { transition:none; }.lup-discovery-door.is-door-latched .lup-discovery-door__handle { animation:none; } }

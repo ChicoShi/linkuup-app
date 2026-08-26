@@ -26,7 +26,7 @@
 					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
 	
 				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
-					<article class="lup-discovery-card" ng-class="[categoryVisual(room).class, {'lup-discovery-card--live': room.inChatRange()}]">
+					<article class="lup-discovery-card" ng-class="[categoryVisual(room).class, {'lup-discovery-card--live': room.inChatRange(), 'lup-discovery-card--door-opening': data.doorOpeningRoomId === room.id()}]">
 						<div class="lup-discovery-card__hero">
 							<button type="button" class="lup-discovery-card__identity" ng-click="maybeGotoRoom(room, $event)" aria-label="Ort öffnen: {{room.name()}}">
 								<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
@@ -48,11 +48,11 @@
 								<button type="button" class="lup-discovery-card__more" ng-if="room.USERS.length>10" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">+{{visitorOverflowLabel(room)}}</button>
 							</div>
 						</div>
-						<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange()}">
+						<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange(), 'is-door-opening': data.doorOpeningRoomId === room.id()}">
 							<button type="button" class="lup-discovery-entry__qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
-							<button type="button" class="lup-discovery-entry__chat" ng-if="room.inChatRange()" ng-click="gotoChat(room)" aria-label="{{'JOIN_CHAT'|translate}}">
-								<span class="lup-discovery-entry__pulse" aria-hidden="true"><i class="material-icons">forum</i></span>
-								<span>{{'JOIN_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i>
+							<button type="button" class="lup-discovery-entry__chat lup-discovery-door" ng-if="room.inChatRange()" lup-pull-action="enterChatDoor(room)" lup-pull-open="enterChatDoor(room)" lup-pull-effect="is-door-latched" aria-label="{{'JOIN_CHAT'|translate}}">
+								<span class="lup-discovery-door__handle" aria-hidden="true"><span class="lup-discovery-door__neck"></span><span class="lup-discovery-door__grip"></span></span>
+								<span class="lup-discovery-door__copy">{{'JOIN_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i>
 							</button>
 							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
 						</section>
