@@ -32,3 +32,17 @@
 @keyframes lup-discovery-identity-signal { 0%,100% { opacity:.40; transform:scaleY(.72); } 46% { opacity:.95; transform:scaleY(1); } 62% { opacity:.62; transform:scaleY(.86); } }
 @media (max-width:360px) { .lup-discovery-card__anchor { min-height:156px; }.lup-discovery-card__distance { left:17px; }.lup-discovery-card__presence-label { transform:translateY(22px); } }
 @media (prefers-reduced-motion:reduce) { .lup-discovery-card__identity::before { animation:none; } }
+
+/* The room action is a threshold, not a generic rounded button. */
+.lup-discovery-entry { grid-template-columns:48px minmax(0,1fr); min-height:55px; }
+.lup-discovery-entry::before { right:0; bottom:1px; left:54px; background:linear-gradient(90deg,rgba(125,228,170,.78),color-mix(in srgb,var(--discovery-accent) 30%,transparent),transparent); box-shadow:0 0 13px rgba(125,228,170,.20); }
+.lup-discovery-entry__chat,.lup-discovery-entry__locked { position:relative; display:flex !important; min-height:46px !important; padding:0 11px 1px !important; align-items:center; gap:9px !important; border:0 !important; border-left:1px solid rgba(125,228,170,.62) !important; border-radius:0 13px 13px 0 !important; background:linear-gradient(90deg,rgba(125,228,170,.13),rgba(125,228,170,.035) 68%,transparent) !important; color:#e6fff0 !important; cursor:pointer !important; font-size:11px !important; font-weight:850 !important; letter-spacing:.055em !important; text-transform:uppercase; transition:transform 180ms ease,background 180ms ease,box-shadow 180ms ease; }
+.lup-discovery-entry__chat::after { width:17px; height:1px; margin-left:auto; content:''; background:#a4f3bf; box-shadow:0 0 10px rgba(125,228,170,.75); transition:width 180ms ease; }
+.lup-discovery-entry__chat:hover,.lup-discovery-entry__chat:focus-visible { background:linear-gradient(90deg,rgba(125,228,170,.21),rgba(125,228,170,.06) 68%,transparent) !important; box-shadow:inset 11px 0 18px -17px rgba(125,228,170,.85),0 0 18px rgba(125,228,170,.08); }
+.lup-discovery-entry__chat:active { transform:translate3d(3px,0,0); }
+.lup-discovery-entry__chat:active::after { width:26px; }
+.lup-discovery-entry__chat > .material-icons { order:4; color:#bcffd2 !important; font-size:16px !important; }
+.lup-discovery-entry__chat .lup-discovery-entry__pulse { width:21px; height:21px; background:rgba(125,228,170,.17); }
+.lup-discovery-entry__locked { border-left-color:color-mix(in srgb,var(--discovery-accent) 38%,#61728a) !important; background:linear-gradient(90deg,color-mix(in srgb,var(--discovery-accent) 7%,transparent),transparent 75%) !important; color:#aebdce !important; cursor:default !important; font-size:9px !important; letter-spacing:.065em !important; }
+.lup-discovery-entry__locked .material-icons { color:color-mix(in srgb,var(--discovery-accent) 72%,#bfd7eb) !important; }
+@media (prefers-reduced-motion:reduce) { .lup-discovery-entry__chat { transition:none; } }

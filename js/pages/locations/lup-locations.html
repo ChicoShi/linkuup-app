@@ -50,11 +50,11 @@
 						</div>
 						<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange()}">
 							<button type="button" class="lup-discovery-entry__qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
-							<button type="button" ng-if="room.inChatRange()" ng-click="gotoChat(room)" aria-label="{{'JOIN_CHAT'|translate}}">
+							<button type="button" class="lup-discovery-entry__chat" ng-if="room.inChatRange()" ng-click="gotoChat(room)" aria-label="{{'JOIN_CHAT'|translate}}">
 								<span class="lup-discovery-entry__pulse" aria-hidden="true"><i class="material-icons">forum</i></span>
 								<span>{{'JOIN_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i>
 							</button>
-							<div ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
+							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()"><i class="material-icons" aria-hidden="true">location_on</i><span>{{'CHAT_TOO_FAR'|translate}}</span></div>
 						</section>
 					</article>
 	
