@@ -39,7 +39,11 @@ angular.module('LUP').config(function($routeProvider) {
 	// completed a horizontal drag. Keep taps working, but discard that trailing
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
-	var nativeRailScrollTimer = null;
+	// Keep the category chip in step with the card under the finger.  A
+	// debounce made it react only after scrolling had stopped, which reads as a
+	// delayed second click.  One animation-frame sync only triggers Angular
+	// when the centred room actually changes.
+	var nativeRailSyncFrame = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
 	$scope.data.currentRoom = $scope.data.currentRoom || null;
@@ -107,6 +111,15 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.focusRoom(roomIndex);
 			});
 		}
+	};
+	var scheduleRailSelectionSync = function(rail) {
+		if (nativeRailSyncFrame !== null) {
+			return;
+		}
+		nativeRailSyncFrame = window.requestAnimationFrame(function() {
+			nativeRailSyncFrame = null;
+			syncSelectedRoomFromRail(rail);
+		});
 	};
 	var settleNativeRail = function(rail) {
 		rail.classList.remove('location-rail-dragging');
@@ -204,13 +217,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		});
 		rail.addEventListener('scroll', function() {
-			if (nativeRailScrollTimer) {
-				$timeout.cancel(nativeRailScrollTimer);
-			}
-			nativeRailScrollTimer = $timeout(function() {
-				nativeRailScrollTimer = null;
-				syncSelectedRoomFromRail(rail);
-			}, 70);
+			scheduleRailSelectionSync(rail);
 		}, {passive: true});
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
@@ -247,8 +254,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
-		if (nativeRailScrollTimer) {
-			$timeout.cancel(nativeRailScrollTimer);
+		if (nativeRailSyncFrame !== null) {
+			window.cancelAnimationFrame(nativeRailSyncFrame);
+			nativeRailSyncFrame = null;
 		}
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
