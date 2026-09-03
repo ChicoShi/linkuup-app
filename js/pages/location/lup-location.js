@@ -137,7 +137,7 @@ angular.module('LUP').config(function($routeProvider) {
 		 * while the browser is still resolving GPS.  A requested chat/online tab
 		 * now waits for that one decisive position result; range protection stays
 		 * exactly as strict once a position is known or denied. */
-		if (requestedTab === 1 && !PositionSrvc.hasPosition()) {
+		if (requestedTab === 1 && !PositionSrvc.hasPosition(true)) {
 			PositionSrvc.probe().then(applyTab, applyTab)['catch']($scope.catchUnknown);
 		}
 		else {
@@ -299,7 +299,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// A location check only makes sense with a real browser position. Ask at
 		// the moment the person actually enters the chat; this is a user gesture,
 		// so Chromium can show a fresh permission prompt after an F5 reload.
-		if (!PositionSrvc.hasPosition()) {
+		if (!PositionSrvc.hasPosition(true)) {
 			return PositionSrvc.probe().then(function(position) {
 				return $scope.updatePosition(position);
 			}).then(function() {
@@ -397,7 +397,6 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	var leaveHandled = false;
-	var leaveDialogOpen = false;
 	var isSameLocationPath = function(path) {
 		return new RegExp('^/location/' + $scope.data.room.id() + '(?:/(?:chat|visitors))?$').test(path);
 	};
@@ -408,7 +407,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.$on('$locationChangeStart', function(event, nextUrl) {
 		var room = $scope.data.room;
-		if (leaveHandled || leaveDialogOpen || !room || !room.id() ||
+		if (leaveHandled || !room || !room.id() ||
 			!ChatSrvc.CHATROOM || ChatSrvc.CHATROOM.id() !== room.id()) {
 			return;
 		}
@@ -416,24 +415,10 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!nextPath || isSameLocationPath(nextPath)) {
 			return;
 		}
-		event.preventDefault();
-		leaveDialogOpen = true;
-		// Leaving a venue is different from changing its tabs.  Let the visitor
-		// deliberately choose whether their presence should be removed now.
-		DialogSrvc.confirm('js/pages/location/html/lup-location-leave-dialog.html', {}).then(function() {
-			leaveHandled = true;
-			leaveDialogOpen = false;
-			return ChatSrvc.part(room).finally(function() {
-				$location.url(nextPath);
-			});
-		}, function() {
-			// "Im Chat bleiben": mark this before navigating. The LocationCtrl is
-			// destroyed by that navigation and must not turn a declined dialog into
-			// an implicit PART.
-			leaveHandled = true;
-			leaveDialogOpen = false;
-			$location.url(nextPath);
-		})['catch']($scope.catchUnknown);
+		// The physical door is the explicit entry gesture. Leaving should be just
+		// as direct: navigate away and part the live room without a second dialog.
+		leaveHandled = true;
+		ChatSrvc.part(room)['catch']($scope.catchUnknown);
 	});
 	$scope.$on('$destroy', function() {
 		// Switching between Location, Chat and Online recreates this controller in
@@ -482,7 +467,7 @@ angular.module('LUP').config(function($routeProvider) {
 		var roomId = $scope.data.room.id();
 		var url = LUP_CONFIG.server + 'linkuup.qrforroom.room_id.' + roomId + '.html?_lang=en';
 		var target = window.location.href.split('#')[0] + '#!/location/' + roomId + '/chat';
-		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target});
+		return DialogSrvc.confirm('js/pages/location/html/lup-room-qr-dialog.html', {url: url, target: target, room: $scope.data.room});
 	}
 
 	///////////////////////
