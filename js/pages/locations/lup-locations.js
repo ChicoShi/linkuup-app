@@ -141,74 +141,13 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 		}
 	};
-	var cancelNativeRailAnimation = function() {
-		if (nativeRailAnimation !== null) {
-			window.cancelAnimationFrame(nativeRailAnimation);
-			nativeRailAnimation = null;
-		}
-	};
-	var settleNativeRail = function(rail, gestureSpeed) {
-		cancelNativeRailAnimation();
+	var settleNativeRail = function(rail) {
+		rail.classList.remove('location-rail-dragging');
 		$timeout(function() {
 			var nearest = nearestRailCard(rail);
-			if (!nearest) {
-				rail.classList.remove('location-rail-dragging');
-				return;
+			if (nearest) {
+				nearest.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
 			}
-			var maxScrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
-			// Calculate from the rendered centres, not offsetLeft.  The latter can
-			// belong to a different offset parent after a responsive layout update
-			// and makes a card appear to settle beside its actual snap point.
-			var railRect = rail.getBoundingClientRect();
-			var cardRect = nearest.getBoundingClientRect();
-			var target = rail.scrollLeft + (cardRect.left + cardRect.width / 2) -
-				(railRect.left + rail.clientWidth / 2);
-			target = Math.max(0, Math.min(maxScrollLeft, target));
-			var start = rail.scrollLeft;
-			var distance = target - start;
-			if (Math.abs(distance) < 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-				rail.scrollLeft = target;
-				rail.classList.remove('location-rail-dragging');
-				return;
-			}
-			// A fixed travel time feels predictable. The bounce follows gesture
-			// speed, not distance: a slow drag settles calmly, a quick fling has
-			// more momentum while remaining safely capped.
-			var duration = 520;
-			var direction = distance < 0 ? -1 : 1;
-			var bounce = Math.min(24, 2 + Math.min(1.4, Math.abs(gestureSpeed || 0)) * 15);
-			var startedAt = window.performance.now();
-			var bounceProgress = function(progress) {
-				var points = [
-					{at: 0, value: start},
-					{at: .68, value: target + direction * bounce},
-					{at: 1, value: target},
-				];
-				for (var index = 1; index < points.length; index++) {
-					if (progress <= points[index].at) {
-						var from = points[index - 1];
-						var to = points[index];
-						var local = (progress - from.at) / (to.at - from.at);
-						// Smooth at each turning point, so the two bounces do not look
-						// like a stepped programmatic scroll.
-						local = local * local * (3 - 2 * local);
-						return from.value + (to.value - from.value) * local;
-					}
-				}
-				return 1;
-			};
-			var animate = function(now) {
-				var progress = Math.min(1, (now - startedAt) / duration);
-				rail.scrollLeft = Math.max(0, Math.min(maxScrollLeft, bounceProgress(progress)));
-				if (progress < 1) {
-					nativeRailAnimation = window.requestAnimationFrame(animate);
-				} else {
-					nativeRailAnimation = null;
-					rail.scrollLeft = target;
-					rail.classList.remove('location-rail-dragging');
-				}
-			};
-			nativeRailAnimation = window.requestAnimationFrame(animate);
 		}, 0);
 	};
 	var initialiseNativeRail = function(rail) {
@@ -216,98 +155,57 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		rail.dataset.lupNativeRail = '1';
-		// Touch scrolling deliberately stays entirely native.  The previous
-		// JavaScript drag handler fought the browser's own scrolling and called
-		// preventDefault() mid-gesture, which made location swipes unreliable on
-		// mobile browsers.  Native overflow plus scroll snapping provides the
-		// same motion, momentum and accessibility without that race.
 		var touchStartX = null;
 		var touchStartY = null;
-		var touchLastX = null;
-		var touchLastAt = null;
-		var touchSpeed = 0;
-		var draggingTouch = false;
-		var updateTouchSpeed = function(touch) {
-			var now = window.performance.now();
-			if (touchLastX !== null && touchLastAt !== null) {
-				var elapsed = now - touchLastAt;
-				if (elapsed > 0) {
-					touchSpeed = Math.abs(touch.clientX - touchLastX) / elapsed;
-				}
-			}
-			touchLastX = touch.clientX;
-			touchLastAt = now;
-		};
+		var touchStartScrollLeft = 0;
+		var draggingHorizontally = false;
 		rail.addEventListener('touchstart', function(event) {
-			cancelNativeRailAnimation();
 			var touch = event.touches[0];
 			touchStartX = touch ? touch.clientX : null;
 			touchStartY = touch ? touch.clientY : null;
-			touchLastX = touch ? touch.clientX : null;
-			touchLastAt = touch ? window.performance.now() : null;
-			touchSpeed = 0;
-			draggingTouch = false;
+			touchStartScrollLeft = rail.scrollLeft;
+			draggingHorizontally = false;
 		}, {passive: true});
 		rail.addEventListener('touchmove', function(event) {
 			var touch = event.touches[0];
-			if (!touch || touchStartX === null) {
-				return;
-			}
-			updateTouchSpeed(touch);
-			if (draggingTouch) {
+			if (touchStartX === null || !touch) {
 				return;
 			}
 			var deltaX = touch.clientX - touchStartX;
 			var deltaY = touch.clientY - touchStartY;
-			if (Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingTouch = true;
+			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+				draggingHorizontally = true;
 				rail.classList.add('location-rail-dragging');
 			}
-		}, {passive: true});
-		rail.addEventListener('touchend', function(event) {
-			var touch = event.changedTouches[0];
-			if (touch) {
-				updateTouchSpeed(touch);
-			}
-			if (draggingTouch) {
+			if (draggingHorizontally) {
+				// Take ownership of horizontal drags so nested card click handlers
+				// cannot turn a short swipe into opening the location.
+				event.preventDefault();
+				rail.scrollLeft = touchStartScrollLeft - deltaX;
 				suppressRoomOpenUntil = Date.now() + 450;
-				settleNativeRail(rail, touchSpeed);
 			}
+		}, {passive: false});
+		rail.addEventListener('touchend', function() {
 			touchStartX = null;
 			touchStartY = null;
-			touchLastX = null;
-			touchLastAt = null;
-			draggingTouch = false;
-		}, {passive: true});
-		rail.addEventListener('touchcancel', function() {
-			if (draggingTouch) {
-				settleNativeRail(rail, touchSpeed);
+			if (draggingHorizontally) {
+				suppressRoomOpenUntil = Date.now() + 450;
+				settleNativeRail(rail);
 			}
-			touchStartX = null;
-			touchStartY = null;
-			touchLastX = null;
-			touchLastAt = null;
-			draggingTouch = false;
 		}, {passive: true});
 		// Desktop users used Slick's mouse dragging too. Keep the same affordance
 		// for every PointerEvent-capable browser without involving a slider plugin.
 		var pointerStartX = null;
 		var pointerStartY = null;
 		var pointerStartScrollLeft = 0;
-		var pointerLastX = null;
-		var pointerLastAt = null;
-		var pointerSpeed = 0;
 		var draggingPointer = false;
 		rail.addEventListener('pointerdown', function(event) {
 			if (event.pointerType === 'touch') {
-				return; // Native touch scrolling owns this gesture.
+				return; // The touch fallback above owns this gesture.
 			}
 			pointerStartX = event.clientX;
 			pointerStartY = event.clientY;
 			pointerStartScrollLeft = rail.scrollLeft;
-			pointerLastX = event.clientX;
-			pointerLastAt = window.performance.now();
-			pointerSpeed = 0;
 			draggingPointer = false;
 		});
 		rail.addEventListener('pointermove', function(event) {
@@ -316,12 +214,6 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 			var deltaX = event.clientX - pointerStartX;
 			var deltaY = event.clientY - pointerStartY;
-			var now = window.performance.now();
-			if (pointerLastAt !== null && now > pointerLastAt) {
-				pointerSpeed = Math.abs(event.clientX - pointerLastX) / (now - pointerLastAt);
-			}
-			pointerLastX = event.clientX;
-			pointerLastAt = now;
 			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
 				draggingPointer = true;
 				rail.setPointerCapture(event.pointerId);
@@ -336,12 +228,10 @@ angular.module('LUP').config(function($routeProvider) {
 		rail.addEventListener('pointerup', function(event) {
 			if (draggingPointer) {
 				suppressRoomOpenUntil = Date.now() + 500;
-				settleNativeRail(rail, pointerSpeed);
+				settleNativeRail(rail);
 			}
 			pointerStartX = null;
 			pointerStartY = null;
-			pointerLastX = null;
-			pointerLastAt = null;
 			if (rail.hasPointerCapture(event.pointerId)) {
 				rail.releasePointerCapture(event.pointerId);
 			}
@@ -391,7 +281,6 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
-		cancelNativeRailAnimation();
 		if (nativeRailScrollTimer) {
 			$timeout.cancel(nativeRailScrollTimer);
 		}
