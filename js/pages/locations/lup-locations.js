@@ -159,6 +159,16 @@ angular.module('LUP').config(function($routeProvider) {
 		var touchStartY = null;
 		var touchStartScrollLeft = 0;
 		var draggingHorizontally = false;
+		var finishTouchDrag = function() {
+			var wasDragging = draggingHorizontally;
+			touchStartX = null;
+			touchStartY = null;
+			draggingHorizontally = false;
+			if (wasDragging) {
+				suppressRoomOpenUntil = Date.now() + 450;
+				settleNativeRail(rail);
+			}
+		};
 		rail.addEventListener('touchstart', function(event) {
 			var touch = event.touches[0];
 			touchStartX = touch ? touch.clientX : null;
@@ -185,20 +195,29 @@ angular.module('LUP').config(function($routeProvider) {
 				suppressRoomOpenUntil = Date.now() + 450;
 			}
 		}, {passive: false});
-		rail.addEventListener('touchend', function() {
-			touchStartX = null;
-			touchStartY = null;
-			if (draggingHorizontally) {
-				suppressRoomOpenUntil = Date.now() + 450;
-				settleNativeRail(rail);
-			}
-		}, {passive: true});
+		rail.addEventListener('touchend', finishTouchDrag, {passive: true});
+		// Browsers can cancel a touch for example when focus changes or a system
+		// gesture takes over. It must release the temporary drag state too.
+		rail.addEventListener('touchcancel', finishTouchDrag, {passive: true});
 		// Desktop users used Slick's mouse dragging too. Keep the same affordance
 		// for every PointerEvent-capable browser without involving a slider plugin.
 		var pointerStartX = null;
 		var pointerStartY = null;
 		var pointerStartScrollLeft = 0;
 		var draggingPointer = false;
+		var finishPointerDrag = function(event) {
+			var wasDragging = draggingPointer;
+			pointerStartX = null;
+			pointerStartY = null;
+			draggingPointer = false;
+			if (event && rail.hasPointerCapture(event.pointerId)) {
+				rail.releasePointerCapture(event.pointerId);
+			}
+			if (wasDragging) {
+				suppressRoomOpenUntil = Date.now() + 500;
+				settleNativeRail(rail);
+			}
+		};
 		rail.addEventListener('pointerdown', function(event) {
 			if (event.pointerType === 'touch') {
 				return; // The touch fallback above owns this gesture.
@@ -225,15 +244,11 @@ angular.module('LUP').config(function($routeProvider) {
 				suppressRoomOpenUntil = Date.now() + 500;
 			}
 		});
-		rail.addEventListener('pointerup', function(event) {
-			if (draggingPointer) {
-				suppressRoomOpenUntil = Date.now() + 500;
-				settleNativeRail(rail);
-			}
-			pointerStartX = null;
-			pointerStartY = null;
-			if (rail.hasPointerCapture(event.pointerId)) {
-				rail.releasePointerCapture(event.pointerId);
+		rail.addEventListener('pointerup', finishPointerDrag);
+		rail.addEventListener('pointercancel', finishPointerDrag);
+		rail.addEventListener('lostpointercapture', function(event) {
+			if (pointerStartX !== null) {
+				finishPointerDrag(event);
 			}
 		});
 		rail.addEventListener('scroll', function() {
@@ -639,17 +654,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.isCategoryActive = function(categories) {
-		// With an explicit filter the selected filter remains authoritative. With
-		// "Alle" the rail itself is the context: highlight the category of the
-		// card currently centred by the native swipe instead of leaving "Alle"
-		// lit while a bar, club or university is on screen.
-		if (!$scope.data.category.length) {
-			if (!categories.length) {
-				return !$scope.data.currentRoom;
-			}
-			return !!$scope.data.currentRoom &&
-				categories.indexOf(String($scope.data.currentRoom.category())) >= 0;
-		}
 		return $scope.data.category.join(',') === categories.join(',');
 	};
 
