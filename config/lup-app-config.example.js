@@ -20,7 +20,7 @@ var LUP_CONFIG = {
 		'female',
 	],
 	
-	positionPatch: { lat: 51.2, lng: 10.4 }, // null to disable in production
+	positionPatch: null, // Development only: { lat: 51.2, lng: 10.4 }; keep null in production
 	positionInterval: 60, // null to disable. default: 60 seconds
 	
 };

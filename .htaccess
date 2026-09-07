@@ -1,0 +1,9 @@
+# Only local development hosts bypass browser caches. Public hosts are unchanged.
+# Apache 2.4 with mod_headers; no release version bumps for development edits.
+<IfModule mod_headers.c>
+    <If "req('Host') =~ m#^(localhost|127\.0\.0\.1|app\.localhost)(:[0-9]+)?$#">
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header always set Pragma "no-cache"
+        Header always set Expires "0"
+    </If>
+</IfModule>

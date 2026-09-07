@@ -380,12 +380,4 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 		return defer.promise;
 	};
 
-	// index_debug.php may supply a clearly local-only test position. This is
-	// deliberately a patch (never a browser/GPS position) and is absent from
-	// the production entry point. It must run after every service method exists.
-	var debugPosition = window.LUP_DEBUG_POSITION;
-	if (Array.isArray(debugPosition) && debugPosition.length === 2 &&
-		Number.isFinite(Number(debugPosition[0])) && Number.isFinite(Number(debugPosition[1]))) {
-		PositionSrvc.startPatching(Number(debugPosition[0]), Number(debugPosition[1]));
-	}
 });
