@@ -41,6 +41,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var suppressRoomOpenUntil = 0;
 	var nativeRailFrame = null;
 	var nativeRailSelectionFrame = null;
+    var nativeRailScrollTimer = null;
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
@@ -187,115 +188,65 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 0);
 	};
 	var initialiseNativeRail = function(rail) {
-		if (rail.dataset.lupNativeRail) {
-			return;
-		}
+		if (rail.dataset.lupNativeRail) return;
 		rail.dataset.lupNativeRail = '1';
-        rail.addEventListener('click',function(event) {
-            if(event.detail !== 0 && Date.now() < suppressRoomOpenUntil) {
-                event.preventDefault(); event.stopImmediatePropagation();
-            }
-        },true);
-		var touchStartX = null;
-		var touchStartY = null;
-		var touchStartScrollLeft = 0;
-		var draggingHorizontally = false;
-		rail.addEventListener('touchstart', function(event) {
-			var touch = event.touches[0];
-			touchStartX = touch ? touch.clientX : null;
-			touchStartY = touch ? touch.clientY : null;
-			touchStartScrollLeft = rail.scrollLeft;
-			draggingHorizontally = false;
-		}, {passive: true});
-		rail.addEventListener('touchmove', function(event) {
-			var touch = event.touches[0];
-			if (touchStartX === null || !touch) {
-				return;
-			}
-			var deltaX = touch.clientX - touchStartX;
-			var deltaY = touch.clientY - touchStartY;
-			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingHorizontally = true;
+		// One gesture owner: native touch scrolling. Desktop mouse drag is separate.
+		var gesture = new window.LupLocationGesture();
+		var pointerId = null, originScroll = 0;
+		var begin = function(x, y) {
+			// Stop an older programmatic smooth scroll at its current position.
+			rail.scrollTo({left: rail.scrollLeft, behavior: 'instant'});
+			gesture.start(x, y); suppressRoomOpenUntil = 0;
+		};
+		var moved = function(x, y) {
+			if (gesture.move(x, y)) suppressRoomOpenUntil = Date.now() + 450;
+		};
+		var end = function() {
+			if (gesture.end()) suppressRoomOpenUntil = Date.now() + 450;
+			rail.classList.remove('location-rail-dragging');
+		};
+		rail.addEventListener('touchstart', function(e) {
+			if (e.touches.length !== 1) { gesture.cancel(); return; }
+			begin(e.touches[0].clientX, e.touches[0].clientY);
+		}, {passive:true});
+		rail.addEventListener('touchmove', function(e) {
+			if (e.touches.length === 1) moved(e.touches[0].clientX,e.touches[0].clientY);
+		}, {passive:true});
+		rail.addEventListener('touchend', end, {passive:true});
+		rail.addEventListener('touchcancel', function() { end(); gesture.cancel(); }, {passive:true});
+		rail.addEventListener('pointerdown', function(e) {
+			if (e.pointerType === 'touch' || e.button !== 0) return;
+			pointerId=e.pointerId; originScroll=rail.scrollLeft; begin(e.clientX,e.clientY);
+		});
+		rail.addEventListener('pointermove', function(e) {
+			if (e.pointerId !== pointerId) return;
+			moved(e.clientX,e.clientY);
+			if (gesture.horizontal) {
+				e.preventDefault(); rail.setPointerCapture(e.pointerId);
 				rail.classList.add('location-rail-dragging');
-				var touchNearby = rail.closest('.nearby');
-				if (touchNearby) {
-					touchNearby.querySelector('.location-categories') && touchNearby.querySelector('.location-categories').classList.add('category-rail-dragging');
-				}
-			}
-			if (draggingHorizontally) {
-				// Take ownership of horizontal drags so nested card click handlers
-				// cannot turn a short swipe into opening the location.
-				event.preventDefault();
-				rail.scrollLeft = touchStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 450;
-			}
-		}, {passive: false});
-		rail.addEventListener('touchcancel',function() {
-            touchStartX=null; touchStartY=null; draggingHorizontally=false;
-            rail.classList.remove('location-rail-dragging');
-        },{passive:true});
-        rail.addEventListener('touchend', function() {
-			touchStartX = null;
-			touchStartY = null;
-			if (draggingHorizontally) {
-				suppressRoomOpenUntil = Date.now() + 450;
-				settleNativeRail(rail);
-			}
-		}, {passive: true});
-		// Desktop users used Slick's mouse dragging too. Keep the same affordance
-		// for every PointerEvent-capable browser without involving a slider plugin.
-		var pointerStartX = null;
-		var pointerStartY = null;
-		var pointerStartScrollLeft = 0;
-		var draggingPointer = false;
-		rail.addEventListener('pointerdown', function(event) {
-			if (event.pointerType === 'touch') {
-				return; // The touch fallback above owns this gesture.
-			}
-			pointerStartX = event.clientX;
-			pointerStartY = event.clientY;
-			pointerStartScrollLeft = rail.scrollLeft;
-			draggingPointer = false;
-		});
-		rail.addEventListener('pointermove', function(event) {
-			if (pointerStartX === null) {
-				return;
-			}
-			var deltaX = event.clientX - pointerStartX;
-			var deltaY = event.clientY - pointerStartY;
-			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingPointer = true;
-				rail.setPointerCapture(event.pointerId);
-				rail.classList.add('location-rail-dragging');
-				var pointerNearby = rail.closest('.nearby');
-				if (pointerNearby) {
-					var pointerCategories = pointerNearby.querySelector('.location-categories');
-					if (pointerCategories) {
-						pointerCategories.classList.add('category-rail-dragging');
-					}
-				}
-			}
-			if (draggingPointer) {
-				event.preventDefault();
-				rail.scrollLeft = pointerStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 500;
+				rail.scrollLeft=originScroll-gesture.dx;
 			}
 		});
-		rail.addEventListener('pointerup', function(event) {
-			if (draggingPointer) {
-				suppressRoomOpenUntil = Date.now() + 500;
-				settleNativeRail(rail);
+		var release = function(e) {
+			if (e.pointerId !== pointerId) return;
+			pointerId=null; end();
+			if (rail.hasPointerCapture(e.pointerId)) rail.releasePointerCapture(e.pointerId);
+		};
+		rail.addEventListener('pointerup',release);
+		rail.addEventListener('pointercancel',release);
+		rail.addEventListener('lostpointercapture',release);
+		rail.addEventListener('pointerleave',function(e) { if (!rail.hasPointerCapture(e.pointerId)) release(e); });
+		// Covers QR, avatar, route and chat equally, before Angular click handlers.
+		rail.addEventListener('click',function(e) {
+			if (e.detail !== 0 && Date.now() < suppressRoomOpenUntil) {
+				e.preventDefault();e.stopImmediatePropagation();
 			}
-			pointerStartX = null;
-			pointerStartY = null;
-			if (rail.hasPointerCapture(event.pointerId)) {
-				rail.releasePointerCapture(event.pointerId);
-			}
-		});
-		rail.addEventListener('scroll', function() {
+		},true);
+		rail.addEventListener('scroll',function() {
 			scheduleRailDepth(rail);
-			scheduleRailSelection(rail);
-		}, {passive: true});
+			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
+			nativeRailScrollTimer=$timeout(function() { nativeRailScrollTimer=null;syncSelectedRoomFromRail(rail); },100);
+		},{passive:true});
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
@@ -331,6 +282,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+        if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
 		if (nativeRailFrame !== null) {
 			window.cancelAnimationFrame(nativeRailFrame);
 			nativeRailFrame = null;

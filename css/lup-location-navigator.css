@@ -66,3 +66,6 @@
 .navigator-view .location-rail.location-rail-dragging { scroll-snap-type:none!important; }
 .navigator-view .location-rail::before,.navigator-view .location-rail::after { display:none!important; animation:none!important; }
 .navigator-view .lup-room-slide-outer { transition:none!important; }
+
+/* Native touch scrolling owns momentum; JS only classifies drag versus tap. */
+.navigator-view .location-rail { touch-action:pan-x pan-y; }
