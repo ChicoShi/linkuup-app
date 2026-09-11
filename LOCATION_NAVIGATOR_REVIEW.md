@@ -25,3 +25,6 @@ Native Touchbewegung ersetzt manuelles preventDefault/scrollLeft bei Touch. Neue
 
 ## Aktionsgestaltung
 Hauptaktion über volle Breite, eigene beschriftete Routenschaltfläche, QR-Nebenaktion und klar umrandeter Chat-Button. Verfügbarkeit wird aus der bestehenden Zugangsprüfung dargestellt; keine Anwesenheitsbehauptung. Fehlender Standort erhält am Routenbutton eine passende Beschriftung. Kurze Transform-Rückmeldung mit Reduced-Motion-Ausnahme. Mobile Höhenkompression erhält die Aktionsflächen. DE/EN-Template-Schlüssel, PHP und Diff geprüft. Keine zusätzliche Geokarte umgesetzt; QR-Serverproblem weiterhin offen.
+
+## Offene Ortsbühne statt gerahmter Karten
+Styles vollständig ersetzt: freie Ortsidentität, räumlicher Marker mit ruhenden Bahnlinien, Symbolkategorien, kompakte Aktionen. Vom Nutzer abgelehnte gestapelte Hauptbuttons entfernt. Suchradius auf ausdrücklichen Wunsch vollständig aus Oberfläche und Filterlogik entfernt; kein versteckter Radiusfilter. Entfernungsanzeige und GPS-Zugangsprüfung bleiben bestehen. Laufende 390x844-Ansicht visuell geprüft. JS/PHP/Diff-Prüfung bestanden; Geräte-/FPS-Abnahme weiterhin offen.

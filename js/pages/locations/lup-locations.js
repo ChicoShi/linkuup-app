@@ -581,7 +581,6 @@ angular.module('LUP').config(function($routeProvider) {
 		return true;
 	};
 
-    $scope.data.navigatorRadius = 101;
     $scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
     $scope.navigatorCategories = [
         {ids:[],icon:'explore',label:'NAV_ALL'},
@@ -599,22 +598,12 @@ angular.module('LUP').config(function($routeProvider) {
         var terms = normalizeSearch($scope.data.searchvalue).trim().split(/\s+/).filter(Boolean);
         $scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
             if (categories.length && categories.indexOf(String(room.category())) < 0) return false;
-            if ($scope.navigatorHasGPS() && Number($scope.data.navigatorRadius) < 101) {
-                var distance = room.distance();
-                if (!room.showDistance() || distance === null || !Number.isFinite(distance) || distance > Number($scope.data.navigatorRadius)) return false;
-            }
             var haystack = normalizeSearch([room.name(),room.city(),room.street(),room.zip(),room.categoryName()].filter(Boolean).join(' '));
             return terms.every(function(term) { return haystack.indexOf(term) >= 0; });
         });
     };
-    $scope.changeNavigatorRadius = function() {
-        var id = selectedRoomId();
-        $scope.updateVisibleRooms();
-        restoreSelectedRoom(id,true);
-        $timeout(function() { $scope.initialiseRail(); },0);
-    };
     $scope.resetNavigator = function() {
-        $scope.data.navigatorRadius=101; $scope.data.searchvalue='';
+        $scope.data.searchvalue='';
         $scope.selectCategory([]); $scope.searchLocation('');
     };
     $scope.stepNavigator = function(direction) {
