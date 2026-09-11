@@ -22,3 +22,6 @@ Die Ortsdetailseite wird weiterhin vom bestehenden Modul dargestellt. Kein bildf
 
 ## Korrektur der Klickbehandlung
 Native Touchbewegung ersetzt manuelles preventDefault/scrollLeft bei Touch. Neue bewusste Berührung setzt die vorherige Klicksperre zurück; pointercancel, pointerleave und lostpointercapture beenden Mausgesten. Vier Regressionen gegen die tatsächlichen Event-Handler bestanden: synthetischer Klick nach Drag blockiert, unmittelbarer bewusster Tap erlaubt, Verlassen vor Drag, Abbruch plus neuer Klick. JS/PHP/Diff-Prüfung bestanden. Im laufenden Browser öffnet der QR-Button den Dialog; Bildabruf meldet HTTP 500 für backend/linkuup.qrforroom.room_id.2100.html. Das QR-Bildproblem ist weiterhin offen und kein behobener Backendfehler.
+
+## Aktionsgestaltung
+Hauptaktion über volle Breite, eigene beschriftete Routenschaltfläche, QR-Nebenaktion und klar umrandeter Chat-Button. Verfügbarkeit wird aus der bestehenden Zugangsprüfung dargestellt; keine Anwesenheitsbehauptung. Fehlender Standort erhält am Routenbutton eine passende Beschriftung. Kurze Transform-Rückmeldung mit Reduced-Motion-Ausnahme. Mobile Höhenkompression erhält die Aktionsflächen. DE/EN-Template-Schlüssel, PHP und Diff geprüft. Keine zusätzliche Geokarte umgesetzt; QR-Serverproblem weiterhin offen.

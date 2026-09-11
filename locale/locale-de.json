@@ -564,5 +564,9 @@
 	"NAV_NIGHT": "Nachtleben",
 	"NAV_CULTURE": "Kultur & Bildung",
 	"NAV_OUTDOORS": "Freizeit",
-	"NAV_CITIES": "Städte"
+	"NAV_CITIES": "Städte",
+	"NAV_CHAT_READY": "Chat für dich verfügbar",
+	"NAV_CHAT_LOCAL": "Chat öffnet sich vor Ort",
+	"NAV_CHAT_GPS": "Standort für den Chat prüfen",
+	"NAV_ENABLE_GPS": "Standort aktivieren"
 }
