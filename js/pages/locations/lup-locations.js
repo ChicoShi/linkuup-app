@@ -76,9 +76,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
 		var span = Math.max(rail.clientWidth * .72, 1);
-		Array.prototype.forEach.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'), function(card) {
-			var rect = card.getBoundingClientRect();
-			var offset = ((rect.left + rect.width / 2) - center) / span;
+		var cards = Array.prototype.slice.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'));
+        var offsets = cards.map(function(card) { var rect=card.getBoundingClientRect(); return ((rect.left+rect.width/2)-center)/span; });
+        cards.forEach(function(card,index) {
+            var offset=offsets[index];
+            if (Math.abs(offset)>2 && card.dataset.navigatorFar==='1') return;
+            card.dataset.navigatorFar=Math.abs(offset)>2?'1':'0';
 			var distance = Math.min(1, Math.abs(offset));
 			card.style.setProperty('--lup-rail-scale', (1 - distance * .115).toFixed(3));
 			card.style.setProperty('--lup-rail-lift', (distance * 13).toFixed(2) + 'px');
@@ -103,7 +106,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		var maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-		var target = card.offsetLeft - Math.max(0, (rail.clientWidth - card.offsetWidth) / 2);
+		var target = rail.scrollLeft + card.getBoundingClientRect().left - rail.getBoundingClientRect().left - (rail.clientWidth - card.offsetWidth) / 2;
 		target = Math.max(0, Math.min(maxScroll, target));
 		rail.scrollTo({left: target, top: 0, behavior: behavior || 'auto'});
 	};
@@ -188,6 +191,11 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		rail.dataset.lupNativeRail = '1';
+        rail.addEventListener('click',function(event) {
+            if(event.detail !== 0 && Date.now() < suppressRoomOpenUntil) {
+                event.preventDefault(); event.stopImmediatePropagation();
+            }
+        },true);
 		var touchStartX = null;
 		var touchStartY = null;
 		var touchStartScrollLeft = 0;
@@ -222,7 +230,11 @@ angular.module('LUP').config(function($routeProvider) {
 				suppressRoomOpenUntil = Date.now() + 450;
 			}
 		}, {passive: false});
-		rail.addEventListener('touchend', function() {
+		rail.addEventListener('touchcancel',function() {
+            touchStartX=null; touchStartY=null; draggingHorizontally=false;
+            rail.classList.remove('location-rail-dragging');
+        },{passive:true});
+        rail.addEventListener('touchend', function() {
 			touchStartX = null;
 			touchStartY = null;
 			if (draggingHorizontally) {
@@ -480,7 +492,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		sortAndSelectNearestRoom();
-		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
+		restoreSelectedRoom(roomId, true);
 		locationsRoomsRendered = true;
 		LoadingSrvc.addTask('location_rail');
 		$timeout(function() {
@@ -617,19 +629,48 @@ angular.module('LUP').config(function($routeProvider) {
 		return true;
 	};
 
-	$scope.updateVisibleRooms = function() {
-		var categories = $scope.data.category;
-		var query = ($scope.data.searchvalue || '').trim().toLocaleLowerCase();
-		$scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
-			var categoryMatches = !categories.length || categories.indexOf(String(room.category())) >= 0;
-			if (!categoryMatches || !query) {
-				return categoryMatches;
-			}
-			var haystack = [room.name(), room.city(), room.street(), room.zip(), room.categoryName()]
-				.filter(Boolean).join(' ').toLocaleLowerCase();
-			return haystack.indexOf(query) >= 0;
-		});
-	};
+    $scope.data.navigatorRadius = 101;
+    $scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
+    $scope.navigatorCategories = [
+        {ids:[],icon:'explore',label:'NAV_ALL'},
+        {ids:['3','4','5','14'],icon:'local_cafe',label:'NAV_CAFE'},
+        {ids:['11'],icon:'nightlife',label:'NAV_NIGHT'},
+        {ids:['12','16','17'],icon:'museum',label:'NAV_CULTURE'},
+        {ids:['13','15','18'],icon:'park',label:'NAV_OUTDOORS'},
+        {ids:['1','2','10'],icon:'location_city',label:'NAV_CITIES'}
+    ];
+    var normalizeSearch = function(value) {
+        return String(value || '').toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ß/g,'ss');
+    };
+    $scope.updateVisibleRooms = function() {
+        var categories = $scope.data.category;
+        var terms = normalizeSearch($scope.data.searchvalue).trim().split(/\s+/).filter(Boolean);
+        $scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
+            if (categories.length && categories.indexOf(String(room.category())) < 0) return false;
+            if ($scope.navigatorHasGPS() && Number($scope.data.navigatorRadius) < 101) {
+                var distance = room.distance();
+                if (!room.showDistance() || distance === null || !Number.isFinite(distance) || distance > Number($scope.data.navigatorRadius)) return false;
+            }
+            var haystack = normalizeSearch([room.name(),room.city(),room.street(),room.zip(),room.categoryName()].filter(Boolean).join(' '));
+            return terms.every(function(term) { return haystack.indexOf(term) >= 0; });
+        });
+    };
+    $scope.changeNavigatorRadius = function() {
+        var id = selectedRoomId();
+        $scope.updateVisibleRooms();
+        restoreSelectedRoom(id,true);
+        $timeout(function() { $scope.initialiseRail(); },0);
+    };
+    $scope.resetNavigator = function() {
+        $scope.data.navigatorRadius=101; $scope.data.searchvalue='';
+        $scope.selectCategory([]); $scope.searchLocation('');
+    };
+    $scope.stepNavigator = function(direction) {
+        var index = Math.max(0,Math.min($scope.data.visibleRooms.length-1,$scope.data.currentRoomIndex+direction));
+        if (!$scope.data.visibleRooms[index]) return;
+        $scope.focusRoom(index);
+        scrollSelectedRoomIntoView(window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth');
+    };
 
 	var selectedRoomId = function() {
 		return $scope.data.currentRoom ? String($scope.data.currentRoom.id()) : '';
@@ -678,19 +719,8 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.isCategoryActive = function(categories) {
-		// With an explicit filter the selected filter remains authoritative. With
-		// "Alle" the rail itself is the context: highlight the category of the
-		// card currently centred by the native swipe instead of leaving "Alle"
-		// lit while a bar, club or university is on screen.
-		if (!$scope.data.category.length) {
-			if (!categories.length) {
-				return !$scope.data.currentRoom;
-			}
-			return !!$scope.data.currentRoom &&
-				categories.indexOf(String($scope.data.currentRoom.category())) >= 0;
-		}
-		return $scope.data.category.join(',') === categories.join(',');
-	};
+        return $scope.data.category.join(',') === categories.join(',');
+    };
 
 	var scheduleCategoryRefresh = function(selectionSerial) {
 		// Coalesce a quick category burst: only the final choice is rendered.
