@@ -19,20 +19,16 @@
 .navigator-view .location-rail { position:relative; display:flex!important; gap:12px!important; padding:8px max(34px,calc((100% - 320px)/2)) 8px!important; margin:0!important; background:transparent!important; overflow-x:auto!important; overflow-y:hidden!important; min-height:0!important; scroll-snap-type:x mandatory; scroll-padding:0!important; scrollbar-width:none; touch-action:pan-x pan-y; }
 .navigator-view .location-rail::-webkit-scrollbar { display:none; }.navigator-view .location-rail.location-rail-dragging { scroll-snap-type:none!important; }
 .navigator-view .lup-room-slide-outer { flex:0 0 min(320px,calc(100vw - 68px))!important; width:min(320px,calc(100vw - 68px))!important; min-width:0!important; height:auto!important; padding:0!important; margin:0!important; transform:none!important; transition:none!important; scroll-snap-align:center; }
-.navigator-view .nav-place { display:flex!important; flex-direction:column; width:100%!important; height:auto!important; min-height:0!important; padding:0!important; margin:0!important; background:transparent!important; box-shadow:none!important; border:0!important; border-radius:0!important; overflow:visible!important; opacity:var(--lup-rail-opacity,1); transform:translateY(var(--lup-rail-lift,0px)) scale(var(--lup-rail-scale,1)); }
+.navigator-view .nav-place { display:flex!important; flex-direction:column; width:100%!important; height:auto!important; min-height:0!important; padding:0!important; margin:0!important; background:transparent!important; box-shadow:none!important; border:0!important; border-radius:0!important; overflow:hidden!important; opacity:1; transform:none; }
 .navigator-view .nav-place::before,.navigator-view .nav-place::after { display:none!important; }
 .nav-landscape { position:relative; height:164px; overflow:hidden; isolation:isolate; background:radial-gradient(ellipse at 50% 72%,#a995ff20,transparent 58%); }
-.nav-contour,.nav-path,.nav-coordinate { display:none; }
-.nav-orbit { position:absolute; width:248px; height:78px; left:calc(50% - 124px); top:68px; border:1px solid #ada1e749; border-radius:50%; transform:rotate(-16deg); background:linear-gradient(160deg,#ad9cff0b,transparent); }
-.nav-orbit::after { content:''; width:7px; height:7px; border-radius:50%; background:#a2e5dc; position:absolute; right:37px; top:0; box-shadow:0 0 0 5px #a2e5dc0c; }
-.nav-orbit-two { width:196px; height:58px; left:calc(50% - 98px); top:80px; transform:rotate(12deg); border-color:#90aee52c; }.nav-orbit-two::after { display:none; }
 .nav-landmark { position:absolute; top:28px; left:calc(50% - 41px); width:82px; height:82px; border-radius:28px 28px 28px 8px; display:grid; place-items:center; transform:rotate(-45deg); background:linear-gradient(145deg,#dfd7ff,#a292e7 55%,#7279be); border:1px solid #ebe7ffb0; box-shadow:-7px 9px 0 #554e8644,0 24px 26px #08091766,inset 0 2px 3px #ffffff66; }
 .nav-landmark>i { transform:rotate(45deg); color:#262844!important; font-size:37px; }
 .lup-room-slide-current .nav-landmark { animation:nav-settle 620ms cubic-bezier(.18,.7,.22,1) both; }
 @keyframes nav-settle { 0% { transform:translateY(-18px) rotate(-56deg) scale(.93); opacity:.65; } 65% { transform:translateY(3px) rotate(-43deg); opacity:1; } 100% { transform:translateY(0) rotate(-45deg); opacity:1; } }
 .nav-place-content { padding:0 3px 12px; text-align:center; }
 .navigator-view .nav-place-category { margin:0 0 9px!important; min-height:0!important; display:flex; align-items:center; justify-content:center; gap:5px; color:#b3a5e9; font-size:11px; }.nav-place-category i { font-size:15px; }
-.navigator-view .nav-place h2 { margin:0 0 10px!important; font-size:29px!important; font-weight:500!important; letter-spacing:-.8px; line-height:1.12!important; color:#f1f0fc; overflow-wrap:anywhere; }
+.navigator-view .nav-place h2 { margin:0 0 10px!important; font-size:28px!important; font-weight:500!important; letter-spacing:-.8px; line-height:1.12!important; color:#f1f0fc; overflow-wrap:anywhere; }
 .navigator-view .nav-address { color:#aaaac5; font-size:12px; line-height:1.5; margin:0!important; min-height:0!important; }
 .navigator-view .nav-facts { display:flex; justify-content:center; flex-wrap:wrap; align-items:center; gap:14px; padding:7px 0; font-size:12px; }.nav-facts>span { display:flex; align-items:center; gap:4px; }.nav-facts i { font-size:16px; color:#abded9; }.nav-facts button { min-height:44px; padding:0; color:#aaaac5; font-family:inherit; background:none; border:0; cursor:pointer; }
 .nav-availability { display:flex; justify-content:center; align-items:center; gap:6px; font-size:11px; color:#aaaac5; padding-bottom:14px; line-height:1.4; }.nav-status-dot { width:5px; height:5px; border-radius:50%; background:#aaaac5; }.is-available { color:#a7ded3; }.is-available .nav-status-dot { background:#a7ded3; }
@@ -47,3 +43,22 @@
 @media(min-width:800px) { .navigator-view .nav-intro { padding-top:24px; }.navigator-view h1 { font-size:38px; }.nav-landscape { height:204px; }.nav-landmark { top:45px; }.nav-orbit { top:90px; }.nav-orbit-two { top:100px; } }
 @media(max-height:900px) and (max-width:600px) { .navigator-view .nav-intro { padding-top:8px; padding-bottom:12px; }.nav-landscape { height:132px; }.nav-landmark { top:16px; width:70px; height:70px; left:calc(50% - 35px); }.nav-landmark i { font-size:33px; }.nav-orbit { top:53px; }.nav-orbit-two { top:61px; }.navigator-view .nav-place h2 { font-size:26px!important; }.navigator-view .nav-facts { padding:1px 0; } }
 @media(prefers-reduced-motion:reduce) { .navigator-view *,.navigator-view *::before,.navigator-view *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }.navigator-view .nav-place { transform:none!important; opacity:1!important; }.nav-landmark { transform:rotate(-45deg)!important; } }
+
+/* Compact category grid; every category remains visible without side scrolling. */
+.navigator-view .nav-categories { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; padding:0 24px 8px; box-sizing:border-box; }
+.navigator-view .nav-categories button { min-width:0; min-height:44px; flex-direction:row; justify-content:flex-start; gap:6px; padding:5px 8px; border:1px solid #ffffff12; border-radius:11px; background:#ffffff03; text-align:left; }
+.navigator-view .nav-categories button>i { flex:none; width:20px; height:24px; font-size:18px; border:0; border-radius:0; background:none; box-shadow:none; transform:none; }
+.navigator-view .nav-categories button span { font-size:11px; overflow-wrap:anywhere; }
+.navigator-view .nav-categories button.active { background:#b3a0ff1c; border-color:#b7a6ff66; }
+.navigator-view .nav-categories button.active>i { background:none; border:0; box-shadow:none; transform:none; }
+.navigator-view .nav-place-content { min-width:0; padding:12px 5px; }
+.navigator-view .nav-place h2,.navigator-view .nav-address,.navigator-view .nav-place-category { position:static!important; width:auto!important; height:auto!important; max-height:none!important; white-space:normal!important; }
+.navigator-view .nav-facts { gap:8px 16px; }.navigator-view .nav-facts>span,.navigator-view .nav-facts>button { flex:none; white-space:nowrap; }
+.navigator-view .nav-actions>* { min-width:0; white-space:normal; line-height:1.3; }
+.navigator-view .nav-actions i { flex:none; }
+.navigator-view .nav-landscape { background:radial-gradient(ellipse at 50% 88%,#a995ff14,transparent 45%); }
+.navigator-view .nav-landmark { box-shadow:-4px 5px 0 #554e8633,0 12px 15px #08091744,inset 0 2px 3px #ffffff66; }
+@keyframes nav-settle { from { transform:translateY(-8px) rotate(-45deg); opacity:.7; } to { transform:translateY(0) rotate(-45deg); opacity:1; } }
+.lup-room-slide-current .nav-landmark { animation-duration:380ms; }
+@media(min-width:800px) { .navigator-view .nav-categories { grid-template-columns:repeat(6,minmax(0,1fr)); } }
+@media(max-width:360px) { .navigator-view .nav-categories { padding-inline:16px; gap:5px; }.navigator-view .nav-categories button { padding-inline:5px; gap:4px; }.navigator-view .nav-actions { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) 40px; gap:5px; }.navigator-view .nav-actions>* { padding-inline:5px; }.navigator-view .nav-open>i { display:none; } }

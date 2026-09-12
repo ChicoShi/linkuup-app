@@ -66,31 +66,19 @@ angular.module('LUP').config(function($routeProvider) {
 	var getLocationRail = function() {
 		return getRail().get(0);
 	};
-	// Each visible card receives a continuous depth value from the actual scroll
-	// position. This is deliberately requestAnimationFrame-driven and writes
-	// only compositor-friendly custom properties: a fast finger swipe stays one
-	// flowing movement instead of becoming a sequence of discrete slider steps.
-	var updateRailDepth = function(rail) {
-		nativeRailFrame = null;
-		if (!rail || !rail.clientWidth) {
-			return;
-		}
-		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
-		var span = Math.max(rail.clientWidth * .72, 1);
-		var cards = Array.prototype.slice.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'));
-        var offsets = cards.map(function(card) { var rect=card.getBoundingClientRect(); return ((rect.left+rect.width/2)-center)/span; });
-        cards.forEach(function(card,index) {
-            var offset=offsets[index];
-            if (Math.abs(offset)>2 && card.dataset.navigatorFar==='1') return;
-            card.dataset.navigatorFar=Math.abs(offset)>2?'1':'0';
-			var distance = Math.min(1, Math.abs(offset));
-			card.style.setProperty('--lup-rail-scale', (1 - distance * .115).toFixed(3));
-			card.style.setProperty('--lup-rail-lift', (distance * 13).toFixed(2) + 'px');
-			card.style.setProperty('--lup-rail-tilt', (-Math.max(-1, Math.min(1, offset)) * 5.5).toFixed(2) + 'deg');
-			card.style.setProperty('--lup-rail-opacity', (1 - distance * .35).toFixed(3));
-			card.classList.toggle('lup-room-slide-current', distance < .18);
-		});
-	};
+    // Native scrolling moves the rail. Select one landmark after settling;
+    // never measure or transform every card on every scroll frame.
+    var currentLandmarkCard = null;
+    var updateRailDepth = function(rail) {
+        nativeRailFrame = null;
+        if (!rail || !rail.clientWidth) return;
+        var card = nearestRailCard(rail);
+        if (card === currentLandmarkCard) return;
+        if (currentLandmarkCard) currentLandmarkCard.classList.remove('lup-room-slide-current');
+        currentLandmarkCard = card;
+        if (card) card.classList.add('lup-room-slide-current');
+    };
+
 	var scheduleRailDepth = function(rail) {
 		if (nativeRailFrame !== null) {
 			return;
@@ -124,24 +112,18 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		}, 0);
 	};
-	var nearestRailCard = function(rail) {
-		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
-		if (!cards.length) {
-			return null;
-		}
-		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
-		var nearest = null;
-		var nearestDistance = Infinity;
-		Array.prototype.forEach.call(cards, function(card) {
-			var rect = card.getBoundingClientRect();
-			var distance = Math.abs((rect.left + rect.width / 2) - center);
-			if (distance < nearestDistance) {
-				nearest = card;
-				nearestDistance = distance;
-			}
-		});
-		return nearest;
-	};
+    var nearestRailCard = function(rail) {
+        var cards = rail.children;
+        if (!cards.length || !rail.clientWidth) return null;
+        var first = cards[0];
+        var firstRect = first.getBoundingClientRect();
+        var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+        var step = cards.length > 1 ? cards[1].getBoundingClientRect().left - firstRect.left : firstRect.width;
+        if (step <= 0) return first;
+        var index = Math.round((center - firstRect.left - firstRect.width / 2) / step);
+        return cards[Math.max(0, Math.min(cards.length - 1, index))];
+    };
+
 	var syncSelectedRoomFromRail = function(rail) {
 		var nearest = nearestRailCard(rail);
 		if (!nearest) {
@@ -243,9 +225,8 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		},true);
 		rail.addEventListener('scroll',function() {
-			scheduleRailDepth(rail);
 			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
-			nativeRailScrollTimer=$timeout(function() { nativeRailScrollTimer=null;syncSelectedRoomFromRail(rail); },100);
+			nativeRailScrollTimer=$timeout(function() { nativeRailScrollTimer=null;updateRailDepth(rail);syncSelectedRoomFromRail(rail); },100);
 		},{passive:true});
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.

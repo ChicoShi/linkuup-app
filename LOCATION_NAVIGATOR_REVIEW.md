@@ -28,3 +28,8 @@ Hauptaktion über volle Breite, eigene beschriftete Routenschaltfläche, QR-Nebe
 
 ## Offene Ortsbühne statt gerahmter Karten
 Styles vollständig ersetzt: freie Ortsidentität, räumlicher Marker mit ruhenden Bahnlinien, Symbolkategorien, kompakte Aktionen. Vom Nutzer abgelehnte gestapelte Hauptbuttons entfernt. Suchradius auf ausdrücklichen Wunsch vollständig aus Oberfläche und Filterlogik entfernt; kein versteckter Radiusfilter. Entfernungsanzeige und GPS-Zugangsprüfung bleiben bestehen. Laufende 390x844-Ansicht visuell geprüft. JS/PHP/Diff-Prüfung bestanden; Geräte-/FPS-Abnahme weiterhin offen.
+
+## Kompakte Kategorien und ruhigere Bewegung
+Atomringe und ungenutzte Landschaftsdekoration entfernt. Kategorien mobil als kompaktes Raster mit sechs sichtbaren Einträgen; Desktop einreihig. Ortsfläche und Schrift werden beim Scrollen nicht mehr skaliert. Nur der ausgewählte Marker erhält nach Scrollende eine kurze Ankunftsbewegung. Auswahl misst maximal zwei Karten statt sämtliche Orte pro Scrollframe; auch gebrochene Pixelabstände werden berücksichtigt. Text-/Aktionslayout gegen geerbte Positionierung und Überlauf abgesichert.
+
+Laufende mobile Chromium-Ansicht 390x844 visuell geprüft: Kategorien und Titel lesbar, Atomringe entfernt. 126 isolierte Auswahlchecks gegen den tatsächlichen Funktionscode einschließlich Listenende, verschiedener Breiten und gebrochener Abstände sowie leere Liste bestanden. JS-/PHP-Syntax und Diff-Prüfung bestanden. Keine FPS-Messung und kein Test auf echtem iPhone; QR-Backendfehler bleibt offen.
