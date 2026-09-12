@@ -36,3 +36,6 @@ Laufende mobile Chromium-Ansicht 390x844 visuell geprüft: Kategorien und Titel 
 
 ## Schlichte Kategorienleiste
 Auf Nutzerwunsch Symbolkacheln durch eine einzige Textzeile ersetzt. Aktive Kategorie nur mit heller Schrift und dünner violetter Unterstreichung. Mobile Leiste horizontal nativ scrollbar, 44 px hohe Ziele; Desktop zeigt alle sechs Kategorien. Filterbindung und aria-pressed unverändert. Mobile 390-px- und Desktopansicht visuell geprüft; PHP-Syntax und Diff-Prüfung bestanden.
+
+## Saubere Kartenränder
+Lichtschein hinter Marker und radiale Seitenbeleuchtung entfernt. Jede Karte belegt die volle Breite des begrenzten Scrollbereichs; Inhalt bleibt mittig mit Innenabstand. Dadurch sind nach Einrasten keine Nachbarbuttons sichtbar. Native Scroll-/Snap- und Aktionslogik unverändert. Mobile 390px und Desktop visuell geprüft; Weiter-Button wechselt korrekt von Ort 1 auf 2, ohne angeschnittene Nachbaraktionen. PHP-/Diff-Prüfung bestanden. Echter Touch-Gerätetest bleibt offen.
