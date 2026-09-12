@@ -42,3 +42,8 @@ Lichtschein hinter Marker und radiale Seitenbeleuchtung entfernt. Jede Karte bel
 
 ## Symbolkategorien und nahe Navigation
 Sechs zentrierte Symbolbuttons mit 44-px-Touchzielen, übersetzten aria-label/title und bestehendem aria-pressed. Aktive Symbole tragen eine eigene Kategorienfarbe mit dezentem Schein; keine Kachelfläche. Seitennavigation direkt innerhalb der jeweiligen Ortskarte 16 px unter den Aktionen angeordnet, unabhängig von der Höhe anderer Orte. Mobile und Desktop visuell geprüft; Kategorienwechsel und farbliche Auswahl sichtbar geprüft. PHP-/Diff-Prüfung bestanden.
+
+## Passende Sidebar
+Eigene navigator-sidebar-Klasse und Stylesheet: dunkler Violettgrund, ruhige Farbsymbole, Navigation/Konto/Rechtliches gegliedert, überflüssiges [+] entfernt. Schließen als echter beschrifteter Button. Neue Texte deutsch/englisch übersetzbar. Mobile und Desktop geöffnet und visuell geprüft; Schließen geprüft. Locale-JSON, PHP-Syntax und Diff bestanden. Keine Kontenaktionen/Abmeldung ausgeführt.
+
+Polygon-Nachtrag: Lokaler aktiver Backend-Code in phpgdo/GDO/LinkUUp enthält room_radius, keine Polygonimplementierung. Lesende Schemaabfrage der konfigurierten Datenbank nach Polygon-/Geometrie-/Boundary-Feldern ergab keine Treffer. Daher keine Geometrien exportiert, keine Installationsdaten erfunden und keine Neuinstallation ausgeführt. Für die gewünschte Übernahme fehlen die tatsächliche Polygonquelle und das passende Speicher-/Importformat.

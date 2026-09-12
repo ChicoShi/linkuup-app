@@ -568,5 +568,9 @@
 	"NAV_CHAT_READY": "Chat für dich verfügbar",
 	"NAV_CHAT_LOCAL": "Chat öffnet sich vor Ort",
 	"NAV_CHAT_GPS": "Standort für den Chat prüfen",
-	"NAV_ENABLE_GPS": "Standort aktivieren"
+	"NAV_ENABLE_GPS": "Standort aktivieren",
+	"SIDEBAR_CLOSE": "Menü schließen",
+	"SIDEBAR_TAGLINE": "Zusammen unterwegs",
+	"SIDEBAR_PROFILE": "Mein LinkUUp",
+	"SIDEBAR_MANAGE": "Mein Konto"
 }

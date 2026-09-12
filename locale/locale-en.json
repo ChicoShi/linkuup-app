@@ -568,5 +568,9 @@
 	"NAV_CHAT_READY": "Chat available to you",
 	"NAV_CHAT_LOCAL": "Chat unlocks at this place",
 	"NAV_CHAT_GPS": "Check your location for chat",
-	"NAV_ENABLE_GPS": "Enable location"
+	"NAV_ENABLE_GPS": "Enable location",
+	"SIDEBAR_CLOSE": "Close menu",
+	"SIDEBAR_TAGLINE": "Out there, together",
+	"SIDEBAR_PROFILE": "My LinkUUp",
+	"SIDEBAR_MANAGE": "My account"
 }
