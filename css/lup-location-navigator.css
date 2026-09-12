@@ -1,5 +1,24 @@
 /* LinkUUp discovery: an open spatial stage, with native touch navigation. */
-.navigator-view { --nav-ink:#f1f0fc; --nav-muted:#aaaac5; --nav-accent:#aa97ff; background:#111125; }
+.navigator-view {
+  --nav-ink:#f1f0fc;
+  --nav-muted:#aaaac5;
+  --nav-accent:#aa97ff;
+  display:flex;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  min-height:var(--lup-viewport-height,100dvh);
+  overflow:hidden;
+  background:#111125;
+}
+.navigator-view > .left-sidebar { flex:0 0 auto; min-width:0; }
+.navigator-view > md-content {
+  flex:1 1 auto;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
 .navigator-view > md-content.greybg { color:var(--nav-ink); background:linear-gradient(150deg,#16182c,#111125 65%,#171d32)!important; overflow-x:hidden; padding-bottom:max(20px,env(safe-area-inset-bottom)); }
 .navigator-view > md-content::before,.navigator-view > md-content::after,.navigator-view .location-rail::before,.navigator-view .location-rail::after { display:none!important; }
 .navigator-view .lup-top-bar,.navigator-view .lup-top-bar .md-toolbar-tools { background:transparent!important; box-shadow:none!important; border:0!important; }
@@ -60,3 +79,12 @@
 @keyframes nav-settle { from { transform:translateY(-8px) rotate(-45deg); opacity:.7; } to { transform:translateY(0) rotate(-45deg); opacity:1; } }
 .lup-room-slide-current .nav-landmark { animation-duration:380ms; }
 @media(max-width:360px) { .navigator-view .nav-categories { padding-inline:8px; gap:4px; }.navigator-view .nav-actions { grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) 40px; gap:5px; }.navigator-view .nav-actions>* { padding-inline:5px; }.navigator-view .nav-open>i { display:none; } }
+@media(max-width:600px) {
+  .navigator-view { min-height:var(--lup-viewport-height,100dvh); }
+  .navigator-view > .left-sidebar { display:none; }
+  .navigator-view > md-content { height:var(--lup-viewport-height,100dvh); overflow-x:hidden; }
+  .navigator-view .nav-intro,
+  .navigator-view .search-input-wrap,
+  .navigator-view .nav-categories,
+  .navigator-view .location-rail { max-width:100%; }
+}
