@@ -5,7 +5,7 @@
   <header class="nav-intro"><span class="nav-eyebrow">LINKUUP / {{'NAV_DISCOVER'|translate}}</span><h1>{{'NAV_HEADLINE'|translate}}</h1></header>
   <div class="search-input-wrap"><i class="material-icons" aria-hidden="true">search</i><input type="search" class="search-input" aria-label="{{'NAV_SEARCH'|translate}}" placeholder="{{'NAV_SEARCH'|translate}}" ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" /></div>
   <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}">
-   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryActive(category.ids)}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}" ng-click="selectCategory(category.ids)"><span>{{category.label|translate}}</span></button>
+   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryActive(category.ids)}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
   </nav>
 
   <div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">
@@ -15,12 +15,13 @@
      <div class="nav-place-content"><p class="nav-place-category"><i class="material-icons" aria-hidden="true">{{categoryVisual(room).icon}}</i>{{room.categoryName()}}</p><h2>{{room.name()}}</h2><p class="nav-address">{{room.city()}}<span ng-if="room.street()"> · {{room.street()}}</span></p><div class="nav-facts"><span><i class="material-icons" aria-hidden="true">near_me</i>{{navigatorHasGPS() && room.showDistance() ? room.displayDistance() : ('NAV_DISTANCE_UNKNOWN'|translate)}}</span><button type="button" ng-click="gotoVisitors(room)">{{'NAV_HERE'|translate:{count:visitorCountLabel(room)} }}</button></div>
      <div class="nav-availability" ng-class="{'is-available':room.inChatRange()}"><span class="nav-status-dot" aria-hidden="true"></span>{{(room.inChatRange()?'NAV_CHAT_READY':(navigatorHasGPS()?'NAV_CHAT_LOCAL':'NAV_CHAT_GPS'))|translate}}</div><div class="nav-actions"><button type="button" class="nav-open" ng-click="maybeGotoRoom(room,$event)">{{'NAV_OPEN'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" ng-click="requestLocation(room,$event)"><i class="material-icons" aria-hidden="true">near_me</i>{{(navigatorHasGPS()?'NAV_ROUTE':'NAV_ENABLE_GPS')|translate}}<i class="material-icons" aria-hidden="true">north_east</i></a><button type="button" class="nav-qr" ng-click="showRoomQRCode(room,$event)" aria-label="{{'NAV_QR'|translate}}"><i class="material-icons" aria-hidden="true">qr_code_2</i></button></div>
      <button type="button" class="nav-chat" ng-if="room.inChatRange()" ng-click="enterChatDoor(room)"><i class="material-icons" aria-hidden="true">forum</i><span>{{'NAV_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i></button>
+  <nav class="nav-pagination" ng-if="data.visibleRooms.length" aria-label="{{'NAV_BROWSE'|translate}}"><button type="button" ng-click="stepNavigator(-1)" ng-disabled="data.currentRoomIndex<=0" aria-label="{{'NAV_PREVIOUS'|translate}}"><i class="material-icons">arrow_back</i></button><span>{{data.currentRoomIndex+1}} <small>/ {{data.visibleRooms.length}}</small></span><button type="button" ng-click="stepNavigator(1)" ng-disabled="data.currentRoomIndex>=data.visibleRooms.length-1" aria-label="{{'NAV_NEXT'|translate}}"><i class="material-icons">arrow_forward</i></button></nav>
      </div>
     </article>
    </div>
   </div>
   <div class="nav-empty" ng-if="!data.visibleRooms.length"><h2>{{'NAV_EMPTY'|translate}}</h2><p>{{'NAV_EMPTY_HINT'|translate}}</p><button type="button" ng-click="resetNavigator()">{{'NAV_RESET'|translate}}</button></div>
 
-  <nav class="nav-pagination" ng-if="data.visibleRooms.length" aria-label="{{'NAV_BROWSE'|translate}}"><button type="button" ng-click="stepNavigator(-1)" ng-disabled="data.currentRoomIndex<=0" aria-label="{{'NAV_PREVIOUS'|translate}}"><i class="material-icons">arrow_back</i></button><span>{{data.currentRoomIndex+1}} <small>/ {{data.visibleRooms.length}}</small></span><button type="button" ng-click="stepNavigator(1)" ng-disabled="data.currentRoomIndex>=data.visibleRooms.length-1" aria-label="{{'NAV_NEXT'|translate}}"><i class="material-icons">arrow_forward</i></button></nav>
+
  </md-content>
 </section>

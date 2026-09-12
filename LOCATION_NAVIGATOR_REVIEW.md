@@ -39,3 +39,6 @@ Auf Nutzerwunsch Symbolkacheln durch eine einzige Textzeile ersetzt. Aktive Kate
 
 ## Saubere Kartenränder
 Lichtschein hinter Marker und radiale Seitenbeleuchtung entfernt. Jede Karte belegt die volle Breite des begrenzten Scrollbereichs; Inhalt bleibt mittig mit Innenabstand. Dadurch sind nach Einrasten keine Nachbarbuttons sichtbar. Native Scroll-/Snap- und Aktionslogik unverändert. Mobile 390px und Desktop visuell geprüft; Weiter-Button wechselt korrekt von Ort 1 auf 2, ohne angeschnittene Nachbaraktionen. PHP-/Diff-Prüfung bestanden. Echter Touch-Gerätetest bleibt offen.
+
+## Symbolkategorien und nahe Navigation
+Sechs zentrierte Symbolbuttons mit 44-px-Touchzielen, übersetzten aria-label/title und bestehendem aria-pressed. Aktive Symbole tragen eine eigene Kategorienfarbe mit dezentem Schein; keine Kachelfläche. Seitennavigation direkt innerhalb der jeweiligen Ortskarte 16 px unter den Aktionen angeordnet, unabhängig von der Höhe anderer Orte. Mobile und Desktop visuell geprüft; Kategorienwechsel und farbliche Auswahl sichtbar geprüft. PHP-/Diff-Prüfung bestanden.
