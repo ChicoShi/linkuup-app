@@ -119,17 +119,13 @@
 	position:relative;
 	isolation:isolate;
 	overflow:visible!important;
-	border-color:rgba(220,244,255,.26);
-	background:
-		linear-gradient(116deg,rgba(255,255,255,.15),rgba(255,255,255,.025) 20%,rgba(255,255,255,0) 57%,rgba(192,229,255,.08) 84%,rgba(255,255,255,0) 100%),
-		radial-gradient(ellipse 68% 120% at 12% 0%,rgba(193,232,255,.14),transparent 72%),
-		rgba(18,39,60,.30);
-	backdrop-filter:blur(16px) saturate(1.28) contrast(1.03);
-	-webkit-backdrop-filter:blur(16px) saturate(1.28) contrast(1.03);
-	box-shadow:
-		inset 0 1px 0 rgba(255,255,255,.18),
-		inset 0 -1px 0 rgba(150,214,247,.07),
-		0 12px 28px rgba(5,17,32,.16);
+	/* The pseudo element below is the one glass surface. Keeping the card
+	 * itself transparent prevents a doubled panel and preserves its layout. */
+	border-color:transparent!important;
+	background:transparent!important;
+	box-shadow:none!important;
+	backdrop-filter:none;
+	-webkit-backdrop-filter:none;
 	transition:transform 180ms ease;
 }
 
@@ -185,11 +181,8 @@
 }
 
 .lup-place .place-event-row.lup-notification-unread .place-event-card {
-	border-color:rgba(171,222,255,.36);
-	background:
-		linear-gradient(116deg,rgba(255,255,255,.17),rgba(255,255,255,.025) 20%,rgba(255,255,255,0) 58%,rgba(183,229,255,.10) 84%,rgba(255,255,255,0) 100%),
-		radial-gradient(ellipse 68% 120% at 12% 0%,rgba(163,222,255,.18),transparent 72%),
-		rgba(22,57,84,.38);
+	border-color:transparent!important;
+	background:transparent!important;
 }
 
 .lup-place .place-event-row.lup-notification-unread .place-event-card::before {
