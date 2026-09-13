@@ -11,12 +11,18 @@
 	overflow:visible!important;
 }
 
+/* The rail still clips its own scroll area; the slide must not clip the
+ * decorative frame at the card's top edge. */
+.navigator-view .lup-room-slide-outer {
+	overflow:visible!important;
+}
+
 .navigator-view .nav-place::before {
 	content:"";
 	display:block!important;
 	position:absolute;
 	z-index:0;
-	inset:-12px -10px -14px;
+	inset:-6px -10px -8px;
 	border:1px solid rgba(211,236,255,.20);
 	border-radius:32px;
 	background:
@@ -37,7 +43,7 @@
 	display:block!important;
 	position:absolute;
 	z-index:2;
-	inset:-12px -10px -14px;
+	inset:-6px -10px -8px;
 	padding:1px;
 	border-radius:32px;
 	background:linear-gradient(108deg,transparent 32%,rgba(255,255,255,.42) 49%,transparent 66%);
@@ -91,7 +97,7 @@
 @media (max-width:360px) {
 	.navigator-view .nav-place::before,
 	.navigator-view .nav-place::after {
-		inset:-10px -8px -12px;
+		inset:-5px -8px -7px;
 		border-radius:28px;
 	}
 }
