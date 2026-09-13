@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-room340", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-room342", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -104,6 +104,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   <link rel="stylesheet" href="css/lup-shared-ambient.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-place-room.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-place-atmosphere.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-location-glass-frame.css<?=$v?>">
 
 </head>
 

@@ -1,0 +1,102 @@
+/*
+ * Location rail glass frame
+ *
+ * One restrained material cue for the discovery rail: the current place gets
+ * a translucent glass frame and one slow reflection. The rail remains native
+ * horizontal scrolling; this layer is decorative and never owns input.
+ */
+.navigator-view .nav-place {
+	position:relative;
+	isolation:isolate;
+	overflow:visible!important;
+}
+
+.navigator-view .nav-place::before {
+	content:"";
+	display:block!important;
+	position:absolute;
+	z-index:0;
+	inset:-12px -10px -14px;
+	border:1px solid rgba(211,236,255,.20);
+	border-radius:32px;
+	background:
+		linear-gradient(145deg,rgba(255,255,255,.10),rgba(181,220,255,.035) 35%,rgba(5,12,26,.19) 82%),
+		radial-gradient(ellipse 80% 44% at 18% 0%,rgba(222,247,255,.10),transparent 72%);
+	box-shadow:
+		inset 0 1px 0 rgba(255,255,255,.27),
+		inset 0 0 0 1px rgba(255,255,255,.035),
+		0 20px 42px rgba(0,0,0,.15);
+	backdrop-filter:blur(12px) saturate(1.12);
+	-webkit-backdrop-filter:blur(12px) saturate(1.12);
+	pointer-events:none;
+}
+
+/* A border-only sheen keeps the reflection off the readable content. */
+.navigator-view .nav-place::after {
+	content:"";
+	display:block!important;
+	position:absolute;
+	z-index:2;
+	inset:-12px -10px -14px;
+	padding:1px;
+	border-radius:32px;
+	background:linear-gradient(108deg,transparent 32%,rgba(255,255,255,.42) 49%,transparent 66%);
+	-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+	-webkit-mask-composite:xor;
+	mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+	mask-composite:exclude;
+	opacity:0;
+	transform:translate3d(-28%,0,0) skewX(-14deg);
+	will-change:transform,opacity;
+	pointer-events:none;
+}
+
+.navigator-view .nav-place > * {
+	position:relative;
+	z-index:1;
+}
+
+/* Depth is supplied by the existing rail variables; the sheen appears only
+ * after a card settles in the centre so a swipe stays calm and legible. */
+.navigator-view .lup-room-slide-current .nav-place::after {
+	animation:lup-location-glass-sheen 7.8s cubic-bezier(.22,.72,.24,1) infinite;
+}
+
+/* A single pass gives the swipe itself a tactile response without making the
+ * whole rail flash. The native scroll remains the only gesture owner. */
+.navigator-view .location-rail.location-rail-dragging .lup-room-slide-current .nav-place::after {
+	animation:lup-location-glass-sheen-swipe 1.35s cubic-bezier(.22,.72,.24,1) 1;
+}
+
+@keyframes lup-location-glass-sheen {
+	0%,56% { opacity:0; transform:translate3d(-28%,0,0) skewX(-14deg); }
+	67% { opacity:.34; }
+	82% { opacity:0; transform:translate3d(128%,0,0) skewX(-14deg); }
+	100% { opacity:0; transform:translate3d(128%,0,0) skewX(-14deg); }
+}
+
+@keyframes lup-location-glass-sheen-swipe {
+	0% { opacity:0; transform:translate3d(-28%,0,0) skewX(-14deg); }
+	23% { opacity:.38; }
+	72% { opacity:.16; transform:translate3d(86%,0,0) skewX(-14deg); }
+	100% { opacity:0; transform:translate3d(128%,0,0) skewX(-14deg); }
+}
+
+@supports not ((backdrop-filter:blur(1px))) {
+	.navigator-view .nav-place::before {
+		background:linear-gradient(145deg,rgba(35,48,76,.82),rgba(9,16,33,.92));
+	}
+}
+
+@media (max-width:360px) {
+	.navigator-view .nav-place::before,
+	.navigator-view .nav-place::after {
+		inset:-10px -8px -12px;
+		border-radius:28px;
+	}
+}
+
+@media (prefers-reduced-motion:reduce) {
+	.navigator-view .lup-room-slide-current .nav-place::after { animation:none; }
+	.navigator-view .nav-place::after { opacity:0; transform:none; }
+}
