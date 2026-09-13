@@ -110,57 +110,74 @@ md-sidenav.navigator-sidebar md-list-item:hover,md-sidenav.navigator-sidebar md-
 /* Profile disclosure is a calm, tactile control with one clear open/close
    state.  It stays compact on mobile and uses only transform/opacity for the
    small interaction feedback. */
+.profile-page .profile-insight-control {box-sizing:border-box!important;}
 .profile-page .profile-insight-toggle {
  position:relative!important;
  display:grid!important;
- grid-template-columns:34px minmax(0,1fr) 24px!important;
+ grid-template-columns:36px minmax(0,1fr) 34px!important;
  gap:10px!important;
  align-items:center!important;
- min-height:60px!important;
- padding:9px 12px!important;
+ min-height:64px!important;
+ padding:9px 10px 9px 11px!important;
  overflow:hidden!important;
- border:1px solid rgba(180,218,244,.20)!important;
- border-radius:18px!important;
- background:linear-gradient(135deg,rgba(36,57,83,.84),rgba(21,31,54,.92))!important;
+ border:1px solid rgba(183,224,248,.25)!important;
+ border-radius:18px 18px 18px 7px!important;
+ background:linear-gradient(112deg,rgba(55,139,180,.25) 0%,rgba(28,57,87,.90) 47%,rgba(22,34,56,.96) 100%)!important;
  color:#e7eef8!important;
  text-align:left!important;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 10px 24px rgba(3,9,24,.17)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 11px 23px rgba(3,9,24,.22),0 0 20px rgba(87,175,231,.06)!important;
  transition:transform 180ms ease,border-color 220ms ease,background 220ms ease,box-shadow 220ms ease!important;
 }
 .profile-page .profile-insight-toggle::before {
  content:''!important;
  position:absolute!important;
- inset:1px!important;
+ top:1px!important;
+ right:1px!important;
+ left:1px!important;
+ height:50%!important;
  z-index:0!important;
- border-radius:16px!important;
+ border-radius:16px 16px 44% 10px!important;
  pointer-events:none!important;
- background:linear-gradient(112deg,rgba(174,225,255,.13),transparent 43%,rgba(185,166,255,.10))!important;
- opacity:.82!important;
+ background:linear-gradient(105deg,rgba(219,246,255,.16),transparent 47%,rgba(167,219,247,.08))!important;
+ opacity:.86!important;
+ }
+.profile-page .profile-insight-toggle::after {
+ content:''!important;
+ position:absolute!important;
+ right:43px!important;
+ bottom:0!important;
+ left:58px!important;
+ height:2px!important;
+ pointer-events:none!important;
+ background:linear-gradient(90deg,rgba(174,237,255,.66),rgba(149,206,239,.37),transparent)!important;
+ box-shadow:0 0 12px rgba(139,215,255,.18)!important;
+ opacity:.78!important;
  }
 .profile-page .profile-insight-toggle > * {position:relative!important;z-index:1!important;}
 .profile-page .profile-insight-toggle-mark {
  display:grid!important;
  place-items:center!important;
- width:34px!important;
- height:34px!important;
- border:1px solid rgba(186,226,249,.23)!important;
- border-radius:12px 12px 12px 5px!important;
- background:rgba(117,190,231,.13)!important;
- color:#c8efff!important;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 5px 12px rgba(8,17,43,.20)!important;
+ width:36px!important;
+ height:36px!important;
+ border:1px solid rgba(212,240,255,.34)!important;
+ border-radius:13px 13px 13px 5px!important;
+ background:linear-gradient(145deg,rgba(108,194,229,.57),rgba(78,121,190,.57))!important;
+ color:#f2fcff!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.23),0 6px 13px rgba(8,17,43,.24),0 0 14px rgba(108,196,239,.12)!important;
  transition:background 220ms ease,border-color 220ms ease,color 220ms ease,transform 180ms ease!important;
 }
-.profile-page .profile-insight-toggle-mark .material-icons {font-size:17px!important;}
+.profile-page .profile-insight-toggle-mark .material-icons {font-size:18px!important;text-shadow:0 2px 6px rgba(21,43,87,.26)!important;}
 .profile-page .profile-insight-toggle-copy {min-width:0!important;}
-.profile-page .profile-insight-toggle-copy small {color:#9db4c9!important;}
-.profile-page .profile-insight-toggle-copy strong {color:#edf7ff!important;}
-.profile-page .profile-insight-chevron {color:#bfe5fa!important;transition:transform 220ms ease,color 220ms ease!important;}
-.profile-page .profile-insight-toggle.is-open .profile-insight-toggle-mark {background:rgba(187,168,255,.16)!important;border-color:rgba(210,196,255,.38)!important;color:#eee7ff!important;transform:rotate(-3deg)!important;}
-.profile-page .profile-insight-toggle.is-open .profile-insight-chevron {transform:translateY(-1px)!important;color:#eee7ff!important;}
+.profile-page .profile-insight-toggle-copy small {display:flex!important;align-items:center!important;gap:6px!important;color:#b8d6e9!important;letter-spacing:.15em!important;}
+.profile-page .profile-insight-toggle-copy small::before {content:'';width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:#9ce6ff;box-shadow:0 0 10px rgba(151,229,255,.84);}
+.profile-page .profile-insight-toggle-copy strong {margin-top:3px!important;color:#f3f9ff!important;font-size:13px!important;font-weight:750!important;letter-spacing:-.005em!important;}
+.profile-page .profile-insight-chevron {display:grid!important;place-items:center!important;width:34px!important;height:34px!important;border:1px solid rgba(208,231,248,.22)!important;border-radius:12px 12px 12px 5px!important;background:rgba(8,18,38,.22)!important;color:#cdeeff!important;font-size:20px!important;transition:transform 220ms ease,color 220ms ease,background 220ms ease,border-color 220ms ease!important;}
+.profile-page .profile-insight-toggle.is-open .profile-insight-toggle-mark {background:linear-gradient(145deg,rgba(112,188,228,.60),rgba(102,122,203,.58))!important;border-color:rgba(211,237,255,.46)!important;color:#fff!important;transform:rotate(-3deg)!important;}
+.profile-page .profile-insight-toggle.is-open .profile-insight-chevron {transform:translateY(-1px)!important;background:rgba(103,171,220,.14)!important;border-color:rgba(193,231,251,.37)!important;color:#eaf8ff!important;}
 .profile-page .profile-insight-toggle:is(:hover,.is-open) {
- background:linear-gradient(135deg,rgba(46,72,101,.94),rgba(29,39,68,.96))!important;
- border-color:rgba(190,224,248,.39)!important;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 26px rgba(3,9,24,.23)!important;
+ background:linear-gradient(112deg,rgba(65,155,194,.31) 0%,rgba(32,68,101,.94) 47%,rgba(25,45,71,.98) 100%)!important;
+ border-color:rgba(204,235,253,.47)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.19),0 13px 27px rgba(3,9,24,.26),0 0 24px rgba(97,194,243,.10)!important;
 }
 @media (hover:hover) {
  .profile-page .profile-insight-toggle:hover {transform:translateY(-1px)!important;}
@@ -168,9 +185,12 @@ md-sidenav.navigator-sidebar md-list-item:hover,md-sidenav.navigator-sidebar md-
 .profile-page .profile-insight-toggle:active {transform:translateY(1px) scale(.995)!important;}
 .profile-page .profile-insight-toggle:focus-visible {outline:2px solid #bfeaff!important;outline-offset:3px!important;}
 @media (max-width:360px) {
- .profile-page .profile-insight-toggle {grid-template-columns:31px minmax(0,1fr) 21px!important;gap:8px!important;min-height:56px!important;padding:8px 10px!important;}
- .profile-page .profile-insight-toggle-mark {width:31px!important;height:31px!important;border-radius:11px 11px 11px 4px!important;}
- .profile-page .profile-insight-toggle-copy strong {font-size:11px!important;}
+ .profile-page .profile-insight-toggle {grid-template-columns:32px minmax(0,1fr) 30px!important;gap:8px!important;min-height:58px!important;padding:8px 8px 8px 9px!important;}
+ .profile-page .profile-insight-toggle-mark {width:32px!important;height:32px!important;border-radius:11px 11px 11px 4px!important;}
+ .profile-page .profile-insight-toggle-mark .material-icons {font-size:17px!important;}
+ .profile-page .profile-insight-chevron {width:30px!important;height:30px!important;font-size:18px!important;}
+ .profile-page .profile-insight-toggle::after {right:37px!important;left:49px!important;}
+ .profile-page .profile-insight-toggle-copy strong {font-size:12px!important;}
 }
 @media (prefers-reduced-motion:reduce) {
  .profile-page .profile-insight-toggle,.profile-page .profile-insight-toggle-mark,.profile-page .profile-insight-chevron {transition:none!important;}
