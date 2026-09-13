@@ -39,8 +39,9 @@ angular.module('LUP').config(function($routeProvider) {
 	// completed a horizontal drag. Keep taps working, but discard that trailing
 	// synthetic click so a swipe cannot accidentally enter the location.
 	var suppressRoomOpenUntil = 0;
-	var nativeRailScrollTimer = null;
 	var nativeRailFrame = null;
+	var nativeRailSelectionFrame = null;
+    var nativeRailScrollTimer = null;
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
@@ -65,28 +66,30 @@ angular.module('LUP').config(function($routeProvider) {
 	var getLocationRail = function() {
 		return getRail().get(0);
 	};
-	// Each visible card receives a continuous depth value from the actual scroll
-	// position. This is deliberately requestAnimationFrame-driven and writes
-	// only compositor-friendly custom properties: a fast finger swipe stays one
-	// flowing movement instead of becoming a sequence of discrete slider steps.
-	var updateRailDepth = function(rail) {
-		nativeRailFrame = null;
-		if (!rail || !rail.clientWidth) {
-			return;
-		}
-		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
-		var span = Math.max(rail.clientWidth * .72, 1);
-		Array.prototype.forEach.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'), function(card) {
-			var rect = card.getBoundingClientRect();
-			var offset = ((rect.left + rect.width / 2) - center) / span;
-			var distance = Math.min(1, Math.abs(offset));
-			card.style.setProperty('--lup-rail-scale', (1 - distance * .115).toFixed(3));
-			card.style.setProperty('--lup-rail-lift', (distance * 13).toFixed(2) + 'px');
-			card.style.setProperty('--lup-rail-tilt', (-Math.max(-1, Math.min(1, offset)) * 5.5).toFixed(2) + 'deg');
-			card.style.setProperty('--lup-rail-opacity', (1 - distance * .35).toFixed(3));
-			card.classList.toggle('lup-room-slide-current', distance < .18);
-		});
-	};
+    // Native scroll remains the gesture owner; only the three nearby cards get depth.
+    var currentLandmarkCard = null;
+    var updateRailDepth = function(rail) {
+        nativeRailFrame = null;
+        if (!rail || !rail.clientWidth) return;
+        var card = nearestRailCard(rail);
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var width = rail.clientWidth;
+        var index = Math.round(rail.scrollLeft / width);
+        // Read scroll geometry once, then write only compositor transforms.
+        for (var i = Math.max(0, index - 1); i <= Math.min(rail.children.length - 1, index + 1); i++) {
+            var slide = rail.children[i];
+            var offset = reduced ? 0 : Math.max(-1, Math.min(1, (i * width - rail.scrollLeft) / width));
+            slide.style.setProperty('--nav-turn', (-offset * 12).toFixed(3) + 'deg');
+            slide.style.setProperty('--nav-scale', (1 - Math.abs(offset) * .08).toFixed(4));
+            slide.style.setProperty('--nav-opacity', (1 - Math.abs(offset) * .30).toFixed(4));
+            slide.style.setProperty('--nav-drift', (offset * 24).toFixed(2) + 'px');
+        }
+        if (card === currentLandmarkCard) return;
+        if (currentLandmarkCard) currentLandmarkCard.classList.remove('lup-room-slide-current');
+        currentLandmarkCard = card;
+        if (card) card.classList.add('lup-room-slide-current');
+    };
+
 	var scheduleRailDepth = function(rail) {
 		if (nativeRailFrame !== null) {
 			return;
@@ -94,6 +97,18 @@ angular.module('LUP').config(function($routeProvider) {
 		nativeRailFrame = window.requestAnimationFrame(function() {
 			updateRailDepth(rail);
 		});
+	};
+	// Center a card using the rail's actual geometry. scrollIntoView() may also
+	// scroll an ancestor and, at the final card, asks the browser for an
+	// impossible extra offset which produces the visible sideways brake.
+	var centerRailCard = function(rail, card, behavior) {
+		if (!rail || !card) {
+			return;
+		}
+		var maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+		var target = rail.scrollLeft + card.getBoundingClientRect().left - rail.getBoundingClientRect().left - (rail.clientWidth - card.offsetWidth) / 2;
+		target = Math.max(0, Math.min(maxScroll, target));
+		rail.scrollTo({left: target, top: 0, behavior: behavior || 'auto'});
 	};
 	var scrollSelectedRoomIntoView = function(behavior) {
 		$timeout(function() {
@@ -104,28 +119,22 @@ angular.module('LUP').config(function($routeProvider) {
 			var roomId = String($scope.data.currentRoom.id());
 			var card = rail.querySelector('.lup-room-slide-outer[data-room-id="' + roomId + '"]');
 			if (card) {
-				card.scrollIntoView({behavior: behavior || 'auto', block: 'nearest', inline: 'center'});
+				centerRailCard(rail, card, behavior);
 			}
 		}, 0);
 	};
-	var nearestRailCard = function(rail) {
-		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
-		if (!cards.length) {
-			return null;
-		}
-		var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
-		var nearest = null;
-		var nearestDistance = Infinity;
-		Array.prototype.forEach.call(cards, function(card) {
-			var rect = card.getBoundingClientRect();
-			var distance = Math.abs((rect.left + rect.width / 2) - center);
-			if (distance < nearestDistance) {
-				nearest = card;
-				nearestDistance = distance;
-			}
-		});
-		return nearest;
-	};
+    var nearestRailCard = function(rail) {
+        var cards = rail.children;
+        if (!cards.length || !rail.clientWidth) return null;
+        var first = cards[0];
+        var firstRect = first.getBoundingClientRect();
+        var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+        var step = cards.length > 1 ? cards[1].getBoundingClientRect().left - firstRect.left : firstRect.width;
+        if (step <= 0) return first;
+        var index = Math.round((center - firstRect.left - firstRect.width / 2) / step);
+        return cards[Math.max(0, Math.min(cards.length - 1, index))];
+    };
+
 	var syncSelectedRoomFromRail = function(rail) {
 		var nearest = nearestRailCard(rail);
 		if (!nearest) {
@@ -141,142 +150,96 @@ angular.module('LUP').config(function($routeProvider) {
 			});
 		}
 	};
+	// The category rail is an orientation aid. Update it on the same animation
+	// cadence as the centred card instead of waiting for a scroll debounce; this
+	// keeps a fast swipe and its category signal visually in one movement.
+	var scheduleRailSelection = function(rail) {
+		if (nativeRailSelectionFrame !== null) {
+			return;
+		}
+		nativeRailSelectionFrame = window.requestAnimationFrame(function() {
+			nativeRailSelectionFrame = null;
+			syncSelectedRoomFromRail(rail);
+		});
+	};
 	var settleNativeRail = function(rail) {
 		rail.classList.remove('location-rail-dragging');
+		var nearby = rail.closest('.nearby');
+		if (nearby) {
+			var categories = nearby.querySelector('.location-categories');
+			if (categories) {
+				categories.classList.remove('category-rail-dragging');
+			}
+		}
 		$timeout(function() {
 			var nearest = nearestRailCard(rail);
 			if (nearest) {
-				nearest.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+				var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+				var nearestCenter = nearest.getBoundingClientRect().left + nearest.offsetWidth / 2;
+				centerRailCard(rail, nearest, Math.abs(nearestCenter - center) > 8 ? 'smooth' : 'auto');
 			}
 		}, 0);
 	};
 	var initialiseNativeRail = function(rail) {
-		if (rail.dataset.lupNativeRail) {
-			return;
-		}
+		if (rail.dataset.lupNativeRail) return;
 		rail.dataset.lupNativeRail = '1';
-		var touchStartX = null;
-		var touchStartY = null;
-		var touchStartScrollLeft = 0;
-		var draggingHorizontally = false;
-		rail.addEventListener('touchstart', function(event) {
-			var touch = event.touches[0];
-			touchStartX = touch ? touch.clientX : null;
-			touchStartY = touch ? touch.clientY : null;
-			touchStartScrollLeft = rail.scrollLeft;
-			draggingHorizontally = false;
-		}, {passive: true});
-		rail.addEventListener('touchmove', function(event) {
-			var touch = event.touches[0];
-			if (touchStartX === null || !touch) {
-				return;
-			}
-			var deltaX = touch.clientX - touchStartX;
-			var deltaY = touch.clientY - touchStartY;
-			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingHorizontally = true;
-				rail.classList.add('location-rail-dragging');
-			}
-			if (draggingHorizontally) {
-				// Take ownership of horizontal drags so nested card click handlers
-				// cannot turn a short swipe into opening the location.
-				event.preventDefault();
-				rail.scrollLeft = touchStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 450;
-			}
-		}, {passive: false});
-		rail.addEventListener('touchend', function() {
-			touchStartX = null;
-			touchStartY = null;
-			if (draggingHorizontally) {
-				suppressRoomOpenUntil = Date.now() + 450;
-				settleNativeRail(rail);
-			}
-		}, {passive: true});
-		// Desktop users used Slick's mouse dragging too. Keep the same affordance
-		// for every PointerEvent-capable browser without involving a slider plugin.
-		var pointerStartX = null;
-		var pointerStartY = null;
-		var pointerStartScrollLeft = 0;
-		var draggingPointer = false;
-		var activePointerId = null;
-		var clearPointerDrag = function(event, settle) {
-			if (activePointerId === null || (event && event.pointerId !== activePointerId)) {
-				return;
-			}
-			var pointerId = activePointerId;
-			var wasDragging = draggingPointer;
-			activePointerId = null;
-			pointerStartX = null;
-			pointerStartY = null;
-			draggingPointer = false;
-			if (rail.hasPointerCapture && rail.hasPointerCapture(pointerId)) {
-				rail.releasePointerCapture(pointerId);
-			}
-			if (wasDragging && settle) {
-				suppressRoomOpenUntil = Date.now() + 500;
-				settleNativeRail(rail);
-			} else {
-				rail.classList.remove('location-rail-dragging');
-			}
+		// One gesture owner: native touch scrolling. Desktop mouse drag is separate.
+		var gesture = new window.LupLocationGesture();
+		var pointerId = null, originScroll = 0;
+		var begin = function(x, y) {
+			// Stop an older programmatic smooth scroll at its current position.
+			rail.scrollTo({left: rail.scrollLeft, behavior: 'instant'});
+			gesture.start(x, y); suppressRoomOpenUntil = 0;
 		};
-		rail.addEventListener('dragstart', function(event) {
-			// A card may contain an image or link. Never let the browser turn a
-			// rail gesture into its native draggable preview.
-			event.preventDefault();
+		var moved = function(x, y) {
+			if (gesture.move(x, y)) suppressRoomOpenUntil = Date.now() + 450;
+		};
+		var end = function() {
+			if (gesture.end()) suppressRoomOpenUntil = Date.now() + 450;
+			rail.classList.remove('location-rail-dragging');
+		};
+		rail.addEventListener('touchstart', function(e) {
+			if (e.touches.length !== 1) { gesture.cancel(); return; }
+			begin(e.touches[0].clientX, e.touches[0].clientY);
+		}, {passive:true});
+		rail.addEventListener('touchmove', function(e) {
+			if (e.touches.length === 1) moved(e.touches[0].clientX,e.touches[0].clientY);
+		}, {passive:true});
+		rail.addEventListener('touchend', end, {passive:true});
+		rail.addEventListener('touchcancel', function() { end(); gesture.cancel(); }, {passive:true});
+		rail.addEventListener('pointerdown', function(e) {
+			if (e.pointerType === 'touch' || e.button !== 0) return;
+			pointerId=e.pointerId; originScroll=rail.scrollLeft; begin(e.clientX,e.clientY);
 		});
-		rail.addEventListener('pointerdown', function(event) {
-			if (event.pointerType === 'touch' || event.button > 0) {
-				return; // The touch fallback above owns this gesture.
-			}
-			activePointerId = event.pointerId;
-			pointerStartX = event.clientX;
-			pointerStartY = event.clientY;
-			pointerStartScrollLeft = rail.scrollLeft;
-			draggingPointer = false;
-			// Do not capture here. A simple press/release must retain its original
-			// target so links and buttons inside a card still receive their click.
-		});
-		rail.addEventListener('pointermove', function(event) {
-			if (pointerStartX === null || event.pointerId !== activePointerId) {
-				return;
-			}
-			var deltaX = event.clientX - pointerStartX;
-			var deltaY = event.clientY - pointerStartY;
-			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingPointer = true;
-				// Once horizontal intent is clear, keep the drag on the rail even if
-				// the pointer leaves the originating card.
-				if (rail.setPointerCapture) {
-					rail.setPointerCapture(event.pointerId);
-				}
+		rail.addEventListener('pointermove', function(e) {
+			if (e.pointerId !== pointerId) return;
+			moved(e.clientX,e.clientY);
+			if (gesture.horizontal) {
+				e.preventDefault(); rail.setPointerCapture(e.pointerId);
 				rail.classList.add('location-rail-dragging');
-			}
-			if (draggingPointer) {
-				event.preventDefault();
-				rail.scrollLeft = pointerStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 500;
+				rail.scrollLeft=originScroll-gesture.dx;
 			}
 		});
-		rail.addEventListener('pointerup', function(event) {
-			clearPointerDrag(event, true);
-		});
-		rail.addEventListener('pointercancel', function(event) {
-			clearPointerDrag(event, false);
-		});
-		rail.addEventListener('lostpointercapture', function(event) {
-			clearPointerDrag(event, false);
-		});
-		rail.addEventListener('scroll', function() {
-			scheduleRailDepth(rail);
-			if (nativeRailScrollTimer) {
-				$timeout.cancel(nativeRailScrollTimer);
+		var release = function(e) {
+			if (e.pointerId !== pointerId) return;
+			pointerId=null; end();
+			if (rail.hasPointerCapture(e.pointerId)) rail.releasePointerCapture(e.pointerId);
+		};
+		rail.addEventListener('pointerup',release);
+		rail.addEventListener('pointercancel',release);
+		rail.addEventListener('lostpointercapture',release);
+		rail.addEventListener('pointerleave',function(e) { if (!rail.hasPointerCapture(e.pointerId)) release(e); });
+		// Covers QR, avatar, route and chat equally, before Angular click handlers.
+		rail.addEventListener('click',function(e) {
+			if (e.detail !== 0 && Date.now() < suppressRoomOpenUntil) {
+				e.preventDefault();e.stopImmediatePropagation();
 			}
-			nativeRailScrollTimer = $timeout(function() {
-				nativeRailScrollTimer = null;
-				syncSelectedRoomFromRail(rail);
-			}, 70);
-		}, {passive: true});
+		},true);
+		rail.addEventListener('scroll',function() {
+            scheduleRailDepth(rail);
+			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
+			nativeRailScrollTimer=$timeout(function() { nativeRailScrollTimer=null;updateRailDepth(rail);syncSelectedRoomFromRail(rail); },100);
+		},{passive:true});
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
@@ -312,12 +275,14 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
-		if (nativeRailScrollTimer) {
-			$timeout.cancel(nativeRailScrollTimer);
-		}
+        if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
 		if (nativeRailFrame !== null) {
 			window.cancelAnimationFrame(nativeRailFrame);
 			nativeRailFrame = null;
+		}
+		if (nativeRailSelectionFrame !== null) {
+			window.cancelAnimationFrame(nativeRailSelectionFrame);
+			nativeRailSelectionFrame = null;
 		}
 		if (resizeRecovery) {
 			$timeout.cancel(resizeRecovery);
@@ -472,7 +437,7 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		sortAndSelectNearestRoom();
-		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
+		restoreSelectedRoom(roomId, true);
 		locationsRoomsRendered = true;
 		LoadingSrvc.addTask('location_rail');
 		$timeout(function() {
@@ -609,19 +574,37 @@ angular.module('LUP').config(function($routeProvider) {
 		return true;
 	};
 
-	$scope.updateVisibleRooms = function() {
-		var categories = $scope.data.category;
-		var query = ($scope.data.searchvalue || '').trim().toLocaleLowerCase();
-		$scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
-			var categoryMatches = !categories.length || categories.indexOf(String(room.category())) >= 0;
-			if (!categoryMatches || !query) {
-				return categoryMatches;
-			}
-			var haystack = [room.name(), room.city(), room.street(), room.zip(), room.categoryName()]
-				.filter(Boolean).join(' ').toLocaleLowerCase();
-			return haystack.indexOf(query) >= 0;
-		});
-	};
+    $scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
+    $scope.navigatorCategories = [
+        {ids:[],icon:'explore',label:'NAV_ALL'},
+        {ids:['3','4','5','14'],icon:'local_cafe',label:'NAV_CAFE'},
+        {ids:['11'],icon:'nightlife',label:'NAV_NIGHT'},
+        {ids:['12','16','17'],icon:'account_balance',label:'NAV_CULTURE'},
+        {ids:['13','15','18'],icon:'park',label:'NAV_OUTDOORS'},
+        {ids:['1','2','10'],icon:'location_city',label:'NAV_CITIES'}
+    ];
+    var normalizeSearch = function(value) {
+        return String(value || '').toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ß/g,'ss');
+    };
+    $scope.updateVisibleRooms = function() {
+        var categories = $scope.data.category;
+        var terms = normalizeSearch($scope.data.searchvalue).trim().split(/\s+/).filter(Boolean);
+        $scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
+            if (categories.length && categories.indexOf(String(room.category())) < 0) return false;
+            var haystack = normalizeSearch([room.name(),room.city(),room.street(),room.zip(),room.categoryName()].filter(Boolean).join(' '));
+            return terms.every(function(term) { return haystack.indexOf(term) >= 0; });
+        });
+    };
+    $scope.resetNavigator = function() {
+        $scope.data.searchvalue='';
+        $scope.selectCategory([]); $scope.searchLocation('');
+    };
+    $scope.stepNavigator = function(direction) {
+        var index = Math.max(0,Math.min($scope.data.visibleRooms.length-1,$scope.data.currentRoomIndex+direction));
+        if (!$scope.data.visibleRooms[index]) return;
+        $scope.focusRoom(index);
+        scrollSelectedRoomIntoView(window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth');
+    };
 
 	var selectedRoomId = function() {
 		return $scope.data.currentRoom ? String($scope.data.currentRoom.id()) : '';

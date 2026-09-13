@@ -6,17 +6,12 @@
       <md-button class="md-icon-button" aria-label="{{'BTN_CANCEL'|translate}}" ng-click="cancel()"><i class="material-icons">close</i></md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content>
-    <div class="md-dialog-content" layout="column">
-      <p>{{'PROFILE_FRIENDS_MENU_COPY'|translate}}</p>
-    </div>
-  </md-dialog-content>
-  <md-dialog-actions layout="column" layout-align="start stretch">
-    <md-button ng-click="choose('view')"><i class="material-icons">groups</i>{{'PROFILE_ACTION_FRIENDS'|translate}}</md-button>
+  <md-dialog-actions class="lup-profile-friends-actions" layout="column" layout-align="start stretch">
+	<md-button class="lup-friend-menu-view" ng-class="'is-' + data.friendsListState" ng-click="choose('view')" ng-disabled="data.friendsListState !== 'available'"><i class="material-icons">{{data.friendsListState === 'available' ? 'groups' : (data.friendsListState === 'private' ? 'lock' : 'hourglass_top')}}</i><span>{{'PROFILE_FRIENDS_LIST_VIEW'|translate}}</span><small ng-if="data.friendsListState === 'private'">{{'PROFILE_FRIENDS_LIST_PRIVATE'|translate}}</small></md-button>
     <md-button ng-if="data.canManage && !data.isFriend && !data.outgoing && !data.incoming" ng-click="choose('request')"><i class="material-icons">person_add_alt_1</i>{{'PROFILE_ACTION_ADD_FRIEND'|translate}}</md-button>
     <md-button ng-if="data.canManage && data.outgoing" ng-click="choose('cancel')"><i class="material-icons">undo</i>{{'PROFILE_ACTION_CANCEL_FRIEND_REQUEST'|translate}}</md-button>
     <md-button ng-if="data.canManage && data.incoming" ng-click="choose('accept')"><i class="material-icons">person_add</i>{{'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST'|translate}}</md-button>
     <md-button ng-if="data.canManage && data.incoming" ng-click="choose('deny')"><i class="material-icons">person_remove</i>{{'PROFILE_ACTION_DENY_FRIEND_REQUEST'|translate}}</md-button>
-    <md-button ng-if="data.canManage && data.isFriend" ng-click="choose('remove')"><i class="material-icons">person_remove</i>{{'PROFILE_ACTION_REMOVE_FRIEND'|translate}}</md-button>
+	<md-button class="lup-friend-menu-remove" ng-if="data.canManage && data.isFriend" ng-click="choose('remove')"><i class="material-icons">person_remove</i>{{'PROFILE_ACTION_REMOVE_FRIEND'|translate}}</md-button>
   </md-dialog-actions>
 </md-dialog>

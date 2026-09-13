@@ -342,7 +342,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
 	flex: 0 0 86%;
 	min-width: 0;
 	scroll-snap-align: center;
-	scroll-snap-stop: always;
+	scroll-snap-stop: normal;
 }
 .location-rail.location-rail-dragging {
 	scroll-snap-type: none;

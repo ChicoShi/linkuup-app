@@ -1,0 +1,117 @@
+/*
+ * Location category rail
+ * One continuous route below all categories. The moving light is orientation
+ * feedback for a swipe, never a separate border under every button.
+ */
+.nearby .location-categories {
+  --lup-category-offset:0%;
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  gap:0 !important;
+  padding:5px 8px 12px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  isolation:isolate;
+}
+.nearby .location-categories::before {
+  position:absolute !important;
+  right:12px;
+  bottom:4px;
+  left:12px;
+  z-index:0;
+  display:block !important;
+  height:1px;
+  content:'' !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:linear-gradient(90deg,transparent,rgba(143,199,230,.23) 8%,rgba(143,199,230,.16) 92%,transparent) !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+  pointer-events:none;
+}
+.nearby .location-categories::after {
+  position:absolute !important;
+  right:auto !important;
+  bottom:3px !important;
+  left:8px !important;
+  z-index:1;
+  display:block !important;
+  width:calc((100% - 16px) / 6) !important;
+  height:3px !important;
+  content:'' !important;
+  border:0 !important;
+  border-radius:99px !important;
+  background:linear-gradient(90deg,transparent 0%,var(--lup-category-ink,#a9ddff) 22%,#edfaff 50%,var(--lup-category-ink,#a9ddff) 78%,transparent 100%) !important;
+  box-shadow:0 0 8px color-mix(in srgb,var(--lup-category-ink,#a9ddff) 62%,transparent),0 0 18px color-mix(in srgb,var(--lup-category-ink,#a9ddff) 26%,transparent) !important;
+  opacity:.96 !important;
+  transform:translate3d(var(--lup-category-offset),0,0) !important;
+  transition:transform 35ms linear,opacity 80ms ease !important;
+  pointer-events:none;
+}
+.nearby .location-categories:has(button:nth-child(1).active) { --lup-category-offset:0%; --lup-category-ink:#a9ddff; }
+.nearby .location-categories:has(button:nth-child(2).active) { --lup-category-offset:100%; --lup-category-ink:#9ec7fa; }
+.nearby .location-categories:has(button:nth-child(3).active) { --lup-category-offset:200%; --lup-category-ink:#edb47f; }
+.nearby .location-categories:has(button:nth-child(4).active) { --lup-category-offset:300%; --lup-category-ink:#e6a4df; }
+.nearby .location-categories:has(button:nth-child(5).active) { --lup-category-offset:400%; --lup-category-ink:#84d8c9; }
+.nearby .location-categories:has(button:nth-child(6).active) { --lup-category-offset:500%; --lup-category-ink:#94dda8; }
+.nearby .location-categories button {
+  position:relative !important;
+  z-index:2 !important;
+  min-height:57px !important;
+  padding:3px 1px 6px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.nearby .location-categories button::before {
+  display:none !important;
+  content:none !important;
+}
+.nearby .location-categories button::after { display:none !important; content:none !important; }
+.nearby .location-categories button.active {
+  color:#f5fbff !important;
+  border-color:transparent !important;
+  outline:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  filter:brightness(1.08);
+  transform:translate3d(0,-1px,0) !important;
+}
+.nearby .location-categories button.active::before {
+  position:absolute !important;
+  bottom:0;
+  left:50%;
+  z-index:-1;
+  display:block !important;
+  width:92%;
+  height:58px;
+  content:'' !important;
+  border:0 !important;
+  border-radius:50% 50% 18px 18px / 86% 86% 10px 10px !important;
+  background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--lup-category-ink,#a9ddff) 27%,transparent) 0%,color-mix(in srgb,var(--lup-category-ink,#a9ddff) 12%,transparent) 34%,transparent 75%) !important;
+  box-shadow:none !important;
+  opacity:.9;
+  transform:translate3d(-50%,0,0) !important;
+  pointer-events:none;
+}
+.nearby .location-categories button.active .material-icons {
+  background:transparent !important;
+  box-shadow:0 0 15px color-mix(in srgb,var(--lup-category-ink,#a9ddff) 32%,transparent) !important;
+}
+.nearby .location-categories.category-rail-dragging::after {
+  transition:none !important;
+}
+@media (max-width:380px) {
+  .nearby .location-categories { padding-right:4px !important; padding-left:4px !important; }
+  .nearby .location-categories::before { right:8px; left:8px; }
+  .nearby .location-categories::after { left:4px !important; width:calc((100% - 8px) / 6) !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .nearby .location-categories::after { transition:none !important; }
+}

@@ -81,38 +81,24 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	////////////////////////
 	// --- Room query --- //
 	////////////////////////
+	RoomSrvc.ROOM_LOADING = {};
 	RoomSrvc.withRoom = function(roomId, refresh) {
-		console.log('RoomSrvc.withRoom()', roomId, !!refresh);
-		console.log(RoomSrvc.CACHE);
-		var deferred = $q.defer();
-		if ( (!refresh) && RoomSrvc.CACHE[roomId]) {
-//			console.log('RoomSrvc.withRoom() was cached.');
-			deferred.resolve(RoomSrvc.CACHE[roomId]);
-		}
-		else {
-			if (!RoomSrvc.CACHE[roomId]) {
-				RoomSrvc.CACHE[roomId] = RoomSrvc.NEW_BLANK_ROOM(roomId);
-			}
-//			console.log('RoomSrvc.withRoom() load from websocket.', roomId);
-			RoomSrvc.withRequestRoom(roomId, deferred);
-		}
-		return deferred.promise;
-	};
-	
-	RoomSrvc.withRequestRoom = function(roomId, deferred) {
-		console.log('RoomSrvc.withRequestRoom()', roomId);
-		var gwsMessage = new GWS_Message().cmd(0x1102).sync().write32(roomId);
-		var success = RoomSrvc.gotRoom.bind(RoomSrvc, deferred);
-		return WebsocketSrvc.sendBinary(gwsMessage).then(success, function(){
-			deferred.resolve(RoomSrvc.CACHE[roomId]);
+		if (RoomSrvc.ROOM_LOADING[roomId]) return RoomSrvc.ROOM_LOADING[roomId];
+		var cached = RoomSrvc.CACHE[roomId];
+		// getOrCreate installs a blank immediately for legacy model references.
+		// That placeholder is not a completed room and must not mask a retry.
+		if (!refresh && cached && cached.name()) return $q.when(cached);
+		if (!cached) RoomSrvc.CACHE[roomId] = RoomSrvc.NEW_BLANK_ROOM(roomId);
+		var message = new GWS_Message().cmd(0x1102).sync().write32(roomId);
+		var request = WebsocketSrvc.sendBinary(message).then(function(response) {
+			var room = RoomSrvc.parseRoomMessage(response);
+			RoomSrvc.CACHE[room.id()] = room;
+			return room;
 		});
-	};
-
-	RoomSrvc.gotRoom = function(deferred, gwsMessage) {
-		console.log('RoomSrvc.gotRoom()', gwsMessage);
-		var room = RoomSrvc.parseRoomMessage(gwsMessage);
-		RoomSrvc.CACHE[room.id()] = room;
-		return deferred.resolve(room);
+		RoomSrvc.ROOM_LOADING[roomId] = request;
+		function finished() {delete RoomSrvc.ROOM_LOADING[roomId];}
+		request.then(finished, finished);
+		return request;
 	};
 
 	RoomSrvc.getRoom = function(roomId) {
@@ -126,7 +112,7 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 			return RoomSrvc.CACHE[roomId];
 		}
 		else {
-			RoomSrvc.withRoom(roomId);
+			RoomSrvc.withRoom(roomId).then(null, function() { /* Background placeholder; explicit loads can retry. */ });
 			return RoomSrvc.CACHE[roomId];
 		}
 	};
@@ -189,10 +175,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {
-		// Discovery is location based. Do not silently substitute a global room
-		// catalogue when the browser has not supplied a real GPS position: that is
-		// both expensive for the carousel and misleading for a nearby view.
-		if (!PositionSrvc.hasPosition(true)) {
+		// Nearby discovery is location based. The complete public catalogue is a
+		// separate, explicit search/category action and uses the backend's 0,0
+		// discovery sentinel. It may therefore be browsed without GPS; entering a
+		// room and every presence action still enforce the real location radius.
+		if (!includeAll && !PositionSrvc.hasPosition(true)) {
 			return $q.reject('GPS position required for locations.');
 		}
 		if (includeAll && RoomSrvc.ALL_ROOMS) {
@@ -204,37 +191,26 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		if (!includeAll && RoomSrvc.ROOMS_LOADING) {
 			return RoomSrvc.ROOMS_LOADING;
 		}
-		var defer = $q.defer();
-		if (!includeAll) {
-			RoomSrvc.ROOMS_LOADING = defer.promise;
-			defer.promise['finally'](function() {
-				RoomSrvc.ROOMS_LOADING = null;
-			});
-		}
-		else {
-			RoomSrvc.ALL_ROOMS_LOADING = defer.promise;
-			defer.promise.then(function(rooms) {
-				RoomSrvc.ALL_ROOMS = rooms;
-				return rooms;
-			})['finally'](function() {
-				RoomSrvc.ALL_ROOMS_LOADING = null;
-			});
-		}
-		var loadRooms = function(p) {
-			var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(p.lat).writeFloat(p.lng);
-			WebsocketSrvc.sendBinary(gwsMessage).then(function(msg){
-				var rooms = RoomSrvc.parseRoomsMessage(msg);
-				rooms = rooms.sort(RoomSrvc.sortDistance);
-//				rooms = rooms.sort(RoomSrvc.sortJoinable);
-				defer.resolve(rooms);
-			}, defer.reject);
-		};
-		// The backend applies every room's visibility radius and orders the result
-		// from this concrete position.  There is deliberately no (0,0) discovery
-		// fallback; callers wait for GPS instead of rendering every public room.
-		var position = PositionSrvc.CURRENT;
-		loadRooms(position);
-		return defer.promise;
+		// The backend applies every room's visibility radius for a nearby request.
+		// For a full catalogue request it recognises (0,0) as a public discovery
+		// query and deliberately skips that radius filter. Do not use a user's real
+		// coordinates here or category/search results silently lose distant rooms.
+		var position = includeAll ? {lat: 0.0, lng: 0.0} : PositionSrvc.CURRENT;
+		var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(position.lat).writeFloat(position.lng);
+		// Return the parser's promise as well. An exception must reject this
+		// request instead of leaving a separate deferred pending forever.
+		var request = WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
+			return RoomSrvc.parseRoomsMessage(msg).sort(RoomSrvc.sortDistance);
+		});
+		var loadingKey = includeAll ? 'ALL_ROOMS_LOADING' : 'ROOMS_LOADING';
+		RoomSrvc[loadingKey] = request;
+		request.then(function(rooms) {
+			RoomSrvc[loadingKey] = null;
+			if (includeAll) RoomSrvc.ALL_ROOMS = rooms;
+		}, function() {
+			RoomSrvc[loadingKey] = null;
+		});
+		return request;
 	};
 
 	RoomSrvc.searchRooms = function(query) {

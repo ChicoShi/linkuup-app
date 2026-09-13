@@ -42,7 +42,8 @@
             <small>{{field.label|translate}}</small>
             <strong ng-if="field.private"><i class="material-icons" aria-hidden="true">visibility_off</i>{{'PROFILE_FIELD_PRIVATE'|translate}}</strong>
             <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
-            <strong ng-if="!field.private && !field.error" ng-bind-html="renderProfileSetting(field)"></strong>
+            <strong ng-if="!field.private && !field.error && field.empty" class="profile-signal-empty">{{'PROFILE_FIELD_EMPTY'|translate}}</strong>
+            <strong ng-if="!field.private && !field.error && !field.empty" ng-bind-html="renderProfileSetting(field)"></strong>
           </div>
         </article>
       </div>

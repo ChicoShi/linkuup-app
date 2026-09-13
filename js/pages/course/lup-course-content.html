@@ -1,42 +1,41 @@
-<section class="course-page" flex>
-  <header class="course-hero">
-    <div class="course-hero-mark"><i class="material-icons">emoji_events</i></div>
-    <div>
-      <small>DEIN AUSGEH-RANG</small>
-      <h2>{{data.courseStats.rank}}</h2>
-      <p>{{data.courseUser.displayName()}} · verifizierte Orte, echte Begegnungen.</p>
-    </div>
-  </header>
-
-  <div class="course-overview" aria-label="Besuchsübersicht">
-    <div><strong>{{data.courseStats.points}}</strong><span>Besuchs-Punkte</span></div>
-    <div><strong>{{data.courseStats.places}}</strong><span>Orte entdeckt</span></div>
-    <div class="course-goal"><i class="material-icons">flag</i><span>Noch {{data.courseStats.remaining}} Punkte bis {{data.courseStats.next}}</span></div>
-  </div>
-
-  <div class="course-ranking-note"><i class="material-icons">verified</i><span>Ein Punkt zählt nur bei einem bestätigten Besuch – pro Ort einmal in 24 Stunden.</span></div>
-
-  <header class="course-list-heading" ng-if="data.course.length"><div><small>DEINE RANGLISTE</small><h3>Am häufigsten besucht</h3></div><span>Nach Besuchen sortiert</span></header>
-
-  <div class="course-timeline" ng-if="data.course.length">
-    <article class="course-stop" ng-repeat="visit in data.course" ng-click="gotoRoom(visit.room)">
-      <div class="course-stop-pin"><i class="material-icons">place</i></div>
-	  <div class="course-stop-icon" ng-class="visitVisual(visit).class"><i class="material-icons">{{visitVisual(visit).icon}}</i></div>
-      <div class="course-stop-main">
-        <small ng-if="$first">DEIN TOP-ORT · {{visit.room.categoryName() || 'Location'}}</small>
-        <small ng-if="!$first">{{visit.room.categoryName() || 'Location'}}</small>
-        <h3>{{visit.room.name()}}</h3>
-        <p><i class="material-icons">schedule</i>{{visitTime(visit.visit_last)}} <span>· {{visit.visit_last|msgDate}}</span></p>
-      </div>
-      <div class="course-stop-count" aria-label="{{visit.visit_count}} Besuche">
-        <strong>{{visit.visit_count}}</strong><span>Punkte</span>
-      </div>
-    </article>
-  </div>
-
-  <div class="course-empty" ng-if="!data.course.length">
-    <i class="material-icons">near_me</i>
-    <strong>Noch keine Besuche gespeichert</strong>
-    <span>Besuche einen Ort und tritt seinem Chat bei – dann startet deine Chronik.</span>
-  </div>
-</section>
+<div class="place-content journey-content">
+ <header class="place-social-heading journey-heading">
+  <span class="place-eyebrow">{{'JOURNEY_EYEBROW'|translate}}</span>
+  <h1>{{(data.courseUser.isSelf()?'JOURNEY_TITLE_SELF':'JOURNEY_TITLE')|translate}}</h1>
+  <p>{{data.courseUser.displayName()}} <span aria-hidden="true">·</span> {{'JOURNEY_COPY'|translate}}</p>
+ </header>
+ <p class="journey-feedback" role="status" ng-if="data.courseLoading">{{'JOURNEY_LOADING'|translate}}</p>
+ <section class="place-empty" ng-if="data.courseError" role="alert"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">cloud_off</i></span><h3>{{'JOURNEY_ERROR'|translate}}</h3><button class="place-outline" type="button" ng-click="loadCourses()">{{'PLACE_RETRY'|translate}}</button></section>
+ <div ng-if="!data.courseLoading && !data.courseError">
+  <section class="journey-stats" aria-label="{{'JOURNEY_SUMMARY'|translate}}">
+   <div><strong>{{journey.visits}}</strong><span>{{'JOURNEY_VISITS'|translate}}</span></div>
+   <div><strong>{{journey.places}}</strong><span>{{'JOURNEY_PLACES'|translate}}</span></div>
+   <div><strong>{{journey.bars}}</strong><span>{{'JOURNEY_BARS'|translate}}</span></div>
+  </section>
+  <button class="journey-featured" type="button" ng-if="journey.featured" ng-click="openJourneyRoom(journey.featured)" ng-disabled="!journey.featured.room.name()">
+   <span class="journey-featured-scene" aria-hidden="true"><span class="journey-island"></span><span class="journey-island-pin"><i class="material-icons">{{visitVisual(journey.featured)}}</i></span><span class="journey-island-ring"></span></span>
+   <span class="journey-featured-copy"><span class="place-eyebrow">{{(journey.featuredIsBar?'JOURNEY_TOP_BAR':'JOURNEY_TOP_PLACE')|translate}}</span><strong>{{journey.featured.room.name() || ('JOURNEY_UNAVAILABLE'|translate)}}</strong><small>{{journey.featured.room.city()}}</small><span class="journey-visit-pill">{{(journey.featured.visit_count===1?'JOURNEY_ONE_VISIT':'JOURNEY_VISIT_COUNT')|translate:{count:journey.featured.visit_count} }}</span></span>
+   <i class="material-icons journey-featured-arrow" aria-hidden="true">north_east</i>
+  </button>
+  <section ng-if="journey.places">
+   <header class="journey-list-title"><h2>{{'JOURNEY_COLLECTION'|translate}}</h2><i class="material-icons" aria-hidden="true">route</i></header>
+   <div class="journey-controls">
+    <div class="journey-filter" role="group" aria-label="{{'JOURNEY_FILTER'|translate}}"><button type="button" ng-click="selectJourneyFilter('all')" ng-attr-aria-pressed="{{journeyFilter==='all'}}">{{'JOURNEY_ALL'|translate}}</button><button type="button" ng-click="selectJourneyFilter('bars')" ng-attr-aria-pressed="{{journeyFilter==='bars'}}">{{'JOURNEY_BARS'|translate}}</button></div>
+    <label class="journey-sort"><span class="place-sr-only">{{'JOURNEY_SORT'|translate}}</span><select ng-model="journeyOrder" ng-change="selectJourneyOrder(journeyOrder)"><option value="frequent">{{'JOURNEY_FREQUENT'|translate}}</option><option value="recent">{{'JOURNEY_RECENT'|translate}}</option></select></label>
+   </div>
+   <ol class="journey-trail">
+    <li ng-repeat="visit in journey.items track by visit.roomId">
+     <span class="journey-trail-dot" aria-hidden="true"></span>
+     <button class="journey-stop" type="button" ng-click="openJourneyRoom(visit)" ng-disabled="!visit.room.name()">
+      <span class="journey-stop-icon" aria-hidden="true"><i class="material-icons">{{visitVisual(visit)}}</i></span>
+      <span class="journey-stop-main"><small>{{visit.room.categoryName()}}</small><strong>{{visit.room.name() || ('JOURNEY_UNAVAILABLE'|translate)}}</strong><span>{{visit.room.city()}}</span><time ng-if="visit.visit_last>0">{{'JOURNEY_LAST'|translate}} {{(visit.visit_last * 1000)|date:('JOURNEY_DATE_FORMAT'|translate)}}</time></span>
+      <span class="journey-stop-count"><strong>{{visit.visit_count}}</strong><small>{{(visit.visit_count===1?'JOURNEY_VISIT':'JOURNEY_VISITS')|translate}}</small><i class="material-icons" aria-hidden="true">arrow_forward</i></span>
+     </button>
+    </li>
+   </ol>
+   <p class="journey-feedback" ng-if="!journey.items.length">{{'JOURNEY_NO_BARS'|translate}}</p>
+  </section>
+  <section class="place-empty" ng-if="!journey.places"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">explore</i></span><h3>{{'JOURNEY_EMPTY'|translate}}</h3><p>{{'JOURNEY_EMPTY_COPY'|translate}}</p></section>
+  <p class="journey-note" ng-if="journey.places">{{'JOURNEY_DATA_NOTE'|translate}}</p>
+ </div>
+</div>

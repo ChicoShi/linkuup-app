@@ -9,7 +9,14 @@
 	var update = function () {
 		frame = null;
 		var height = viewport ? viewport.height : window.innerHeight;
+		var offsetTop = viewport ? viewport.offsetTop : 0;
+		/* On iOS, innerHeight generally remains the layout viewport while the
+		 * keyboard reduces visualViewport.height. Expose that fact without
+		 * guessing from focus events; browser chrome alone is below this limit. */
+		var keyboardHeight = Math.max(0, window.innerHeight - height - offsetTop);
 		document.documentElement.style.setProperty('--lup-viewport-height', Math.round(height) + 'px');
+		document.documentElement.style.setProperty('--lup-keyboard-height', Math.round(keyboardHeight) + 'px');
+		document.documentElement.classList.toggle('lup-soft-keyboard-open', keyboardHeight > 110);
 	};
 	var schedule = function () {
 		if (frame === undefined || frame === null) {

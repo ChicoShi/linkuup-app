@@ -1,126 +1,80 @@
 "use strict";
 angular.module('LUP').config(function($routeProvider) {
-	$routeProvider.when('/course/:id', {
-		templateUrl: 'js/pages/course/lup-course.html?v='+window.LUP_BUILD,
-		controller: 'CourseCtrl',
-		params: {
-			authCheck: true,
-		},
-	});
-}).controller('CourseCtrl', function($scope, $routeParams, $interval,
-		UserSrvc, CourseSrvc, RoomSrvc, ErrorSrvc) {
+ $routeProvider.when('/course/:id', {
+  templateUrl:'js/pages/course/lup-course.html?v='+window.LUP_BUILD,
+  controller:'CourseCtrl', params:{authCheck:true}
+ });
+}).controller('CourseCtrl', function($scope, $routeParams, $q, UserSrvc, CourseSrvc, RoomSrvc) {
+ var initialized=false, destroyed=false, requestSerial=0;
+ $scope.data.title='TITLE_COURSE';
+ $scope.data.courseUser=null;
+ $scope.data.course=[];
+ $scope.data.courseLoading=false;
+ $scope.data.courseError=false;
+ $scope.journeyFilter='all';
+ $scope.journeyOrder='frequent';
+ $scope.journey=window.LupCourseSummary([]);
 
-	$scope.data.title = 'TITLE_COURSE';
-	
-	$scope.data.courseUser = GWF_User.ghost();
-	$scope.data.course = [];
-	$scope.data.courseStats = {places: 0, visits: 0, points: 0, next: 20, remaining: 20, rank: 'Start'};
-	$scope.now = Date.now();
-
-	$scope.visitVisual = function(visit) {
-		var category = String(visit.room.category());
-		var visuals = {
-			'2': {icon:'apartment', class:'course-icon-city'},
-			'3': {icon:'local_bar', class:'course-icon-bar'},
-			'4': {icon:'sports_bar', class:'course-icon-bar'},
-			'5': {icon:'local_cafe', class:'course-icon-cafe'},
-			'11': {icon:'nightlife', class:'course-icon-club'},
-			'12': {icon:'theater_comedy', class:'course-icon-culture'},
-			'13': {icon:'sports_soccer', class:'course-icon-sport'},
-			'14': {icon:'restaurant', class:'course-icon-food'},
-			'15': {icon:'park', class:'course-icon-outdoors'},
-			'16': {icon:'school', class:'course-icon-education'},
-			'17': {icon:'account_balance', class:'course-icon-education'},
-			'18': {icon:'local_hospital', class:'course-icon-health'},
-		};
-		return visuals[category] || {icon:'place', class:'course-icon-default'};
-	};
-	
-	$scope.init = function() {
-		console.log('CourseCtrl.init()', $routeParams.id);
-		// Both the app init and view-content events reach this controller. A course
-		// request is enough; doing it twice made malformed legacy tails fail twice.
-		if ($scope.data.courseInitialized || !$scope.data.authenticated) {
-			return;
-		}
-		$scope.data.courseInitialized = true;
-		if ($scope.data.authenticated) {
-			$scope.loadCourses($routeParams.id);
-		}
-	};
-	
-	$scope.loadCourses = function(userId) {
-		console.log('CourseCtrl.loadCourses()', userId);
-		$scope.data.courseUser = GWF_User.ghost();
-		$scope.data.course = [];
-		UserSrvc.withUser(userId).then($scope.loadedUser)['catch']($scope.catchUnknown);
-	};
-	
-	$scope.loadedUser = function(user) {
-		console.log('CourseCtrl.loadedUser()', user);
-		$scope.data.courseUser = user;
-		CourseSrvc.getCourse(user).then(
-				$scope.loadedCourse,
-				ErrorSrvc.websocketMaybeJSONError)['catch']($scope.catchUnknown);
-	};
-	
-	$scope.loadedCourse = function(gwsMessage) {
-		console.log('CourseCtrl.loadedCourse()', gwsMessage);
-		// A visit is exactly three uint32 values. Do not attempt a partial tail.
-		while (gwsMessage.LENGTH - gwsMessage.INDEX >= 12) {
-			var visit = {
-				room: RoomSrvc.getOrCreate(gwsMessage.read32()),
-				visit_count: gwsMessage.read32(),
-				visit_last: gwsMessage.read32(),
-			};
-			$scope.data.course.push(visit);
-		}
-		if (gwsMessage.hasMore()) {
-			console.warn('Ignoring incomplete course payload tail.');
-		}
-		$scope.updateCourseStats();
-	};
-
-	$scope.updateCourseStats = function() {
-		var visits = $scope.data.course;
-		var total = visits.reduce(function(sum, visit) {
-			return sum + Math.max(0, Number(visit.visit_count) || 0);
-		}, 0);
-		var milestones = [20, 50, 100, 250];
-		var rank = 'Start';
-		if (total >= 250) { rank = 'LinkUUp Legende'; }
-		else if (total >= 100) { rank = 'Stadtkenner'; }
-		else if (total >= 50) { rank = 'Nachtfinder'; }
-		else if (total >= 20) { rank = 'Stammgast'; }
-		var next = milestones.find(function(goal) { return goal > total; }) || 500;
-		$scope.data.courseStats = {
-			places: visits.length,
-			visits: total,
-			points: total,
-			next: next,
-			remaining: next - total,
-			rank: rank,
-		};
-	};
-
-	$scope.visitTime = function(timestamp) {
-		var seconds = Number(timestamp) || 0;
-		if (!seconds) { return 'Zeitpunkt unbekannt'; }
-		var minutes = Math.max(0, Math.floor(($scope.now - seconds * 1000) / 60000));
-		if (minutes < 1) { return 'gerade eben'; }
-		if (minutes < 60) { return 'vor ' + minutes + ' Min.'; }
-		var hours = Math.floor(minutes / 60);
-		if (hours < 24) { return 'vor ' + hours + ' Std.'; }
-		var days = Math.floor(hours / 24);
-		if (days === 1) { return 'gestern'; }
-		if (days < 14) { return 'vor ' + days + ' Tagen'; }
-		return 'vor längerer Zeit';
-	};
-
-	var clock = $interval(function() { $scope.now = Date.now(); }, 60000);
-	$scope.$on('$destroy', function() { $interval.cancel(clock); });
-
-	$scope.$on('lup-inited', $scope.init);
-	$scope.$on('$viewContentLoaded', $scope.init);
-
+ $scope.visitVisual=function(visit) {
+  var category=String(visit && visit.room && visit.room.category ? visit.room.category() : '');
+  var visuals={
+   '2':'apartment', '3':'local_bar', '4':'sports_bar', '5':'local_cafe',
+   '11':'nightlife', '12':'theater_comedy', '13':'sports_soccer',
+   '14':'restaurant', '15':'park', '16':'school', '17':'account_balance', '18':'local_hospital'
+  };
+  return visuals[category] || 'place';
+ };
+ $scope.updateJourney=function() {
+  $scope.journey=window.LupCourseSummary($scope.data.course,$scope.journeyFilter,$scope.journeyOrder);
+ };
+ $scope.selectJourneyFilter=function(filter) {$scope.journeyFilter=filter;$scope.updateJourney();};
+ $scope.selectJourneyOrder=function(order) {$scope.journeyOrder=order;$scope.updateJourney();};
+ $scope.openJourneyRoom=function(visit) {
+  if(visit && visit.room && visit.room.name()) $scope.gotoRoom(visit.room);
+ };
+ $scope.init=function() {
+  if(initialized || !$scope.data.authenticated) return;
+  initialized=true;
+  $scope.loadCourses();
+ };
+ $scope.loadCourses=function() {
+  var serial=++requestSerial;
+  $scope.data.courseLoading=true;
+  $scope.data.courseError=false;
+  $scope.data.course=[];
+  $scope.updateJourney();
+  return UserSrvc.withUser($routeParams.id).then(function(user) {
+   if(destroyed || serial!==requestSerial) return null;
+   $scope.data.courseUser=user;
+   return CourseSrvc.getCourse(user);
+  }).then(function(message) {
+   if(!message || destroyed || serial!==requestSerial) return null;
+   var visits=[];
+   while(message.LENGTH-message.INDEX>=12) {
+    var id=message.read32(), count=message.read32(), last=message.read32();
+    if(id>0 && count>0) visits.push({roomId:id,visit_count:count,visit_last:last});
+   }
+   if(message.hasMore()) throw new Error('Incomplete visit record');
+   return $q.all(visits.map(function(visit) {
+    return RoomSrvc.withRoom(visit.roomId).then(function(room) {
+     visit.room=room;return visit;
+    },function() {
+     // An unavailable old place must not hide all other permitted visits.
+     visit.room=null;return visit;
+    });
+   }));
+  }).then(function(visits) {
+   if(destroyed || serial!==requestSerial) return;
+   $scope.data.course=visits || [];
+   $scope.data.courseLoading=false;
+   $scope.updateJourney();
+  },function() {
+   if(destroyed || serial!==requestSerial) return;
+   $scope.data.courseLoading=false;
+   $scope.data.courseError=true;
+  });
+ };
+ $scope.$on('$destroy',function(){destroyed=true;requestSerial++;});
+ $scope.$on('lup-inited',$scope.init);
+ $scope.$on('$viewContentLoaded',$scope.init);
 });

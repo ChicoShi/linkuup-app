@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-ui294", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-room340", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -96,6 +96,14 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   <link rel="stylesheet" href="css/lup-location-stage.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-voices.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-discovery-card.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-location-navigator.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-navigator-sidebar.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-settings-front.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-category-rail.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-profile-insight.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-shared-ambient.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-place-room.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-place-atmosphere.css<?=$v?>">
 
 </head>
 
@@ -108,7 +116,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   </div>
 
 <script type="text/javascript">
-window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-ui294')?>;
+window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-local-room340')?>;
 window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
 </script>
 
@@ -154,6 +162,7 @@ window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
   <script src="js/model/gws-message.js<?=$v?>"></script>
   <script src="js/model/lup-room.js<?=$v?>"></script>
   <script src="js/model/lup-room-visit.js<?=$v?>"></script>
+  <script src="js/model/lup-course-summary.js<?=$v?>"></script>
   <script src="js/model/lup-query-thread.js<?=$v?>"></script>
   <script src="js/model/lup-query-message.js<?=$v?>"></script>
   <script src="js/model/lup-notification.js<?=$v?>"></script>
@@ -225,6 +234,7 @@ window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
   <script src="js/pages/location/lup-location.js<?=$v?>"></script>
   <script src="js/pages/location/lup-room-vote-ctrl.js<?=$v?>"></script>
   <script src="js/pages/location/lup-new-location.js<?=$v?>"></script>
+  <script src="js/pages/locations/lup-location-gesture.js<?=$v?>"></script>
   <script src="js/pages/locations/lup-locations.js<?=$v?>"></script>
   <script src="js/pages/profile/lup-profile.js<?=$v?>"></script>
   <script src="js/pages/settings/lup-settings.js<?=$v?>"></script>

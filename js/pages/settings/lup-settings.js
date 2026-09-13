@@ -12,6 +12,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.data.title = 'TITLE_SETTINGS';
 	$scope.data.groups = [];
+	$scope.data.settingsSection = 'identity';
 	const ACLS = ['acl_all', 'acl_guests', 'acl_members', 'acl_friend_friends', 'acl_friends', 'acl_noone'];
 	const HIDDEN_SETTINGS = {
 		Date: {activity_accuracy: true},
@@ -95,6 +96,15 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.sectionTitle = function(section) {
 		return 'SETTINGS_SECTION_' + section.toUpperCase();
+	};
+
+	$scope.sectionIcon = function(section) {
+		return {identity:'person_outline', local:'language', privacy:'shield', contact:'alternate_email'}[section] || 'tune';
+	};
+	$scope.selectSection = function(section) {
+		$scope.data.settingsSection = section;
+		var scroll = document.querySelector('.place-settings-scroll');
+		if (scroll) { scroll.scrollTop = 0; }
 	};
 
 	$scope.sectionHint = function(section) {
@@ -229,6 +239,7 @@ angular.module('LUP').config(function($routeProvider) {
 			console.log('SettingsCtrl.init()');
 			$scope.data.user = window.GWF_USER;
 			$scope.settingsLoading = true;
+			$scope.data.settingsFailed = false;
 			$scope.data.groups = [];
 			SettingsSrvc.withConfig().then(function(cache) {
 				var groups = {};
@@ -258,7 +269,7 @@ angular.module('LUP').config(function($routeProvider) {
 						setting.options = setting.options || {};
 						setting.renderer = GDTRendererSrvc.forSetting(setting);
 						var selected = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
-						setting.value = selected && typeof selected === 'object' && selected.id !== undefined ? selected.id : selected;
+						setting.value = selected && typeof selected === 'object' ? (typeof selected.id === 'function' ? selected.id() : (selected.id !== undefined ? selected.id : (selected.value !== undefined ? selected.value : selected))) : selected;
 						setting.value = GDTRendererSrvc.valueForSetting(setting, setting.value);
 						if (setting.renderer.source === 'enum' && !setting.options.notNull && (setting.value === null || setting.value === '')) {
 							setting.value = '0';
@@ -277,6 +288,7 @@ angular.module('LUP').config(function($routeProvider) {
 						groups[section].settings.push(setting);
 					}
 				}
+				if ($scope.data.profileVisibility && !groups.privacy) { groups.privacy = {section:'privacy', sort:30, settings:[]}; }
 				$scope.data.groups = Object.keys(groups).map(function(section) { return groups[section]; });
 				$scope.data.groups.sort(function(a, b) {
 					return a.sort - b.sort || a.section.localeCompare(b.section);
@@ -286,11 +298,13 @@ angular.module('LUP').config(function($routeProvider) {
 						return a.module.localeCompare(b.module) || a.name.localeCompare(b.name);
 					});
 				});
+				if (!$scope.data.groups.some(function(group) { return group.section === $scope.data.settingsSection; })) { $scope.data.settingsSection = $scope.data.groups.length ? $scope.data.groups[0].section : 'identity'; }
 				return $q.all([CountrySrvc.withCountries(), TimezoneSrvc.withTimezones()]);
 			}).then(function(results) {
 				$scope.data.countries = results[0];
 				$scope.data.timezones = TimezoneSrvc.options();
 			})['catch'](function(error) {
+				$scope.data.settingsFailed = true;
 				return ErrorSrvc.showError(error, 'Settings');
 			})['finally'](function() {
 				$scope.settingsLoading = false;
@@ -322,12 +336,15 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		var savedValue = setting.value;
 		var savedACL = setting.acl;
-		console.log('SettingsCtrl.changeSetting()', setting.module, setting.name, savedValue, savedACL);
+		setting.saved = false;
+		setting.saveFailed = false;
 		setting.saving = true;
 		SettingsSrvc.changeSetting(setting, savedValue, savedACL, visibilityOnly).then(function() {
+			setting.saved = true;
 			if (setting.value === savedValue) { setting.initialValue = savedValue; }
 			if (setting.acl === savedACL) { setting.initialACL = savedACL; }
 		}, function(gwsMessage) {
+			setting.saveFailed = true;
 			// Do not overwrite text that was entered after this request started.
 			if (setting.value === savedValue) { setting.value = setting.initialValue; }
 			if (setting.acl === savedACL) { setting.acl = setting.initialACL; }
@@ -363,7 +380,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.selectVisibility = function(setting, relation, event) {
 		if (event) { event.preventDefault(); event.stopPropagation(); }
-		if (!setting || setting.saving || !relation) { return; }
+		if (!setting || setting.saving || !relation || !$scope.aclAllowed(setting, relation)) { return; }
 		setting.acl = relation;
 		setting.visibilityOpen = false;
 		$scope.changeVisibility(setting);

@@ -1,11 +1,11 @@
-<md-dialog aria-label="Delete Image">
+<md-dialog class="lup-gallery-delete-dialog" aria-label="{{'DLGT_DELETE_IMAGE'|translate}}">
   <form ng-cloak>
 
     <md-toolbar>
       <div class="md-toolbar-tools">
         <h2 translate="DLGT_DELETE_IMAGE"></h2>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
+        <md-button class="md-icon-button" aria-label="{{'BTN_CANCEL'|translate}}" ng-click="cancel()">
           <i class="material-icons">close</i>
         </md-button>
       </div>
@@ -14,16 +14,15 @@
     <md-dialog-content>
       <div class="md-dialog-content">
         <p translate="DLGP_DELETE_IMAGE"></p>
-          <img
-           ng-src="{{data.image.thumbURL()}}"
-           style="max-width: 100%;" />
+        <div class="gallery-delete-preview">
+          <img ng-src="{{data.image.thumbURL()}}" alt="" />
+        </div>
       </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
-      <md-button ng-click="cancel()" translate="BTN_CANCEL"></md-button>
-      <span flex></span>
-      <md-button ng-click="ok()" translate="BTN_DELETE"></md-button>
+    <md-dialog-actions class="gallery-delete-actions" layout="row">
+      <md-button class="gallery-delete-cancel" ng-click="cancel()" translate="BTN_CANCEL"></md-button>
+      <md-button class="gallery-delete-confirm" ng-click="ok()"><i class="material-icons" aria-hidden="true">delete_outline</i><span translate="BTN_DELETE"></span></md-button>
     </md-dialog-actions>
     
   </form>

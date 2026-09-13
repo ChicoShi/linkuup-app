@@ -1,32 +1,6 @@
-<md-dialog class="lup-dialog-shell lup-qr-dialog" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}">
-    <form ng-cloak>
-
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h2>{{'QR_ROOM_DIALOG_TITLE'|translate}}</h2>
-                <span flex></span>
-                <md-button class="md-icon-button" ng-click="cancel()">
-                    <i class="material-icons">close</i>
-                </md-button>
-            </div>
-        </md-toolbar>
-
-        <md-dialog-content>
-            <div class="md-dialog-content">
-				<span class="qr-dialog-eyebrow">{{'QR_ROOM_DIALOG_EYEBROW'|translate}}</span>
-				<strong class="qr-dialog-place" ng-if="data.room">{{data.room.name()}}</strong>
-                <p>{{'QR_ROOM_DIALOG_PARAGRAPH'|translate}}</p>
-				<a class="room-qr-test-link" ng-href="{{data.target}}" title="Ort öffnen">
-					<img class="qrcode" src="{{data.url}}" />
-				</a>
-				<span class="qr-dialog-scan"><i class="material-icons">center_focus_strong</i>{{'QR_ROOM_DIALOG_SCAN'|translate}}</span>
-				<p class="qr-dialog-note"><i class="material-icons">verified_user</i>{{'QR_ROOM_DIALOG_NOTE'|translate}}</p>
-            </div>
-        </md-dialog-content>
-
-        <md-dialog-actions layout="row">
-            <md-button ng-click="cancel()">{{'OK'|translate}}</md-button>
-        </md-dialog-actions>
-
-    </form>
+<md-dialog class="place-dialog place-qr-dialog" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}">
+  <form ng-cloak><header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">qr_code_2</i></span><div><span>{{'PLACE_CATEGORY'|translate}}</span><h2>{{'QR_ROOM_DIALOG_TITLE'|translate}}</h2></div><button class="place-dialog-close" type="button" ng-click="cancel()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
+    <md-dialog-content><div class="place-dialog-body"><p class="place-dialog-room" ng-if="data.room">{{data.room.name()}}</p><p class="place-dialog-copy">{{'QR_ROOM_DIALOG_PARAGRAPH'|translate}}</p><a class="place-qr-code" ng-href="{{data.target}}" aria-label="{{'PLACE_OPEN_LOCATION'|translate}}"><img class="qrcode" ng-src="{{data.url}}" alt="{{'PLACE_QR_ALT'|translate}}"></a><p class="place-qr-caption"><i class="material-icons" aria-hidden="true">center_focus_strong</i>{{'QR_ROOM_DIALOG_SCAN'|translate}}</p><p class="place-dialog-hint">{{'QR_ROOM_DIALOG_NOTE'|translate}}</p></div></md-dialog-content>
+    <footer class="place-dialog-actions"><button class="place-dialog-primary" type="button" ng-click="cancel()">{{'PLACE_DONE'|translate}}</button></footer>
+  </form>
 </md-dialog>

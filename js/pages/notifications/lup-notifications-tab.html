@@ -1,86 +1,26 @@
-<md-content layout="column" flex class="scroll-notifications">
-
-  <md-list
-   id="lup-notification-list"
-   class="lup-notification-list"
-   md-virtual-repeat-container
-   md-dense flex>
-  
-    <md-list-item
-     md-on-demand
-     md-virtual-repeat="notification in data.notifications"
-     data-index="{{$index}}"
-     style="position: relative;"
-     class="md-2-line md-long-text lup-swipeable"
-     in-view="$inview&&markRead(notification)"
-     ng-class="{'lup-notification-unread':notification.unread()}">
-
-      <lup-avatar
-       ng-user="notification.friend"
-       ng-click="gotoProfile(notification.friend);"></lup-avatar>
-
-      <div class="md-list-item-text" layout="column">
-
-        <h5 class="lup-item-date">{{notification.displayDate()}}</h5>
-        
-        <p ng-if="notification.TYPE === 0"
-         translate="LOADING_NOTIFICATION"></p>
-
-        <p ng-if="notification.TYPE === 1"
-         translate="NOTIFICATION_JOIN"
-         translate-value-user="{{notification.friend.displayName()}}"
-         translate-value-room="{{notification.room.name()}}"
-         translate-value-roomid="{{notification.room.id()}}"></p>
-
-        <p ng-if="notification.TYPE === 2"
-         translate="NOTIFICATION_COMMENT"
-         translate-value-user="{{notification.friend.displayName()}}"
-         translate-value-room="{{notification.room.name()}}"
-         translate-value-roomid="{{notification.room.id()}}"
-         translate-value-comment="{{notification.data().comment}}"
-         translate-value-rating="{{notification.data().rating}}"></p>
-         
-        <p ng-if="notification.TYPE === 3"
-         translate="NOTIFICATION_FRIEND_REQUEST"
-         translate-value-user="{{notification.friend.displayName()}}"></p>
-
-        <p ng-if="notification.TYPE === 4"
-		 translate="NOTIFICATION_FRIEND_REQUESTED"
-         translate-value-user="{{notification.friend.displayName()}}"></p>
-         
-        <p ng-if="notification.TYPE === 5 && notification.other.isSelf()"
-         translate="NOTIFICATION_FRIEND_MADE"
-         translate-value-user="{{notification.friend.displayName()}}"></p>
-         
-        <p ng-if="notification.TYPE === 5 && notification.other.isNotSelf()"
-         translate="NOTIFICATION_FRIENDS_MADE"
-         translate-value-friendid="{{notification.friend.id()}}"
-         translate-value-friend="{{notification.friend.displayName()}}"
-         translate-value-user="{{notification.other.displayName()}}"></p>
-        
-        <p ng-if="notification.TYPE === 6 && notification.other.isSelf()"
-         translate="NOTIFICATION_FRIEND_REMOVED"
-         translate-value-user="{{notification.friend.displayName()}}"></p>
-         
-        <p ng-if="notification.TYPE === 6 && notification.other.isNotSelf()"
-         translate="NOTIFICATION_FRIENDS_REMOVED"
-         translate-value-friend="{{notification.other.displayName()}}"
-         translate-value-friendid="{{notification.other.id()}}"
-         translate-value-user="{{notification.friend.displayName()}}"></p>
-
+<md-content layout="column" flex class="place-events">
+  <header class="place-social-heading place-events-heading"><span class="place-eyebrow">{{'PLACE_EVENTS_EYEBROW'|translate}}</span><h1>{{'TAB_NOTIFICATIONS'|translate}}</h1><p>{{'PLACE_EVENTS_COPY'|translate}}</p></header>
+  <section class="place-empty" ng-if="NotificationSrvc.COUNT === 0"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">notifications_none</i></span><h3>{{'PLACE_EVENTS_EMPTY'|translate}}</h3><p>{{'PLACE_EVENTS_EMPTY_COPY'|translate}}</p></section>
+  <md-list id="lup-notification-list" class="lup-notification-list place-event-list" md-virtual-repeat-container md-dense flex>
+    <md-list-item md-on-demand md-virtual-repeat="notification in data.notifications" data-index="{{$index}}" class="lup-swipeable place-event-row" in-view="$inview&&markRead(notification)" ng-class="{'lup-notification-unread':notification.unread()}">
+      <div class="place-event-card">
+        <button class="place-event-avatar" type="button" ng-click="gotoProfile(notification.friend)" ng-disabled="!notification.friend" aria-label="{{notification.friend.displayName()}}"><lup-avatar ng-user="notification.friend"></lup-avatar></button>
+        <div class="place-event-copy">
+          <button class="place-event-name" type="button" ng-click="gotoProfile(notification.friend)" ng-if="notification.friend">{{notification.friend.displayName()}}</button>
+          <time class="lup-item-date">{{notification.displayDate()}}</time>
+          <p ng-if="notification.TYPE === 0">{{'LOADING_NOTIFICATION'|translate}}</p>
+          <p ng-if="notification.TYPE === 1">{{'PLACE_EVENT_VISIT'|translate}}</p>
+          <p ng-if="notification.TYPE === 2">{{'PLACE_EVENT_REVIEW'|translate}}</p>
+          <p ng-if="notification.TYPE === 3">{{'PLACE_EVENT_REQUEST'|translate}}</p>
+          <p ng-if="notification.TYPE === 4">{{'PLACE_EVENT_REQUESTED'|translate}}</p>
+          <p ng-if="notification.TYPE === 5 && notification.other.isSelf()">{{'PLACE_EVENT_CONNECTED'|translate}}</p>
+          <p ng-if="notification.TYPE === 5 && notification.other.isNotSelf()">{{'PLACE_EVENT_CONNECTED_WITH'|translate}} {{notification.other.displayName()}}.</p>
+          <p ng-if="notification.TYPE === 6 && notification.other.isSelf()">{{'PLACE_EVENT_REMOVED'|translate}}</p>
+          <p ng-if="notification.TYPE === 6 && notification.other.isNotSelf()">{{'PLACE_EVENT_REMOVED_WITH'|translate}} {{notification.other.displayName()}}.</p>
+          <div class="place-event-links"><button type="button" ng-if="notification.room" ng-click="gotoRoom(notification.room)"><i class="material-icons" aria-hidden="true">place</i><span>{{notification.room.name()}}</span></button><button type="button" ng-if="notification.TYPE === 2" ng-click="showComment(notification.data().comment, notification.data().rating)">{{'PLACE_EVENT_READ'|translate}}</button></div>
+        </div>
+        <button type="button" class="place-event-accept" ng-if="notification.TYPE === 3" ng-click="acceptFriendRequest(notification.frqid)" aria-label="{{'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST'|translate}}"><i class="material-icons" aria-hidden="true">done</i></button>
       </div>
-      
-      <div class="md-secondary-container">
-      
-        <i ng-if="notification.TYPE === 3"
-         class="material-icons md-secondary"
-         aria-label="Accept Friendship"
-         ng-click="acceptFriendRequest(notification.frqid)">done</i>
-      
-      </div>
-      
     </md-list-item>
-  
   </md-list>
-
 </md-content>

@@ -2,22 +2,35 @@
   <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
   <md-content class="settings-content" flex>
     <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
-    <form name="addRoomForm" class="settings-form" ng-submit="create()" novalidate>
-      <h2>{{'TITLE_ADD_ROOM'|translate}}</h2>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_NAME'|translate}}</label>
-        <input ng-model="data.room.name" maxlength="64" required autofocus>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_CATEGORY'|translate}}</label>
-        <md-select ng-model="data.room.category" required>
-          <md-option ng-repeat="category in data.categories" ng-value="category.cat_id">{{category.cat_name}}</md-option>
-        </md-select>
-      </md-input-container>
-      <md-input-container class="md-block">
-        <label>{{'LABEL_ROOM_INFO'|translate}}</label>
-        <textarea ng-model="data.room.info" maxlength="512" rows="3"></textarea>
-      </md-input-container>
+    <form name="addRoomForm" class="add-room-form" ng-submit="create()" novalidate>
+      <header class="add-room-hero">
+        <span class="add-room-hero__mark"><i class="material-icons">add_location_alt</i></span>
+        <div>
+          <small>NEUER ORT</small>
+          <h1>{{'TITLE_ADD_ROOM'|translate}}</h1>
+          <p>{{'INFO_ADD_ROOM_GPS'|translate}}</p>
+        </div>
+      </header>
+
+
+      <section class="add-room-section" aria-label="Ort benennen">
+        <span class="add-room-section__label">1 · ORT BESCHREIBEN</span>
+        <md-input-container class="md-block">
+          <label>{{'LABEL_ROOM_NAME'|translate}}</label>
+          <input ng-model="data.room.name" maxlength="64" required autofocus>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>{{'LABEL_ROOM_CATEGORY'|translate}}</label>
+          <md-select ng-model="data.room.category" required>
+            <md-option ng-repeat="category in data.categories" ng-value="category.cat_id">{{category.cat_name}}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block add-room-description">
+          <label>{{'LABEL_ROOM_INFO'|translate}}</label>
+          <textarea ng-model="data.room.info" maxlength="512" rows="3"></textarea>
+        </md-input-container>
+      </section>
+
       <section class="lup-add-room-map-section" aria-label="{{'TITLE_ROOM_AREA'|translate}}">
         <h3>{{'TITLE_ROOM_AREA'|translate}}</h3>
         <p>{{'INFO_ROOM_AREA'|translate}}</p>

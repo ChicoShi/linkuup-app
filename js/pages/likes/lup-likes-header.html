@@ -7,7 +7,10 @@
       <i class="material-icons">arrow_back</i>
     </md-button>
 
-    <h2 flex md-truncate>{{data.title|translate}}</h2>
+    <!-- The page itself carries the Ups heading. Keep this flexible spacer so
+         the utility actions retain their established position without a
+         duplicate title in the top bar. -->
+    <span flex aria-hidden="true"></span>
 
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
 

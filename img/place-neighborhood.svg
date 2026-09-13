@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 960" fill="none">
+ <defs>
+  <linearGradient id="avenue" x1="430" y1="60" x2="45" y2="860" gradientUnits="userSpaceOnUse"><stop stop-color="#9bdcff" stop-opacity=".34"/><stop offset=".45" stop-color="#68bbee" stop-opacity=".2"/><stop offset="1" stop-color="#88cef7" stop-opacity=".28"/></linearGradient>
+  <linearGradient id="block" x2="1" y2="1"><stop stop-color="#7ac5f1" stop-opacity=".11"/><stop offset="1" stop-color="#4d92c9" stop-opacity=".02"/></linearGradient>
+  <radialGradient id="light"><stop stop-color="#65bce9" stop-opacity=".11"/><stop offset="1" stop-color="#65bce9" stop-opacity="0"/></radialGradient>
+ </defs>
+ <ellipse cx="390" cy="275" rx="175" ry="230" fill="url(#light)"/>
+ <ellipse cx="80" cy="680" rx="180" ry="225" fill="url(#light)"/>
+ <g stroke="#84c5ed" stroke-opacity=".13" stroke-width="1" fill="url(#block)">
+  <path d="M279 42 334 64 310 128 256 105Z M358 87 413 109 388 172 332 150Z M212 138 270 161 244 227 186 204Z M301 182 357 205 333 270 276 247Z"/>
+  <path d="M45 218 108 244 81 310 18 284Z M128 252 187 276 162 341 102 317Z M350 302 420 331 394 396 324 368Z"/>
+  <path d="M190 352 256 378 230 444 165 418Z M97 373 138 390 112 455 71 438Z M282 421 336 443 310 506 257 484Z"/>
+  <path d="M26 502 84 525 57 593 0 570Z M108 536 162 558 136 623 81 601Z M339 539 396 563 370 629 313 605Z"/>
+  <path d="M188 609 247 633 221 698 162 674Z M270 643 324 665 299 729 244 708Z M81 674 135 696 108 762 55 740Z"/>
+  <path d="M159 755 216 779 190 843 133 820Z M303 787 373 817 347 881 277 852Z M51 830 108 854 81 920 25 896Z"/>
+ </g>
+ <g stroke="#83c7ed" stroke-opacity=".10" stroke-width="1.2">
+  <path d="M-80 144 554 407 M-45 364 550 611 M-65 614 557 871 M168-90 0 337 M430-85 11 980 M577 59 165 1070"/>
+  <path d="M-80 158 554 421 M-45 378 550 625 M-65 628 557 885 M184-90 14 337 M444-85 25 980 M591 59 181 1070"/>
+ </g>
+ <path d="M430 72 352 265 234 216 143 441 282 499 184 740 74 694 5 864" stroke="url(#avenue)" stroke-width="1.5" stroke-linejoin="round"/>
+ <g fill="#9bdfff" fill-opacity=".65" stroke="#82c7ee" stroke-opacity=".24">
+  <circle cx="352" cy="265" r="3"/><circle cx="143" cy="441" r="3"/><circle cx="282" cy="499" r="3"/><circle cx="184" cy="740" r="3"/>
+ </g>
+ <g stroke="#94d7fb" stroke-opacity=".28">
+  <circle cx="352" cy="265" r="13"/><circle cx="143" cy="441" r="12"/><circle cx="184" cy="740" r="16"/>
+ </g>
+</svg>

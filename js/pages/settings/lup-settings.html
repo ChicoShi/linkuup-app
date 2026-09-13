@@ -1,13 +1,7 @@
-<section class="settings-page" layout="row" flex>
-
+<section class="lup-place place-settings" layout="row" flex>
   <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
-
-  <md-content layout="column" flex layout-fill>
-
+  <md-content class="place-shell" layout="column" flex>
     <ng-include src="'js/pages/settings/lup-settings-header-bar.html?v='+V"></ng-include>
- 
-    <ng-include src="'js/pages/settings/lup-settings-content.html?v='+V"></ng-include>
-
+    <div class="place-settings-scroll"><ng-include src="'js/pages/settings/lup-settings-content.html?v='+V"></ng-include></div>
   </md-content>
-  
 </section>

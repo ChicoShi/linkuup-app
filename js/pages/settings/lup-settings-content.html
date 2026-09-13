@@ -1,14 +1,11 @@
-<main class="lup-settings-list" aria-label="Einstellungen">
-  <header class="settings-hero">
-    <span class="settings-hero-route" aria-hidden="true"><i class="material-icons">tune</i></span>
-    <div>
-      <small>{{'SETTINGS_EYEBROW'|translate}}</small>
-      <h1>{{'SETTINGS_HEADLINE'|translate}}</h1>
-      <p>{{'SETTINGS_INTRO'|translate}}</p>
-    </div>
-  </header>
-
-  <section ng-if="data.profileVisibility" class="lup-settings-profile-visibility">
+<main class="lup-settings-list" aria-label="{{'TITLE_SETTINGS'|translate}}">
+  <header class="place-social-heading"><span class="place-eyebrow">{{'SETTINGS_EYEBROW'|translate}}</span><h1>{{'SETTINGS_HEADLINE'|translate}}</h1><p>{{'PLACE_SETTINGS_AUTOSAVE'|translate}}</p></header>
+  <div class="place-empty" ng-if="settingsLoading && !data.groups.length" role="status">{{'PLACE_LOADING'|translate}}</div>
+  <div class="place-empty" ng-if="data.settingsFailed" role="alert"><p>{{'PLACE_SETTINGS_FAILED'|translate}}</p><button class="place-tool" type="button" ng-click="init()">{{'PLACE_RETRY'|translate}}</button></div>
+  <nav class="place-settings-nav" aria-label="{{'PLACE_SETTINGS_SECTIONS'|translate}}" ng-if="data.groups.length">
+    <button type="button" ng-repeat="group in data.groups track by group.section" ng-click="selectSection(group.section)" ng-class="{'is-selected':data.settingsSection === group.section}" aria-pressed="{{data.settingsSection === group.section}}"><i class="material-icons" aria-hidden="true">{{sectionIcon(group.section)}}</i><span>{{sectionTitle(group.section)|translate}}</span></button>
+  </nav>
+  <section ng-if="data.profileVisibility && data.settingsSection === 'privacy'" class="lup-settings-profile-visibility">
     <header class="settings-visibility-heading">
       <i class="material-icons" aria-hidden="true">visibility</i>
       <div><strong>{{'SETTINGS_VISIBILITY_TITLE'|translate}}</strong><small>{{'SETTINGS_VISIBILITY_HINT'|translate}}</small></div>
@@ -21,15 +18,16 @@
         <button type="button" ng-repeat="relation in aclChoices(data.profileVisibility)" ng-click="selectProfileVisibility(relation, $event)" ng-class="{'is-selected': data.profileVisibility.value === relation}">{{enumLabel(relation)|translate}}</button>
       </div>
     </div>
+    <p class="place-setting-save" ng-if="data.profileVisibility.saving || data.profileVisibility.saveFailed || data.profileVisibility.saved" role="status">{{(data.profileVisibility.saving ? 'PLACE_SAVING' : (data.profileVisibility.saveFailed ? 'PLACE_SAVE_FAILED' : 'PLACE_SAVED'))|translate}}</p>
   </section>
 
-  <section ng-repeat="group in data.groups track by group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
+  <section ng-repeat="group in data.groups track by group.section" ng-show="data.settingsSection === group.section" class="lup-settings-group" ng-class="'settings-section-' + group.section">
     <header class="lup-settings-group-heading">
       <small>{{sectionTitle(group.section)|translate}}</small>
       <p>{{sectionHint(group.section)|translate}}</p>
     </header>
 
-    <article ng-repeat="setting in group.settings track by setting.name" class="lup-setting-card" ng-class="{'lup-setting-card--textarea': controlIs(setting, 'textarea')}">
+    <article ng-repeat="setting in group.settings track by setting.name" class="lup-setting-card" ng-class="{'lup-setting-card--textarea': controlIs(setting, 'textarea'), 'lup-setting-card--country': isCountry(setting), 'lup-setting-card--language': isLanguage(setting), 'lup-setting-card--timezone': isTimezone(setting), 'lup-setting-card--switch': controlIs(setting, 'checkbox')}">
       <header class="lup-setting-card-heading">
         <span class="lup-setting-icon" aria-hidden="true"><i class="material-icons">{{settingIcon(setting)}}</i></span>
         <div><h3>{{setting.displayLabel|translate}}</h3><p ng-if="isDateSetting(setting)">{{'SETTINGS_DATE_HINT'|translate}}</p></div>
@@ -37,27 +35,27 @@
 
       <div class="lup-setting-value">
         <md-switch ng-if="controlIs(setting, 'checkbox')" ng-model="setting.value" ng-true-value="'1'" ng-false-value="'0'" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}"></md-switch>
-        <md-select ng-if="controlIs(setting, 'select') && !isCountry(setting) && !isTimezone(setting) && !isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+        <md-select md-container-class="place-settings-select" ng-if="controlIs(setting, 'select') && !isCountry(setting) && !isTimezone(setting) && !isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
           <md-option ng-if="!setting.options.notNull" value="0">{{'PLEASE_SELECT'|translate}}</md-option>
           <md-option ng-repeat="option in setting.options.enumValues" value="{{option}}">{{enumLabel(option)|translate}}</md-option>
         </md-select>
-        <md-select ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+        <md-select md-container-class="place-settings-select" ng-if="isCountry(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
           <md-option value="0">{{'not_specified'|translate}}</md-option>
           <md-option class="country-option" ng-repeat="country in data.countries" value="{{country.id}}"><span class="country-flag" ng-style="countryStyle(country)" aria-hidden="true"></span> {{country.text}}</md-option>
         </md-select>
-        <md-select ng-if="isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+        <md-select md-container-class="place-settings-select" ng-if="isLanguage(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
           <md-option ng-repeat="language in data.languages" value="{{language.id}}"><span class="country-flag" ng-style="languageStyle(language)" aria-hidden="true"></span> {{language.text}}</md-option>
         </md-select>
-        <md-select ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
+        <md-select md-container-class="place-settings-select" ng-if="isTimezone(setting)" ng-model="setting.value" ng-change="changeSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
           <md-option value="0">{{'PLEASE_SELECT'|translate}}</md-option>
           <md-option ng-repeat="timezone in data.timezones" value="{{timezone.tz_id}}">{{displayTimezone(timezone)}}</md-option>
         </md-select>
         <md-input-container ng-if="controlIs(setting, 'input') || controlIs(setting, 'textarea')" class="lup-setting-input" ng-class="{'lup-setting-date': isDateSetting(setting)}">
           <input ng-if="controlIs(setting, 'input')" type="{{inputType(setting)}}" min="{{setting.renderer.min}}" max="{{setting.renderer.max}}" ng-model="setting.value" ng-change="changeDateSetting(setting)" ng-blur="blurSetting(setting)" aria-label="{{setting.displayLabel|translate}}">
-          <textarea ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4" aria-label="{{setting.displayLabel|translate}}"></textarea>
+          <textarea md-no-autogrow ng-if="controlIs(setting, 'textarea')" ng-model="setting.value" ng-blur="changeSetting(setting)" rows="4" aria-label="{{setting.displayLabel|translate}}"></textarea>
         </md-input-container>
-        <div ng-if="hasEmojiPicker(setting)" class="lup-setting-emoji-picker" aria-label="Emojis einfügen">
-          <button type="button" ng-repeat="emoji in emojiChoices(setting) track by emoji" ng-mousedown="$event.preventDefault()" ng-click="appendEmoji(setting, emoji, $event)" aria-label="{{emoji}} einfügen">{{emoji}}</button>
+        <div ng-if="hasEmojiPicker(setting)" class="lup-setting-emoji-picker" aria-label="{{'PLACE_INSERT_EMOJI'|translate}}">
+          <button type="button" ng-repeat="emoji in emojiChoices(setting) track by emoji" ng-mousedown="$event.preventDefault()" ng-click="appendEmoji(setting, emoji, $event)" aria-label="{{'PLACE_INSERT_EMOJI'|translate}}: {{emoji}}">{{emoji}}</button>
         </div>
       </div>
 
@@ -68,10 +66,12 @@
             <span>{{visibilityLabel(setting)|translate}}</span><i class="material-icons" aria-hidden="true">{{setting.visibilityOpen ? 'expand_less' : 'expand_more'}}</i>
           </button>
           <div class="lup-visibility-menu" ng-if="setting.visibilityOpen">
-            <button type="button" ng-repeat="relation in aclChoices(setting)" ng-click="selectVisibility(setting, relation, $event)" ng-class="{'is-selected': visibilityLabel(setting) === relation}">{{enumLabel(relation)|translate}}</button>
+            <button type="button" ng-repeat="relation in aclChoices(setting)" ng-click="selectVisibility(setting, relation, $event)" ng-disabled="!aclAllowed(setting, relation)" ng-class="{'is-selected': visibilityLabel(setting) === relation}">{{enumLabel(relation)|translate}}</button>
           </div>
         </div>
       </div>
+      <p class="place-setting-save" ng-if="setting.saving || setting.saveFailed || (setting.saved && setting.value === setting.initialValue && setting.acl === setting.initialACL)" ng-class="{'has-error':setting.saveFailed}" role="status"><i class="material-icons" aria-hidden="true">{{setting.saving ? 'sync' : (setting.saveFailed ? 'error_outline' : 'check')}}</i>{{(setting.saving ? 'PLACE_SAVING' : (setting.saveFailed ? 'PLACE_SAVE_FAILED' : 'PLACE_SAVED'))|translate}}</p>
     </article>
   </section>
+  <footer class="place-settings-legal"><span>{{'PLACE_LEGAL_HEADING'|translate}}</span><div><button type="button" ng-click="DialogSrvc.openTermsOfService()">{{'TOS'|translate}}</button><button type="button" ng-click="DialogSrvc.openPrivacyInformation()">{{'PRIVACY'|translate}}</button><button type="button" ng-click="DialogSrvc.openImpressum()">{{'IMPRESSUM'|translate}}</button></div></footer>
 </main>

@@ -69,9 +69,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.initScrollHandlers = function() {
 		console.log('QueryCtrl.initScrollHandlers()');
 		var $ = window.jQuery;
-		$('#lup-query-list-'+$scope.data.user.id()).
-			scroll($scope.onScroll).
-			bind('touchstart click', $scope.onScroll);
+		$( $scope.getList() ).off('.placeQuery').on('scroll.placeQuery touchstart.placeQuery click.placeQuery', $scope.onScroll);
 	};
 	
 	/**
@@ -79,7 +77,7 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.onScroll = function() {
 		var element = $scope.getList();
-		console.log('QueryCtrl.onScroll()', element.scrollTop, element.scrollHeight, element.clientHeight);
+		if (!element) { return; }
 	};
 
 	$scope.scrollToMessage = function(message) {
@@ -104,16 +102,18 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.sendMessage = function() {
-		console.log('QueryCtrl.sendMessage()', $scope.data.user, $scope.data.message);
-		if($scope.data.message){
-			ChatSrvc.sendQuery($scope.data.user, $scope.data.message).
-				then($scope.scrollToBottomAfterRender)['catch']($scope.catchUnknown);
-		}
-		jQuery('.chatbottom input').val('');
-		jQuery('.chatbottom button').removeClass('sendmessage');
-		$scope.data.message = null;
+		var text = String($scope.data.message || '').trim();
+		if (!text || $scope.data.querySending) { return; }
+		var draft = $scope.data.message;
+		$scope.data.querySending = true;
+		return ChatSrvc.sendQuery($scope.data.user, text).then(function() {
+			if ($scope.data.message === draft) { $scope.data.message = ''; }
+			return $scope.scrollToBottomAfterRender();
+		})['catch']($scope.catchUnknown)['finally'](function() {
+			$scope.data.querySending = false;
+		});
 	};
-		
+
 	$scope.onMessageRead = function(lupMessage) {
 		console.log('QueryCtrl.onMessageRead()', lupMessage);
 		ChatSrvc.updateReadState(lupMessage).then(function(queryMessage){
@@ -124,7 +124,7 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////
 	// --- Events --- //
 	////////////////////
-	$rootScope.$on('lup-query-message', function(event, message){
+	$scope.$on('lup-query-message', function(event, message){
 		var thread = ChatSrvc.forMessage(message);
 		thread.addNewMessage(message);
 		if (message && message.isOwnMessage() && thread.user().id() === $scope.data.user.id()) {
@@ -133,6 +133,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 
+	$scope.$on('$destroy', function() { jQuery($scope.getList()).off('.placeQuery'); });
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
 });

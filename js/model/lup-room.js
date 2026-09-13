@@ -11,7 +11,23 @@ function LUPRoom(json) {
 
 	this.id = function() { return this.JSON.room_id; };
 	this.name = function() { return this.JSON.room_name; };
-	this.info = function() { return this.JSON.room_info; };
+	// Keep raw import provenance in JSON for administration. Public descriptions
+	// must not expose the importer's diagnostics as if they described the venue.
+	this.info = function() {
+		return String(this.JSON.room_info || '')
+			.replace(/Quelle:\s*(?:©\s*)?OpenStreetMap contributors\s*\(ODbL(?: 1\.0)?\)\.?\s*(?:\[osm-(?:way|node|relation)-\d+\])?\s*(?:https?:\/\/(?:www\.)?openstreetmap\.org\/[^\s|]+)?/gi, '')
+			.replace(/(?:^|\s*\|\s*)Lokaler Test:[^\n]*/gi, '')
+			.split('\n').filter(function(line) {
+				return !/^(?:Braunschweig-Testlokalität|Präzise Testlokalität|Geprüfte regionale Testlokalität)\b/.test(line.trim());
+			}).join('\n').replace(/^\s*\|\s*|\s*\|\s*$/g, '').trim();
+	};
+	this.hasOSMSource = function() {
+		return /OpenStreetMap|openstreetmap\.org|\[osm-(?:way|node|relation)-/i.test(String(this.JSON.room_info || ''));
+	};
+	this.mapsListingHref = function() {
+		var query = [this.name(), this.street(), this.zip(), this.city()].filter(Boolean).join(' ');
+		return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+	};
 	this.color = function() { return this.JSON.room_color; };
 	this.www = function() { return this.JSON.room_www; };
 	this.zip = function() { return this.JSON.address_zip; };

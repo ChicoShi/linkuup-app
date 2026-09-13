@@ -72,7 +72,7 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	};
 	
 	// --- Delete with Confirm --- //
-	FriendSrvc.removeFriend = function(friend) {
+	FriendSrvc.removeFriend = function(friend, canProceed) {
 		console.log("FriendSrvc.removeFriend()", friend);
 		var defer = $q.defer();
 		var dialogURL = "js/pages/friends/lup-friend-delete.html";
@@ -80,7 +80,10 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 			friend: friend,
 		};
 		DialogSrvc.confirm(dialogURL, dialogData).then(
-				FriendSrvc.reallyRemoveFriend.bind(FriendSrvc, friend, defer),
+				function() {
+					if (canProceed && !canProceed()) return defer.resolve(null);
+					return FriendSrvc.reallyRemoveFriend(friend, defer);
+				},
 				defer.reject.bind(defer));
 		return defer.promise;
 	};

@@ -64,6 +64,14 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 	SettingsSrvc.changeSetting = function(setting, value, relation, visibilityOnly) {
 		var config = typeof setting === 'string' ? SettingsSrvc.setting(setting) : setting;
 		value = SettingsSrvc.valueForTransport(config, value);
+		// Select controls can return a GDO object on older Angular Material builds.
+		// The websocket protocol expects only its scalar id, never the object.
+		if (value && typeof value === 'object') {
+			if (typeof value.id === 'function') { value = value.id(); }
+			else if (value.id !== undefined) { value = value.id; }
+			else if (value.value !== undefined) { value = value.value; }
+			else if (value.key !== undefined) { value = value.key; }
+		}
 		// A value change must not be rejected just because its unchanged ACL is
 		// currently stricter than the profile default. Only put ACL data on the
 		// wire when the user actually changed it.

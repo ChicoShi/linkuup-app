@@ -60,3 +60,94 @@
 	.md-sidenav-left .sidenav-brand { min-height:76px; }.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:76px; }
 	.sidebar-user-card { margin-top:12px; }.md-sidenav-left md-list { padding-bottom:18px; }
 }
+
+/* Shared midnight navigation — one calm material across every app view. */
+.md-sidenav-left {
+	border-right:1px solid rgba(181,210,238,.10);
+	background:#080e18 !important;
+	box-shadow:20px 0 54px rgba(0,0,0,.46);
+}
+.md-sidenav-left .sidenav-brand {
+	min-height:94px;
+	border-bottom:1px solid rgba(184,213,239,.10);
+	background:linear-gradient(144deg,#0d1727,#090f1b 78%) !important;
+}
+.md-sidenav-left .sidenav-brand::before {
+	right:21px;
+	top:29px;
+	width:5px;
+	height:5px;
+	border:0;
+	border-radius:50%;
+	background:#9fe8ff;
+	box-shadow:-25px 17px 0 -1px rgba(159,232,255,.52),-47px -9px 0 -2px rgba(159,232,255,.35),0 0 17px rgba(114,218,255,.72);
+}
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:94px; padding:0 19px; }
+.md-sidenav-left .sidenav-brand h1 { font-size:23px; font-weight:720; letter-spacing:-.045em; }
+.md-sidenav-left .sidenav-brand span { margin-top:7px; color:#8fa4bd; font-size:8px; font-weight:800; letter-spacing:.18em; }
+.md-sidenav-left .nav-close { width:36px; height:36px; margin-right:10px; border:1px solid rgba(191,220,244,.12); border-radius:50%; color:#bcd5e9; }
+
+.md-sidenav-left md-content { overflow-x:hidden; background:#080e18 !important; }
+.md-sidenav-left md-list { padding:14px 13px 26px; }
+.sidebar-user-card {
+	margin:15px 14px 13px;
+	padding:12px 2px 15px;
+	border:0;
+	border-bottom:1px solid rgba(186,214,239,.10);
+	border-radius:0;
+	background:transparent;
+	box-shadow:none;
+}
+.sidebar-user-card:hover { background:transparent; box-shadow:none; }
+.sidebar-user-card .lup-avatar { outline:1px solid rgba(159,227,255,.58); outline-offset:3px; }
+.sidebar-user-card strong { color:#eff7ff; font-size:13px; font-weight:700; }
+.sidebar-user-card span { display:block; margin-top:3px; color:#8195ad; font-size:9px; letter-spacing:.03em; }
+.sidebar-user-card > .material-icons { color:#88d9f3; opacity:.72; }
+
+.md-sidenav-left .sidebar-section-title,.md-sidenav-left .md-subheader {
+	margin:22px 6px 7px;
+	color:#677b92;
+	font-size:8px;
+	font-weight:820;
+	letter-spacing:.19em;
+}
+.md-sidenav-left .sidebar-legal-title { margin-top:29px; padding-top:15px; border-top:1px solid rgba(186,214,239,.09); }
+.md-sidenav-left md-list-item {
+	min-height:49px;
+	margin:1px 0;
+	border:0;
+	border-radius:8px;
+	background:transparent !important;
+}
+.md-sidenav-left md-list-item::before { top:13px; bottom:13px; width:1px; background:transparent; }
+.md-sidenav-left md-list-item:hover { border:0; background:rgba(141,202,235,.075) !important; }
+.md-sidenav-left md-list-item:hover::before { background:#9ce5ff; box-shadow:0 0 12px rgba(123,215,255,.78); }
+.md-sidenav-left md-list-item p { color:#cfdae7; font-size:13px; font-weight:610; }
+.md-sidenav-left md-list-item .nav-icon {
+	width:28px;
+	height:28px;
+	margin-right:13px;
+	border:0;
+	border-radius:0;
+	background:transparent !important;
+	color:#849ab2;
+	font-size:19px;
+	box-shadow:none;
+}
+.md-sidenav-left md-list-item:hover .nav-icon { border:0; background:transparent; color:#ccefff; transform:translateX(1px); }
+.md-sidenav-left md-list-item.nav-discover .nav-icon,
+.md-sidenav-left md-list-item.nav-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-account .nav-icon,
+.md-sidenav-left md-list-item.nav-friends .nav-icon { color:#849ab2; background:transparent; }
+.md-sidenav-left md-list-item.nav-discover:hover .nav-icon { color:#9fe8ff; }
+.md-sidenav-left md-list-item.nav-logout { margin-top:13px; border:0; background:transparent !important; }
+.md-sidenav-left md-list-item.nav-logout .nav-icon { color:#9a7180; background:transparent; }
+.md-sidenav-left md-list-item.nav-logout p { color:#bda1ab; }
+.md-sidenav-left md-list-item.nav-logout:hover { background:rgba(215,126,147,.065) !important; }
+.md-sidenav-left md-list-item:has(.impressum) .nav-icon,.md-sidenav-left md-list-item:has(.tos) .nav-icon,.md-sidenav-left md-list-item:has(.privacy) .nav-icon { color:#647890; }
+.md-sidenav-left md-list-item:has(.impressum) p,.md-sidenav-left md-list-item:has(.tos) p,.md-sidenav-left md-list-item:has(.privacy) p { color:#8395aa; font-size:11px; font-weight:560; }
+@media (max-width:599px) {
+	.md-sidenav-left .sidenav-brand,.md-sidenav-left .sidenav-brand .md-toolbar-tools { min-height:82px; height:82px; }
+	.md-sidenav-left .sidenav-brand .md-toolbar-tools { padding:0 15px; }
+	.sidebar-user-card { margin-top:13px; }
+}

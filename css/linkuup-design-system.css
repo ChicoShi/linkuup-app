@@ -14,6 +14,86 @@
 body, md-content { background: var(--lup-bg); color: var(--lup-text); }
 body { font-family: Ubuntu, Roboto, Arial, sans-serif; letter-spacing: .01em; }
 
+/* Add room: a location is created from a real position, not from an abstract
+ * settings form. The GPS marker is the page's one distinctive visual anchor. */
+.lup-add-room-page .settings-content { background:transparent; }
+.lup-add-room-page .add-room-form {
+  width:min(100%,680px);
+  margin:0 auto;
+  padding:18px 16px calc(34px + env(safe-area-inset-bottom));
+  color:var(--lup-text);
+}
+.add-room-hero {
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  margin:2px 1px 17px;
+}
+.add-room-hero__mark {
+  display:grid;
+  width:52px;
+  height:52px;
+  place-items:center;
+  color:#b8efff;
+  border:1px solid rgba(130,218,255,.33);
+  border-radius:20px 20px 20px 7px;
+  background:linear-gradient(145deg,rgba(45,151,213,.26),rgba(113,85,191,.17));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 26px rgba(0,0,0,.18),0 0 22px rgba(75,190,255,.13);
+}
+.add-room-hero__mark .material-icons { font-size:27px; }
+.add-room-hero small,.add-room-section__label,.add-room-radius__head > span,.add-room-position small {
+  display:block;
+  color:#9bc4df;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.15em;
+  line-height:1.2;
+}
+.add-room-hero h1 { margin:4px 0 5px; color:#f7f9ff; font-size:clamp(23px,6vw,31px); font-weight:820; letter-spacing:-.045em; line-height:1; }
+.add-room-hero p { margin:0; color:#abbcd0; font-size:11px; line-height:1.45; }
+.add-room-position {
+  display:grid;
+  grid-template-columns:43px minmax(0,1fr) 26px;
+  gap:11px;
+  align-items:center;
+  min-height:70px;
+  margin:0 0 20px;
+  padding:10px 12px;
+  color:#aab9cc;
+  border:1px solid rgba(177,205,234,.15);
+  border-radius:19px 19px 19px 7px;
+  background:linear-gradient(115deg,rgba(44,67,99,.48),rgba(17,25,41,.70));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.add-room-position.is-ready { border-color:rgba(94,229,190,.34); background:linear-gradient(115deg,rgba(53,132,117,.25),rgba(17,29,42,.74)); }
+.add-room-position__pin { display:grid; width:43px; height:43px; place-items:center; color:#a8d5f8; border-radius:50% 50% 50% 14px; background:rgba(103,178,224,.13); box-shadow:inset 0 0 0 1px rgba(139,215,255,.21); }
+.add-room-position.is-ready .add-room-position__pin { color:#77efbd; background:rgba(73,205,157,.12); box-shadow:inset 0 0 0 1px rgba(109,239,187,.25),0 0 17px rgba(82,231,177,.12); }
+.add-room-position strong { display:block; margin-top:4px; color:#e5eef9; font-size:12px; font-weight:720; line-height:1.25; }
+.add-room-position__state { color:#77efbd; font-size:20px; }
+.add-room-section { margin:0 0 20px; }
+.add-room-section__label { margin:0 2px 8px; color:#c2cef0; }
+.add-room-form md-input-container { margin:6px 0 14px; }
+.add-room-form md-input-container .md-input,.add-room-form md-select .md-select-value {
+  color:#f4f7ff !important;
+  border-bottom-color:rgba(163,198,238,.27) !important;
+}
+.add-room-form md-input-container label { color:#9fb4cc !important; }
+.add-room-form md-input-container.md-input-focused label { color:#8adbf9 !important; }
+.add-room-form md-input-container .md-input:focus { border-bottom-color:#75d7fa !important; }
+.add-room-form .add-room-description textarea { min-height:86px; padding:10px 11px; border:1px solid rgba(164,201,238,.15) !important; border-radius:14px 14px 14px 5px; background:rgba(255,255,255,.035); }
+.add-room-radius { margin:0 0 22px; padding:14px 13px 9px; border:1px solid rgba(156,189,232,.17); border-radius:20px 20px 20px 7px; background:linear-gradient(130deg,rgba(93,76,164,.15),rgba(20,31,50,.66)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08); }
+.add-room-radius__head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.add-room-radius__head > span { color:#c0b9ef; }.add-room-radius__head strong { color:#f1f4ff; font-size:18px; font-weight:800; letter-spacing:-.03em; }
+.add-room-radius p { margin:6px 0 12px; color:#a7b7cc; font-size:10px; line-height:1.4; }
+.add-room-radius__presets { display:flex; flex-wrap:wrap; gap:7px; }
+.add-room-radius__presets button { min-width:47px; min-height:32px; padding:0 9px; color:#b9c6d9; border:1px solid rgba(191,213,241,.14); border-radius:11px 11px 11px 4px; background:rgba(255,255,255,.035); font-size:10px; font-weight:720; }
+.add-room-radius__presets button.is-active { color:#f5f7ff; border-color:rgba(155,132,255,.62); background:linear-gradient(135deg,rgba(121,92,255,.54),rgba(67,157,222,.30)); box-shadow:0 0 15px rgba(121,92,255,.22); }
+.add-room-radius md-slider { margin:10px 3px 0; }.add-room-radius md-slider .md-thumb:after { border-color:#a99bff; background:#a99bff; }.add-room-radius md-slider .md-track-fill { background:#8976ff; }
+.add-room-submit { display:grid; width:100%; grid-template-columns:28px minmax(0,1fr) 28px; align-items:center; min-height:52px; padding:0 13px; color:#fff; border:1px solid rgba(180,216,255,.35); border-radius:17px 17px 17px 6px; background:linear-gradient(104deg,#7057df,#2a9fe0); box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 26px rgba(44,102,202,.25); font-size:13px; font-weight:820; letter-spacing:.01em; text-align:left; }
+.add-room-submit span { text-align:center; }.add-room-submit .material-icons:last-child { justify-self:end; }.add-room-submit:disabled { opacity:.45; box-shadow:none; }.add-room-submit:not(:disabled):active { transform:translateY(1px) scale(.995); }
+@media (max-width:360px) { .lup-add-room-page .add-room-form { padding-right:11px; padding-left:11px; }.add-room-hero { grid-template-columns:45px minmax(0,1fr); gap:9px; }.add-room-hero__mark { width:45px; height:45px; border-radius:16px 16px 16px 6px; }.add-room-hero h1 { font-size:23px; }.add-room-radius { padding-right:10px; padding-left:10px; }.add-room-radius__presets { gap:5px; }.add-room-radius__presets button { min-width:43px; padding:0 7px; } }
+
 .login, .nearby, .profile-page {
   background:
     radial-gradient(circle at 92% 4%, rgba(66,96,187,.18), transparent 28%),
@@ -4289,6 +4369,40 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .lup-legal-dialog .legal-dialog-document > .gdt-panel { display:none !important; }
 @media (max-width:520px) { .lup-legal-dialog { width:calc(100vw - 20px); max-height:88vh; border-radius:18px !important; }.lup-legal-dialog md-toolbar,.lup-legal-dialog md-toolbar .md-toolbar-tools { min-height:62px; height:62px; padding:0 11px; }.lup-legal-dialog .legal-dialog-mark { width:32px; height:32px; margin-right:8px; border-radius:10px 10px 10px 3px; }.lup-legal-dialog .legal-dialog-heading h2 { font-size:17px; }.lup-legal-dialog md-dialog-content { max-height:calc(88vh - 62px); }.lup-legal-dialog .legal-dialog-document { padding:20px 17px 28px; font-size:12px; line-height:1.58; }.lup-legal-dialog .legal-dialog-document h2 { margin-top:23px; font-size:15px; } }
 
+/* Legal dialog: keep the close control pinned to the dialog, not to Angular
+   Material's dynamically sized toolbar row. */
+.lup-legal-dialog { position:relative; isolation:isolate; background:linear-gradient(155deg,#172239,#0e1525 76%) !important; }
+.lup-legal-dialog md-toolbar .md-toolbar-tools { position:relative; padding-right:58px; }
+.lup-legal-dialog .legal-dialog-close {
+	position:absolute;
+	z-index:5;
+	top:50%; right:15px;
+	margin:0 !important;
+	transform:translateY(-50%);
+}
+.lup-legal-dialog md-dialog-content { position:relative; z-index:1; background:linear-gradient(180deg,rgba(10,16,29,.42),rgba(10,16,29,.08)) !important; }
+@media (max-width:520px) {
+	.lup-legal-dialog md-toolbar .md-toolbar-tools { padding-right:52px; }
+	.lup-legal-dialog .legal-dialog-close { right:11px; }
+}
+
+/* The legal template contains a second md-dialog-content wrapper.  Reset the
+   outer Material padding so the actual document stays centered instead of
+   being pushed sideways by two nested content gutters. */
+.lup-legal-dialog > form > md-dialog-content {
+	margin:0 !important;
+	padding:0 !important;
+	width:100% !important;
+	box-sizing:border-box !important;
+}
+.lup-legal-dialog .legal-dialog-document {
+	display:block !important;
+	width:100% !important;
+	max-width:none !important;
+	margin:0 auto !important;
+	box-sizing:border-box !important;
+}
+
 /* Profile facts are supporting information. Keep them compact so the person,
    rather than a wall of glowing cards, remains the focus of “Über mich”. */
 .profile-page .profile-information.profile-settings-view { width:min(100%,680px) !important; padding:6px 16px 24px !important; }
@@ -6002,6 +6116,25 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
    separate QR-confirmed gesture. */
 .profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever .material-icons { font-size:23px; transform:translateY(0); text-shadow:0 2px 7px rgba(101,53,22,.32); }
 .profile-page .profile-stat-pull.stat-ups .profile-up-pull-lever::after { display:none; }
+
+/* Visits / rank: an extension of the profile's personal route, not a separate
+   trophy screen. Keep the data and ranking logic, soften the old game-card UI. */
+.course-page { max-width:720px; padding-top:14px; background:radial-gradient(ellipse 72% 36% at 50% -8%,rgba(105,93,208,.15),transparent 72%),radial-gradient(circle at 96% 25%,rgba(72,172,224,.08),transparent 25%),transparent; }
+.course-hero { gap:12px; min-height:76px; border-color:rgba(180,207,255,.13); border-radius:19px; background:linear-gradient(112deg,rgba(38,51,84,.72),rgba(18,25,43,.73) 68%,rgba(43,34,75,.58)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 11px 24px rgba(0,0,0,.12); }
+.course-hero-mark { flex-basis:48px; width:48px; height:48px; border:1px solid rgba(179,213,255,.35); border-radius:15px 15px 15px 5px; background:linear-gradient(145deg,rgba(115,168,237,.50),rgba(102,84,190,.40)); box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 7px 16px rgba(10,17,48,.24); color:#eaf7ff; }
+.course-hero-mark .material-icons { font-size:25px; }
+.course-hero h2 { font-size:22px; letter-spacing:-.035em; }
+.course-overview { border-radius:15px; background:rgba(8,14,27,.43); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
+.course-overview > div { min-height:64px; background:rgba(27,36,59,.62); }
+.course-overview .course-goal { background:linear-gradient(105deg,rgba(77,129,208,.22),rgba(101,78,171,.17)); }
+.course-ranking-note { margin-top:9px; padding:0 3px; color:#aebbd2; }
+.course-timeline::before { background:linear-gradient(rgba(158,207,255,.48),rgba(124,103,218,.07)); }
+.course-stop { border-color:rgba(177,207,247,.11); border-radius:16px; background:linear-gradient(108deg,rgba(59,81,133,.18),rgba(19,27,47,.49) 68%); box-shadow:inset 0 1px 0 rgba(255,255,255,.055); }
+.course-stop:first-child { border-color:rgba(177,216,255,.22); background:linear-gradient(108deg,rgba(78,116,187,.25),rgba(27,31,56,.54) 68%); }
+.course-stop-count { border-left-color:rgba(188,218,255,.08); }
+.course-stop-count strong { color:#e8f4ff; }
+.course-empty { border-style:solid; border-color:rgba(175,207,255,.14); background:linear-gradient(145deg,rgba(48,65,105,.20),rgba(15,22,40,.42)); }
+@media (max-width:420px) { .course-page { padding-top:12px; }.course-hero { min-height:72px; }.course-hero-mark { flex-basis:44px; width:44px; height:44px; }.course-hero-mark .material-icons { font-size:23px; }.course-hero h2 { font-size:20px; }.course-stop { border-radius:15px; } }
 .profile-page .profile-stat-pull.stat-friends .profile-stat-pull-lever { background:linear-gradient(145deg,#62c6f7,#4676cf); }
 .profile-page .profile-stat-pull.stat-cuddles .profile-stat-pull-lever { background:linear-gradient(145deg,#ff9bb4,#cd5f93); }
 .profile-page .profile-stat-pull.is-pulling .profile-stat-pull-lever { box-shadow:0 3px 0 rgba(38,39,83,.42),0 8px 15px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.30); filter:brightness(1.06); }
@@ -9677,3 +9810,83 @@ md-backdrop.md-dialog-backdrop { z-index:10010 !important; }
 .lup-help-dialog .md-dialog-content { padding-top:10px; }
 .lup-help-dialog .md-dialog-content > *:first-child { margin-top:0; }
 @media (max-width:360px) { .md-dialog-container .lup-dialog-shell { width:calc(100vw - 20px); border-radius:18px !important; }.lup-dialog-shell md-toolbar,.lup-dialog-shell md-toolbar .md-toolbar-tools { min-height:59px; height:59px; padding:0 13px; }.lup-dialog-shell .md-toolbar-tools h2 { font-size:16px; }.lup-dialog-shell .md-dialog-content { padding-right:43px; padding-left:13px; }.lup-dialog-shell md-dialog-actions { padding-right:13px; padding-left:13px; }.lup-qr-dialog .qrcode { width:min(204px,68vw); } }
+
+/* Shared route field -------------------------------------------------------
+   Location is the visual reference: every signed-in destination now shares
+   one quiet midnight field.  Individual pages keep their own content accent.
+   This is deliberately surface-only: no route, action or data flow changes. */
+.profile-page > md-content,
+.friends-page > md-content,
+.notification > md-content,
+.settings-page > md-content,
+.account-page > md-content,
+.likes-page > md-content,
+.location-page > md-content {
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse 74% 40% at 50% -9%,rgba(91,151,224,.11),transparent 72%),
+    linear-gradient(160deg,#090e19 0%,#0a1120 54%,#070b13 100%) !important;
+}
+.profile-page > md-content::before,
+.friends-page > md-content::before,
+.notification > md-content::before,
+.settings-page > md-content::before,
+.account-page > md-content::before,
+.likes-page > md-content::before {
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  content:'';
+  pointer-events:none;
+  opacity:.48;
+  background:
+    radial-gradient(circle at 13% 21%,rgba(124,207,255,.36) 0 1px,transparent 2px),
+    radial-gradient(circle at 82% 17%,rgba(178,132,255,.31) 0 1px,transparent 2px),
+    radial-gradient(circle at 73% 73%,rgba(109,195,255,.22) 0 1px,transparent 2px),
+    radial-gradient(circle at 24% 81%,rgba(166,142,255,.20) 0 1px,transparent 2px);
+  animation:lup-shared-field-drift 22s ease-in-out infinite alternate;
+}
+.profile-page md-toolbar:not(.sidenav-brand),
+.friends-page md-toolbar:not(.sidenav-brand),
+.notification md-toolbar:not(.sidenav-brand),
+.settings-page md-toolbar:not(.sidenav-brand),
+.account-page md-toolbar:not(.sidenav-brand),
+.likes-page md-toolbar:not(.sidenav-brand),
+.location-page md-toolbar:not(.sidenav-brand) {
+  background:linear-gradient(180deg,rgba(9,15,27,.93),rgba(9,15,27,.64)) !important;
+  border-bottom:1px solid rgba(164,207,245,.10);
+  box-shadow:none !important;
+}
+.profile-page .profile-section-nav,
+.notification .notification-switch,
+.settings-page .lup-settings-group,
+.account-page .account-form,
+.friends-page .lup-user-list,
+.likes-page .ups-favorite,
+.likes-page .ups-empty-preview,
+.location-reviews-page .reviews-scoreboard,
+.location-reviews-page .reviews-compose {
+  border-color:rgba(175,214,249,.15) !important;
+  background:linear-gradient(145deg,rgba(26,42,66,.48),rgba(8,15,27,.54)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 14px 32px rgba(0,0,0,.14) !important;
+}
+.profile-page .profile-section-nav button,
+.notification .notification-switch button {
+  color:#b8c8db;
+}
+.profile-page .profile-section-nav button.active,
+.notification .notification-switch button.active {
+  color:#f2f9ff;
+  background:linear-gradient(135deg,rgba(105,191,241,.16),rgba(122,97,211,.14));
+}
+.friends-page .lup-user-list md-list-item,
+.notification .notification-panel md-list-item,
+.likes-page .ups-list md-list-item,
+.location-reviews-page .reviews-list md-list-item {
+  border-bottom-color:rgba(184,216,246,.09) !important;
+}
+@keyframes lup-shared-field-drift { from { transform:translate3d(-1.5%,-.5%,0); } to { transform:translate3d(1.5%,1.5%,0); } }
+@media (prefers-reduced-motion:reduce) {
+  .profile-page > md-content::before,.friends-page > md-content::before,.notification > md-content::before,.settings-page > md-content::before,.account-page > md-content::before,.likes-page > md-content::before { animation:none; }
+}

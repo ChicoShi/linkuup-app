@@ -152,6 +152,11 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.openFriendMenu = function() {
 		var user = $scope.data.user;
 		if (!user) { return; }
+		// On your own profile the friends statistic has exactly one safe meaning:
+		// open your own friend list. Do not put an unnecessary menu in front of it.
+		if (user.isSelf()) {
+			return $scope.gotoFriends(user);
+		}
 		var ownUser = $scope.data.ownUser;
 		var available = user.isSelf() || (user.isMember() && ownUser && ownUser.isMember());
 		var data = {
@@ -161,11 +166,26 @@ angular.module('LUP').config(function($routeProvider) {
 			isFriend: user.isFriend(),
 			outgoing: !!user.JSON.relation_pending,
 			incoming: !!user.JSON.relation_incoming,
+			// The dialog renders this state instead of making the visitor discover
+			// a private list through a failing navigation attempt.
+			friendsListState: 'checking',
 		};
+		FriendSrvc.isFriendListAllowed(user).then(function() {
+			data.friendsListState = 'available';
+		}, function() {
+			data.friendsListState = 'private';
+		});
 		return DialogSrvc.menu('js/pages/profile/lup-profile-friends-dialog.html', data).then(function(action) {
 			switch (action) {
-			case 'view': return $scope.gotoUserFriends(user);
-			case 'request': return FriendSrvc.addFriend(user);
+			case 'view': return $scope.gotoUserFriends(user, true);
+			case 'request':
+				// The dialog can remain open while a relation update arrives. Re-check
+				// the live relation so a stale tap can never send a second request or
+				// request someone who is already a friend.
+				if (user.isFriend() || user.JSON.relation_pending || user.JSON.relation_incoming) {
+					return;
+				}
+				return FriendSrvc.addFriend(user);
 			case 'cancel': return FriendSrvc.cancelFriendRequest(user);
 			case 'accept': return FriendSrvc.acceptFriendRequest(user);
 			case 'deny': return FriendSrvc.denyFriendRequest(user);
@@ -363,6 +383,10 @@ angular.module('LUP').config(function($routeProvider) {
 			lup_religion: 'SETTING_LABEL_RELIGION'
 		};
 		var cache = SettingsSrvc.CACHE || {};
+		var ownId = window.GWF_USER && window.GWF_USER.id ? window.GWF_USER.id() : null;
+		var profileId = $scope.data.user && $scope.data.user.id ? $scope.data.user.id() : null;
+		var isOwnProfile = !!($scope.data.user && $scope.data.user.isSelf && $scope.data.user.isSelf());
+		isOwnProfile = isOwnProfile || (ownId !== null && profileId !== null && String(ownId) === String(profileId));
 		// A fresh profile response is normally a GDO_Profile, but the HTTP
 		// settings refresh can briefly hand us its plain transport object first.
 		// Missing metadata means "not explicitly empty", not a fatal profile.
@@ -377,10 +401,31 @@ angular.module('LUP').config(function($routeProvider) {
 				// Legacy display helpers initialise a few optional enums with "0".
 				// The profile frame still knows that they were actually absent, and
 				// an absent field must not turn into a visible "not specified" row.
-				if (empty[key]) {
+				if (empty[key] && !isOwnProfile) {
 					continue;
 				}
 				var value = (profile.JSON || {})[key];
+				// Basic account fields are part of the user payload, not the profile
+				// payload. Use them for both the owner and permitted visitor views.
+				if ((value === undefined || value === null || value === '') && $scope.data.user) {
+					if (key === 'gender' && $scope.data.user.gender) {
+						value = $scope.data.user.gender();
+					}
+					if (key === 'country_of_origin' && $scope.data.user.countryId) {
+						value = $scope.data.user.countryId();
+					}
+					if ((value === undefined || value === null || value === '') && $scope.data.user.JSON) {
+						value = $scope.data.user.JSON[key];
+					}
+				}
+				if (isOwnProfile && (value === undefined || value === null || value === '') && setting.options) {
+					value = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
+					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
+				}
+				if (isOwnProfile && (value === undefined || value === null || value === '') && setting.value !== undefined && setting.value !== null) {
+					value = setting.value;
+					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
+				}
 				// Do not turn an absent optional enum (often represented as 0 by a
 				// legacy endpoint) into an empty profile card.
 				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
@@ -388,12 +433,12 @@ angular.module('LUP').config(function($routeProvider) {
 				// Visitors never see private facts. Their owner, however, needs one
 				// quiet confirmation that the field exists and is currently locked.
 				// This keeps privacy understandable without exposing the value.
-				var isPrivateForOwner = !!error && $scope.data.user.isSelf();
+				var isPrivateForOwner = !!error && isOwnProfile;
 				if (error && !isPrivateForOwner) {
 					continue;
 				}
 				// Empty settings are intentionally omitted from the profile.
-				if (!hasValue && !isPrivateForOwner) {
+				if (!hasValue && !isPrivateForOwner && !isOwnProfile) {
 					continue;
 				}
 				var section = profileSections[placement.section];
@@ -410,6 +455,7 @@ angular.module('LUP').config(function($routeProvider) {
 					label: profileLabels[key] || setting.label || key,
 					value: value,
 					error: error,
+					empty: !hasValue && !isPrivateForOwner,
 					private: isPrivateForOwner,
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.
@@ -421,6 +467,37 @@ angular.module('LUP').config(function($routeProvider) {
 				});
 			}
 		}
+		// A rolling backend can temporarily return a reduced settings catalogue.
+		// For the owner, keep the insight complete by adding only the already
+		// approved profile fields from fieldOrder; visitors never receive this
+		// fallback and therefore cannot gain visibility through it.
+		if (isOwnProfile) {
+			var known = {};
+			Object.keys(groups).forEach(function(module) {
+				groups[module].fields.forEach(function(field) { known[field.key] = true; });
+			});
+			Object.keys(fieldOrder).forEach(function(key) {
+				if (known[key]) { return; }
+				var placement = fieldOrder[key];
+				var fallbackSetting = SettingsSrvc.setting(key) || {type: key === 'country_of_origin' ? 'GDO\\Country\\GDT_Country' : 'GDO\\Core\\GDT_String'};
+				var value = (profile.JSON || {})[key];
+				if ((value === undefined || value === null || value === '') && $scope.data.user) {
+					if (key === 'gender' && $scope.data.user.gender) { value = $scope.data.user.gender(); }
+					if (key === 'country_of_origin' && $scope.data.user.countryId) { value = $scope.data.user.countryId(); }
+					if ((value === undefined || value === null || value === '') && $scope.data.user.JSON) { value = $scope.data.user.JSON[key]; }
+				}
+				if ((value === undefined || value === null || value === '') && fallbackSetting.options) {
+					value = fallbackSetting.options.var !== undefined && fallbackSetting.options.var !== null ? fallbackSetting.options.var : fallbackSetting.options.selected;
+					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
+				}
+				if ((value === undefined || value === null || value === '') && fallbackSetting.value !== undefined && fallbackSetting.value !== null) {
+					value = fallbackSetting.value;
+					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
+				}
+				groups[placement.section] = groups[placement.section] || {module: placement.section, label: profileSections[placement.section].label, sort: profileSections[placement.section].sort, fields: []};
+				groups[placement.section].fields.push({key: key, sort: placement.sort, setting: fallbackSetting, label: profileLabels[key] || key, value: value, error: null, empty: value === undefined || value === null || value === '' || value === '0', private: false, acl: null, visibility: 'private'});
+			});
+		}
 		var result = Object.keys(groups).map(function(module) { return groups[module]; }).sort(function(a, b) {
 			return a.sort - b.sort || a.module.localeCompare(b.module);
 		});
@@ -431,7 +508,52 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.renderProfileSetting = function(field) {
-		return RenderSrvc.renderClass(field.setting, field.value);
+		var value = field.value;
+		// Account basics are transported with GWF_User, while optional profile
+		// facts arrive in GDO_Profile. Keep the insight view consistent when the
+		// two payloads are delivered separately.
+		if ((value === undefined || value === null || value === '') && $scope.data.user) {
+			if (field.key === 'gender' && $scope.data.user.gender) {
+				value = $scope.data.user.gender();
+			}
+			if (field.key === 'country_of_origin' && $scope.data.user.countryId) {
+				value = $scope.data.user.countryId();
+			}
+		}
+		if (field.key === 'lup_height' && value !== undefined && value !== null && value !== '') {
+			var meters = Number(value);
+			if (Number.isFinite(meters) && meters > 0) {
+				return Math.round(meters * 100) + ' cm';
+			}
+		}
+		if (field.key === 'lup_smokes') {
+			var smokeValues = ['lup_smokes_yes', 'lup_smokes_no_care', 'lup_smokes_no', 'lup_smokes_no_way'];
+			if (typeof value === 'number') { value = smokeValues[value - 1] || value; }
+			if (typeof value === 'string' && value.indexOf('lup_smokes_') === 0) { return window.t(value); }
+		}
+		if (field.key === 'lup_religion') {
+			var religionValues = ['religion_christian', 'religion_muslim', 'religion_jewish', 'religion_egyptian', 'religion_hindi', 'religion_romanian', 'religion_vikings', 'religion_buddhism', 'religion_atheist', 'religion_other'];
+			if (typeof value === 'number') { value = religionValues[value - 1] || value; }
+			if (typeof value === 'string' && value.indexOf('religion_') === 0) {
+				var religionLabel = window.t(value);
+				return religionLabel && religionLabel !== value ? religionLabel : value;
+			}
+		}
+		if (field.key === 'lup_eyecolor' && typeof value === 'string' && value.indexOf('lup_eyecolor_') === 0) {
+			return window.t(value);
+		}
+		if (typeof value === 'string' && /^(pet_|religion_|amber$|green$|green_brown$|gray$|blue$|light_brown$|light_blue$|blue_green$)/.test(value)) {
+			var translatedValue = window.t(value);
+			return translatedValue && translatedValue !== value ? translatedValue : value;
+		}
+		if (field.key === 'country_of_origin' && value) {
+			var countryCode = String(value).toUpperCase();
+			var countryTitle = window.t('country_' + countryCode);
+			// Do not expose an unresolved translation key or a broken sprite cell.
+			return countryTitle && countryTitle.indexOf('country_') !== 0 ? countryTitle : countryCode;
+		}
+		var rendered = RenderSrvc.renderClass(field.setting, value);
+		return rendered === undefined || rendered === null || rendered === '' ? value : rendered;
 	};
 
 	$scope.profileFieldIcon = function(key) {
@@ -671,8 +793,16 @@ angular.module('LUP').config(function($routeProvider) {
 			)['catch']($scope.catchUnknown);
 	};
 	
-	$scope.gotoUserFriends = function(user) {
+	$scope.gotoUserFriends = function(user, accessAlreadyChecked) {
 		console.log('ProfileCtrl.gotoUserFriends()', user);
+		// A user always has access to their own list; keep the websocket ACL
+		// preflight for every foreign profile only.
+		if (user && user.isSelf()) {
+			return $scope.gotoFriends(user);
+		}
+		if (accessAlreadyChecked) {
+			return $scope.gotoFriends(user);
+		}
 		FriendSrvc.isFriendListAllowed(user).then(
 				$scope.gotoFriends.bind($scope, user),
 				ErrorSrvc.websocketMaybeJSONError.bind(ErrorSrvc)

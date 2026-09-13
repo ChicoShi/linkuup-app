@@ -1,6 +1,5 @@
 <md-sidenav
- style="overflow: scroll;"
- class="md-sidenav-left"
+ class="md-sidenav-left navigator-sidebar"
  md-component-id="left"
  md-is-locked-open="$mdMedia('gt-lg')"
  md-whiteframe="4"
@@ -8,20 +7,20 @@
 
   <md-toolbar class="sidenav-brand">
    <div class="md-toolbar-tools">
-    <i class="material-icons nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')" aria-label="Menü schließen">menu</i>
-    <div><h1>LinkUUp</h1><span>Zusammen unterwegs</span></div>
+    <button type="button" class="nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')" aria-label="{{'SIDEBAR_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button>
+    <div><h1>LinkUUp</h1><span>{{'SIDEBAR_TAGLINE'|translate}}</span></div>
    </div>
   </md-toolbar>
 
   <md-content>
 	<div class="sidebar-user-card" ng-if="data.ownUser.isAuthed()" ng-click="gotoOwnProfile()">
 	  <lup-avatar ng-user="data.ownUser"></lup-avatar>
-	  <div><strong>{{data.ownUser.displayName()}}</strong><span>Mein LinkUUp</span></div>
+	  <div><strong>{{data.ownUser.displayName()}}</strong><span>{{'SIDEBAR_PROFILE'|translate}}</span></div>
 	  <i class="material-icons">chevron_right</i>
 	</div>
     
 	<md-list class="md-dense" flex layout="column">
-	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Entdecken</md-subheader>
+	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">{{'NAV_DISCOVER'|translate}}</md-subheader>
 
 	  <md-list-item class="md-1-line nav-discover" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">explore</i>
@@ -43,7 +42,7 @@
 		<p>{{'BTN_REGISTER'|translate}}</p>
 	  </md-list-item>
 
-	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">Verwaltung</md-subheader>
+	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">{{'SIDEBAR_MANAGE'|translate}}</md-subheader>
 
 	  <md-list-item class="md-1-line nav-settings" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">settings</i>

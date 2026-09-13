@@ -14,14 +14,14 @@
 		    <p ng-if="data.totalUps">{{'UPS_TOTAL_COPY'|translate:{count:data.totalUps} }}</p>
 		    <p ng-if="!data.totalUps">{{'UPS_EMPTY_INTRO'|translate}}</p>
 		  </div>
-		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">group</i><b></b></div>
+		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">favorite</i><b></b></div>
 		</section>
 
 		<section class="ups-favorite" ng-if="data.topUpGiver" aria-label="{{'UPS_FAVORITE_TITLE'|translate}}">
 		  <div class="ups-favorite-label"><i class="material-icons" aria-hidden="true">auto_awesome</i>{{'UPS_FAVORITE_TITLE'|translate}}</div>
 		  <div class="ups-favorite-person" ng-click="gotoProfile(data.topUpGiver)">
 		    <lup-avatar ng-user="data.topUpGiver"></lup-avatar>
-		    <div><strong>{{data.topUpGiver.displayName()}}</strong><span>{{'UPS_FAVORITE_COPY'|translate:{count:data.topUpGiver.likedMe} }}</span></div>
+		    <div><strong>{{data.topUpGiver.displayName()}}</strong><span>{{'UPS_FAVORITE_COPY'|translate}}</span></div>
 		    <i class="material-icons" aria-hidden="true">arrow_forward</i>
 		  </div>
 		</section>
@@ -32,7 +32,7 @@
 		</section>
 
 		<md-list flex class="md-dense ups-list" ng-if="data.likes.length">
-		  <div class="ups-list-label"><span>{{'UPS_ALL_TITLE'|translate}}</span><small>{{data.likes.length}}</small></div>
+		  <div class="ups-list-label"><span>{{'UPS_ALL_TITLE'|translate}}</span></div>
 		  <div class="lup-user-list">
 			  <md-list-item class="md-2-line up-giver-card" ng-repeat="user in data.likes track by user.id()">
 				<lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>

@@ -11,6 +11,8 @@ angular.module('LUP').config(function($routeProvider) {
 }).controller('NotificationCtrl', function($scope, $rootScope, $q, $translate,
 		ErrorSrvc, WebsocketSrvc, TypeSrvc, UserSrvc, RoomSrvc,
 		ChatSrvc, NotificationSrvc, HelpSrvc, DialogSrvc) {
+	var swipeInterval = null;
+	var destroyed = false;
 	// Hook Service into view
 	$scope.UserSrvc = UserSrvc;
 	$scope.NotificationSrvc = NotificationSrvc;
@@ -166,13 +168,13 @@ angular.module('LUP').config(function($routeProvider) {
 	////////////////////////
 	$scope.hasUnreadQueries = function() {
 		var result = !!ChatSrvc.unreadMessages();
-		console.log('NotificationCtrl.hasUnreadQueries()', result);
+
 		return result;
 	};
 
 	$scope.hasNotifications = function() {
 		var result = !!NotificationSrvc.unreadNotificationCount();
-		console.log('NotificationCtrl.hasNotifications()', result);
+
 		return result;
 	};
 	
@@ -209,14 +211,18 @@ angular.module('LUP').config(function($routeProvider) {
 		if ($scope.data.authenticated) {
 			if ($scope.data.loadingChats === null) {
 				$scope.data.loadingChats = true;
-				ChatSrvc.loadChats(window.GWF_USER.id()).
-					then($scope.loadedChats)['catch']($scope.catchUnknown);
+				return ChatSrvc.loadChats(window.GWF_USER.id()).
+					then($scope.loadedChats)['catch'](function(error) {
+						$scope.data.loadingChats = null; // A later tab selection may retry.
+						$scope.catchUnknown(error);
+					});
 			}
 		}
 	};
 	
 	$scope.loadedChats = function(chats) {
 		console.log('NotificationCtrl.loadedChats()', chats);
+		$scope.data.loadingChats = false;
 	};
 	
 	$scope.deleteChat = function(chat) {
@@ -257,12 +263,12 @@ angular.module('LUP').config(function($routeProvider) {
 	 * Finds notification via virtual-scroll index integer which matches $scope.notifications.items
 	 */
 	$scope.readfix = function() {
-		console.log('NotificationCtrl.readfix()');
+		if (destroyed) { return; }
 		var list = $('#lup-notification-list');
 		list.find('md-list-item').each(function(index){
 			var item = $(this);
 			if (item.visible(true)) {
-				var lupNotification = $scope.data.notifications.items[index];
+				var lupNotification = $scope.data.notifications.items[Number(item.attr('data-index'))];
 				$scope.markRead(lupNotification);
 			}
 		});
@@ -299,7 +305,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// --- Init --- //
 	//////////////////
 	
-	$rootScope.$on('lup-clear-cache', function() {
+	$scope.$on('lup-clear-cache', function() {
 		console.log('NotificationCtrl.$on-lup-clear-cache()');
 		$scope.data.loadingChats = null;
 		$scope.data.notifications.reset();
@@ -329,10 +335,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 
 			// Make initSwipeHandlers an interval once.
-			if (!NotificationSrvc.initedHandlers) {
-				setInterval($scope.initSwipeHandlers, 1500);
-				NotificationSrvc.initedHandlers = true;
-			}
+			if (!swipeInterval) { swipeInterval = setInterval($scope.initSwipeHandlers, 1500); }
 			
 			setTimeout(function(){
 				$('#lup-notification-list .md-virtual-repeat-scroller').
@@ -343,6 +346,11 @@ angular.module('LUP').config(function($routeProvider) {
 			
 		}
 	};
+	$scope.$on('$destroy', function() {
+		destroyed = true;
+		clearInterval(swipeInterval);
+		$('#lup-notification-list .lup-swipeable, #lup-notification-list .md-virtual-repeat-scroller').off('.placeEvents');
+	});
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
 
@@ -352,27 +360,28 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.swipeStart = null;
 	$scope.swipeDelete = -1;
 	$scope.initSwipeHandlers = function() {
-		console.log('NotificationCtrl.initSwipeHandlers()');
+		if (destroyed) { return; }
 		
-		$('#lup-notification-list .md-virtual-repeat-scroller').scroll(function(event){
+		$('#lup-notification-list .md-virtual-repeat-scroller').off('scroll.placeEvents').on('scroll.placeEvents', function(event){
 			NotificationSrvc.notificationScrollTop = $(this).scrollTop();
 		});
 
-		$('.lup-swipeable').on('touchstart mousedown', function(evt){
+		$('#lup-notification-list .lup-swipeable').off('.placeEvents').on('touchstart.placeEvents mousedown.placeEvents', function(evt){
 //			console.log('NotificationCtrl$touchstart()', evt);
 			$(this).css('left', 0);
 			var x = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0].clientX : evt.originalEvent.clientX;
 			$scope.swipeStart = x;
+			$scope.swipeStartY = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0].clientY : evt.originalEvent.clientY;
 			var id = $(this).attr('data-index');
 			$scope.swipeDelete = id;
 		});
-		$('.lup-swipeable').on('touchend mouseup', function(evt){
+		$('#lup-notification-list .lup-swipeable').on('touchend.placeEvents mouseup.placeEvents touchcancel.placeEvents', function(evt){
 //			console.log('NotificationCtrl$touchend()', evt);
 			$scope.swipeStart = null;
 			$scope.swipeDelete = null;
 			$('.lup-swipeable').css('left', 0);
 		});
-		$('.lup-swipeable').on('touchmove mousemove', function(evt){
+		$('#lup-notification-list .lup-swipeable').on('touchmove.placeEvents mousemove.placeEvents', function(evt){
 //			console.log('NotificationCtrl$touchmove()', evt);
 			if ($scope.swipeStart === null) {
 				return;
@@ -380,10 +389,12 @@ angular.module('LUP').config(function($routeProvider) {
 
 			var x = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0].clientX : evt.originalEvent.clientX;
 			var left = x - $scope.swipeStart;
+			var y = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0].clientY : evt.originalEvent.clientY;
+			if (Math.abs(y - $scope.swipeStartY) > Math.abs(left)) { $scope.swipeStart = null; return; }
 			if (Math.abs(left) > 5) {
 				$(this).css('left', left);
 			}
-			if ($scope.swipeStart) {
+			if ($scope.swipeStart !== null) {
 				if (Math.abs(left) > 128) {
 					$scope.swipeStart = null;
 					var id = $(this).attr('data-index');

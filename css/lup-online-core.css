@@ -108,3 +108,776 @@
   box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 5px 13px var(--chat-glow) !important;
 }
 .location-page .location-chat-surface .chatbottom .chat-compose-send button { color:color-mix(in srgb,var(--chat-accent) 74%,#fff) !important; }
+
+/* iPhone keyboard safety. The app follows visualViewport via
+   --lup-viewport-height; keep the complete tab/flex chain inside it so the
+   composer never asks Safari to scroll the whole page. 16px prevents iOS
+   focus-zoom on the actual text field. */
+@media (max-width:600px) {
+  .location-page > md-content {
+    display:flex !important;
+    height:var(--lup-viewport-height,100dvh) !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+  .location-page > md-content > md-tabs {
+    display:flex !important;
+    flex:1 1 0 !important;
+    min-height:0 !important;
+    height:auto !important;
+    flex-direction:column;
+  }
+  .location-page > md-content > md-tabs .md-tabs-content-wrapper,
+  .location-page > md-content > md-tabs .md-tab-content,
+  .location-page > md-content > md-tabs .md-tab-content > div {
+    min-height:0 !important;
+    height:100% !important;
+  }
+  .location-page .location-chat-surface {
+    display:flex !important;
+    flex:1 1 auto !important;
+    height:100% !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+  .location-page .location-chat-surface .chat-msgs {
+    flex:1 1 0 !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .location-page .location-chat-surface .chatbottom {
+    flex:0 0 auto !important;
+    padding-bottom:max(8px,env(safe-area-inset-bottom)) !important;
+  }
+  .location-page .location-chat-surface .chatbottom input {
+    font-size:16px !important;
+  }
+  html.lup-soft-keyboard-open .location-page > md-content {
+    overscroll-behavior:none;
+  }
+}
+
+/* Profile relationship menu: visibility and relationship actions are separate
+   decisions. The list's real ACL result is shown before its button can be used. */
+.lup-profile-friends-dialog {
+  width:min(420px,calc(100vw - 30px));
+  border:1px solid rgba(158,204,243,.18);
+  border-radius:18px;
+  overflow:hidden;
+  color:#edf6ff;
+  background:linear-gradient(145deg,rgba(20,37,58,.98),rgba(7,13,24,.99));
+  box-shadow:0 26px 68px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.lup-profile-friends-dialog md-toolbar {
+  min-height:58px;
+  color:#f4f9ff;
+  background:linear-gradient(100deg,rgba(87,179,238,.18),rgba(117,86,206,.16)) !important;
+  border-bottom:1px solid rgba(173,215,247,.12);
+}
+.lup-profile-friends-dialog md-dialog-actions { gap:7px; padding:12px; }
+.lup-profile-friends-dialog md-dialog-actions .md-button { width:100%; min-height:46px; margin:0; border:1px solid rgba(168,208,242,.14); border-radius:12px; color:#d9eaff; background:rgba(255,255,255,.04); text-align:left; }
+.lup-profile-friends-dialog md-dialog-actions .md-button .material-icons { margin-right:9px; vertical-align:middle; font-size:19px; color:#92d9ff; }
+.lup-profile-friends-dialog md-dialog-actions .md-button small { float:right; margin:3px 2px 0 0; color:#91a1b2; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-view { border-color:rgba(105,205,246,.34); background:linear-gradient(100deg,rgba(66,179,232,.18),rgba(115,93,210,.12)); }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-view:not([disabled]):hover { background:linear-gradient(100deg,rgba(66,179,232,.26),rgba(115,93,210,.19)); }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-view[disabled] { opacity:.44; color:#8390a0; background:rgba(255,255,255,.018); }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-view.is-private .material-icons { color:#9daabd; }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-remove { margin-top:5px; color:#f0c3cc; border-color:rgba(225,125,145,.22); background:rgba(159,55,78,.08); }
+.lup-profile-friends-dialog md-dialog-actions .lup-friend-menu-remove .material-icons { color:#ff9cae; }
+
+/* The profile switch is a lit line inside the page, never a second boxed card.
+   This final rule deliberately wins over legacy profile theme layers. */
+.profile-page .profile-section-nav {
+  margin:0 0 8px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+.profile-page .profile-section-nav button,
+.profile-page .profile-section-nav button.active,
+.profile-page .profile-section-nav button:hover {
+  min-height:48px;
+  border:0 !important;
+  border-radius:0 !important;
+  color:#9eaec0;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.profile-page .profile-section-nav button + button::before { display:none !important; }
+.profile-page .profile-section-nav button.active { color:#f4fbff; }
+.profile-page .profile-section-nav button.active::after {
+  height:2px;
+  opacity:1;
+  transform:scaleX(.78);
+  background:linear-gradient(90deg,transparent,#68d9ff 26%,#d4d3ff 50%,#8d7dff 74%,transparent) !important;
+  box-shadow:0 0 12px rgba(108,205,255,.55) !important;
+}
+.profile-page .profile-section-nav button.active .material-icons {
+  color:#c8eeff !important;
+  text-shadow:0 0 12px rgba(105,212,255,.62) !important;
+}
+.profile-page .profile-section-nav button.active span { color:#f4fbff !important; text-shadow:0 0 9px rgba(133,180,255,.42); }
+@media (prefers-reduced-motion:reduce) {
+  .profile-page .profile-section-nav button,
+  .lup-profile-friends-dialog md-dialog-actions .md-button { transition:none !important; }
+}
+
+/* Friends: a connection list, not a stack of generic system rows. Each person
+   gets one quiet surface; the cyan thread is the only recurring landmark. */
+.friends-page .friends-list {
+  overflow:visible;
+  border:0;
+  background:transparent;
+}
+.friends-page .lup-user-list {
+  display:grid;
+  gap:7px;
+}
+.friends-page .lup-user-list md-list-item.friend-card {
+  position:relative;
+  min-height:70px;
+  margin:0;
+  padding:9px 8px;
+  overflow:hidden;
+  border:1px solid transparent;
+  border-radius:15px;
+  background:transparent;
+  box-shadow:none;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease;
+}
+.friends-page .lup-user-list md-list-item.friend-card::before {
+  position:absolute;
+  top:17px;
+  bottom:17px;
+  left:0;
+  width:2px;
+  content:'';
+  border-radius:0 3px 3px 0;
+  background:linear-gradient(180deg,transparent,rgba(111,210,255,.82),transparent);
+  box-shadow:0 0 10px rgba(96,199,255,.38);
+  opacity:.58;
+}
+.friends-page .lup-user-list md-list-item.friend-card:hover,
+.friends-page .lup-user-list md-list-item.friend-card:focus-within {
+  transform:translateX(2px);
+  border-color:rgba(130,208,255,.18);
+  background:linear-gradient(90deg,rgba(67,147,207,.08),transparent 72%);
+}
+.friends-page .lup-user-list md-list-item.friend-card .md-list-item-inner { background:transparent !important; }
+.friends-page .lup-user-list md-list-item.friend-card .lup-avatar {
+  margin-left:4px;
+  border-color:rgba(167,223,255,.34);
+  box-shadow:0 0 0 3px rgba(98,201,255,.055),0 6px 17px rgba(0,0,0,.20);
+}
+.friends-page .lup-user-list .username { letter-spacing:-.012em; }
+.friends-page .lup-user-list .lup-user-status { color:#aebfd2; }
+.friends-page .lup-user-actions {
+  gap:4px;
+  margin-left:5px;
+  padding-left:5px;
+  border-left:0;
+}
+.friends-page .lup-user-action {
+  width:36px;
+  height:36px;
+  border:1px solid transparent;
+  border-radius:50%;
+  transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease;
+}
+.friends-page .lup-user-action-message {
+  border-color:rgba(139,181,255,.18);
+  background:rgba(119,144,239,.09);
+  color:#cbd5ff;
+}
+.friends-page .lup-user-action-remove { color:#c9a9b4; }
+.friends-page .lup-user-action-message:hover,
+.friends-page .lup-user-action-message:focus-visible {
+  transform:translateY(-1px);
+  border-color:rgba(159,198,255,.45);
+  background:rgba(116,164,244,.19);
+  color:#f0f4ff;
+  outline:0;
+}
+.friends-page .lup-user-action-remove:hover,
+.friends-page .lup-user-action-remove:focus-visible {
+  transform:translateY(-1px);
+  background:rgba(205,110,143,.13);
+  color:#ffd5e0;
+  outline:0;
+}
+@media (max-width:380px) {
+  .friends-page .lup-user-list md-list-item.friend-card { padding-right:5px; padding-left:5px; }
+  .friends-page .lup-user-action { width:33px; height:33px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .friends-page .lup-user-list md-list-item.friend-card,
+  .friends-page .lup-user-action { transition:none; }
+}
+
+/* Gallery deletion is deliberate but should not feel like a generic system
+   warning. The preview anchors the decision; the safe action gets priority. */
+.lup-gallery-delete-dialog {
+  width:min(390px,calc(100vw - 28px));
+  overflow:hidden;
+  border:1px solid rgba(169,210,246,.18);
+  border-radius:19px;
+  color:#eef6ff;
+  background:linear-gradient(150deg,#16273e,#090f1b);
+  box-shadow:0 26px 70px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.lup-gallery-delete-dialog md-toolbar {
+  min-height:56px;
+  color:#f4f9ff;
+  background:linear-gradient(100deg,rgba(100,181,234,.15),rgba(121,92,201,.13)) !important;
+  border-bottom:1px solid rgba(183,219,247,.11);
+}
+.lup-gallery-delete-dialog .md-toolbar-tools h2 { font-size:17px; font-weight:760; }
+.lup-gallery-delete-dialog .md-icon-button { width:34px; height:34px; min-height:34px; margin:0; border:1px solid rgba(220,237,255,.11); border-radius:10px; color:#d8e6f5; background:rgba(255,255,255,.035); }
+.lup-gallery-delete-dialog .md-dialog-content { padding:15px 16px 12px; }
+.lup-gallery-delete-dialog .md-dialog-content > p { margin:0 0 12px; color:#c1d0e0; font-size:13px; line-height:1.45; }
+.lup-gallery-delete-dialog .gallery-delete-preview { overflow:hidden; display:grid; place-items:center; min-height:118px; border:1px solid rgba(177,213,245,.13); border-radius:13px; background:rgba(4,8,15,.38); }
+.lup-gallery-delete-dialog .gallery-delete-preview img { display:block; width:100%; max-height:min(42vh,250px); object-fit:contain; }
+.lup-gallery-delete-dialog .gallery-delete-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:11px 16px 16px; border-top:1px solid rgba(183,219,247,.09); }
+.lup-gallery-delete-dialog .gallery-delete-actions .md-button { min-height:42px; margin:0; border-radius:12px; font-size:12px; font-weight:760; letter-spacing:.01em; text-transform:none; }
+.lup-gallery-delete-dialog .gallery-delete-cancel { border:1px solid rgba(177,213,245,.21); color:#edf7ff; background:linear-gradient(135deg,rgba(76,143,206,.25),rgba(81,91,161,.21)); box-shadow:inset 0 1px 0 rgba(255,255,255,.15); }
+.lup-gallery-delete-dialog .gallery-delete-confirm { display:inline-flex; align-items:center; justify-content:center; gap:6px; border:1px solid rgba(236,151,173,.20); color:#d5aeba; background:rgba(171,72,98,.065); }
+.lup-gallery-delete-dialog .gallery-delete-confirm .material-icons { font-size:17px; }
+.lup-gallery-delete-dialog .gallery-delete-cancel:hover,.lup-gallery-delete-dialog .gallery-delete-cancel:focus-visible { background:linear-gradient(135deg,rgba(89,162,230,.35),rgba(92,105,184,.29)); outline:0; }
+.lup-gallery-delete-dialog .gallery-delete-confirm:hover,.lup-gallery-delete-dialog .gallery-delete-confirm:focus-visible { border-color:rgba(246,179,198,.42); color:#ffe0e8; background:rgba(200,91,124,.15); outline:0; }
+
+/* Ups: one shared resonance field, not three competing cards.  The count is
+   real connection data; the surrounding surface stays deliberately quiet. */
+.likes-page > md-content {
+  background:
+    radial-gradient(ellipse 78% 29% at 50% -8%,rgba(101,210,255,.13),transparent 72%),
+    radial-gradient(ellipse 58% 34% at 94% 37%,rgba(129,91,232,.10),transparent 76%),
+    linear-gradient(160deg,#0d1523 0%,#090f1b 64%,#101325 100%) !important;
+}
+.likes-page > md-content::before,
+.likes-page > md-content::after { display:none !important; }
+.likes-page .ups-hero {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 54px;
+  gap:14px;
+  min-height:126px;
+  margin:0 16px;
+  padding:27px 4px 18px;
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.likes-page .ups-hero::before {
+  right:0;
+  bottom:9px;
+  left:0;
+  width:auto;
+  height:1px;
+  border:0;
+  border-radius:0;
+  background:linear-gradient(90deg,rgba(91,211,255,.70),rgba(142,111,255,.42),transparent);
+  box-shadow:0 0 15px rgba(88,203,255,.24);
+}
+.likes-page .ups-hero::after {
+  top:auto;
+  right:17px;
+  bottom:4px;
+  width:74px;
+  height:11px;
+  background:radial-gradient(ellipse,rgba(221,245,255,.9) 0 1px,rgba(108,216,255,.35) 2px,transparent 64%);
+  box-shadow:0 0 17px rgba(101,212,255,.50);
+  animation:lup-ups-resonance 7s ease-in-out infinite;
+}
+.ups-hero-copy > span { color:#91cdeb; font-size:8px; letter-spacing:.18em; }
+.ups-hero-copy h1 { margin:6px 0 6px; color:#f4f8ff; font-size:24px; font-weight:720; letter-spacing:-.045em; }
+.ups-hero-copy p { max-width:270px; color:#98aabd; font-size:11px; line-height:1.5; }
+.ups-hero-mark {
+  width:48px;
+  height:48px;
+  align-self:end;
+  margin-bottom:17px;
+  border:1px solid rgba(137,221,255,.30);
+  border-radius:50%;
+  background:radial-gradient(circle at 36% 31%,rgba(223,250,255,.54),rgba(90,207,255,.14) 32%,rgba(111,84,202,.16) 64%,transparent 72%);
+  box-shadow:inset 0 0 15px rgba(157,230,255,.12),0 0 22px rgba(94,205,255,.16);
+  color:#d9f6ff;
+}
+.ups-hero-mark .material-icons { font-size:22px; filter:drop-shadow(0 0 7px rgba(127,218,255,.72)); }
+.ups-hero-mark b { width:66px; height:66px; border-color:rgba(118,211,255,.18); }
+.likes-page .ups-favorite {
+  position:relative;
+  margin:0 16px 14px;
+  padding:0 0 12px;
+  border:0;
+  border-bottom:1px solid rgba(170,215,246,.12);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.ups-favorite-label { padding:0 0 8px; color:#879bb0; font-size:8px; letter-spacing:.16em; }
+.ups-favorite-label .material-icons { color:#9edfff; font-size:14px; }
+.ups-favorite-person {
+  grid-template-columns:42px minmax(0,1fr) 22px;
+  gap:10px;
+  padding:0;
+}
+.ups-favorite-person .lup-avatar { border-color:rgba(135,220,255,.42); box-shadow:0 0 0 3px rgba(91,204,255,.055),0 6px 17px rgba(0,0,0,.2); }
+.ups-favorite-person strong { color:#edf8ff; font-size:13px; font-weight:720; }
+.ups-favorite-person span { color:#90a5ba; font-size:10px; }
+.ups-favorite-person > .material-icons { color:#94d7f6; opacity:.72; }
+.likes-page .ups-empty-preview { margin:0 16px 14px; padding:5px 0 15px; border-top:0; border-bottom:1px solid rgba(170,215,246,.12); }
+.likes-page .ups-list { padding:0 16px calc(25px + env(safe-area-inset-bottom)); }
+.ups-list-label { min-height:34px; color:#8599ae; font-size:8px; letter-spacing:.16em; }
+.ups-list-label small { min-width:22px; height:22px; border-color:rgba(127,207,245,.16); background:rgba(92,192,240,.07); color:#bde7f8; }
+.likes-page .ups-list .lup-user-list { gap:2px; }
+.likes-page .ups-list .up-giver-card,
+.likes-page .ups-list .up-giver-card:first-child {
+  position:relative;
+  min-height:66px;
+  padding:10px 4px;
+  border:0;
+  border-bottom:1px solid rgba(177,215,246,.09);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.likes-page .ups-list .up-giver-card::before {
+  position:absolute;
+  top:21px;
+  bottom:21px;
+  left:0;
+  width:2px;
+  content:'';
+  border-radius:3px;
+  background:linear-gradient(180deg,transparent,rgba(103,210,255,.72),transparent);
+  opacity:.48;
+  transition:opacity .2s ease,box-shadow .2s ease;
+}
+.likes-page .ups-list .up-giver-card:hover::before,
+.likes-page .ups-list .up-giver-card:focus-within::before { opacity:1; box-shadow:0 0 10px rgba(88,205,255,.38); }
+.likes-page .ups-list .up-giver-card .lup-avatar { width:42px; height:42px; margin-right:12px; border-color:rgba(146,218,255,.28); }
+.likes-page .ups-list .up-giver-card .username { color:#eaf5ff; font-size:13px; font-weight:720; }
+.likes-page .ups-list .up-giver-card .lup-user-status { color:#8da2b6 !important; font-size:10px; }
+.likes-page .ups-list .lup-user-action-message { width:34px; height:34px; border-color:rgba(119,205,246,.17); border-radius:50%; background:rgba(74,166,220,.08); color:#b8eaff; }
+.likes-page .ups-list .lup-user-action-message:hover,
+.likes-page .ups-list .lup-user-action-message:focus-visible { border-color:rgba(139,220,255,.43); background:rgba(83,183,236,.17); color:#effbff; outline:0; }
+@keyframes lup-ups-resonance { 0%,100% { opacity:.22; transform:translateX(-18px) scaleX(.58); } 46% { opacity:.92; transform:translateX(5px) scaleX(1); } 62% { opacity:.38; transform:translateX(18px) scaleX(.72); } }
+@media (max-width:380px) {
+  .likes-page .ups-hero,.likes-page .ups-favorite,.likes-page .ups-empty-preview { margin-right:12px; margin-left:12px; }
+  .likes-page .ups-list { padding-right:12px; padding-left:12px; }
+  .ups-hero-copy h1 { font-size:21px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .likes-page .ups-hero::after,.ups-hero-mark b { animation:none !important; }
+}
+
+/* Location categories: one navigation rail, not six unrelated mini-cards.
+   Category hue stays useful as orientation while the common light track makes
+   the current filter immediately legible on a phone and at desktop width. */
+.nearby .location-categories {
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:0;
+  min-height:69px;
+  padding:5px 8px 7px;
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  background:transparent !important;
+  box-shadow:none;
+  isolation:isolate;
+}
+.nearby .location-categories::before { content:none !important; display:none !important; }
+.nearby .location-categories button {
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  min-height:57px;
+  padding:3px 1px 5px;
+  border:0 !important;
+  border-radius:0;
+  color:color-mix(in srgb,var(--lup-category-ink,#b8d9ee) 55%,#8997aa) !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  transition:color .2s ease,transform .2s ease,filter .2s ease;
+}
+.nearby .location-categories button .material-icons {
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  margin:0;
+  border:1px solid transparent;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.065),transparent 68%) !important;
+  box-shadow:none !important;
+  color:var(--lup-category-ink,#b8d9ee) !important;
+  font-size:18px;
+  line-height:1;
+  opacity:.72;
+  text-shadow:0 0 8px color-mix(in srgb,var(--lup-category-ink,#b8d9ee) 28%,transparent);
+  transition:transform .2s ease,opacity .2s ease,filter .2s ease,background .2s ease,border-color .2s ease;
+}
+.nearby .location-categories button span {
+  display:grid;
+  min-height:16px;
+  margin-top:4px;
+  overflow:visible;
+  color:inherit !important;
+  font-size:7px;
+  font-weight:760;
+  line-height:1.1;
+  letter-spacing:.01em;
+  text-align:center;
+  white-space:normal;
+}
+.nearby .location-categories button::after {
+  position:absolute;
+  top:auto;
+  right:calc(50% - 13px);
+  bottom:0;
+  left:calc(50% - 13px);
+  z-index:2;
+  display:block !important;
+  width:auto;
+  height:2px;
+  content:'';
+  border:0;
+  border-radius:3px;
+  background:var(--lup-category-ink,#b8d9ee);
+  box-shadow:0 0 11px color-mix(in srgb,var(--lup-category-ink,#b8d9ee) 68%,transparent);
+  opacity:0;
+  transform:scaleX(.3);
+  transition:transform .23s cubic-bezier(.2,.8,.25,1),opacity .2s ease;
+  pointer-events:none;
+}
+.nearby .location-categories button.active {
+  color:#f6fbff !important;
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+.nearby .location-categories button.active .material-icons {
+  border-color:transparent;
+  background:transparent !important;
+  box-shadow:0 0 15px color-mix(in srgb,var(--lup-category-ink,#b8d9ee) 34%,transparent) !important;
+  opacity:1;
+  transform:translateY(-1px) !important;
+}
+.nearby .location-categories button.active::after { opacity:1; transform:scaleX(1); }
+.nearby .location-categories button:hover:not(.active) .material-icons,
+.nearby .location-categories button:focus-visible .material-icons { opacity:1; transform:translateY(-1px); }
+.nearby .location-categories button:focus-visible { outline:0; }
+.nearby .location-categories button:focus-visible::after { opacity:.72; transform:scaleX(.72); }
+@media (max-width:380px) {
+  .nearby .location-categories { padding-right:4px; padding-left:4px; }
+  .nearby .location-categories button span { font-size:6.5px; letter-spacing:0; }
+  .nearby .location-categories button .material-icons { width:26px; height:26px; font-size:17px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .nearby .location-categories button,
+  .nearby .location-categories button .material-icons,
+  .nearby .location-categories button::after { transition:none !important; }
+}
+
+/* Sidebar: one continuous night surface, shared with Locations and profiles.
+ * The navigation remains the same; only the older, isolated sidebar material
+ * is replaced by the current midnight / cyan / violet visual language. */
+.md-sidenav-left {
+  border-right:1px solid rgba(138,209,242,.15) !important;
+  background:
+    radial-gradient(80% 34% at 100% 0%,rgba(72,157,219,.12),transparent 72%),
+    radial-gradient(66% 36% at 0% 100%,rgba(113,75,214,.11),transparent 74%),
+    linear-gradient(160deg,#101b2b 0%,#0c1523 44%,#080e18 100%) !important;
+  box-shadow:20px 0 58px rgba(0,0,0,.52),1px 0 0 rgba(255,255,255,.025) inset;
+}
+.md-sidenav-left .sidenav-brand {
+  min-height:96px;
+  border-bottom:1px solid rgba(158,219,247,.11);
+  background:
+    radial-gradient(54% 100% at 94% 18%,rgba(74,181,232,.18),transparent 73%),
+    linear-gradient(128deg,rgba(22,43,70,.98),rgba(11,20,34,.92) 70%,rgba(9,15,26,.98)) !important;
+}
+.md-sidenav-left .sidenav-brand::before {
+  top:25px;
+  right:22px;
+  width:5px;
+  height:5px;
+  border:0;
+  background:#8fe8ff;
+  box-shadow:-23px 19px 0 -1px rgba(143,232,255,.46),-45px -7px 0 -2px rgba(167,128,255,.32),0 0 18px rgba(104,213,255,.62);
+}
+.md-sidenav-left .sidenav-brand .md-toolbar-tools { height:96px; padding:0 19px; }
+.md-sidenav-left .sidenav-brand h1 { color:#f4faff; font-size:23px; font-weight:730; letter-spacing:-.045em; }
+.md-sidenav-left .sidenav-brand span { color:#87a9c4; font-size:8px; letter-spacing:.19em; }
+.md-sidenav-left .nav-close {
+  border-color:rgba(160,220,246,.14);
+  background:rgba(117,192,231,.055);
+  color:#bce8fa;
+}
+.md-sidenav-left md-content {
+  overflow-x:hidden;
+  background:
+    radial-gradient(95% 38% at 100% 0%,rgba(63,158,215,.07),transparent 74%),
+    linear-gradient(180deg,rgba(13,25,40,.42),rgba(7,13,23,.16)) !important;
+}
+.md-sidenav-left md-list { padding:14px 13px calc(28px + env(safe-area-inset-bottom,0px)); }
+.sidebar-user-card {
+  margin:14px 14px 13px;
+  padding:13px 2px 16px;
+  border:0;
+  border-bottom:1px solid rgba(151,216,243,.14);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.sidebar-user-card:hover { background:transparent; box-shadow:none; }
+.sidebar-user-card .lup-avatar { outline-color:rgba(122,220,250,.62); }
+.sidebar-user-card strong { color:#edf8ff; }
+.sidebar-user-card span { color:#7f9bb5; }
+.sidebar-user-card > .material-icons { color:#84d8f4; }
+.md-sidenav-left .sidebar-section-title,
+.md-sidenav-left .md-subheader {
+  margin:23px 6px 7px;
+  color:#68839e;
+  font-size:8px;
+  font-weight:820;
+  letter-spacing:.19em;
+}
+.md-sidenav-left .sidebar-legal-title {
+  margin-top:30px;
+  padding-top:15px;
+  border-top-color:rgba(151,216,243,.10);
+}
+.md-sidenav-left md-list-item {
+  min-height:50px;
+  margin:1px 0;
+  border:0;
+  border-radius:9px;
+  background:transparent !important;
+  transition:background .18s ease,filter .18s ease;
+}
+.md-sidenav-left md-list-item::before {
+  top:14px;
+  bottom:14px;
+  width:1px;
+  background:transparent;
+}
+.md-sidenav-left md-list-item:hover {
+  border:0;
+  background:linear-gradient(90deg,rgba(96,196,237,.105),rgba(114,82,209,.05) 68%,transparent) !important;
+}
+.md-sidenav-left md-list-item:hover::before {
+  background:#8ce6ff;
+  box-shadow:0 0 12px rgba(106,212,250,.72);
+}
+.md-sidenav-left md-list-item p { color:#d6e5f1; font-size:13px; font-weight:620; }
+.md-sidenav-left md-list-item .nav-icon,
+.md-sidenav-left md-list-item.nav-discover .nav-icon,
+.md-sidenav-left md-list-item.nav-settings .nav-icon,
+.md-sidenav-left md-list-item.nav-account .nav-icon,
+.md-sidenav-left md-list-item.nav-friends .nav-icon {
+  border:0;
+  border-radius:0;
+  background:transparent !important;
+  color:#8ea9c0;
+  box-shadow:none;
+}
+.md-sidenav-left md-list-item:hover .nav-icon {
+  background:transparent !important;
+  color:#c8f3ff;
+  transform:translateX(1px);
+}
+.md-sidenav-left md-list-item.nav-discover .nav-icon { color:#8fdbf5; }
+.md-sidenav-left md-list-item.nav-settings .nav-icon { color:#b9a6f2; }
+.md-sidenav-left md-list-item.nav-account .nav-icon { color:#94e0dc; }
+.md-sidenav-left md-list-item.nav-friends .nav-icon { color:#e7a6cd; }
+.md-sidenav-left md-list-item.nav-logout { margin-top:14px; border:0; background:transparent !important; }
+.md-sidenav-left md-list-item.nav-logout .nav-icon { color:#9e7788; }
+.md-sidenav-left md-list-item.nav-logout p { color:#c3a7b1; }
+.md-sidenav-left md-list-item.nav-logout:hover { background:rgba(218,124,151,.07) !important; }
+.md-sidenav-left md-list-item:has(.impressum) .nav-icon,
+.md-sidenav-left md-list-item:has(.tos) .nav-icon,
+.md-sidenav-left md-list-item:has(.privacy) .nav-icon { color:#66829d; }
+.md-sidenav-left md-list-item:has(.impressum) p,
+.md-sidenav-left md-list-item:has(.tos) p,
+.md-sidenav-left md-list-item:has(.privacy) p { color:#8ea4b8; }
+@media (max-width:599px) {
+  .md-sidenav-left .sidenav-brand,
+  .md-sidenav-left .sidenav-brand .md-toolbar-tools { min-height:86px; height:86px; }
+  .md-sidenav-left .sidenav-brand .md-toolbar-tools { padding:0 15px; }
+}
+
+/* Settings: reduce the stacked legacy surfaces to one calm, readable form.
+ * Settings are decisions, not a second dashboard. */
+.settings-page > md-content {
+  background:
+    radial-gradient(70% 29% at 100% 0%,rgba(70,167,221,.10),transparent 74%),
+    radial-gradient(58% 24% at 0% 72%,rgba(118,82,204,.08),transparent 74%),
+    linear-gradient(160deg,#101a2b 0%,#0d1523 55%,#0a101b 100%) !important;
+}
+.settings-page > md-content::before,
+.settings-page > md-content::after { display:none !important; }
+.settings-page .lup-settings-list {
+  width:min(100%,680px);
+  max-width:680px !important;
+  margin:0 auto;
+  padding:14px 16px 34px !important;
+  background:transparent !important;
+}
+.settings-page .settings-hero {
+  display:block !important;
+  min-height:0 !important;
+  margin:0 0 21px !important;
+  padding:5px 1px 16px !important;
+  overflow:visible !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(150,215,243,.15) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.settings-page .settings-hero::before,
+.settings-page .settings-hero::after,
+.settings-page .settings-hero-route { display:none !important; }
+.settings-page .settings-hero small {
+  color:#86cbe8 !important;
+  font-size:8px !important;
+  font-weight:850 !important;
+  letter-spacing:.18em !important;
+}
+.settings-page .settings-hero h1 {
+  margin:6px 0 5px !important;
+  color:#f0f8ff !important;
+  font-size:23px !important;
+  font-weight:750 !important;
+  letter-spacing:-.04em !important;
+}
+.settings-page .settings-hero p {
+  max-width:470px !important;
+  color:#91a9c0 !important;
+  font-size:12px !important;
+  line-height:1.45 !important;
+}
+.settings-page .lup-settings-profile-visibility {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:12px !important;
+  margin:0 0 24px !important;
+  padding:11px 1px !important;
+  border:0 !important;
+  border-top:1px solid rgba(151,216,243,.10) !important;
+  border-bottom:1px solid rgba(151,216,243,.10) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-settings-profile-visibility::before { display:none !important; }
+.settings-page .settings-visibility-heading { min-width:0; }
+.settings-page .settings-visibility-heading > .material-icons {
+  display:none !important;
+}
+.settings-page .settings-visibility-heading strong { color:#e5f3fc !important; font-size:12px !important; }
+.settings-page .settings-visibility-heading small { color:#839cb4 !important; font-size:10px !important; }
+.settings-page .lup-profile-visibility-choice { justify-self:end; }
+.settings-page .lup-settings-group {
+  margin:0 0 25px !important;
+  padding:0 !important;
+}
+.settings-page .lup-settings-group::before { display:none !important; }
+.settings-page .lup-settings-group-heading {
+  min-height:0 !important;
+  margin:0 0 8px !important;
+  padding:0 0 7px !important;
+  border-bottom:1px solid rgba(151,216,243,.10) !important;
+  border-left:0 !important;
+}
+.settings-page .lup-settings-group-heading::before { display:none !important; }
+.settings-page .lup-settings-group-heading small {
+  color:#9ed9f2 !important;
+  font-size:8px !important;
+  font-weight:840 !important;
+  letter-spacing:.16em !important;
+}
+.settings-page .lup-settings-group-heading p {
+  margin:4px 0 0 !important;
+  color:#718aa3 !important;
+  font-size:10px !important;
+  line-height:1.35 !important;
+}
+.settings-page .lup-setting-card {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(118px,auto) !important;
+  gap:10px 14px !important;
+  align-items:center !important;
+  min-height:64px !important;
+  margin:0 !important;
+  padding:10px 1px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(151,216,243,.085) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-setting-card:last-child { border-bottom:0 !important; }
+.settings-page .lup-setting-card:hover,
+.settings-page .lup-setting-card:focus-within {
+  border-color:rgba(151,216,243,.18) !important;
+  background:linear-gradient(90deg,rgba(94,184,226,.055),transparent 72%) !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-setting-card-heading { min-width:0; }
+.settings-page .lup-setting-icon { display:none !important; }
+.settings-page .lup-setting-card-heading h3 {
+  color:#e8f2fa !important;
+  font-size:12px !important;
+  font-weight:680 !important;
+  letter-spacing:0 !important;
+}
+.settings-page .lup-setting-card-heading p { color:#7891a9 !important; font-size:10px !important; }
+.settings-page .lup-setting-value {
+  min-width:118px !important;
+  justify-content:flex-end !important;
+}
+.settings-page .lup-setting-value md-select,
+.settings-page .lup-setting-value .lup-setting-input input,
+.settings-page .lup-setting-value .lup-setting-input textarea,
+.settings-page .lup-visibility-trigger {
+  border-color:rgba(153,215,244,.18) !important;
+  border-radius:8px !important;
+  background:rgba(7,15,27,.44) !important;
+  box-shadow:none !important;
+}
+.settings-page .lup-setting-visibility {
+  grid-column:1 / -1 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  min-height:27px !important;
+  padding-top:2px !important;
+}
+.settings-page .lup-setting-visibility > span { color:#718ca5 !important; font-size:9px !important; }
+.settings-page .lup-setting-card--textarea { grid-template-columns:1fr !important; }
+.settings-page .lup-setting-card--textarea .lup-setting-value { justify-content:stretch !important; }
+.settings-page .lup-setting-card--textarea .lup-setting-input { width:100% !important; }
+.settings-page .lup-setting-card--textarea textarea { min-height:90px !important; }
+@media (max-width:420px) {
+  .settings-page .lup-settings-list { padding-right:12px !important; padding-left:12px !important; }
+  .settings-page .lup-settings-profile-visibility,
+  .settings-page .lup-setting-card { grid-template-columns:1fr !important; }
+  .settings-page .lup-profile-visibility-choice,
+  .settings-page .lup-setting-value { justify-self:stretch !important; justify-content:stretch !important; }
+  .settings-page .lup-profile-visibility-choice .lup-visibility-trigger,
+  .settings-page .lup-setting-value md-select,
+  .settings-page .lup-setting-value .lup-setting-input { width:100% !important; }
+}

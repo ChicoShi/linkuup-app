@@ -1,23 +1,5 @@
-<md-dialog aria-label="{{data.title|translate}}" class="lup-agb-dialog lup-legal-dialog" ng-class="{'lup-privacy-dialog': data.title === 'PRIVACY', 'lup-impressum-dialog': data.title === 'IMPRESSUM'}">
-  <form ng-cloak>
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <span class="legal-dialog-mark" aria-hidden="true"><i class="material-icons" ng-if="data.title === 'PRIVACY'">verified_user</i><i class="material-icons" ng-if="data.title !== 'PRIVACY'">account_balance</i></span>
-        <div class="legal-dialog-heading">
-          <small>LINKUUP · RECHTLICHES</small>
-          <h2>{{data.title|translate}}</h2>
-        </div>
-        <span flex></span>
-		<md-button class="md-icon-button legal-dialog-close" aria-label="Schließen" ng-click="cancel()">
-			<i class="material-icons">close</i>
-        </md-button>
-      </div>
-    </md-toolbar>
-
-    <md-dialog-content>
-      <div class="md-dialog-content legal-dialog-document" ng-bind-html="data.html">
-      </div>
-    </md-dialog-content>
-
-  </form>
+<md-dialog aria-label="{{data.title|translate}}" class="place-dialog place-legal-dialog">
+  <header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">{{data.title === 'PRIVACY' ? 'shield' : (data.title === 'IMPRESSUM' ? 'alternate_email' : 'description')}}</i></span><div><span>{{'PLACE_LEGAL_HEADING'|translate}}</span><h2>{{data.title|translate}}</h2></div><button type="button" class="place-dialog-close" ng-click="cancel()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
+  <md-dialog-content tabindex="0" aria-label="{{data.title|translate}}"><div class="place-dialog-body place-legal-document" ng-bind-html="data.html"></div></md-dialog-content>
+  <footer class="place-dialog-actions"><button type="button" class="place-dialog-primary" ng-click="cancel()">{{'PLACE_CLOSE'|translate}}</button></footer>
 </md-dialog>

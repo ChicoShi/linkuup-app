@@ -19,6 +19,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	// Data to work on
 	$scope.data.frienduser = null;
+	$scope.data.friendsLoading = true;
 	$scope.data.friends = [];
 	$scope.data.pagemenu = new GWFPagination();
 	
@@ -44,12 +45,14 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log("FriendsCtrl.loadFriends()", $scope.data.pagemenu.page+1);
 		var page = $scope.data.pagemenu.nextPage();
 		if (page) {
+			$scope.data.friendsLoading = true;
 			FriendSrvc.getFriendList($scope.data.frienduser, page).
 				then($scope.loadedFriends, $scope.loadError);
 		}
 	};
 	
 	$scope.loadError = function(response) {
+		$scope.data.friendsLoading = false;
 		ErrorSrvc.websocketError(response).then(function(){
 			$scope.gotoReferrer();
 		})['catch']($scope.catchUnknown);
@@ -57,6 +60,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.loadedFriends = function(gwsMessage) {
 		console.log("FriendsCtrl.loadedFriends()");
+		$scope.data.friendsLoading = false;
 		$scope.data.pagemenu = GWFPagination.fromGWSMessage(gwsMessage);
 		$scope.translationData.friends = $scope.data.pagemenu.nItems;
 		while (gwsMessage.hasMore()) {

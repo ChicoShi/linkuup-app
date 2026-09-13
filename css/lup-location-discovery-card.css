@@ -193,3 +193,643 @@
 /* Keep route and distance as one landmark; lower it without disturbing entry controls. */
 .lup-discovery-card__anchor { transform:translate3d(0,16px,0); }
 @media (max-width:360px) { .lup-discovery-card__anchor { transform:translate3d(0,12px,0); } }
+
+/* Final optical alignment: QR and the matching chat/lock marker share one
+   axis, lifted slightly from the lower edge and offset from the card centre. */
+.lup-discovery-entry { margin-right:9px; margin-bottom:38px; margin-left:42px; }
+.lup-discovery-entry__qr { transform:translate3d(0,4px,0); }
+.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active { transform:translate3d(0,4px,0); }
+.lup-discovery-entry__locked { transform:translate3d(0,4px,0); }
+@media (max-width:360px) { .lup-discovery-entry { margin-right:7px; margin-bottom:30px; margin-left:31px; }.lup-discovery-entry__qr,.lup-discovery-gateway,.lup-discovery-gateway:hover,.lup-discovery-gateway:focus,.lup-discovery-gateway:focus-visible,.lup-discovery-gateway:active,.lup-discovery-entry__locked { transform:translate3d(0,3px,0); } }
+
+/* Location name is the primary destination; the map is a compact route aid. */
+.lup-discovery-card__identity { padding-right:38px; }
+.lup-discovery-card__open-mark { position:absolute; top:28px; right:0; display:grid; width:27px; height:27px; place-items:center; border:1px solid color-mix(in srgb,var(--discovery-accent) 40%,transparent); border-radius:10px 10px 10px 3px; background:color-mix(in srgb,var(--discovery-accent) 10%,rgba(7,15,28,.22)); box-shadow:0 0 13px color-mix(in srgb,var(--discovery-accent) 10%,transparent); color:color-mix(in srgb,var(--discovery-accent) 86%,#effcff); }
+.lup-discovery-card__open-mark .material-icons { font-size:16px; }
+.lup-discovery-card__anchor { min-height:148px; }
+.lup-discovery-card__symbol { width:64px; height:64px; box-shadow:inset 0 1px 0 rgba(255,255,255,.31),0 0 0 7px color-mix(in srgb,var(--discovery-accent) 4%,transparent),0 0 25px var(--discovery-glow); }
+.lup-discovery-card__symbol::after { inset:-11px -10px -14px -13px; }
+.lup-discovery-card__symbol .material-icons { font-size:34px; }
+@media (max-width:360px) { .lup-discovery-card__identity { padding-right:33px; }.lup-discovery-card__open-mark { top:25px; width:24px; height:24px; }.lup-discovery-card__open-mark .material-icons { font-size:14px; }.lup-discovery-card__anchor { min-height:132px; }.lup-discovery-card__symbol { width:57px; height:57px; }.lup-discovery-card__symbol .material-icons { font-size:31px; } }
+
+/* --------------------------------------------------------------------------
+   Ortsrad — a location is one instrument, not a stack of unrelated cards.
+   Only transform and opacity animate so the native touch rail stays fluent.
+   -------------------------------------------------------------------------- */
+.nearby .location-categories {
+	position:relative;
+	gap:6px;
+	padding:5px 14px 11px;
+	background:
+		radial-gradient(ellipse 72% 78% at 50% 114%,rgba(55,123,187,.10),transparent 70%),
+		linear-gradient(180deg,rgba(8,13,24,.76) 0%,rgba(9,16,29,.42) 74%,rgba(9,16,29,0) 100%);
+	border-bottom:0;
+	mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+}
+.nearby .location-categories::after { display:none; }
+.nearby .location-categories button {
+	position:relative;
+	display:grid;
+	min-width:54px;
+	min-height:48px;
+	padding:6px 8px;
+	place-items:center;
+	border:1px solid rgba(176,217,255,.12);
+	border-radius:18px 18px 8px 18px;
+	background:rgba(18,31,51,.34);
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+	color:#aabbd0;
+	font-size:7px;
+	transition:transform 180ms ease,background 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+}
+.nearby .location-categories button::before { width:4px; height:4px; content:''; border-radius:50%; background:rgba(151,185,219,.5); box-shadow:0 0 0 rgba(118,205,255,0); transition:background 180ms ease,box-shadow 180ms ease; }
+.nearby .location-categories button .material-icons { font-size:18px; }
+.nearby .location-categories button span { display:block; max-width:47px; margin-top:1px; line-height:1.05; text-align:center; }
+.nearby .location-categories button.active {
+	border-color:color-mix(in srgb,#8fd7ff 52%,transparent);
+	background:linear-gradient(145deg,rgba(105,195,255,.22),rgba(54,79,151,.25));
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 0 15px rgba(87,185,255,.15);
+	color:#f3fbff;
+	transform:translate3d(0,-1px,0);
+}
+.nearby .location-categories button.active::before { background:#bff6ff; box-shadow:0 0 10px rgba(105,221,255,.75); }
+
+.nearby .location-rail {
+	position:relative;
+	padding:8px 7% 28px;
+	scroll-padding-inline:7%;
+	background:transparent;
+}
+.nearby .location-rail::before {
+	inset:-82px -20% 0;
+	background:
+		radial-gradient(circle at 18% 31%,rgba(130,218,255,.42) 0 1px,transparent 2px),
+		radial-gradient(circle at 77% 23%,rgba(173,136,255,.35) 0 1px,transparent 2px),
+		radial-gradient(circle at 67% 68%,rgba(108,197,255,.27) 0 1px,transparent 2px),
+		radial-gradient(circle at 34% 76%,rgba(188,151,255,.25) 0 1px,transparent 2px),
+		radial-gradient(ellipse 35% 27% at 50% 39%,rgba(79,140,223,.09),transparent 72%);
+	opacity:.72;
+	animation:lup-orbit-field-drift 16s ease-in-out infinite alternate;
+}
+.nearby .location-rail::after {
+	position:absolute;
+	inset:8% 5% 12%;
+	content:'';
+	pointer-events:none;
+	border:0;
+	border-radius:50%;
+	box-shadow:0 0 90px rgba(68,139,217,.06);
+}
+.nearby .location-rail .lup-room-slide-outer {
+	padding:0 7px;
+	transform:translate3d(0,var(--lup-rail-lift,7px),0) scale(var(--lup-rail-scale,.93));
+	transition:transform 180ms cubic-bezier(.2,.8,.2,1),opacity 150ms linear;
+}
+.nearby .location-rail.location-rail-dragging { scroll-snap-type:none; }
+@media (min-width:760px) {
+	.nearby .location-rail {
+		padding-right:max(7%,calc((100% - 560px) / 2));
+		padding-left:max(7%,calc((100% - 560px) / 2));
+		scroll-padding-inline:max(7%,calc((100% - 560px) / 2));
+	}
+}
+.nearby .location-rail.location-rail-dragging .lup-room-slide-outer {
+	transition:none !important;
+}
+
+.lup-orbit-card {
+	--orbit-accent:var(--discovery-accent,#89c9ef);
+	--orbit-glow:var(--discovery-glow,rgba(96,190,230,.24));
+	position:relative;
+	display:flex;
+	min-height:min(548px,calc(100svh - 232px));
+	overflow:hidden;
+	flex-direction:column;
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 37%,rgba(211,239,255,.13));
+	border-radius:50% 50% 34px 34px / 14% 14% 7% 7%;
+	background:
+		radial-gradient(circle at 50% 46%,color-mix(in srgb,var(--orbit-accent) 16%,transparent),transparent 28%),
+		linear-gradient(160deg,rgba(20,34,57,.86),rgba(7,13,25,.95) 62%,rgba(5,10,19,.98));
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.15),inset 0 0 52px color-mix(in srgb,var(--orbit-accent) 5%,transparent),0 24px 48px rgba(0,0,0,.30),0 0 34px color-mix(in srgb,var(--orbit-accent) 9%,transparent);
+	isolation:isolate;
+}
+.lup-orbit-card::before {
+	position:absolute;
+	z-index:-1;
+	top:35%; left:50%; width:130%; aspect-ratio:1;
+	content:'';
+	border:0;
+	border-radius:50%;
+	box-shadow:0 0 0 20px color-mix(in srgb,var(--orbit-accent) 3%,transparent),0 0 72px color-mix(in srgb,var(--orbit-accent) 10%,transparent);
+	transform:translate3d(-50%,-50%,0);
+}
+.lup-orbit-card::after {
+	position:absolute;
+	z-index:-1;
+	right:-31%; bottom:-35%; width:80%; aspect-ratio:1;
+	content:'';
+	border-radius:50%;
+	background:
+		radial-gradient(circle at 28% 23%,color-mix(in srgb,var(--orbit-accent) 68%,transparent) 0 1px,transparent 2px),
+		radial-gradient(circle at 74% 31%,color-mix(in srgb,var(--orbit-accent) 48%,transparent) 0 1px,transparent 2px),
+		radial-gradient(circle at 48% 72%,color-mix(in srgb,var(--orbit-accent) 39%,transparent) 0 1px,transparent 2px),
+		conic-gradient(from 0deg,transparent 0deg,color-mix(in srgb,var(--orbit-accent) 12%,transparent) 56deg,transparent 126deg,color-mix(in srgb,var(--orbit-accent) 6%,transparent) 208deg,transparent 292deg);
+	filter:blur(10px);
+	animation:lup-orbit-ambient-turn 24s linear infinite;
+}
+.lup-orbit-card__dial {
+	position:absolute;
+	top:34%; left:50%; width:min(310px,83vw); aspect-ratio:1;
+	pointer-events:none;
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 27%,transparent);
+	border-radius:50%;
+	box-shadow:inset 0 0 30px color-mix(in srgb,var(--orbit-accent) 5%,transparent),0 0 28px color-mix(in srgb,var(--orbit-accent) 8%,transparent);
+	opacity:.94;
+	transform:translate3d(-50%,-50%,0) rotate(var(--lup-rail-tilt,0deg));
+	transition:transform 160ms linear;
+}
+.lup-orbit-card__dial::before,.lup-orbit-card__dial::after {
+	position:absolute;
+	content:'';
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 16%,transparent);
+	border-radius:50%;
+}
+.lup-orbit-card__dial::before { inset:11%; border-color:color-mix(in srgb,var(--orbit-accent) 11%,transparent); }
+.lup-orbit-card__dial::after { display:none; }
+.lup-orbit-card__dial span {
+	position:absolute;
+	top:50%; left:50%; width:7px; height:7px;
+	border-radius:50%;
+	background:color-mix(in srgb,var(--orbit-accent) 76%,#effcff);
+	box-shadow:0 0 12px var(--orbit-glow);
+	transform:rotate(calc(var(--i, 0) * 60deg)) translateY(clamp(-142px,-38vw,-116px));
+}
+.lup-orbit-card__dial span:nth-child(1) { --i:0; }
+.lup-orbit-card__dial span:nth-child(2) { --i:1; }
+.lup-orbit-card__dial span:nth-child(3) { --i:2; }
+.lup-orbit-card__dial span:nth-child(4) { --i:3; }
+.lup-orbit-card__dial span:nth-child(5) { --i:4; }
+.lup-orbit-card__dial span:nth-child(6) { --i:5; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span {
+	animation:lup-orbit-dial-signal 4.8s ease-in-out infinite;
+}
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span:nth-child(2) { animation-delay:.18s; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span:nth-child(3) { animation-delay:.36s; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span:nth-child(4) { animation-delay:.54s; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span:nth-child(5) { animation-delay:.72s; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span:nth-child(6) { animation-delay:.90s; }
+
+.lup-orbit-card__signage {
+	position:relative;
+	z-index:2;
+	padding:27px 24px 0;
+	text-align:center;
+}
+.lup-orbit-card__category {
+	display:inline-flex;
+	align-items:center;
+	gap:7px;
+	color:color-mix(in srgb,var(--orbit-accent) 82%,#ecfaff);
+	font-size:8px;
+	font-weight:850;
+	letter-spacing:.18em;
+	text-transform:uppercase;
+}
+.lup-orbit-card__category::before,.lup-orbit-card__category::after { display:none; }
+.lup-orbit-card__identity {
+	position:relative;
+	display:grid;
+	width:100%;
+	margin:10px 0 0;
+	padding:0 32px;
+	border:0;
+	background:transparent;
+	color:#f5f9ff;
+	cursor:pointer;
+	font:inherit;
+	text-align:center;
+	touch-action:manipulation;
+}
+.lup-orbit-card__identity strong {
+	display:block;
+	font-size:clamp(24px,6.6vw,34px);
+	font-weight:760;
+	letter-spacing:-.058em;
+	line-height:1.01;
+	text-shadow:0 0 22px color-mix(in srgb,var(--orbit-accent) 22%,transparent);
+	overflow-wrap:anywhere;
+}
+.lup-orbit-card__identity strong.room-hero-name--long { font-size:clamp(19px,5.1vw,25px); letter-spacing:-.035em; }
+.lup-orbit-card__identity strong.room-hero-name--longword { font-size:clamp(17px,4.5vw,21px); letter-spacing:-.025em; }
+.lup-orbit-card__identity > span {
+	display:inline-flex;
+	margin:6px auto 0;
+	align-items:center;
+	gap:4px;
+	color:#afc2d8;
+	font-size:10px;
+}
+.lup-orbit-card__identity > span .material-icons { color:var(--orbit-accent); font-size:13px; }
+.lup-orbit-card__open-mark {
+	position:absolute;
+	top:50%; right:1px;
+	width:26px; height:26px;
+	display:grid;
+	place-items:center;
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 41%,transparent);
+	border-radius:50% 50% 50% 6px;
+	box-shadow:0 0 14px color-mix(in srgb,var(--orbit-accent) 16%,transparent);
+	color:color-mix(in srgb,var(--orbit-accent) 88%,#effcff);
+	font-size:15px;
+	transform:translateY(-40%);
+}
+.lup-orbit-card__identity:active { transform:translate3d(0,1px,0); }
+.lup-orbit-card__identity:focus-visible,.lup-orbit-card__route:focus-visible,.lup-orbit-card__seal:focus-visible,.lup-orbit-card__gate:focus-visible { outline:1px solid color-mix(in srgb,var(--orbit-accent) 88%,#fff); outline-offset:5px; }
+
+.lup-orbit-card__route {
+	position:relative;
+	z-index:2;
+	display:grid;
+	width:100%;
+	min-height:194px;
+	margin-top:-7px;
+	place-items:center;
+	color:#eefdff;
+	text-decoration:none;
+}
+.lup-orbit-card__route::before { display:none; }
+.lup-orbit-card__needle {
+	position:relative;
+	z-index:1;
+	display:grid;
+	width:80px; height:80px;
+	margin-top:-18px;
+	place-items:center;
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 70%,rgba(234,250,255,.28));
+	border-radius:50% 50% 50% 13%;
+	background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.31),transparent 26%),color-mix(in srgb,var(--orbit-accent) 35%,rgba(8,19,35,.86));
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.33),0 0 0 9px color-mix(in srgb,var(--orbit-accent) 4%,transparent),0 0 29px var(--orbit-glow);
+	color:#fff;
+	transform:translate3d(0,-9px,0) rotate(-45deg);
+}
+.lup-orbit-card__needle::before {
+	position:absolute;
+	inset:-15px -14px -17px -17px;
+	content:'';
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 25%,transparent);
+	border-radius:50% 50% 50% 13%;
+}
+.lup-orbit-card__needle .material-icons { font-size:42px; text-shadow:0 3px 7px rgba(0,0,0,.28); transform:rotate(45deg); }
+.lup-orbit-card__distance {
+	position:absolute;
+	bottom:3px; left:50%;
+	display:grid;
+	grid-template-columns:18px minmax(0,1fr);
+	min-width:112px;
+	column-gap:5px;
+	align-items:center;
+	color:#e7f7ff;
+	transform:translateX(-50%);
+}
+.lup-orbit-card__distance .material-icons { grid-row:1 / span 2; color:var(--orbit-accent); font-size:17px; }
+.lup-orbit-card__distance strong { font-size:17px; font-weight:820; letter-spacing:-.04em; line-height:1.02; }
+.lup-orbit-card__distance small { color:color-mix(in srgb,var(--orbit-accent) 62%,#aab8cc); font-size:7px; font-weight:820; letter-spacing:.11em; line-height:1.2; text-transform:uppercase; }
+
+.lup-orbit-card__presence {
+	position:relative;
+	z-index:2;
+	display:flex;
+	min-height:52px;
+	margin:auto 22px 0;
+	padding:3px 0 7px;
+	align-items:center;
+	justify-content:space-between;
+	border-top:0;
+}
+.lup-orbit-card__people { display:flex; min-width:0; min-height:32px; align-items:center; padding-right:7px; }
+.lup-orbit-card__people .lup-avatar,.lup-orbit-card__people > button {
+	width:30px; height:30px;
+	margin-left:-9px;
+	border:2px solid #0b1323;
+	border-radius:50%;
+	box-shadow:0 4px 10px rgba(0,0,0,.26);
+}
+.lup-orbit-card__people .lup-avatar:first-child { margin-left:0; }
+.lup-orbit-card__people > button { background:color-mix(in srgb,var(--orbit-accent) 42%,#31435f); color:#f5fbff; cursor:pointer; font:800 8px/1 inherit; }
+.lup-orbit-card__people-label { display:inline-flex; min-height:32px; align-items:center; gap:5px; padding:0; border:0; background:transparent; color:#ccebdc; cursor:pointer; font:760 10px/1 inherit; }
+.lup-orbit-card__people-label > span { width:7px; height:7px; border-radius:50%; background:#8395af; box-shadow:none; }
+.lup-orbit-card__people-label.has-visitors > span { background:#7fe1a7; box-shadow:0 0 0 4px rgba(127,225,167,.10),0 0 12px rgba(127,225,167,.46); }
+.lup-orbit-card__people-label b { color:#f2fff8; font-size:13px; }
+
+.lup-orbit-card__entry {
+	position:relative;
+	z-index:2;
+	display:grid;
+	min-height:84px;
+	margin:0 31px 12px;
+	grid-template-columns:1fr 1fr;
+	align-items:center;
+	border-top:0;
+}
+.lup-orbit-card__seal,.lup-orbit-card__gate,.lup-orbit-card__lock {
+	display:grid;
+	width:39px; height:39px;
+	place-items:center;
+	border:1px solid color-mix(in srgb,var(--orbit-accent) 42%,rgba(255,255,255,.14));
+	border-radius:50% 50% 50% 7px;
+	background:color-mix(in srgb,var(--orbit-accent) 10%,rgba(8,17,31,.56));
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 16px color-mix(in srgb,var(--orbit-accent) 13%,transparent);
+	color:color-mix(in srgb,var(--orbit-accent) 90%,#effcff);
+}
+.lup-orbit-card__seal { justify-self:center; cursor:pointer; transform:translate3d(7px,5px,0); }
+.lup-orbit-card__seal .material-icons { font-size:21px; }
+.lup-orbit-card__gate {
+	position:relative;
+	justify-self:center;
+	width:54px; height:54px;
+	border-radius:50%;
+	background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.30),transparent 24%),color-mix(in srgb,var(--orbit-accent) 28%,rgba(8,18,32,.7));
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 0 0 7px color-mix(in srgb,var(--orbit-accent) 4%,transparent),0 0 24px var(--orbit-glow);
+	cursor:pointer;
+	transform:translate3d(-7px,5px,0);
+}
+.lup-orbit-card__gate::before,.lup-orbit-card__gate::after { display:none; }
+.lup-orbit-card__gate .material-icons { font-size:23px; }
+.lup-orbit-card__gate:active { transform:translate3d(-7px,5px,0) scale(.92); }
+.lup-orbit-card__lock { justify-self:center; border:0; background:transparent; box-shadow:none; color:color-mix(in srgb,var(--orbit-accent) 78%,#c4d9ec); }
+.lup-orbit-card__lock .material-icons { font-size:21px; }
+.lup-orbit-card--live .lup-orbit-card__gate { animation:lup-orbit-gate-breath 2.7s ease-in-out infinite; }
+@keyframes lup-orbit-gate-breath { 0%,100% { filter:brightness(1); } 50% { filter:brightness(1.16); } }
+@keyframes lup-orbit-ambient-turn { from { transform:rotate(0deg) scale(1); } to { transform:rotate(360deg) scale(1.04); } }
+@keyframes lup-orbit-field-drift { from { transform:translate3d(-2%,-1%,0) scale(1); } to { transform:translate3d(2%,2%,0) scale(1.035); } }
+@keyframes lup-orbit-dial-signal { 0%,100% { opacity:.52; } 9%,18% { opacity:1; } 28% { opacity:.66; } }
+
+@media (max-width:360px) {
+	.lup-orbit-card { min-height:min(512px,calc(100svh - 217px)); }
+	.lup-orbit-card__signage { padding:22px 17px 0; }
+	.lup-orbit-card__identity { padding-right:27px; padding-left:27px; }
+	.lup-orbit-card__identity strong { font-size:clamp(21px,6.1vw,27px); }
+	.lup-orbit-card__route { min-height:174px; }
+	.lup-orbit-card__needle { width:67px; height:67px; }
+	.lup-orbit-card__needle .material-icons { font-size:34px; }
+	.lup-orbit-card__presence { margin-right:16px; margin-left:16px; }
+	.lup-orbit-card__entry { margin-right:20px; margin-bottom:10px; margin-left:20px; }
+}
+@media (prefers-reduced-motion:reduce) {
+	.nearby .location-categories button,.nearby .location-rail .lup-room-slide-outer,.lup-orbit-card__dial { transition:none; }
+	.nearby .location-rail::before,.lup-orbit-card--live .lup-orbit-card__gate,.lup-orbit-card::after,.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__dial span { animation:none; }
+}
+
+/* Location front — one quiet night field, one category signal.
+   Keep the room's category colour for orientation; do not let it recolour
+   every surrounding surface. */
+.nearby .location-categories {
+	border:1px solid rgba(183,204,233,.10);
+	background:rgba(10,16,29,.58);
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.nearby .location-categories button {
+	--category-accent:#b9c9e8;
+	color:color-mix(in srgb,var(--category-accent) 58%,#8f9caf) !important;
+	background:transparent !important;
+}
+.nearby .location-categories button:nth-child(2) { --category-accent:#9dbce4; }
+.nearby .location-categories button:nth-child(3) { --category-accent:#e3ae7d; }
+.nearby .location-categories button:nth-child(4) { --category-accent:#dc9bd8; }
+.nearby .location-categories button:nth-child(5) { --category-accent:#86d0cd; }
+.nearby .location-categories button:nth-child(6) { --category-accent:#91d39f; }
+.nearby .location-categories button .material-icons {
+	color:currentColor !important;
+	text-shadow:none;
+}
+.nearby .location-categories button.active {
+	color:var(--category-accent) !important;
+	border-color:color-mix(in srgb,var(--category-accent) 30%,transparent) !important;
+	background:color-mix(in srgb,var(--category-accent) 9%,transparent) !important;
+	box-shadow:inset 0 1px 0 color-mix(in srgb,var(--category-accent) 13%,transparent) !important;
+}
+.nearby .location-categories button.active::after {
+	background:var(--category-accent) !important;
+	box-shadow:0 0 9px color-mix(in srgb,var(--category-accent) 50%,transparent) !important;
+}
+.lup-orbit-card {
+	background:linear-gradient(148deg,rgba(18,27,45,.78),rgba(6,11,22,.86) 72%) !important;
+	border-color:color-mix(in srgb,var(--orbit-accent) 22%,rgba(205,227,249,.12)) !important;
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 42px color-mix(in srgb,var(--orbit-accent) 3%,transparent),0 24px 48px rgba(0,0,0,.27) !important;
+}
+.lup-orbit-card::before { opacity:.52; }
+.lup-orbit-card::after { opacity:.45; }
+.lup-orbit-card__dial {
+	border-color:color-mix(in srgb,var(--orbit-accent) 17%,transparent);
+	box-shadow:inset 0 0 24px color-mix(in srgb,var(--orbit-accent) 3%,transparent),0 0 20px color-mix(in srgb,var(--orbit-accent) 5%,transparent);
+}
+.lup-orbit-card__dial span { opacity:.65; }
+
+/* Live concept: "Wegmarke". The place is read as a direction in space,
+   not as a decorative dial. The same HTML actions and swipe rail remain. */
+.lup-orbit-card {
+	min-height:min(554px,calc(100svh - 226px));
+	border-radius:28px 28px 18px 18px / 22px 22px 18px 18px;
+	background:
+		radial-gradient(ellipse 68% 38% at 28% 55%,color-mix(in srgb,var(--orbit-accent) 12%,transparent),transparent 74%),
+		linear-gradient(156deg,#162238 0%,#0c1526 48%,#070c16 100%) !important;
+}
+.lup-orbit-card__dial { display:none; }
+.lup-orbit-card__signage {
+	padding:27px 26px 0;
+	text-align:left;
+}
+.lup-orbit-card__category {
+	gap:9px;
+	letter-spacing:.15em;
+}
+.lup-orbit-card__category::before {
+	display:block;
+	width:26px;
+	height:1px;
+	content:'';
+	background:var(--orbit-accent);
+	box-shadow:0 0 12px var(--orbit-glow);
+}
+.lup-orbit-card__identity {
+	margin-top:12px;
+	padding:0 42px 0 0;
+	text-align:left;
+}
+.lup-orbit-card__identity > span { margin:7px 0 0; }
+.lup-orbit-card__open-mark {
+	top:50%; right:0;
+	width:34px; height:34px;
+	border-radius:11px 11px 11px 4px;
+	background:color-mix(in srgb,var(--orbit-accent) 8%,transparent);
+	transform:translateY(-50%);
+}
+.lup-orbit-card__route {
+	min-height:224px;
+	margin-top:0;
+	padding:0 28px;
+	box-sizing:border-box;
+	place-items:start;
+}
+.lup-orbit-card__route::before {
+	position:absolute;
+	z-index:0;
+	inset:12px 7% 8px;
+	display:block;
+	content:'';
+	pointer-events:none;
+	background:
+		radial-gradient(circle at 14% 24%,color-mix(in srgb,var(--orbit-accent) 74%,#effcff) 0 1.4px,transparent 2.4px),
+		radial-gradient(circle at 76% 17%,color-mix(in srgb,var(--orbit-accent) 58%,#effcff) 0 1px,transparent 2px),
+		radial-gradient(circle at 84% 61%,color-mix(in srgb,var(--orbit-accent) 67%,#effcff) 0 1.2px,transparent 2.2px),
+		radial-gradient(circle at 21% 74%,color-mix(in srgb,var(--orbit-accent) 48%,#effcff) 0 .8px,transparent 1.8px),
+		radial-gradient(circle at 57% 82%,color-mix(in srgb,var(--orbit-accent) 55%,#effcff) 0 1px,transparent 2px);
+	filter:drop-shadow(0 0 6px color-mix(in srgb,var(--orbit-accent) 45%,transparent));
+	opacity:0;
+	transform:translate3d(0,0,0);
+	will-change:transform,opacity;
+}
+.lup-orbit-card__route::after {
+	position:absolute;
+	z-index:0;
+	inset:18px 10% 12px;
+	display:block;
+	content:'';
+	pointer-events:none;
+	background:
+		radial-gradient(circle at 10% 68%,color-mix(in srgb,var(--orbit-accent) 72%,#effcff) 0 1.1px,transparent 2.2px),
+		radial-gradient(circle at 36% 43%,color-mix(in srgb,var(--orbit-accent) 48%,#effcff) 0 .8px,transparent 1.8px),
+		radial-gradient(circle at 66% 24%,color-mix(in srgb,var(--orbit-accent) 74%,#effcff) 0 1.4px,transparent 2.5px),
+		radial-gradient(circle at 92% 38%,color-mix(in srgb,var(--orbit-accent) 42%,#effcff) 0 .8px,transparent 1.8px);
+	filter:drop-shadow(0 0 6px color-mix(in srgb,var(--orbit-accent) 42%,transparent));
+	opacity:0;
+	will-change:transform,opacity;
+}
+.lup-orbit-card__needle {
+	width:92px; height:92px;
+	margin:31px 0 0 calc(37% - 46px);
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 0 0 11px color-mix(in srgb,var(--orbit-accent) 4%,transparent),0 0 37px var(--orbit-glow);
+	transform:rotate(-45deg);
+}
+.lup-orbit-card__distance {
+	bottom:31px; left:calc(37% + 59px);
+	z-index:1;
+	transform:none;
+}
+.lup-orbit-card__presence {
+	margin:0 26px;
+	padding:15px 0 12px;
+	border-top:0;
+}
+.lup-orbit-card__entry {
+	min-height:68px;
+	margin:0 26px 13px;
+	grid-template-columns:39px 54px;
+	justify-content:center;
+	column-gap:44px;
+	margin-bottom:5px;
+	border-top:0;
+	transform:translate3d(0,8px,0);
+}
+.lup-orbit-card__seal,.lup-orbit-card__gate,.lup-orbit-card__lock { justify-self:center; transform:none; }
+.lup-orbit-card__gate:active { transform:scale(.92); }
+
+/* The selected place has a living field: background particles drift toward
+   its marker while the marker emits one restrained, category-coloured signal. */
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card::before {
+	animation:lup-orbit-field-drift 12s cubic-bezier(.38,.05,.3,1) infinite alternate;
+}
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__needle::before {
+	animation:lup-orbit-needle-signal 3.8s cubic-bezier(.24,.72,.32,1) infinite;
+}
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__route::before {
+	animation:lup-orbit-particle-pass-one 5.8s cubic-bezier(.18,.72,.28,1) infinite;
+}
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__route::after {
+	animation:lup-orbit-particle-pass-two 7.4s cubic-bezier(.22,.68,.32,1) 1.1s infinite;
+}
+@keyframes lup-orbit-needle-signal {
+	0%,100% { opacity:.32; transform:scale(.94); }
+	38% { opacity:.86; transform:scale(1.16); }
+	62% { opacity:.48; transform:scale(1.05); }
+}
+@keyframes lup-orbit-particle-pass-one {
+	0%,12% { opacity:0; transform:translate3d(-46px,22px,0) scale(.88); }
+	28% { opacity:.72; }
+	70% { opacity:.46; }
+	100% { opacity:0; transform:translate3d(70px,-34px,0) scale(1.08); }
+}
+@keyframes lup-orbit-particle-pass-two {
+	0%,16% { opacity:0; transform:translate3d(52px,-25px,0) scale(.9); }
+	33% { opacity:.58; }
+	74% { opacity:.34; }
+	100% { opacity:0; transform:translate3d(-66px,38px,0) scale(1.06); }
+}
+@media (prefers-reduced-motion:reduce) {
+	.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card::before,
+	.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__needle::before,
+	.lup-orbit-card__route::before,.lup-orbit-card__route::after { animation:none; }
+}
+
+/* Independent particles replace the repeated "star group".  They share a
+   direction field, but each point has a different route, pace and arrival. */
+.lup-orbit-card__route::before,.lup-orbit-card__route::after { display:none; }
+.lup-orbit-card__particles {
+	position:absolute;
+	z-index:0;
+	inset:8px 3% 5px;
+	overflow:hidden;
+	pointer-events:none;
+}
+.lup-orbit-card__particles i {
+	position:absolute;
+	display:block;
+	width:4px; height:4px;
+	border-radius:50%;
+	background:color-mix(in srgb,var(--orbit-accent) 78%,#effcff);
+	box-shadow:0 0 7px color-mix(in srgb,var(--orbit-accent) 76%,transparent),0 0 15px var(--orbit-glow);
+	opacity:0;
+	will-change:transform,opacity;
+}
+.lup-orbit-card__particles i:nth-child(1) { top:18%; left:7%; }
+.lup-orbit-card__particles i:nth-child(2) { top:67%; left:15%; width:3px; height:3px; }
+.lup-orbit-card__particles i:nth-child(3) { top:32%; right:4%; width:5px; height:5px; }
+.lup-orbit-card__particles i:nth-child(4) { top:79%; left:43%; width:2px; height:2px; }
+.lup-orbit-card__particles i:nth-child(5) { top:8%; left:53%; width:3px; height:3px; }
+.lup-orbit-card__particles i:nth-child(6) { top:52%; right:18%; width:2px; height:2px; }
+.lup-orbit-card__particles i:nth-child(7) { top:89%; right:8%; width:4px; height:4px; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(1) { animation:lup-orbit-current-a 7.1s cubic-bezier(.19,.7,.28,1) .2s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(2) { animation:lup-orbit-current-b 8.9s cubic-bezier(.22,.65,.31,1) 1.4s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(3) { animation:lup-orbit-current-c 6.4s cubic-bezier(.24,.73,.34,1) 2.8s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(4) { animation:lup-orbit-current-a 10.3s cubic-bezier(.18,.68,.25,1) 3.6s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(5) { animation:lup-orbit-current-b 9.7s cubic-bezier(.2,.75,.3,1) 4.4s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(6) { animation:lup-orbit-current-c 7.8s cubic-bezier(.21,.68,.32,1) 5.5s infinite; }
+.lup-room-slide-outer.lup-room-slide-current .lup-orbit-card__particles i:nth-child(7) { animation:lup-orbit-current-a 11.6s cubic-bezier(.2,.7,.3,1) 6.1s infinite; }
+@keyframes lup-orbit-current-a {
+	0%,16% { opacity:0; transform:translate3d(-30px,24px,0) scale(.55); }
+	29% { opacity:.78; }
+	62% { opacity:.38; transform:translate3d(46px,-34px,0) scale(1.04); }
+	100% { opacity:0; transform:translate3d(76px,-58px,0) scale(.72); }
+}
+@keyframes lup-orbit-current-b {
+	0%,19% { opacity:0; transform:translate3d(40px,-30px,0) scale(.5); }
+	33% { opacity:.6; }
+	67% { opacity:.32; transform:translate3d(-38px,37px,0) scale(1.12); }
+	100% { opacity:0; transform:translate3d(-70px,58px,0) scale(.65); }
+}
+@keyframes lup-orbit-current-c {
+	0%,14% { opacity:0; transform:translate3d(-10px,48px,0) scale(.48); }
+	30% { opacity:.72; }
+	69% { opacity:.28; transform:translate3d(23px,-46px,0) scale(1.08); }
+	100% { opacity:0; transform:translate3d(38px,-76px,0) scale(.62); }
+}
+@media (prefers-reduced-motion:reduce) {
+	.lup-orbit-card__particles i { animation:none !important; }
+}
+@media (max-width:360px) {
+	.lup-orbit-card__signage { padding-right:20px; padding-left:20px; }
+	.lup-orbit-card__route { min-height:201px; padding-right:22px; padding-left:22px; }
+	.lup-orbit-card__needle { width:78px; height:78px; margin-left:calc(37% - 39px); }
+	.lup-orbit-card__distance { left:calc(37% + 49px); bottom:25px; }
+	.lup-orbit-card__presence,.lup-orbit-card__entry { margin-right:20px; margin-left:20px; }
+}

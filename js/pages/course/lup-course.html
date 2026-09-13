@@ -1,13 +1,9 @@
-<section layout="row" flex>
-
-    <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
-
-	<md-content layout="column" flex>
-
-		<ng-include src="'js/pages/course/lup-course-header.html?v='+V"></ng-include>
-
-		<ng-include src="'js/pages/course/lup-course-content.html?v='+V"></ng-include>
-		
-	</md-content>
-
+<section class="lup-place place-journey" layout="row" flex>
+ <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
+ <md-content class="place-shell" layout="column" flex>
+  <ng-include src="'js/pages/course/lup-course-header.html?v='+V"></ng-include>
+  <md-content class="place-social-scroll" flex>
+   <ng-include src="'js/pages/course/lup-course-content.html?v='+V"></ng-include>
+  </md-content>
+ </md-content>
 </section>

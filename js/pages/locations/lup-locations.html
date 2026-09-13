@@ -1,68 +1,37 @@
-<section class="nearby" layout="row" flex ng-cloak>
+<section class="nearby navigator-view" layout="row" flex ng-cloak>
+ <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
+ <md-content class="greybg" flex>
+    <div class="profile-ambient-map" aria-hidden="true">
+      <span class="profile-ambient-route profile-ambient-route-one"></span>
+      <span class="profile-ambient-route profile-ambient-route-two"></span>
+      <span class="profile-ambient-route profile-ambient-route-three"></span>
+      <span class="profile-ambient-node profile-ambient-node-one"></span>
+      <span class="profile-ambient-node profile-ambient-node-two"></span>
+      <span class="profile-ambient-node profile-ambient-node-three"></span>
+      <span class="profile-ambient-focus"></span>
+      <span class="profile-ambient-signal"></span>
+    </div>
+  <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
+  <header class="nav-intro"><span class="nav-eyebrow">LINKUUP / {{'NAV_DISCOVER'|translate}}</span><h1>{{'NAV_HEADLINE'|translate}}</h1></header>
+  <div class="search-input-wrap"><i class="material-icons" aria-hidden="true">search</i><input type="search" class="search-input" aria-label="{{'NAV_SEARCH'|translate}}" placeholder="{{'NAV_SEARCH'|translate}}" ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" /></div>
+  <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}">
+   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryFilterActive(category.ids),'is-current-category':isCurrentRoomCategory(category.ids)}" ng-attr-aria-pressed="{{isCategoryFilterActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
+  </nav>
 
-	<ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
+  <div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">
+   <div ng-repeat="room in data.visibleRooms track by room.id()" class="lup-room-slide-outer" ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
+    <article id="room{{room.id()}}" class="lup-room-slide nav-place" ng-class="categoryVisual(room).class">
+     <div class="nav-landscape" aria-hidden="true"><div class="nav-landmark"><i class="material-icons">{{categoryVisual(room).icon}}</i></div></div>
+     <div class="nav-place-content"><p class="nav-place-category"><i class="material-icons" aria-hidden="true">{{categoryVisual(room).icon}}</i>{{room.categoryName()}}</p><h2>{{room.name()}}</h2><p class="nav-address">{{room.city()}}<span ng-if="room.street()"> · {{room.street()}}</span></p><div class="nav-facts"><span><i class="material-icons" aria-hidden="true">near_me</i>{{navigatorHasGPS() && room.showDistance() ? room.displayDistance() : ('NAV_DISTANCE_UNKNOWN'|translate)}}</span><button type="button" ng-click="gotoVisitors(room)">{{'NAV_HERE'|translate:{count:visitorCountLabel(room)} }}</button></div>
+     <div class="nav-availability" ng-class="{'is-available':room.inChatRange()}"><span class="nav-status-dot" aria-hidden="true"></span>{{(room.inChatRange()?'NAV_CHAT_READY':(navigatorHasGPS()?'NAV_CHAT_LOCAL':'NAV_CHAT_GPS'))|translate}}</div><div class="nav-actions"><button type="button" class="nav-open" ng-click="maybeGotoRoom(room,$event)">{{'NAV_OPEN'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button><a ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" ng-click="requestLocation(room,$event)"><i class="material-icons" aria-hidden="true">near_me</i>{{(navigatorHasGPS()?'NAV_ROUTE':'NAV_ENABLE_GPS')|translate}}<i class="material-icons" aria-hidden="true">north_east</i></a><button type="button" class="nav-qr" ng-click="showRoomQRCode(room,$event)" aria-label="{{'NAV_QR'|translate}}"><i class="material-icons" aria-hidden="true">qr_code_2</i></button></div>
+     <button type="button" class="nav-chat" ng-if="room.inChatRange()" ng-click="enterChatDoor(room)"><i class="material-icons" aria-hidden="true">forum</i><span>{{'NAV_CHAT'|translate}}</span><i class="material-icons" aria-hidden="true">arrow_forward</i></button>
+  <nav class="nav-pagination" ng-if="data.visibleRooms.length" aria-label="{{'NAV_BROWSE'|translate}}"><button type="button" ng-click="stepNavigator(-1)" ng-disabled="data.currentRoomIndex<=0" aria-label="{{'NAV_PREVIOUS'|translate}}"><i class="material-icons">arrow_back</i></button><span>{{data.currentRoomIndex+1}} <small>/ {{data.visibleRooms.length}}</small></span><button type="button" ng-click="stepNavigator(1)" ng-disabled="data.currentRoomIndex>=data.visibleRooms.length-1" aria-label="{{'NAV_NEXT'|translate}}"><i class="material-icons">arrow_forward</i></button></nav>
+     </div>
+    </article>
+   </div>
+  </div>
+  <div class="nav-empty" ng-if="!data.visibleRooms.length"><h2>{{'NAV_EMPTY'|translate}}</h2><p>{{'NAV_EMPTY_HINT'|translate}}</p><button type="button" ng-click="resetNavigator()">{{'NAV_RESET'|translate}}</button></div>
 
-	<md-content class="greybg" flex>
-	
-		<ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
-		
-		<div class="search-input-wrap">
-			<input
-			type="text" class="search-input" placeholder="{{'SEARCH_FOR_LOCATIONS'|translate}}"
-			ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" />
-		</div>
 
-		<div class="location-categories" aria-label="Kategorien">
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive([])}" ng-click="selectCategory([])"><i class="material-icons">apps</i><span>Alle</span></button>
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive(['2','6','7','9','10','15']), 'is-current-category': isCurrentRoomCategory(['2','6','7','9','10','15'])}" ng-click="selectCategory(['2','6','7','9','10','15'])"><i class="material-icons">apartment</i><span>Städte<br>&amp; Länder</span></button>
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive(['3','4','5','14']), 'is-current-category': isCurrentRoomCategory(['3','4','5','14'])}" ng-click="selectCategory(['3','4','5','14'])"><i class="material-icons">storefront</i><span>Bar<br>&amp; Café</span></button>
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive(['11']), 'is-current-category': isCurrentRoomCategory(['11'])}" ng-click="selectCategory(['11'])"><i class="material-icons">music_note</i><span>Club<br>&amp; Disco</span></button>
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive(['8','12','16','17']), 'is-current-category': isCurrentRoomCategory(['8','12','16','17'])}" ng-click="selectCategory(['8','12','16','17'])"><i class="material-icons">menu_book</i><span>Bildung<br>&amp; Kultur</span></button>
-			<button type="button" ng-class="{'is-filter-active': isCategoryFilterActive(['13','18','19','20']), 'is-current-category': isCurrentRoomCategory(['13','18','19','20'])}" ng-click="selectCategory(['13','18','19','20'])"><i class="material-icons">sports_soccer</i><span>Sport<br>&amp; Freizeit</span></button>
-		</div>
-
-		<div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">
-			<div ng-repeat="room in data.visibleRooms" class="lup-room-slide-outer"
-					 ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
-	
-				<div id="room{{room.id()}}" class="lup-room-slide" flex layout-fill layout="column">
-					<article class="lup-discovery-card" ng-class="[categoryVisual(room).class, {'lup-discovery-card--live': room.inChatRange(), 'lup-discovery-card--door-opening': data.doorOpeningRoomId === room.id()}]">
-						<span class="lup-discovery-card__door-leaf" aria-hidden="true"></span>
-						<div class="lup-discovery-card__hero">
-							<button type="button" class="lup-discovery-card__identity" ng-click="maybeGotoRoom(room, $event)" aria-label="Ort öffnen: {{room.name()}}">
-								<span class="lup-discovery-card__category">{{room.categoryName()}}</span>
-								<strong class="lup-discovery-card__name" ng-class="roomNameClass(room)">{{room.name()}}</strong>
-								<span class="lup-discovery-card__place"><i class="material-icons">place</i>{{room.city() || 'LinkUUp Ort'}}</span>
-							</button>
-							<a class="lup-discovery-card__anchor" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener" title="{{'NAVIGATE_TO_THIS_PLACE'|translate}}" ng-click="requestLocation(room, $event)">
-								<span class="lup-discovery-card__anchor-line" aria-hidden="true"></span>
-								<span class="lup-discovery-card__symbol"><i class="material-icons">{{categoryVisual(room).icon}}</i></span>
-								<span class="lup-discovery-card__distance"><i class="material-icons">near_me</i><strong ng-if="room.showDistance()">{{room.displayDistance()}}</strong><strong ng-if="!room.showDistance()">Ort öffnen</strong><small>Route ansehen</small></span>
-							</a>
-						</div>
-						<div class="lup-discovery-card__presence">
-							<button type="button" class="lup-discovery-card__presence-label" ng-class="{'has-visitors': room.USERS.length > 0}" ng-click="gotoVisitors(room)">
-								<span class="lup-discovery-card__presence-dot"></span><b>{{visitorCountLabel(room)}}</b><span>gerade hier</span>
-							</button>
-							<div class="lup-discovery-card__people" ng-class="{'has-overflow': room.USERS.length > 10}" aria-label="Gäste an diesem Ort">
-								<lup-avatar ng-repeat="user in sortedVisitors(room) | limitTo: 10" ng-click="gotoProfile(user)" ng-user="user"></lup-avatar>
-								<button type="button" class="lup-discovery-card__more" ng-if="room.USERS.length>10" ng-click="gotoVisitors(room)" title="Alle Anwesenden anzeigen">+{{visitorOverflowLabel(room)}}</button>
-							</div>
-						</div>
-						<section class="lup-discovery-entry" ng-class="{'lup-discovery-entry--locked': !room.inChatRange(), 'is-door-opening': data.doorOpeningRoomId === room.id()}">
-							<button type="button" class="lup-discovery-entry__qr" ng-click="showRoomQRCode(room, $event)" title="{{'QR_ROOM_DIALOG_TITLE'|translate}}" aria-label="{{'QR_ROOM_DIALOG_TITLE'|translate}}"><i class="material-icons">qr_code_2</i></button>
-							<button type="button" class="lup-discovery-entry__chat lup-discovery-gateway" ng-if="room.inChatRange()" ng-click="enterChatDoor(room)" aria-label="{{'JOIN_CHAT'|translate}}">
-								<span class="lup-discovery-gateway__mark" aria-hidden="true"><span class="lup-discovery-gateway__rail"></span><span class="lup-discovery-gateway__core"><i class="material-icons">forum</i></span><span class="lup-discovery-gateway__rail"></span></span>
-							</button>
-							<div class="lup-discovery-entry__locked" ng-if="!room.inChatRange()" title="{{'CHAT_TOO_FAR'|translate}}" aria-label="{{'CHAT_TOO_FAR'|translate}}"><span class="lup-discovery-entry__lock" aria-hidden="true"><i class="material-icons">lock</i></span></div>
-						</section>
-					</article>
-	
-				</div>
-	
-			</div>
-		</div>
-
-	</md-content>
-
+ </md-content>
 </section>

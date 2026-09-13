@@ -1,64 +1,7 @@
-<ng-include
- ng-if="data.frienduser.isSelf()"
- src="'js/pages/friends/lup-friends-search.html?v='+V"></ng-include>
-
-<!-- Begin user list -->
-<section class="friends-shell" flex>
-  <div class="friends-overview" ng-if="data.frienduser">
-    <div class="friends-overview-copy">
-      <span class="friends-overview-eyebrow">{{data.frienduser.isSelf() ? ('FRIENDS_EYEBROW'|translate) : ('FRIENDS_PROFILE_EYEBROW'|translate)}}</span>
-      <strong>{{data.frienduser.isSelf() ? ('FRIENDS_TITLE'|translate) : data.frienduser.displayName()}}</strong>
-      <span class="friends-overview-description" ng-if="data.frienduser.isSelf()">{{'FRIENDS_COPY'|translate}}</span>
-      <span class="friends-overview-description" ng-if="!data.frienduser.isSelf()">{{'FRIENDS_PROFILE_COPY'|translate}}</span>
-    </div>
-    <span class="friends-overview-count" aria-label="{{data.pagemenu.nItems}} Verbindungen">
-      <b>{{data.pagemenu.nItems}}</b><small>{{'FRIENDS_COUNT'|translate}}</small>
-    </span>
-  </div>
-<md-list class="friends-list" flex>
-  
-  <md-subheader class="md-no-sticky">
-    <div
-     translate="SUBHEADER_FRIENDS"
-     translate-value-user="{{data.frienduser.displayName()}}"
-     translate-value-count="{{data.pagemenu.nItems}}"></div>
-  </md-subheader>
-
-  <div class="lup-user-list">
-    <md-list-item
-     class="md-2-line friend-card"
-     ng-repeat="user in sortedFriends()"
-     on-long-press="deleteFriend(user)"
-     class="no-right">
-      <lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
-      <div class="md-list-item-text" layout="column">
-        <p class="username">{{ user.displayName(); }}</p>
-        <p class="lup-user-status">{{ user.status(); }}</p>
-      </div>
-      <div class="lup-user-actions">
-        <button
-         class="lup-user-action lup-user-action-remove"
-         type="button"
-         aria-label="Freund entfernen"
-         title="Freund entfernen"
-         ng-click="deleteFriend(user)"
-         ng-if="!user.isSelf() && user.isMember() && user.isFriend()"><i class="material-icons">link_off</i></button>
-        <button
-         class="lup-user-action lup-user-action-message"
-         type="button"
-         aria-label="Nachricht senden"
-         title="Nachricht senden"
-         ng-click="gotoQuery(user)"
-         ng-if="!user.isSelf()"><i class="material-icons">forum</i></button>
-      </div>
-    </md-list-item>
-  </div>
-
-  <section class="friends-empty" ng-if="data.frienduser && !data.pagemenu.nItems">
-    <i class="material-icons" aria-hidden="true">person_search</i>
-    <strong>Noch keine Verbindungen.</strong>
-    <span>Finde Menschen, mit denen du in Kontakt bleiben möchtest.</span>
-  </section>
-</md-list>
-</section>
-<!-- End of user list -->
+<header class="place-social-heading"><span class="place-eyebrow">{{(data.frienduser.isSelf() ? 'FRIENDS_EYEBROW' : 'FRIENDS_PROFILE_EYEBROW')|translate}}</span><h1>{{data.frienduser.isSelf() ? ('FRIENDS_TITLE'|translate) : data.frienduser.displayName()}}</h1><p>{{(data.frienduser.isSelf() ? 'FRIENDS_COPY' : 'FRIENDS_PROFILE_COPY')|translate}}</p></header>
+<ng-include ng-if="data.frienduser.isSelf()" src="'js/pages/friends/lup-friends-search.html?v='+V"></ng-include>
+<div class="place-voices-list-heading" ng-if="!data.friendsLoading"><h2>{{'TITLE_FRIENDS'|translate}}</h2><span>{{data.pagemenu.nItems}}</span></div>
+<div class="place-friend-list"><article class="place-friend" ng-repeat="user in sortedFriends() track by user.id()"><button class="place-friend-profile" type="button" ng-click="gotoProfile(user)"><lup-avatar ng-user="user"></lup-avatar><span><strong>{{user.displayName()}}</strong><small ng-if="user.status()">{{user.status()}}</small></span></button><div class="place-friend-actions" ng-if="!user.isSelf()"><button class="place-friend-chat" type="button" ng-click="gotoQuery(user)"><i class="material-icons" aria-hidden="true">chat_bubble_outline</i>{{'TAB_CHAT'|translate}}</button><button class="place-friend-remove" type="button" ng-if="user.isMember() && user.isFriend()" ng-click="deleteFriend(user)" aria-label="{{'PLACE_REMOVE_FRIEND'|translate}}"><i class="material-icons" aria-hidden="true">link_off</i></button></div></article></div>
+<p class="place-voices-loading" role="status" ng-if="data.friendsLoading">{{'PLACE_FRIENDS_LOADING'|translate}}</p>
+<section class="place-empty" ng-if="data.frienduser && !data.friendsLoading && !data.pagemenu.nItems"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">people_outline</i></span><h3>{{'PLACE_FRIENDS_EMPTY'|translate}}</h3><p>{{(data.frienduser.isSelf() ? 'PLACE_FRIENDS_EMPTY_COPY' : 'PLACE_FRIENDS_OTHER_EMPTY')|translate}}</p></section>
+<button class="place-tool place-load-more" type="button" ng-if="data.pagemenu.page < data.pagemenu.nPages" ng-disabled="data.friendsLoading" ng-click="loadFriends()">{{'PLACE_FRIENDS_MORE'|translate}}</button>

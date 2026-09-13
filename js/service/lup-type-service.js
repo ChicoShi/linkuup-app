@@ -60,9 +60,7 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 						// Composite binary types such as GDT_Position intentionally expand
 						// into several columns. A JSON field, however, is one named value;
 						// flattening it loses that field (notably LUP_Notification.note_data).
-						if ((value instanceof Object) &&
-							(field.type !== 'GDO\\Core\\GDT_JSON') &&
-							(field.type !== 'GDO\\Core\\GDT_Array')) {
+						if ((value instanceof Object) && !TypeSrvc.isJSONType(field.type)) {
 							for (var i in value) {
 								gdo.JSON[i] = value[i];
 							}
@@ -77,6 +75,11 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 //			alert(classname);
 //			console.log(TypeSrvc.FIELDS);
 //		});
+	};
+
+	TypeSrvc.isJSONType = function(type) {
+		return type === 'GDO\\Core\\GDT_JSON' || type === 'GDO\\Core\\GDT_Array' ||
+			(TypeSrvc.TYPES[type] || []).indexOf('GDO\\Core\\GDT_JSON') >= 0;
 	};
 	
 	/**
@@ -123,8 +126,12 @@ service('TypeSrvc', function($q, RequestSrvc, ErrorSrvc) {
 		let s = null;
 		switch (klass) {
 		case 'GDO\\LinkUUp\\GDT_ICQ': s = gwsMessage.readString(); return s ? parseInt(s) : null;
-		case 'GDO\\Core\\GDT_Array': s = gwsMessage.readString(); return JSON.parse(s);
-		case 'GDO\\Core\\GDT_JSON': s = gwsMessage.readString(); return JSON.parse(s);
+		case 'GDO\\Core\\GDT_Array':
+		case 'GDO\\Core\\GDT_JSON':
+			// Nullable JSON (including room_polygon) uses the inherited string
+			// wire format: null is a single terminator, not the JSON text "null".
+			s = gwsMessage.readString();
+			return s === '' ? null : JSON.parse(s);
 		case 'GDO\\Date\\GDT_Timestamp':
 			const t = gwsMessage.readDouble();
 			return Number.isNaN(t) ? null : t * 1000.0;

@@ -1,0 +1,198 @@
+/* A shared, decorative neighbourhood. No live positions or activity implied. */
+.lup-place .place-shell {
+ position:relative!important;
+ isolation:isolate;
+ background:var(--lup-app-field,#111a2d)!important;
+}
+.lup-place .place-shell::before {
+ content:'';
+ position:absolute;
+ z-index:0;
+ left:50%;top:50%;width:480px;height:960px;
+ margin:-480px 0 0 -240px;
+ background:url('../img/place-neighborhood.svg') center/480px 960px no-repeat;
+ pointer-events:none;
+ opacity:.9;
+}
+.lup-place .place-shell::after {
+ content:'';
+ position:absolute;
+ z-index:0;
+ left:calc(50% - 244px);top:calc(50% - 484px);
+ width:8px;height:8px;
+ border-radius:50%;
+ background:#c7edff;
+ box-shadow:0 0 0 5px #83d6ff0b,0 0 22px #70cfff80;
+ pointer-events:none;
+ animation:place-neighborhood-walk 28s linear infinite;
+}
+.lup-place .place-shell > * {position:relative;z-index:1;}
+.lup-place .place-topbar {background:#111a2dcc!important;}
+.lup-place .place-overview,.lup-place .place-people,
+.location-page.lup-place .location-chat-surface.place-chat,
+.location-page.lup-place .place-private-chat {background:transparent!important;}
+.lup-place .place-thread,.lup-place .place-event-card,.lup-place .place-friend,
+.lup-place .place-person,.place-settings .lup-setting-card {
+ background:linear-gradient(130deg,#20334cf2,#17263ceb);
+ border-color:#a8d7f323;
+ box-shadow:inset 0 1px 0 #d1edff06,0 8px 24px #06132316;
+}
+.lup-place .place-thread.is-unread {
+ background:linear-gradient(130deg,#274461f5,#192f47ef);
+ border-color:#9bd7ff60;
+}
+.lup-place .place-thread.is-unread::before {
+ content:'';position:absolute;left:-1px;top:24px;bottom:24px;
+ width:2px;border-radius:2px;background:#a6e0ff;box-shadow:0 0 10px #7dcaff70;
+}
+.lup-place .place-event-row.lup-notification-unread .place-event-card {
+ background:linear-gradient(130deg,#274461f5,#192f47ef);
+}
+.lup-place .place-bubble {background:#1b2c44ed;}
+.lup-place .lup-own-msg .place-bubble {background:#284564f2;}
+.lup-place .place-social-heading {position:relative;padding-top:13px;}
+.lup-place .place-social-heading::before {
+ content:'';display:block;width:34px;height:3px;margin:0 0 18px;
+ background:linear-gradient(90deg,#abdfff,#abdfff00);border-radius:3px;
+}
+.lup-place .place-eyebrow {color:#a7d5f5;}
+.lup-place .place-empty-mark {
+ position:relative;
+ background:linear-gradient(145deg,#315371b3,#162c4580);
+ border:1px solid #b2e2ff38;
+ box-shadow:inset 0 1px 0 #e1f5ff14,0 12px 35px #07142745;
+ color:#c0e8ff;
+}
+.lup-place .place-empty-mark::before {
+ content:'';position:absolute;inset:-12px;border-radius:inherit;
+ border:1px solid #95d3fb18;
+}
+.lup-place .place-primary:hover {background:#b6dfff;}
+.lup-place .place-search-qr,.lup-place .place-person-actions .place-person-chat {color:#c2e4fc;}
+.lup-place .place-message-meta strong {color:#c5def4;}
+.lup-place .place-composer {z-index:2;}
+.lup-place .place-composer:focus-within {border-top-color:#8ec9ef55!important;}
+.lup-place .place-thread,.lup-place .place-friend,.lup-place .place-person {
+ transition:transform 180ms ease;
+}
+@media(hover:hover) {
+ .lup-place .place-thread:hover,.lup-place .place-friend:hover,.lup-place .place-person:hover {transform:translateY(-2px);}
+}
+@keyframes place-neighborhood-walk {
+ 0% {transform:translate3d(430px,72px,0);opacity:0;}
+ 5% {opacity:.7;}
+ 20% {transform:translate3d(352px,265px,0);opacity:.85;}
+ 32% {transform:translate3d(234px,216px,0);opacity:.4;}
+ 54% {transform:translate3d(143px,441px,0);opacity:.8;}
+ 68% {transform:translate3d(282px,499px,0);opacity:.45;}
+ 89% {transform:translate3d(184px,740px,0);opacity:.75;}
+ 98% {transform:translate3d(74px,694px,0);opacity:0;}
+ 100% {transform:translate3d(5px,864px,0);opacity:0;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .lup-place .place-shell::after {animation:none;transform:translate3d(352px,265px,0);opacity:.45;}
+ .lup-place .place-thread,.lup-place .place-friend,.lup-place .place-person {transition:none;transform:none!important;}
+}
+@media print {
+ .lup-place .place-shell::before,.lup-place .place-shell::after {display:none;}
+}
+/* A visited-place collection: the route connects actual recorded visits. */
+.lup-place .journey-heading {padding-bottom:22px;}
+.lup-place .journey-heading h1 {max-width:370px;font-size:34px;line-height:1.1;letter-spacing:-.045em;}
+.lup-place .journey-heading p {margin-top:12px;}
+.lup-place .journey-stats {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 0 23px;margin:0 0 5px;}
+.lup-place .journey-stats > div {display:flex;flex-direction:column;gap:6px;padding-left:13px;border-left:1px solid #b0dfff30;}
+.lup-place .journey-stats strong {font-family:Ubuntu,Roboto,sans-serif;font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;}
+.lup-place .journey-stats span {color:#afc8dc;font-size:11px;line-height:1.4;}
+.lup-place .journey-featured {position:relative;isolation:isolate;display:flex;align-items:center;gap:12px;width:100%;min-height:208px;padding:22px 24px 22px 8px;box-sizing:border-box;overflow:hidden;border:1px solid #b8e5ff3b;border-radius:25px;background:linear-gradient(125deg,#244a67,#172e46 75%);color:#eff7ff;text-align:left;box-shadow:inset 0 1px 0 #d9f1ff19,0 15px 35px #06122330;}
+.lup-place .journey-featured-scene {position:relative;flex:0 0 96px;height:140px;}
+.lup-place .journey-island {position:absolute;top:44px;left:13px;width:74px;height:74px;border-radius:14px;transform:rotateX(56deg) rotateZ(45deg);background:linear-gradient(135deg,#4a8cb0,#204568);border:1px solid #a7dfff6b;box-shadow:5px 5px 0 #1c3650,9px 9px 0 #0f253c,17px 17px 22px #04152755;}
+.lup-place .journey-island::after {content:'';position:absolute;inset:12px;border:1px solid #b6e8ff40;border-radius:8px;}
+.lup-place .journey-island-pin {position:absolute;left:28px;top:14px;display:grid;place-items:center;width:48px;height:58px;border-radius:23px 23px 23px 5px;background:linear-gradient(135deg,#c5ebff,#85bee6 65%,#659ec8);color:#173751;transform:rotate(-10deg);box-shadow:4px 4px 0 #416d91,0 14px 22px #030f2040;transition:transform 220ms ease;}
+.lup-place .journey-island-pin i {font-size:25px;transform:rotate(10deg);}
+.lup-place .journey-island-ring {position:absolute;left:18px;top:102px;width:69px;height:13px;border:1px solid #b7eaff57;border-radius:50%;}
+.lup-place .journey-featured-copy {display:flex;flex-direction:column;align-items:flex-start;gap:8px;flex:1;min-width:0;}
+.lup-place .journey-featured-copy .place-eyebrow {font-size:9px;line-height:1.5;letter-spacing:.08em;}
+.lup-place .journey-featured-copy > strong {font-family:Ubuntu,Roboto,sans-serif;font-size:24px;font-weight:500;line-height:1.2;letter-spacing:-.025em;overflow-wrap:anywhere;}
+.lup-place .journey-featured-copy > small {color:#b5d2e8;font-size:12px;}
+.lup-place .journey-visit-pill {display:inline-flex;align-items:center;min-height:27px;margin-top:5px;padding:0 10px;border:1px solid #bedfff30;border-radius:9px;background:#b1dfff0f;color:#d6edfb;font-size:11px;}
+.lup-place .journey-featured-arrow {position:absolute;top:14px;right:14px;color:#bedbf0;font-size:18px;}
+.lup-place .journey-list-title {display:flex;align-items:center;justify-content:space-between;margin:29px 0 15px;}
+.lup-place .journey-list-title h2 {margin:0;font-family:Ubuntu,Roboto,sans-serif;font-size:20px;font-weight:500;letter-spacing:-.025em;}
+.lup-place .journey-list-title > i {font-size:22px;color:#9bcfff;}
+.lup-place .journey-controls {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:19px;}
+.lup-place .journey-filter {display:flex;align-items:center;gap:4px;padding:3px;border:1px solid #badfff1c;border-radius:13px;background:#101e31c7;}
+.lup-place .journey-filter button {min-height:40px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:#b1c6d9;font-size:11px;}
+.lup-place .journey-filter button[aria-pressed=true] {background:#a3d1f1;color:#162b42;}
+.lup-place .journey-sort {display:flex;flex:1 1 100px;max-width:155px;min-width:100px;}
+.lup-place .journey-sort select {width:100%;min-height:44px;padding:0 5px;border:0;border-bottom:1px solid #afdaff35;border-radius:0;background:#111f32;color:#c4d9e9;font:11px Roboto,Arial,sans-serif;cursor:pointer;}
+.lup-place .journey-sort select:focus-visible {outline:2px solid #9bcfff;outline-offset:3px;}
+.lup-place .journey-trail {position:relative;list-style:none;margin:0;padding:0 0 0 18px;}
+.lup-place .journey-trail::before {content:'';position:absolute;top:30px;bottom:30px;left:3px;width:1px;background:linear-gradient(#90c9ee8c,#90c9ee18);}
+.lup-place .journey-trail > li {position:relative;margin:0 0 12px;}
+.lup-place .journey-trail-dot {position:absolute;left:-18px;top:30px;width:7px;height:7px;border-radius:50%;background:#8dc5e8;box-shadow:0 0 0 4px #86cbef12;}
+.lup-place .journey-stop {display:flex;align-items:flex-start;gap:11px;width:100%;min-width:0;min-height:125px;box-sizing:border-box;padding:15px 12px;border:1px solid #b4dfff23;border-radius:17px;background:linear-gradient(135deg,#20354dea,#17283ded);color:#f1f5fc;text-align:left;transition:transform 180ms ease;}
+.lup-place .journey-stop-icon {display:grid;place-items:center;flex:0 0 35px;width:35px;height:39px;border:1px solid #b4dfff20;border-radius:10px;background:#abdfff0d;color:#b2dfff;}
+.lup-place .journey-stop-icon i {font-size:20px;}
+.lup-place .journey-stop-main {display:flex;flex:1;flex-direction:column;min-width:0;gap:5px;}
+.lup-place .journey-stop-main > small {color:#9ac5e4;font-size:9px;line-height:1.4;}
+.lup-place .journey-stop-main > strong {font-size:14px;line-height:1.4;font-weight:500;overflow-wrap:anywhere;}
+.lup-place .journey-stop-main > span {color:#b2c7db;font-size:10px;line-height:1.4;}
+.lup-place .journey-stop-main > time {margin-top:7px;color:#9dafc5;font-size:10px;line-height:1.4;}
+.lup-place .journey-stop-count {display:flex;align-items:flex-end;flex-direction:column;gap:4px;flex:0 0 38px;color:#c8e4f8;}
+.lup-place .journey-stop-count strong {font:500 21px Ubuntu,Roboto,sans-serif;font-variant-numeric:tabular-nums;}
+.lup-place .journey-stop-count small {font-size:9px;}
+.lup-place .journey-stop-count i {margin-top:17px;font-size:17px;color:#91b9d6;}
+.lup-place .journey-feedback,.lup-place .journey-note {margin:18px 0;color:#a9c1d6;font-size:12px;line-height:1.7;}
+.lup-place .journey-note {padding-left:18px;font-size:10px;}
+.lup-place .journey-stop:disabled,.lup-place .journey-featured:disabled {cursor:default;}
+/* The guest list stays readable outside a place. Actions only appear on site. */
+.lup-place .place-visitor-mode {display:flex;align-items:center;gap:10px;margin:0 0 19px;padding:12px;border:1px solid #aecfea20;border-radius:13px;background:#17283dcc;color:#b4cbe0;font-size:11px;line-height:1.6;}
+.lup-place .place-visitor-mode i {flex:0 0 19px;font-size:19px;color:#99bbd6;}
+.lup-place .place-visitor-mode.is-here {border-color:#9edeca33;background:#163339ab;color:#bee4dc;}
+.lup-place .place-visitor-mode.is-here i {color:#9edeca;}
+.lup-place .place-person {display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:13px 12px;}
+.lup-place .place-person-profile {flex:1 1 120px;min-width:0;width:auto;}
+.lup-place .place-person-profile:disabled {opacity:1;cursor:default;}
+.lup-place .place-person-profile em {flex:0 0 auto;padding:5px 7px;border:1px solid #b4dfff23;border-radius:7px;background:#9bcfff0a;color:#b5dfff;font-size:10px;font-style:normal;}
+.lup-place .place-person:not(.is-interactive) .place-person-actions {display:none;}
+.lup-place .place-person-actions {flex:0 0 auto;flex-wrap:nowrap;gap:5px;margin:0 0 0 auto;}
+.lup-place .place-person-actions button {position:relative;flex:0 0 44px;width:44px;height:44px;min-width:44px;box-sizing:border-box;padding:0;border:1px solid #b1dcff30;border-radius:13px;background:#94c6f019;color:#bde1ff;}
+.lup-place .place-person-actions button i {font-size:21px;}
+.lup-place .place-person-actions .place-person-friend.is-friend {border-color:#9edeca40;color:#bde8d7;background:#8ed2b914;}
+.lup-place .place-person-actions .place-person-friend.is-pending {border-color:#d5bf8c38;color:#d9cb9f;background:#d5bf8c0c;}
+.lup-place .place-person-actions .place-person-friend.is-incoming {border-color:#9bd6ff70;color:#dbf0ff;background:#9bcfff25;}
+.lup-place .place-person-actions .place-person-decline {border-color:transparent;background:transparent;color:#9eaec2;}
+.lup-place .place-friend-state-dot {position:absolute;right:6px;bottom:6px;width:5px;height:5px;border-radius:50%;background:currentColor;}
+.lup-place .place-person-actions button:disabled {opacity:.45;cursor:wait;}
+@media(hover:hover) {
+ .lup-place .place-person:not(.is-interactive):hover {transform:none;}
+ .lup-place .journey-featured:not(:disabled):hover .journey-island-pin {transform:translateY(-4px) rotate(-5deg);}
+ .lup-place .journey-stop:not(:disabled):hover {transform:translateX(3px);border-color:#b4dfff50;}
+}
+@media(min-width:960px) {
+ .lup-place .journey-heading h1 {max-width:none;font-size:40px;}
+ .lup-place .journey-featured {gap:30px;padding:28px;}
+ .lup-place .journey-featured-scene {flex-basis:130px;}
+ .lup-place .journey-featured-copy > strong {font-size:31px;}
+ .lup-place .journey-stats {max-width:450px;}
+}
+@media(max-width:360px) {
+ .lup-place .journey-heading h1 {font-size:31px;}
+ .lup-place .journey-featured {gap:5px;padding-right:17px;}
+ .lup-place .journey-featured-scene {flex-basis:81px;transform:scale(.86);transform-origin:center;}
+ .lup-place .journey-featured-copy > strong {font-size:21px;}
+ .lup-place .journey-filter button {padding:0 8px;font-size:10px;}
+ .lup-place .journey-sort {max-width:119px;}
+ .lup-place .journey-stop {gap:8px;padding:13px 10px;}
+ .lup-place .journey-stop-icon {flex-basis:29px;width:29px;}
+ .lup-place .place-person {padding:11px 10px;}
+ .lup-place .place-person-profile {gap:8px;}
+ .lup-place .place-person.has-incoming .place-person-profile {flex-basis:100%;}
+ .lup-place .place-person-profile .lup-avatar {flex-basis:38px;width:38px!important;height:38px!important;min-width:38px!important;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .lup-place .journey-stop,.lup-place .journey-island-pin {transition:none;transform:none;}
+ .lup-place .journey-featured:hover .journey-island-pin {transform:rotate(-10deg);}
+ .lup-place .journey-stop:hover {transform:none;}
+}
