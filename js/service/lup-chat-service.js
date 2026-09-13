@@ -67,6 +67,21 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		return WebsocketSrvc.sendBinary(gwsMessage);
 	};
 
+	/** Send a paid broadcast without pretending the sender joined every room. */
+	ChatSrvc.sendShout = function(message) {
+		var gwsMessage = new GWS_Message().cmd(0x1166).sync().writeString(message);
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(reply) {
+			var result = {
+				credits: reply.read32(),
+				locations: reply.read32(),
+				recipients: reply.read32()
+			};
+			window.GWF_USER.JSON.user_credits = result.credits;
+			$rootScope.$broadcast('lup-credits-changed', result.credits);
+			return result;
+		});
+	};
+
 	///////////
 	// Query //
 	///////////

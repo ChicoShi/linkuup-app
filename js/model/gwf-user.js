@@ -21,6 +21,7 @@ var GWF_User = function(json) {
 	this.friends = function() { return this.JSON.lup_friends||0; };
 	this.visits = function() { return this.JSON.lup_visits||0; };
 	this.cuddles = function() { return this.JSON.lup_cuddles||0; };
+	this.credits = function() { return Number(this.JSON.user_credits || 0); };
 	this.avatarVersion = function() { return this.JSON.avatar_version||0; };
 
 	this.id = function(id) { if(id) this.JSON.user_id = id; return this.JSON.user_id; };

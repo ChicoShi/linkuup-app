@@ -323,15 +323,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
 	display: flex;
 	overflow-x: auto;
 	overflow-y: hidden;
+	user-select: none;
+	-webkit-user-select: none;
 	gap: 0;
 	padding: 0 7%;
 	scroll-snap-type: x mandatory;
 	scroll-padding-inline: 7%;
 	-webkit-overflow-scrolling: touch;
-	overscroll-behavior-x: none;
-	/* Vertical scrolling stays native; horizontal drags are handled above so
-	 * their synthetic click cannot open a location. */
-	touch-action: pan-y;
+	overscroll-behavior-x: contain;
+	/* Let the browser negotiate horizontal card swipes and vertical page
+	 * scrolling.  Do not claim the gesture in JavaScript: it breaks momentum
+	 * scrolling and can leave mobile users stuck on one location. */
+	touch-action: pan-x pan-y;
 	scrollbar-width: none;
 }
 .location-rail::-webkit-scrollbar { display: none; }

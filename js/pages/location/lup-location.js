@@ -26,7 +26,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 }).controller('LocationCtrl', function($scope, $location, $route, $routeParams, $mdDialog, $translate, $timeout,
 		RoomSrvc, CommentSrvc, ChatSrvc, UserSrvc, AuthSrvc, LikeSrvc, FriendSrvc,
-		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, PositionSrvc) {
+		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, PositionSrvc, ConfigSrvc) {
 	
 	$scope.LikeSrvc = LikeSrvc;
 	$scope.FriendSrvc = FriendSrvc;
@@ -254,8 +254,17 @@ angular.module('LUP').config(function($routeProvider) {
 				$mdDialog.cancel();
 			};
 			$scope.vote = function() {
+				// The rating component has an isolate scope. Keep the selected value
+				// explicitly on this dialog scope before it is destroyed.
+				$scope.data.rating = Number($scope.data.rating) || 0;
+				if ($scope.data.rating < 1 || $scope.data.rating > 10) {
+					return;
+				}
 				$mdDialog.cancel();
 				scope.onRoomVoteComment($scope.data.rating, $scope.data.comment);
+			};
+			$scope.setRating = function(rating) {
+				$scope.data.rating = Number(rating) || 0;
 			};
 		}];
 		
@@ -279,11 +288,14 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.onRoomVoteComment = function(rating, commentText) {
 		console.log('LocationCtrl.onRoomVoteComment()', rating, commentText);
+		commentText = (commentText || '').trim();
 		$scope.data.rating = rating;
 		$scope.data.commentInput = commentText;
 		return $scope.onVoteRoom(rating).then(function() {
-			return CommentSrvc.saveComment($scope.data.room, commentText);
-		}).then($scope.savedComment, ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
+			// A rating is useful on its own. Only create/update a comment when the
+			// visitor actually wrote one; an empty review must not block voting.
+			return commentText ? CommentSrvc.saveComment($scope.data.room, commentText) : null;
+		}).then($scope.savedComment)['catch'](ErrorSrvc.websocketError);
 	};
 	
 
@@ -291,7 +303,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.onVoteRoom()', rating);
 		var roomId = $scope.data.room.id();
 		var gwsMessage = new GWS_Message().cmd(0x1120).sync().write32(roomId).write8(rating);
-		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted, ErrorSrvc.websocketJSONError)['catch']($scope.catchUnknown);
+		return WebsocketSrvc.sendBinary(gwsMessage).then($scope.onVoted);
 	};
 	
 	$scope.onVoted = function(gwsMessage) {
@@ -399,6 +411,36 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.scrollChatToBottom(true);
 	};
 
+	$scope.leaveChat = function() {
+		var room = $scope.data.room;
+		if (!room || !room.id() || !ChatSrvc.CHATROOM || ChatSrvc.CHATROOM.id() !== room.id()) {
+			return $location.path('/locations');
+		}
+		return ChatSrvc.part(room).then(function() {
+			$location.path('/locations');
+		})['catch']($scope.catchUnknown);
+	};
+
+	$scope.sendShout = function() {
+		var message = ($scope.data.message || '').trim();
+		var cost = ConfigSrvc.shoutCost();
+		if (!message) {
+			return;
+		}
+		return DialogSrvc.show($mdDialog.confirm()
+			.title('An alle Locations senden?')
+			.textContent('Der Shout wird an alle aktuell besetzten Locations gesendet. Kosten: ' + cost + ' Credits.')
+			.ariaLabel('Shout senden')
+			.ok('Senden')
+			.cancel('Abbrechen'))
+		.then(function() {
+			return ChatSrvc.sendShout(message).then(function(result) {
+				$scope.data.message = '';
+				return ErrorSrvc.showMessage('Gesendet an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
+			}, ErrorSrvc.websocketError);
+		});
+	};
+
 	$scope.onMessageRead = function(lupMessage) {
 		console.log('LocationCtrl.onMessageRead()', lupMessage);
 		ChatSrvc.markRead(lupMessage);
@@ -417,48 +459,6 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.scrollChatToBottom(false);
 		}
 	});
-	var leaveHandled = false;
-	var isSameLocationPath = function(path) {
-		return new RegExp('^/location/' + $scope.data.room.id() + '(?:/(?:chat|visitors))?$').test(path);
-	};
-	var routeFromUrl = function(url) {
-		var marker = '#!';
-		var index = url.indexOf(marker);
-		return index >= 0 ? url.substring(index + marker.length) : '';
-	};
-	$scope.$on('$locationChangeStart', function(event, nextUrl) {
-		var room = $scope.data.room;
-		if (leaveHandled || !room || !room.id() ||
-			!ChatSrvc.CHATROOM || ChatSrvc.CHATROOM.id() !== room.id()) {
-			return;
-		}
-		var nextPath = routeFromUrl(nextUrl);
-		if (!nextPath || isSameLocationPath(nextPath)) {
-			return;
-		}
-		// The physical door is the explicit entry gesture. Leaving should be just
-		// as direct: navigate away and part the live room without a second dialog.
-		leaveHandled = true;
-		ChatSrvc.part(room)['catch']($scope.catchUnknown);
-	});
-	$scope.$on('$destroy', function() {
-		// Switching between Location, Chat and Online recreates this controller in
-		// Angular. That is still the same physical place, so it must not emit PART
-		// between the join and the first typed message.
-		var sameLocationView = isSameLocationPath($location.path());
-		if (sameLocationView) {
-			return;
-		}
-		if (leaveHandled) {
-			return;
-		}
-		// Navigating away really does mean leaving the live-presence room.
-		// The server broadcasts the part event, removing the mini avatar at once.
-		if (ChatSrvc.CHATROOM && ChatSrvc.CHATROOM.id() === $scope.data.room.id()) {
-			ChatSrvc.part($scope.data.room);
-		}
-	});
-
 	//////////
 	// Maps //
 	//////////

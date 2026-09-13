@@ -50,6 +50,12 @@
 <section layout="row" flex>
   <md-button type="submit" class="md-primary md-raised login-button" ng-click="register()" translate="BTN_REGISTER"></md-button>
 </section>
+<section class="login-google" layout="row" flex>
+  <md-button
+   aria-label="Mit Google fortfahren"
+   ng-click="initGoogleAuth()"
+   class="md-raised google-button"><span class="google-mark" aria-hidden="true">G</span><span>Mit Google fortfahren</span></md-button>
+</section>
 <section layout="row" flex>
   <md-button ng-click="gotoLogin()" class="md-primary md-raised backtologin" translate="BACK_TO_LOGIN"></md-button>
 </section>

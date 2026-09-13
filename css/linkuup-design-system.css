@@ -2028,6 +2028,8 @@ md-list.usernavigation .presence-actions .usericon {
 .register-page .register-panel .lup-tos-line a { color:#cbbdff; }
 .register-page .register-panel > section { width:100%; margin:0; padding:0; }
 .register-page .register-panel .login-button { width:100%; height:48px; margin:0 0 9px; border:1px solid rgba(233,227,255,.26); border-radius:14px; background:linear-gradient(105deg,#8d75e5,#5a94d8) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 10px 20px rgba(42,48,113,.24); color:#fff; font-size:14px; font-weight:800; }
+.register-page .register-panel .google-button { display:block; width:100%; height:42px; margin:0 0 9px; border:1px solid rgba(195,222,255,.16) !important; border-radius:14px; background:rgba(7,13,27,.38) !important; box-shadow:none !important; color:#eaf4ff !important; font-size:12px; font-weight:740; text-transform:none; }
+.register-page .register-panel .google-button:hover { background:rgba(116,163,215,.13) !important; }
 .register-page .register-panel .backtologin { width:100%; height:42px; margin:0; border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.045) !important; color:#ded9ec; font-size:12px; font-weight:750; }
 .register-page .login-bottom { width:min(88%,410px); margin:8px auto 0; padding-bottom:18px; }
 
@@ -3243,7 +3245,9 @@ md-list.usernavigation .presence-actions .usericon {
 
 /* Keep the category response, remove the visible circuit. The discovery strip
    stays calm while the matching seal still gives the user orientation. */
-.nearby .location-categories button::after { display:none !important; }
+.nearby .location-categories button::after { display:block !important; opacity:0; transform:scaleX(0); transform-origin:center; transition:transform 190ms cubic-bezier(.2,.85,.25,1),opacity 120ms ease-out; }
+.nearby .location-categories button.is-current-category::after { opacity:1; transform:scaleX(1); }
+@media (prefers-reduced-motion:reduce) { .nearby .location-categories button::after { transition:none; } }
 .nearby .slickit::before,
 .nearby .slickit::after { content:none; display:none; }
 .nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:not(:nth-child(1)) {
@@ -3850,10 +3854,13 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .auth-panel .signup,.auth-panel .pwforgot { width:auto !important; margin:0 !important; font-size:11px !important; line-height:1.45 !important; }
 .auth-panel .pwforgot { margin-left:auto !important; text-align:right !important; }
 .auth-panel .signup a,.auth-panel .pwforgot a { color:#b9e2fb !important; font-weight:720 !important; text-decoration:none !important; }
-.auth-panel .login-submit,.auth-panel .login-social,.auth-panel .login-guest { width:100% !important; padding:0 !important; }
+.auth-panel .login-submit,.auth-panel .login-google,.auth-panel .login-social,.auth-panel .login-guest { width:100% !important; padding:0 !important; }
 .auth-panel .login-button { width:100% !important; min-height:50px !important; height:50px !important; margin:10px 0 0 !important; border:1px solid rgba(224,240,255,.31) !important; border-radius:13px !important; background:linear-gradient(108deg,#5794c6,#735fc4) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 13px 25px rgba(54,75,168,.28) !important; color:#fff !important; font-size:13px !important; font-weight:820 !important; letter-spacing:.02em !important; text-transform:none !important; }
 .auth-panel .login-button:hover { filter:brightness(1.08) saturate(1.04); transform:translateY(-1px); }
 .auth-panel .login-button:active { transform:translateY(1px); }
+.auth-panel .google-button { display:block !important; width:100% !important; min-height:42px !important; height:42px !important; margin:9px 0 0 !important; border:1px solid rgba(195,222,255,.16) !important; border-radius:12px !important; background:rgba(7,13,27,.38) !important; box-shadow:none !important; color:#eaf4ff !important; font-size:12px !important; font-weight:740 !important; text-transform:none !important; }
+.auth-panel .google-button:hover { background:rgba(116,163,215,.13) !important; }
+.auth-panel .google-mark { margin-right:8px; color:#9cd8f8; font-family:Arial,sans-serif; font-size:17px; font-weight:850; }
 .auth-panel .login-social { display:flex !important; gap:9px; margin-top:10px !important; }
 .auth-panel .facebook-button,.auth-panel .instagram-button { flex:1 1 0; min-width:0 !important; height:40px !important; min-height:40px !important; margin:0 !important; border:1px solid rgba(195,222,255,.13) !important; border-radius:12px !important; background:rgba(7,13,27,.38) !important; box-shadow:none !important; }
 .auth-panel .facebook-button:hover,.auth-panel .instagram-button:hover { background:rgba(116,163,215,.13) !important; }

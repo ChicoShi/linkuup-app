@@ -144,6 +144,30 @@ md-input-container:not(.md-input-invalid).md-input-focused label {
 {
     width: 50%;
 }
+.google-button {
+	width:100%;
+	margin:0 8px;
+	min-height:46px;
+	border:1px solid rgba(195,222,255,.20) !important;
+	border-radius:12px;
+	background:rgba(7,13,27,.38) !important;
+	box-shadow:none !important;
+	color:#eff6ff !important;
+	font-size:13px;
+	font-weight:720;
+	letter-spacing:0;
+	text-transform:none;
+}
+.google-button:hover { background:rgba(116,163,215,.13) !important; }
+.google-mark {
+	display:inline-block;
+	margin-right:8px;
+	color:#8cccf4;
+	font-family:Arial,sans-serif;
+	font-size:18px;
+	font-weight:800;
+	line-height:1;
+}
 
 .login-button {
     background-image: linear-gradient(to top, #b712ff 0%, #9c1cd1 100%);
@@ -457,7 +481,7 @@ section.login md-content {
 .auth-panel .pwforgot { margin-left:auto; text-align:right; }
 .auth-panel .signup span { width:auto; float:none; }
 .auth-panel .signup a,.auth-panel .pwforgot a { color:#a8d9f8; font-weight:700; text-decoration:none; }
-.auth-panel .login-submit,.auth-panel .login-social,.auth-panel .login-guest,.auth-panel .guest-submit,.auth-panel .guest-back { display:block; width:100%; box-sizing:border-box; padding:0 !important; }
+.auth-panel .login-submit,.auth-panel .login-google,.auth-panel .login-social,.auth-panel .login-guest,.auth-panel .guest-submit,.auth-panel .guest-back { display:block; width:100%; box-sizing:border-box; padding:0 !important; }
 .auth-panel .login-button,.auth-panel .backtologin {
 	display:block;
 	width:100%;
@@ -477,6 +501,7 @@ section.login md-content {
 	text-transform:none;
 }
 .auth-panel .login-social { display:none; }
+.auth-panel .google-button { display:block; width:100%; margin:9px 0 0; }
 .auth-panel .guest-button {
 	display:block;
 	width:100%;

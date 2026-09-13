@@ -2,7 +2,7 @@
  * Base controller that catches some nav/auth/connection events.
  */
 angular.module('LUP').
-controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $location, $mdMedia, $mdSidenav, $mdToast, $translate,
+controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $location, $mdMedia, $mdSidenav, $mdToast, $mdDialog, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
 		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc,
@@ -28,6 +28,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	
 	$scope.V = window.LUP_BUILD;
 	$scope.LUP_CONFIG = window.LUP_CONFIG;
+	$scope.ConfigSrvc = ConfigSrvc;
 
 	// Hook DialogSrvc in main scope
 	$scope.DialogSrvc = DialogSrvc;
@@ -380,11 +381,21 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		$scope.data.ownUser = window.GWF_USER;
 		$scope.data.authenticated = window.GWF_USER.authenticated(true);
 		UserSrvc.loggedIn(window.GWF_USER);
-		$rootScope.$broadcast('lup-menu-refresh', window.GWF_USER);
 		var path = $scope.data.initialUrl || '/locations';
 		$scope.data.initialUrl = undefined;
 		$scope.data.authRedirectPending = true;
-		SettingsSrvc.withConfig().then(function(){
+		// The login reply only contains the generic core user JSON. Refresh the
+		// LinkUUp user payload as well, otherwise trophy fields such as lup_vip
+		// stay at their pre-login value until the next page reload.
+		UserSrvc.withUser(window.GWF_USER.id(), true).then(function(user) {
+			$scope.data.user = user;
+			$scope.data.ownUser = user;
+			return SettingsSrvc.withConfig();
+		}, function(error) {
+			console.warn('LUP: Could not refresh the authenticated user.', error);
+			return SettingsSrvc.withConfig();
+		}).then(function(){
+			$rootScope.$broadcast('lup-menu-refresh', window.GWF_USER);
 			console.log('redirects to ' + path);
 			$location.path(path);
 		})['finally'](function() {
@@ -412,6 +423,28 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoHome = function() { $scope.goto('/home'); };
 	$scope.gotoDebug = function() { $scope.goto('/debug'); };
 	$scope.gotoBackend = function() { window.location.href = window.LUP_CONFIG.server; };
+	$scope.gotoBuyCredits = function() {
+		window.location.href = window.LUP_CONFIG.server + 'index.php?_mo=PaymentCredits&_me=OrderCredits';
+	};
+	$scope.openShout = function() {
+		var cost = ConfigSrvc.shoutCost();
+		return $mdDialog.show($mdDialog.prompt()
+			.title('Shout')
+			.textContent('An alle aktuell besetzten Locations senden. Kosten: ' + cost + ' Credits.')
+			.placeholder('Dein Shout')
+			.ariaLabel('Shout')
+			.ok('Senden')
+			.cancel('Abbrechen'))
+		.then(function(text) {
+			text = (text || '').trim();
+			if (!text) {
+				return;
+			}
+			return ChatSrvc.sendShout(text).then(function(result) {
+				return ErrorSrvc.showMessage('Gesendet an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
+			}, ErrorSrvc.websocketError);
+		})['catch'](angular.noop);
+	};
 	$scope.gotoAddRoom = function() {
 		if (!window.GWF_USER.isVIP()) {
 			return ErrorSrvc.showError($translate.instant('ERR_VIP_ONLY'), $translate.instant('TITLE_ADD_ROOM'));
@@ -788,6 +821,18 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
 		room.addUser(user);
 		var message = room.addMessage(time, user, room, gwsMessage.readString());
+		message.effect = 'blubble';
+		FXSrvc.onChat(user, room);
+		$rootScope.$broadcast('lup-room-message', room, message);
+	};
+
+	$scope.cmd_1167 = function shoutMessage(gwsMessage) {
+		console.log('LUPCtrl.shoutMessage()', gwsMessage.dump());
+		var time = gwsMessage.read32();
+		var user = UserSrvc.getOrCreate(gwsMessage.read32());
+		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
+		var message = room.addMessage(time, user, room, gwsMessage.readString());
+		message.shout = true;
 		message.effect = 'blubble';
 		FXSrvc.onChat(user, room);
 		$rootScope.$broadcast('lup-room-message', room, message);

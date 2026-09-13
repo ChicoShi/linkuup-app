@@ -1,0 +1,42 @@
+.lup-add-room-map-section {
+	margin: 22px 0 18px;
+	padding: 15px;
+	border: 1px solid rgba(163, 140, 255, .28);
+	border-radius: 14px;
+	background: rgba(21, 22, 38, .48);
+}
+
+.lup-add-room-map-section h3 {
+	margin: 0 0 7px;
+	color: #f3efff;
+	font-size: 16px;
+}
+
+.lup-add-room-map-section p {
+	margin: 0 0 12px;
+	color: #b9b6ce;
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.lup-add-room-map {
+	height: 340px;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #141523;
+}
+
+.lup-add-room-map-status {
+	margin: 10px 0 0 !important;
+	color: #a897ff !important;
+}
+
+.lup-add-room-view-radius {
+	margin: 11px 0 0 !important;
+	color: #efecff !important;
+	font-weight: 700;
+}
+
+@media (max-width: 600px) {
+	.lup-add-room-map { height: 280px; }
+}

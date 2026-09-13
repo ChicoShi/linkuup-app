@@ -22,8 +22,6 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.ConfigSrvc = ConfigSrvc;
 
-	$scope.data.facebookMode = false;
-
 	$scope.data.error = null;
 	$scope.data.errors = {};
 	$scope.data.tosLine = AuthSrvc.tosLine();
@@ -79,18 +77,7 @@ angular.module('LUP').config(function($routeProvider) {
 	///////////////
 	$scope.switchToSignUp = function() {
 		console.log('LoginCtrl.switchToSignUp()');
-		$scope.data.facebookMode = false;
 		$location.path('/signup');
-	};
-
-	///////////////////////
-	// --- LUP Login --- //
-	///////////////////////
-	$scope.switchToLogin = function() {
-		console.log('LoginCtrl.switchToLogin()');
-		$scope.data.error = null;
-		$scope.data.errors = {};
-		$scope.data.facebookMode = false;
 	};
 
 	$scope.login = function() {
@@ -173,80 +160,14 @@ angular.module('LUP').config(function($routeProvider) {
 		})['catch']($scope.catchUnknown);
 	};
 
-	////////////////////////////
-	// --- Facebook login --- //
-	////////////////////////////
-	$scope.initFacebook = function() {
-		console.log('LoginCtrl.initFacebook()');
-		$scope.data.error = null;
-		$scope.data.errors = {};
-		if (!$scope.data.fbInited) {
-			$scope.data.fbInited = true;
-			AuthSrvc.initFacebook($scope);
-		}
-		$scope.data.facebookMode = true;
+	//////////////////////////
+	// --- Google sign-in --- //
+	//////////////////////////
+	$scope.initGoogleAuth = function() {
+		// Google OAuth needs the backend's session cookie for its PKCE state.
+		// Leave the SPA for the complete browser redirect flow.
+		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
 	};
-
-	$scope.afterFacebookLogin = function() {
-		console.log('LoginCtrl.afterFacebookLogin()');
-		LoadingSrvc.addTask('oauth');
-		AuthSrvc.afterFacebookLogin().then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
-	};
-	window.afterFacebookLogin = $scope.afterFacebookLogin;
-
-	/////////////////////////////
-	// --- Instagram login --- //
-	/////////////////////////////
-	$scope.initInstagram = function() {
-//		console.log('LoginCtrl.initInstagram()');
-//		$scope.goto('/instagram-login').then(function() {
-			console.log('LoginCtrl.initInstagram()');
-			var clientId = window.LUP_CONFIG.ig_client_id;
-			var redirectURL = encodeURIComponent(window.LUP_CONFIG.ig_redirect_url);
-			var instagramURL = 'https://instagram.com/oauth/authorize/?client_id='+clientId+'&redirect_uri='+redirectURL+'&response_type=token';
-			$scope.instagramWindow = window.open(instagramURL);
-			$scope.initInstagramInterval();
-			LoadingSrvc.addTask('oauth');
-//		});
-	};
-
-	$scope.intervalRuns = 0;
-	$scope.initInstagramInterval = function() {
-		console.log('LoginCtrl.initInstagramInterval()');
-		if ($scope.instagramInterval) {
-            clearInterval($scope.instagramInterval);
-		}
-		$scope.instagramInterval = setInterval(function() {
-            try {
-                // Check if hash exists
-                if($scope.instagramWindow.location.hash.length) {
-                    // Hash found, that includes the access token
-                    clearInterval($scope.instagramInterval);
-                    $scope.instagramInterval = null;
-                    var hash = $scope.instagramWindow.location.hash;
-                    $scope.instagramToken = hash.substrFrom('#access_token=');
-                    $scope.instagramWindow.close();
-                    $scope.afterInstagram($scope.instagramToken);
-                }
-            }
-            catch(evt) {
-                // Permission denied
-            }
-            if ($scope.instagramWindow.closed) {
-        		console.log('LoginCtrl.initInstagramInterval() CLEARED');
-        		clearInterval($scope.instagramInterval);
-        		$scope.instagramInterval = null;
-            }
-        }, 100);
-
-	};
-
-	$scope.afterInstagram = function(token) {
-		console.log('LoginCtrl.afterInstagram()', token);
-		var gwsMessage = new GWS_Message().cmd(0x0112).sync().writeString(token);
-		WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
-	};
-
 
 	//////////////////
 	// --- Init --- //
@@ -257,7 +178,6 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.password = '';
 		$scope.data.nickname = '';
 		$scope.data.loginPending = false;
-		$scope.data.fbInited = false;
 		if ($scope.data.authenticated) {
 			console.log('LoginCtrl.init()');
 			let link_tos = sprintf('<a ng-click="gotoTOS();" class="toslink">%s</a>', $translate.instant('TOS_TOS'));

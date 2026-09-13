@@ -15,7 +15,7 @@
   <header class="nav-intro"><span class="nav-eyebrow">LINKUUP / {{'NAV_DISCOVER'|translate}}</span><h1>{{'NAV_HEADLINE'|translate}}</h1></header>
   <div class="search-input-wrap"><i class="material-icons" aria-hidden="true">search</i><input type="search" class="search-input" aria-label="{{'NAV_SEARCH'|translate}}" placeholder="{{'NAV_SEARCH'|translate}}" ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" /></div>
   <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}">
-   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryActive(category.ids)}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
+   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryFilterActive(category.ids),'is-current-category':isCurrentRoomCategory(category.ids)}" ng-attr-aria-pressed="{{isCategoryFilterActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
   </nav>
 
   <div class="location-rail" aria-label="{{'LOCATIONS'|translate}}">

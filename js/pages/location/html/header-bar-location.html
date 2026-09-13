@@ -7,6 +7,7 @@
       <span ng-if="data.roomReady && data.room.isSelfInRoom() && inChatRange()"><b class="place-status-dot" aria-hidden="true"></b>{{'PLACE_CHAT_ACTIVE'|translate}}</span>
       <span ng-if="!data.roomReady || !data.room.isSelfInRoom() || !inChatRange()">{{(data.roomReady && inChatRange() ? 'PLACE_HERE' : 'PLACE_DISCOVER')|translate}}</span>
     </div>
+    <button class="place-icon-button" type="button" ng-if="data.roomReady && data.room.isSelfInRoom()" ng-click="leaveChat()" aria-label="{{'PLACE_LEAVE_CHAT'|translate}}"><i class="material-icons" aria-hidden="true">logout</i></button>
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
     <button class="place-profile-button" type="button" ng-click="gotoOwnProfile()" aria-label="{{'PLACE_MY_PROFILE'|translate}}"><lup-avatar ng-user="data.ownUser"></lup-avatar></button>
   </div>

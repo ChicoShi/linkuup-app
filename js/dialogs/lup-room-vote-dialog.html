@@ -5,7 +5,7 @@
       <p class="place-dialog-room">{{room.name()}}</p><p class="place-dialog-copy">{{'LUP_VOTE_COPY'|translate}}</p>
       <p class="place-dialog-hint" ng-if="data.comment">{{'LUP_VOTE_UPDATE_NOTE'|translate}}</p>
       <section class="place-rating-control"><div><label for="place-vote-rating">{{'LUP_VOTE_RATING'|translate}}</label><output for="place-vote-rating">{{data.rating || 0}}<small> / 10</small></output></div><input id="place-vote-rating" type="range" min="1" max="10" step="1" ng-model="data.rating" aria-valuetext="{{data.rating}} {{'LUP_REVIEWS_OUT_OF_TEN'|translate}}"><div class="place-rating-scale" aria-hidden="true"><span>1</span><span>5</span><span>10</span></div></section>
-      <label class="place-field-label" for="place-vote-comment">{{'LUP_VOTE_COMMENT'|translate}}</label><textarea id="place-vote-comment" class="place-comment-field" ng-model="data.comment" rows="4" placeholder="{{'LUP_VOTE_PLACEHOLDER'|translate}}"></textarea>
+      <label class="place-field-label" for="place-vote-comment">{{'LUP_VOTE_COMMENT'|translate}} · {{'PLACE_OPTIONAL'|translate}}</label><textarea id="place-vote-comment" class="place-comment-field" ng-model="data.comment" rows="4" placeholder="{{'LUP_VOTE_PLACEHOLDER'|translate}}"></textarea>
     </div></md-dialog-content>
     <footer class="place-dialog-actions"><button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</button><button class="place-dialog-primary" type="submit">{{'LUP_VOTE_SUBMIT'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button></footer>
   </form>

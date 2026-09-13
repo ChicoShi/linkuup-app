@@ -32,6 +32,12 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.captchaUrl = function() {
 		return window.LUP_CONFIG.server + '/index.php?_mo=Captcha&_me=Image&_ajax=1';
 	};
+
+	$scope.initGoogleAuth = function() {
+		// The backend owns the OAuth state and completes the account lookup or
+		// first-time registration after Google returns the verified profile.
+		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
+	};
 	
 	$scope.register = function() {
 		console.log('RegisterCtrl.register()');

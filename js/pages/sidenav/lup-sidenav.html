@@ -54,6 +54,16 @@
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
 	  </md-list-item>
 
+	  <md-list-item class="md-1-line nav-credits" ng-click="gotoBuyCredits()" ng-if="data.ownUser.isAuthed()">
+	    <i class="material-icons nav-icon">toll</i>
+		<p>{{data.ownUser.credits()}} {{'TITLE_CREDITS'|translate}}</p>
+	  </md-list-item>
+
+	  <md-list-item class="md-1-line nav-shout" ng-click="openShout()" ng-if="data.ownUser.isAuthed()">
+	    <i class="material-icons nav-icon">campaign</i>
+		<p>Shout · {{ConfigSrvc.shoutCost()}} Credits</p>
+	  </md-list-item>
+
 	  <md-list-item class="md-1-line nav-add-room" ng-click="gotoAddRoom()" ng-if="data.ownUser.isAuthed()" ng-class="{'lup-vip-locked': !data.ownUser.isVIP()}">
 	    <i class="material-icons nav-icon">add_circle_outline</i>
 		<p>{{'TITLE_ADD_ROOM'|translate}}</p>

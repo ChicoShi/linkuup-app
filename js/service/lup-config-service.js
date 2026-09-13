@@ -86,6 +86,32 @@ service('ConfigSrvc', function(RequestSrvc) {
 		console.log('ConfigSrvc.ipp() === ', result);
 		return result;
 	};
+
+	////////////////
+	// --- LinkUUp --- //
+	////////////////
+	ConfigSrvc.roomCost = function() {
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).room_cost || 0);
+	};
+
+	ConfigSrvc.roomViewCost = function() {
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).room_cost_view || 0);
+	};
+
+	ConfigSrvc.roomViewCostUnit = function() {
+		var unit = Number((ConfigSrvc.CACHE.LinkUUp || {}).room_cost_view_unit || .5);
+		return unit > 0 ? unit : .5;
+	};
+
+	ConfigSrvc.shoutCost = function() {
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).shout_cost || 0);
+	};
+
+	ConfigSrvc.roomCreationCost = function(viewRadius) {
+		var radius = Math.max(0, Number(viewRadius) || 0);
+		var viewCost = radius * ConfigSrvc.roomViewCost() / ConfigSrvc.roomViewCostUnit();
+		return ConfigSrvc.roomCost() + Math.ceil(viewCost);
+	};
 	
 	ConfigSrvc.singleACL = function() {
 		var result = ConfigSrvc.CACHE.Profile.profile_single_acl;
