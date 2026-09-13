@@ -21,7 +21,8 @@
 </md-list>
 
 <div class="profile-insight-control" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
-  <button type="button" class="profile-insight-toggle" ng-click="toggleProfileDetails()" ng-class="{'is-open': data.profileDetailsOpen}" aria-expanded="{{data.profileDetailsOpen}}">
+  <button type="button" class="profile-insight-toggle" ng-click="toggleProfileDetails()" ng-class="{'is-open': data.profileDetailsOpen}" ng-attr-aria-expanded="{{data.profileDetailsOpen ? 'true' : 'false'}}" aria-controls="profile-insight-content">
+    <span class="profile-insight-toggle-mark" aria-hidden="true"><i class="material-icons">{{data.profileDetailsOpen ? 'visibility_off' : 'visibility'}}</i></span>
     <span class="profile-insight-toggle-copy">
       <small>{{'PROFILE_INSIGHT_LABEL'|translate}}</small>
       <strong ng-if="!data.profileDetailsOpen">{{'PROFILE_INSIGHT_OPEN'|translate}}</strong>
@@ -31,7 +32,7 @@
   </button>
 </div>
 
-<div class="profile-detail-reveal" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length" ng-class="{'is-open': data.profileDetailsOpen}">
+<div id="profile-insight-content" class="profile-detail-reveal" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length" ng-class="{'is-open': data.profileDetailsOpen}">
   <section class="profile-information profile-signal-board">
     <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
       <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
