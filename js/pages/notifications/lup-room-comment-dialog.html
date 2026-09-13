@@ -1,30 +1,5 @@
-<md-dialog id="lup-notification-comment-dialog" class="lup-dialog-shell" aria-label="new comment">
-  <form ng-cloak>
-
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2 translate="DLGT_NEW_COMMENT"></h2>
-        <span flex></span>
-        <md-button class="md-icon-button" ng-click="ok()">
-          <i class="material-icons">close</i>
-        </md-button>
-      </div>
-    </md-toolbar>
-
-    <md-dialog-content>
-      <div class="md-dialog-content">
-        <p>{{data.commentText}}</p>
-        <jk-rating-stars
-         ng-if="data.rating"
-         max-rating="5"
-         rating="data.rating"
-         read-only="true"></jk-rating-stars>
-      </div>
-    </md-dialog-content>
-
-    <md-dialog-actions layout="row">
-      <md-button ng-click="ok()" translate="BTN_OK"></md-button>
-    </md-dialog-actions>
-    
-  </form>
+<md-dialog class="place-dialog" aria-label="{{'DLGT_NEW_COMMENT'|translate}}">
+  <header class="place-dialog-header"><span class="place-dialog-symbol"><i class="material-icons" aria-hidden="true">chat_bubble_outline</i></span><div><span>LinkUUp</span><h2>{{'DLGT_NEW_COMMENT'|translate}}</h2></div><button class="place-dialog-close" type="button" ng-click="ok()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
+  <md-dialog-content><div class="place-dialog-body"><p class="place-dialog-copy">{{data.commentText}}</p><p class="place-review-rating" ng-if="data.rating"><i class="material-icons" aria-hidden="true">star</i>{{data.rating}} / 10</p></div></md-dialog-content>
+  <footer class="place-dialog-actions"><button class="place-dialog-primary" type="button" ng-click="ok()">{{'PLACE_CLOSE'|translate}}</button></footer>
 </md-dialog>

@@ -1,24 +1,13 @@
-<md-toolbar class="md-hue-2 lup-top-bar">
-	<div class="md-toolbar-tools">
-
-    	<i class="material-icons menutop" ng-click="openLeft()">menu</i>
-
-		<md-button class="md-icon-button" aria-label="Nearby" ng-click="gotoReferrer()">
-			<i class="material-icons">arrow_back</i>
-		</md-button>
-
-		<div flex md-truncate class="location-top-identity">
-			<span class="location-top-icon"><i class="material-icons">forum</i></span>
-			<div class="location-top-copy">
-				<div class="room-name" ng-bind-html="headerRoomName()"></div>
-				<span ng-if="data.room.isSelfInRoom() && inChatRange()"><i class="material-icons">fiber_manual_record</i> Chat aktiv</span>
-				<span ng-if="!data.room.isSelfInRoom() || !inChatRange()"><i class="material-icons">place</i> Ort ansehen</span>
-			</div>
-		</div>
-    
-        <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
-
-		<lup-avatar ng-user="data.ownUser" aria-label="Your own profile" ng-click="gotoOwnProfile()"></lup-avatar>
-
-	</div>
+<md-toolbar class="md-hue-2 lup-top-bar place-topbar">
+  <div class="md-toolbar-tools">
+    <button class="place-icon-button menutop" type="button" ng-click="openLeft()" aria-label="{{'PLACE_MENU'|translate}}"><i class="material-icons" aria-hidden="true">menu</i></button>
+    <button class="place-icon-button" type="button" ng-click="gotoReferrer()" aria-label="{{'PLACE_BACK'|translate}}"><i class="material-icons" aria-hidden="true">arrow_back</i></button>
+    <div class="place-topbar-copy" flex>
+      <strong>{{data.roomReady ? headerRoomName() : ('TAB_LOCATION'|translate)}}</strong>
+      <span ng-if="data.roomReady && data.room.isSelfInRoom() && inChatRange()"><b class="place-status-dot" aria-hidden="true"></b>{{'PLACE_CHAT_ACTIVE'|translate}}</span>
+      <span ng-if="!data.roomReady || !data.room.isSelfInRoom() || !inChatRange()">{{(data.roomReady && inChatRange() ? 'PLACE_HERE' : 'PLACE_DISCOVER')|translate}}</span>
+    </div>
+    <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
+    <button class="place-profile-button" type="button" ng-click="gotoOwnProfile()" aria-label="{{'PLACE_MY_PROFILE'|translate}}"><lup-avatar ng-user="data.ownUser"></lup-avatar></button>
+  </div>
 </md-toolbar>

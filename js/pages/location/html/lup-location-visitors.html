@@ -1,52 +1,20 @@
-<md-list
- class="usernavigation location-online-view"
- in-view="$inview&&visitorsVisible()"
- in-view-options="{considerPageVisibility:true}"
- flex>
-  
-  <section class="online-room-header" ng-class="locationVisual(data.room).class" aria-live="polite">
-    <span class="presence-live-mark" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></span>
-    <div class="presence-header-copy">
-      <strong>{{ 'ONLINE_LIVE_TITLE' | translate }}</strong>
-      <span>{{ 'ONLINE_LIVE_SUBTITLE' | translate }}</span>
+<section class="place-people" in-view="$inview&&visitorsVisible()" in-view-options="{considerPageVisibility:true}">
+  <div class="place-ambient-route" aria-hidden="true"><span></span></div>
+  <div class="place-content">
+    <header class="place-panel-heading"><div><span class="place-eyebrow">{{'PLACE_SAME_PLACE'|translate}}</span><h2>{{'PLACE_PEOPLE'|translate}}</h2><p>{{'PLACE_PEOPLE_COPY'|translate}}</p></div><span class="place-people-count"><i class="material-icons" aria-hidden="true">people_outline</i>{{visitorCount()}}</span></header>
+    <div class="place-people-list">
+      <section class="place-empty" ng-if="!visitorCount()"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">people_outline</i></span><h3>{{'PLACE_PEOPLE_EMPTY'|translate}}</h3><p>{{'ONLINE_EMPTY_SUBTITLE'|translate}}</p></section>
+      <article class="place-person" ng-repeat="user in sortedVisitors() track by user.id()">
+        <button class="place-person-profile" type="button" ng-click="gotoProfile(user)"><lup-avatar ng-user="user"></lup-avatar><span><strong>{{user.displayName()}}</strong><small>{{user.status() || ('ONLINE_VISITOR_HERE'|translate)}}</small></span><em ng-if="user.isSelf()">{{'PLACE_YOU'|translate}}</em></button>
+        <div class="place-person-actions" ng-if="!user.isSelf()">
+          <button type="button" class="place-person-chat" ng-click="gotoQuery(user)"><i class="material-icons" aria-hidden="true">chat_bubble_outline</i>{{'TAB_CHAT'|translate}}</button>
+          <button type="button" ng-click="FriendSrvc.addFriend(user)" ng-if="user.isMember() && data.user.isMember() && !user.isFriend() && !user.JSON.relation_pending" aria-label="{{'PLACE_ADD_FRIEND'|translate}}"><i class="material-icons" aria-hidden="true">person_add_alt_1</i><span>{{'PLACE_FRIEND'|translate}}</span></button>
+          <button type="button" ng-click="FriendSrvc.cancelFriendRequest(user)" ng-if="user.isMember() && data.user.isMember() && !user.isFriend() && user.JSON.relation_pending" aria-label="{{'PLACE_CANCEL_FRIEND'|translate}}"><i class="material-icons" aria-hidden="true">hourglass_top</i><span>{{'PLACE_PENDING'|translate}}</span></button>
+          <button type="button" ng-click="FriendSrvc.removeFriend(user)" ng-if="user.isMember() && data.user.isMember() && user.isFriend()" aria-label="{{'PLACE_REMOVE_FRIEND'|translate}}"><i class="material-icons" aria-hidden="true">people_outline</i><span>{{'PLACE_FRIEND'|translate}}</span></button>
+          <button type="button" ng-click="LikeSrvc.likeUser(user)" ng-if="user.isMember()" aria-label="{{'PLACE_SEND_UP'|translate}}"><i class="material-icons" aria-hidden="true">bolt</i><span>Up</span></button>
+        </div>
+      </article>
     </div>
-    <span class="presence-total" aria-label="{{visitorCount()}} Personen online"><strong>{{visitorCount()}}</strong><small>ONLINE</small></span>
-  </section>
-
-  <div class="visitors-list">
-	  <section class="presence-empty" ng-if="!visitorCount()">
-		<i class="material-icons" aria-hidden="true">location_searching</i>
-		<strong>Noch ruhig hier.</strong>
-      <span>{{ 'ONLINE_EMPTY_SUBTITLE' | translate }}</span>
-	  </section>
-	  <md-list-item class="md-2-line presence-person no-right" ng-repeat="user in sortedVisitors() track by user.id()">
-		<lup-avatar class="presence-avatar" ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
-		<div ng-click="gotoProfile(user)" class="md-list-item-text presence-person-copy" layout="column">
-		  <p class="username">{{ user.displayName(); }}</p>
-		  <p>{{ user.status() || ('ONLINE_VISITOR_HERE' | translate) }}</p>
-		</div>
-		<div class="presence-actions">
-		  <button type="button" class="presence-action presence-message" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()">
-			<i class="material-icons">chat_bubble</i>
-			<span>Chat</span>
-		  </button>
-		  <button type="button" class="presence-action presence-friend" aria-label="Freundschaftsanfrage senden" title="Freundschaftsanfrage senden" ng-click="FriendSrvc.addFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && !user.JSON.relation_pending">
-			<i class="material-icons">person_add_alt_1</i>
-			<span>Freund</span>
-		  </button>
-		  <button type="button" class="presence-action presence-friend presence-pending" aria-label="Freundschaftsanfrage zurücknehmen" title="Anfrage zurücknehmen" ng-click="FriendSrvc.cancelFriendRequest(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && !user.isFriend() && user.JSON.relation_pending">
-			<i class="material-icons">hourglass_top</i>
-			<span>Offen</span>
-		  </button>
-		  <button type="button" class="presence-action presence-friend presence-connected" aria-label="Freundschaft entfernen" title="Freundschaft entfernen" ng-click="FriendSrvc.removeFriend(user)" ng-if="!user.isSelf() && user.isMember() && data.user.isMember() && user.isFriend()">
-			<i class="material-icons">group</i>
-			<span>Freund</span>
-		  </button>
-		  <button type="button" class="presence-action presence-up" aria-label="Up senden" title="Up senden" ng-click="LikeSrvc.likeUser(user)" ng-if="!user.isSelf() && user.isMember()">
-			<i class="material-icons">bolt</i>
-			<span>Up</span>
-		  </button>
-		</div>
-	  </md-list-item>
-   </div>
-</md-list>
+    <p class="place-footnote"><i class="material-icons" aria-hidden="true">visibility</i>{{'PLACE_VISIBLE_PEOPLE'|translate}}</p>
+  </div>
+</section>

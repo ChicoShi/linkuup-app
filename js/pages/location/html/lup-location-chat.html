@@ -1,40 +1,16 @@
-<div class="location-chat-surface" ng-class="locationVisual(data.room).class" layout="column" flex
- XXin-view="$inview&&chatVisible()">
-  <div class="chat-location-atmosphere" aria-hidden="true"><i class="material-icons">{{locationVisual(data.room).icon}}</i></div>
-  <div class="chat-msgs md-padding" flex="100">
-<!-- 	<div class="msgline"> -->
-		<div
-		 ng-repeat="msg in data.room.MESSAGES"
-		 class="lup-msg"
-		 lup-effect="msg.effect"
-		 in-view="$inview&&onMessageRead(msg)"
-		 in-view-options="{considerPageVisibility:true}"
-		 ng-class="{'lup-own-msg':msg.isOwnMessage(),
-		 	'lup-system-msg':msg.isSystemMessage(),
-		 	'lup-notification-unread':!msg.read,
-		 	'lup-other-msg':!msg.isOwnMessage() && !msg.isSystemMessage()}">
-		  <div class="head">
-			  <p class="msg">
-				  
-				  <span class="name">{{msg.user.displayName()}}</span>
-				  <span class="time">{{msg.time|msgDate}}</span>
-				  <span class="message"><span class="messager-inner">{{msg.text}}</span>
-				  <lup-avatar
-				   ng-user="msg.user"
-				   ng-if="!msg.isSystemMessage()"
-				   ng-click="gotoProfile(msg.user)"></lup-avatar>
-			  </p>
-		  </div>
-		</div>
-		
-<!--     </div> -->
+<div class="location-chat-surface place-chat" layout="column" flex>
+  <div class="place-ambient-route" aria-hidden="true"><span></span></div>
+  <header class="place-panel-heading"><div><span class="place-eyebrow">{{'PLACE_ROOM_CHAT'|translate}}</span><h2>{{'PLACE_CONVERSATION'|translate}}</h2></div><button class="place-small-presence" type="button" ng-click="openVisitorsTab()"><span class="place-status-dot" aria-hidden="true"></span>{{visitorCount()}}<i class="material-icons" aria-hidden="true">people_outline</i><span class="place-sr-only">{{'TAB_ONLINE'|translate}}</span></button></header>
+  <div class="chat-msgs place-messages" role="log" aria-label="{{'PLACE_ROOM_CHAT'|translate}}" aria-live="polite" aria-relevant="additions text">
+    <section class="place-empty" ng-if="!data.room.MESSAGES.length"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">waving_hand</i></span><h3>{{'PLACE_CHAT_EMPTY'|translate}}</h3><p>{{'PLACE_CHAT_EMPTY_COPY'|translate}}</p></section>
+    <div ng-repeat="msg in data.room.MESSAGES" class="lup-msg place-message" lup-effect="msg.effect" in-view="$inview&&onMessageRead(msg)" in-view-options="{considerPageVisibility:true}" ng-class="{'lup-own-msg':msg.isOwnMessage(),'lup-system-msg':msg.isSystemMessage(),'lup-notification-unread':!msg.read,'lup-other-msg':!msg.isOwnMessage() && !msg.isSystemMessage()}">
+      <button class="place-message-avatar" type="button" ng-if="!msg.isSystemMessage() && !msg.isOwnMessage()" ng-click="gotoProfile(msg.user)" aria-label="{{msg.user.displayName()}}"><lup-avatar ng-user="msg.user"></lup-avatar></button>
+      <div class="place-message-content"><div class="place-message-meta" ng-if="!msg.isSystemMessage()"><strong>{{msg.user.displayName()}}</strong><time>{{msg.time|msgDate}}</time></div><p class="place-bubble">{{msg.text}}</p></div>
+    </div>
   </div>
-  <div class="chatbottom" ng-if="data.room.isSelfInRoom() && inChatRange()">
-	<div class="chat-input">
-		<input type="text" ng-model="data.message" ng-enter="sendMessage()" placeholder="Nachricht schreiben …" aria-label="Nachricht schreiben" />
-	</div>
-	<div class="chat-button chat-compose-send">
-		<button type="button" ng-click="sendMessage()" class="sendbutton" aria-label="Nachricht senden" title="Nachricht senden"><i class="material-icons">done</i></button>
-	</div>
-  </div>
+  <form class="chatbottom place-composer" ng-if="data.room.isSelfInRoom() && inChatRange()" ng-submit="sendMessage()">
+    <input type="text" ng-model="data.message" placeholder="{{'PLACE_MESSAGE'|translate}}" aria-label="{{'PLACE_MESSAGE'|translate}}" autocomplete="off" />
+    <button type="submit" class="place-send" ng-disabled="!data.message.trim()" aria-label="{{'PLACE_SEND'|translate}}"><i class="material-icons" aria-hidden="true">arrow_upward</i></button>
+  </form>
+  <div class="place-join-state" ng-if="!data.room.isSelfInRoom() || !inChatRange()"><p>{{(data.chatJoining ? 'PLACE_JOINING' : 'PLACE_CHAT_RANGE')|translate}}</p><button class="place-tool" ng-if="!data.chatJoining" type="button" ng-click="joinChat($event)"><i class="material-icons" aria-hidden="true">login</i>{{'PLACE_JOIN'|translate}}</button></div>
 </div>

@@ -66,13 +66,24 @@ angular.module('LUP').config(function($routeProvider) {
 	var getLocationRail = function() {
 		return getRail().get(0);
 	};
-    // Native scrolling moves the rail. Select one landmark after settling;
-    // never measure or transform every card on every scroll frame.
+    // Native scroll remains the gesture owner; only the three nearby cards get depth.
     var currentLandmarkCard = null;
     var updateRailDepth = function(rail) {
         nativeRailFrame = null;
         if (!rail || !rail.clientWidth) return;
         var card = nearestRailCard(rail);
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var width = rail.clientWidth;
+        var index = Math.round(rail.scrollLeft / width);
+        // Read scroll geometry once, then write only compositor transforms.
+        for (var i = Math.max(0, index - 1); i <= Math.min(rail.children.length - 1, index + 1); i++) {
+            var slide = rail.children[i];
+            var offset = reduced ? 0 : Math.max(-1, Math.min(1, (i * width - rail.scrollLeft) / width));
+            slide.style.setProperty('--nav-turn', (-offset * 12).toFixed(3) + 'deg');
+            slide.style.setProperty('--nav-scale', (1 - Math.abs(offset) * .08).toFixed(4));
+            slide.style.setProperty('--nav-opacity', (1 - Math.abs(offset) * .30).toFixed(4));
+            slide.style.setProperty('--nav-drift', (offset * 24).toFixed(2) + 'px');
+        }
         if (card === currentLandmarkCard) return;
         if (currentLandmarkCard) currentLandmarkCard.classList.remove('lup-room-slide-current');
         currentLandmarkCard = card;
@@ -225,6 +236,7 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 		},true);
 		rail.addEventListener('scroll',function() {
+            scheduleRailDepth(rail);
 			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
 			nativeRailScrollTimer=$timeout(function() { nativeRailScrollTimer=null;updateRailDepth(rail);syncSelectedRoomFromRail(rail); },100);
 		},{passive:true});
@@ -567,7 +579,7 @@ angular.module('LUP').config(function($routeProvider) {
         {ids:[],icon:'explore',label:'NAV_ALL'},
         {ids:['3','4','5','14'],icon:'local_cafe',label:'NAV_CAFE'},
         {ids:['11'],icon:'nightlife',label:'NAV_NIGHT'},
-        {ids:['12','16','17'],icon:'museum',label:'NAV_CULTURE'},
+        {ids:['12','16','17'],icon:'account_balance',label:'NAV_CULTURE'},
         {ids:['13','15','18'],icon:'park',label:'NAV_OUTDOORS'},
         {ids:['1','2','10'],icon:'location_city',label:'NAV_CITIES'}
     ];

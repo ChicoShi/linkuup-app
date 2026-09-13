@@ -28,6 +28,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.comments = {
 		loading: null,
+		failed: false,
 		pagination: new GWFPagination(),
 		items: [],
 		getItemAtIndex: function (index) {
@@ -44,6 +45,7 @@ angular.module('LUP').config(function($routeProvider) {
 				var page = this.pagination.nextPage();
 				if (page) {
 					this.loading = true;
+					this.failed = false;
 					CommentSrvc.withCommentsPage($scope.data.room, page).
 					then(this.loadedComments.bind(this), this.failedComments.bind(this));
 				}
@@ -66,6 +68,8 @@ angular.module('LUP').config(function($routeProvider) {
 		failedComments: function(error) {
 			console.log("CommentsCtrl$comments.failedComments()", error);
 			this.loading = false;
+			this.pagination.page = Math.max(0, this.pagination.page - 1);
+			this.failed = error !== undefined && error !== null && error !== 'undefined';
 			// An empty response is a normal initial state for locations that have
 			// not received a comment yet.  Do not interrupt the voices view with a
 			// modal literally displaying "undefined".

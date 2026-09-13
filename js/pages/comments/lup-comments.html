@@ -1,65 +1,26 @@
-<section layout="row" flex class="location-page comments-template location-reviews-page">
-    <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
-	<md-content layout="column" flex>
-
-	    <ng-include src="'js/pages/comments/header-bar-comments.html?v='+V"></ng-include>
-
-		<section class="reviews-hero">
-			<div class="reviews-hero-mark"><i class="material-icons">local_activity</i></div>
-			<div class="reviews-hero-copy">
-			<span>{{'LUP_REVIEWS_TITLE'|translate}}</span>
-			<h1>{{data.room.name()}}</h1>
-			<p>{{'LUP_REVIEWS_COPY'|translate}}</p>
-			</div>
-		</section>
-
-		<!-- One clear action: the star card opens the rating and comment dialog. -->
-		<section class="reviews-scoreboard" ng-class="'vote-tier-' + ratingTier(data.room.rating())" ng-click="onVoteDialog($event)" role="button" tabindex="0" aria-label="{{'LUP_REVIEWS_RATE_ARIA'|translate}}">
-			<div class="reviews-score"><strong>{{(data.room.rating() || 0) | number:1}}</strong><span>{{'LUP_REVIEWS_OUT_OF_TEN'|translate}}</span></div>
-			<div class="reviews-stars"><jk-rating-stars max-rating="10" rating="data.room.rating()" read-only="true"></jk-rating-stars><small>{{data.room.votes() || 0}} {{'LUP_REVIEWS_VOTES'|translate}}</small></div>
-			<i class="material-icons">chevron_right</i>
-		</section>
-
-		<button class="reviews-compose" type="button" ng-click="onVoteDialog($event)">
-			<i class="material-icons">edit_note</i>
-			<span><b>{{'LUP_REVIEWS_COMPOSE'|translate}}</b><small>{{'LUP_REVIEWS_COMPOSE_COPY'|translate}}</small></span>
-			<i class="material-icons">arrow_forward</i>
-		</button>
-
-		<md-list flex class="md-dense reviews-list">
-
-			<div class="reviews-list-heading reviews-list-heading--plain"><i class="material-icons">forum</i><span>{{'LUP_REVIEWS_CURRENT'|translate}}</span><b>{{data.comments.pagination.nItems || 0}}</b></div>
-
-			<md-list-item
-			 class="md-2-line no-right"
-			 ng-class="{'lup-comment-deleted':comment.deleted}"
-			 ng-repeat="comment in data.comments.items track by comment.id()">
-				<lup-avatar ng-user="comment.user()" ng-click="gotoProfile(comment.user());"></lup-avatar>
-				<div class="md-list-item-text">
-				  <h4 class="lup-comment-text" ng-bind-html="comment.text()"></h4>
-				  <div class="review-comment-rating" ng-if="comment.rating()" ng-class="'vote-tier-' + ratingTier(comment.rating())">
-					<i class="material-icons" ng-repeat="star in [1,2,3,4,5,6,7,8,9,10]" ng-class="{'is-rated': comment.rating() >= star}">star</i>
-					<span>{{comment.rating()}} / 10</span>
-				  </div>
-				  <p class="lup-comment-date"
-				   translate="COMMENTED_AT"
-				   translate-value-user="{{comment.user().displayName()}}"
-				   translate-value-date="{{comment.displayDate()}}"></p>
-				</div>
-				<div class="md-secondary">
-				  <button class="review-delete" type="button"
-				   ng-if="hasPermission('staff') || comment.isOwn()"
-				   ng-click="deleteComment(comment)" aria-label="{{'LUP_REVIEWS_DELETE'|translate}}">
-				   <i class="material-icons">delete_outline</i><span>{{'LUP_REVIEWS_DELETE'|translate}}</span>
-				  </button>
-				</div>
-			</md-list-item>
-
-			<md-list-item class="reviews-empty" ng-if="!data.comments.loading && !data.comments.items.length">
-			  <i class="material-icons">forum</i>
-			  <span>{{'LUP_REVIEWS_EMPTY'|translate}}</span>
-			</md-list-item>
-
-		</md-list>
-	</md-content>
+<section layout="row" flex class="location-page lup-place place-reviews-page" ng-class="locationVisual(data.room).class">
+  <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
+  <md-content layout="column" flex class="place-shell">
+    <ng-include src="'js/pages/comments/header-bar-comments.html?v='+V"></ng-include>
+    <div class="place-loading" ng-if="!data.roomReady" role="status"><i class="material-icons" aria-hidden="true">forum</i><span>{{(data.roomLoadFailed ? 'PLACE_LOAD_ERROR' : 'PLACE_LOADING')|translate}}</span><button class="place-tool" type="button" ng-if="data.roomLoadFailed" ng-click="init()">{{'PLACE_RETRY'|translate}}</button></div>
+    <md-content class="place-voices-scroll" ng-if="data.roomReady">
+      <div class="place-content">
+        <header class="place-voices-intro"><span class="place-eyebrow">{{'PLACE_VOICES'|translate}}</span><h1>{{data.room.name()}}</h1><p>{{'LUP_REVIEWS_COPY'|translate}}</p></header>
+        <div class="place-rating-summary"><span class="place-rating-symbol" aria-hidden="true"><i class="material-icons">star</i></span><div><strong>{{data.room.votes() ? (data.room.rating() | number:1) : '—'}}</strong><span>{{'LUP_REVIEWS_OUT_OF_TEN'|translate}}</span></div><p><b>{{data.room.votes() || 0}}</b> {{'LUP_REVIEWS_VOTES'|translate}}</p></div>
+        <button class="place-primary" type="button" ng-click="onVoteDialog($event)"><span class="place-primary-icon"><i class="material-icons" aria-hidden="true">edit_note</i></span><span><strong>{{'LUP_REVIEWS_COMPOSE'|translate}}</strong><small>{{'LUP_REVIEWS_COMPOSE_COPY'|translate}}</small></span><i class="material-icons" aria-hidden="true">arrow_forward</i></button>
+        <div class="place-voices-list-heading"><h2>{{'LUP_REVIEWS_CURRENT'|translate}}</h2><span>{{data.comments.pagination.nItems || 0}}</span></div>
+        <div class="place-review-list">
+          <article class="place-review" ng-repeat="comment in data.comments.items track by comment.id()" ng-if="!comment.deleted">
+            <header><button class="place-review-person" type="button" ng-click="gotoProfile(comment.user())"><lup-avatar ng-user="comment.user()"></lup-avatar><span><strong>{{comment.user().displayName()}}</strong><time>{{comment.displayDate()}}</time></span></button><span class="place-review-rating" ng-if="comment.rating()"><i class="material-icons" aria-hidden="true">star</i><b>{{comment.rating()}}</b><small>/ 10</small></span></header>
+            <div class="place-review-body" ng-if="comment.text()" ng-bind-html="comment.text()"></div>
+            <button class="place-review-delete" type="button" ng-if="hasPermission('staff') || comment.isOwn()" ng-click="deleteComment(comment)"><i class="material-icons" aria-hidden="true">delete_outline</i>{{'LUP_REVIEWS_DELETE'|translate}}</button>
+          </article>
+        </div>
+        <div class="place-empty" ng-if="!data.comments.loading && !data.comments.failed && !data.comments.items.length"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">forum</i></span><h3>{{'PLACE_FIRST_VOICE_TITLE'|translate}}</h3><p>{{'LUP_REVIEWS_EMPTY'|translate}}</p></div>
+        <p class="place-voices-loading" ng-if="data.comments.loading" role="status">{{'PLACE_VOICES_LOADING'|translate}}</p>
+        <div class="place-voices-retry" ng-if="data.comments.failed"><p role="status">{{'PLACE_VOICES_ERROR'|translate}}</p><button class="place-tool" type="button" ng-click="data.comments.loadNextPage()">{{'PLACE_RETRY'|translate}}</button></div>
+        <button class="place-tool place-load-more" type="button" ng-if="!data.comments.loading && !data.comments.failed && data.comments.pagination.page < data.comments.pagination.nPages" ng-click="data.comments.loadNextPage()">{{'PLACE_MORE_VOICES'|translate}}<i class="material-icons" aria-hidden="true">expand_more</i></button>
+      </div>
+    </md-content>
+  </md-content>
 </section>

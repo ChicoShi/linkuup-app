@@ -1,34 +1,21 @@
-<section class="location-page" layout="row" flex>
-
+<section class="location-page lup-place" ng-class="locationVisual(data.room).class" layout="row" flex>
   <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
-
-  <md-content layout="column" flex>
-  
+  <md-content class="place-shell" layout="column" flex>
     <ng-include src="'js/pages/location/html/header-bar-location.html?v='+V"></ng-include>
-
-    <!-- Keep one tab layout at every width. The previous tablet and desktop
-         variants rendered Chat next to Online (and on wide screens next to
-         Location too), which made a joined conversation look split or broken. -->
-    <md-tabs
-     md-selected="data.selectedTab"
-     flex
-     ccmd-dynamic-height
-     md-stretch-tabs="always"
-     layout="column">
-     
-      <md-tab label="{{'TAB_LOCATION'|translate}}">
-        <ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V"></ng-include>
+    <section class="place-loading" ng-if="!data.roomReady" aria-live="polite"><i class="material-icons" aria-hidden="true">location_on</i><p>{{(data.roomLoadFailed ? 'PLACE_LOAD_ERROR' : 'PLACE_LOADING')|translate}}</p><button class="place-tool" type="button" ng-if="data.roomLoadFailed" ng-click="init()">{{'PLACE_RETRY'|translate}}</button></section>
+    <md-tabs ng-if="data.roomReady" class="place-tabs" md-selected="data.selectedTab" flex md-stretch-tabs="always" layout="column">
+      <md-tab>
+        <md-tab-label><span class="place-tab-label"><i class="material-icons" aria-hidden="true">place</i><span>{{'TAB_LOCATION'|translate}}</span></span></md-tab-label>
+        <md-tab-body><ng-include src="'js/pages/location/html/lup-location-tab.html?v='+V"></ng-include></md-tab-body>
       </md-tab>
-    
-      <md-tab label="{{'TAB_CHAT'|translate}}" ng-disabled="!inChatRange()" md-on-select="openChatTab()">
-        <ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V"></ng-include>
+      <md-tab ng-disabled="!inChatRange()" md-on-select="openChatTab()">
+        <md-tab-label><span class="place-tab-label"><i class="material-icons" aria-hidden="true">chat_bubble_outline</i><span>{{'TAB_CHAT'|translate}}</span><i class="material-icons place-tab-lock" ng-if="!inChatRange()" aria-hidden="true">lock_outline</i></span></md-tab-label>
+        <md-tab-body><ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V"></ng-include></md-tab-body>
       </md-tab>
-
-      <md-tab label="{{'TAB_ONLINE'|translate}}" ng-click="openVisitorsTab()" md-on-select="visitorsVisible()">
-        <ng-include src="'js/pages/location/html/lup-location-visitors.html?v='+V"></ng-include>
+      <md-tab ng-click="openVisitorsTab()" md-on-select="visitorsVisible()">
+        <md-tab-label><span class="place-tab-label"><i class="material-icons" aria-hidden="true">people_outline</i><span>{{'TAB_ONLINE'|translate}}</span><b class="place-tab-count" ng-if="visitorCount()">{{visitorCount()}}</b></span></md-tab-label>
+        <md-tab-body><ng-include src="'js/pages/location/html/lup-location-visitors.html?v='+V"></ng-include></md-tab-body>
       </md-tab>
-
     </md-tabs>
-
   </md-content>
 </section>

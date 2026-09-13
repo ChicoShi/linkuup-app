@@ -33,3 +33,48 @@ md-sidenav.navigator-sidebar .sidenav-brand span { text-transform:none!important
 md-sidenav.navigator-sidebar .md-subheader { min-height:0!important; padding:0!important; border:0!important; }
 md-sidenav.navigator-sidebar .md-subheader-inner { padding:8px 0!important; }
 md-sidenav.navigator-sidebar .sidebar-legal-title { margin-top:22px!important; padding-top:14px!important; border-top:1px solid #aaa2d726!important; }
+
+/* One drawer appearance across route-specific parent styles. */
+md-sidenav.md-sidenav-left.navigator-sidebar {
+ background:var(--lup-app-panel,#12182b)!important;
+ color:var(--lup-app-ink,#f1f0fc);border-radius:0!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar > md-content {
+ background:transparent!important;color:inherit;isolation:auto;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand,
+md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand .md-toolbar-tools {
+ background:transparent!important;box-shadow:none!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand h1 {
+ font-size:24px!important;font-weight:600!important;color:#f1f0fc!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand span {
+ font-size:11px!important;color:#b2c0d4!important;letter-spacing:0!important;text-transform:none!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {
+ border:0!important;box-shadow:none!important;border-radius:10px!important;
+ width:32px!important;height:32px!important;background:#bce8fa08!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item p {font-size:14px!important;color:#e3edf8!important;}
+md-sidenav.md-sidenav-left.navigator-sidebar .nav-logout p {color:#d8aeba!important;}
+
+/* The same profile field follows the drawer on every app route. */
+md-sidenav.md-sidenav-left.navigator-sidebar {
+ background:var(--lup-app-field,linear-gradient(160deg,#111a2d,#12182b 49%,#101522))!important;
+ border-right:1px solid var(--lup-app-line,rgba(157,211,255,.13))!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .sidebar-user-card {
+ padding:14px 10px!important;border:1px solid rgba(157,211,255,.13)!important;
+ border-radius:16px!important;background:rgba(157,211,255,.035)!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .nav-close {
+ width:44px!important;height:44px!important;border-radius:12px!important;
+ background:rgba(157,211,255,.055)!important;color:#dcefff!important;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:focus-within {
+ outline:2px solid #a9ddff;outline-offset:-2px;
+}
+md-sidenav.md-sidenav-left.navigator-sidebar .sidebar-section-title {
+ color:#b2c0d4!important;font-size:10px!important;letter-spacing:.12em!important;
+}

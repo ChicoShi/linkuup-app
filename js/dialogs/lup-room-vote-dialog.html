@@ -1,39 +1,12 @@
-<md-dialog aria-label="{{'ROOM_VOTE'|translate}}" class="lup-comment-dialog vote-dialog" ng-class="'vote-tier-' + scope.ratingTier(data.rating)">
-  <form ng-cloak>
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-		<div class="vote-dialog-title"><span>{{'LUP_VOTE_EYEBROW'|translate}}</span><h2>{{'LUP_VOTE_TITLE'|translate}}</h2></div>
-        <span flex></span>
-		<button class="vote-dialog-close" type="button" ng-click="cancel()" aria-label="{{'BTN_CANCEL'|translate}}">
-			<i class="material-icons">close</i>
-		</button>
-      </div>
-    </md-toolbar>
-
-    <md-dialog-content>
-      <div class="md-dialog-content" layout="column">
-
-		<div class="vote-dialog-intro"><span class="vote-dialog-mark"><i class="material-icons">forum</i></span><p>{{'LUP_VOTE_COPY'|translate}}</p></div>
-		<p class="vote-dialog-note" ng-if="data.comment">{{'LUP_VOTE_UPDATE_NOTE'|translate}}</p>
-		<section class="vote-rating-panel">
-		  <div class="vote-rating-head"><span>{{'LUP_VOTE_RATING'|translate}}</span><b>{{data.rating || 0}}<small>/ 10</small></b></div>
-		  <jk-rating-stars max-rating="10" rating="data.rating" reset-allowed="false"></jk-rating-stars>
-		  <div class="vote-rating-scale" aria-hidden="true"><span>ehrlich</span><span>besonders</span></div>
-		</section>
-      
-        <md-input-container flex>
-		  <label>{{'LUP_VOTE_COMMENT'|translate}}</label>
-          <textarea ng-model="data.comment" rows="4" placeholder="{{'LUP_VOTE_PLACEHOLDER'|translate}}" style="width: 100%;" flex>
-          </textarea>
-        </md-input-container>
-      
-      </div>
-    </md-dialog-content>
-
-    <md-dialog-actions layout="row">
-      <md-button ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button>
-		<md-button class="vote-save" ng-click="vote()">{{'LUP_VOTE_SUBMIT'|translate}}</md-button>
-    </md-dialog-actions>
-
+<md-dialog aria-label="{{'LUP_VOTE_TITLE'|translate}}" class="place-dialog place-vote-dialog">
+  <form ng-cloak ng-submit="vote()">
+    <header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">edit_note</i></span><div><span>{{'PLACE_VOICES'|translate}}</span><h2>{{'LUP_VOTE_TITLE'|translate}}</h2></div><button class="place-dialog-close" type="button" ng-click="cancel()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
+    <md-dialog-content><div class="place-dialog-body">
+      <p class="place-dialog-room">{{room.name()}}</p><p class="place-dialog-copy">{{'LUP_VOTE_COPY'|translate}}</p>
+      <p class="place-dialog-hint" ng-if="data.comment">{{'LUP_VOTE_UPDATE_NOTE'|translate}}</p>
+      <section class="place-rating-control"><div><label for="place-vote-rating">{{'LUP_VOTE_RATING'|translate}}</label><output for="place-vote-rating">{{data.rating || 0}}<small> / 10</small></output></div><input id="place-vote-rating" type="range" min="1" max="10" step="1" ng-model="data.rating" aria-valuetext="{{data.rating}} {{'LUP_REVIEWS_OUT_OF_TEN'|translate}}"><div class="place-rating-scale" aria-hidden="true"><span>1</span><span>5</span><span>10</span></div></section>
+      <label class="place-field-label" for="place-vote-comment">{{'LUP_VOTE_COMMENT'|translate}}</label><textarea id="place-vote-comment" class="place-comment-field" ng-model="data.comment" rows="4" placeholder="{{'LUP_VOTE_PLACEHOLDER'|translate}}"></textarea>
+    </div></md-dialog-content>
+    <footer class="place-dialog-actions"><button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</button><button class="place-dialog-primary" type="submit">{{'LUP_VOTE_SUBMIT'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button></footer>
   </form>
 </md-dialog>

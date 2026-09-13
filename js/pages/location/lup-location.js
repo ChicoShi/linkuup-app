@@ -33,6 +33,8 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.data.room = $scope.data.room||RoomSrvc.BLANK_ROOM;
 	$scope.data.message = '';
+	$scope.data.roomReady = false;
+	$scope.data.roomLoadFailed = false;
 	$scope.data.topComments = $scope.data.topComments || [];
 	$scope.data.selectedTab = $scope.data.selectedTab || 0;
 	$scope.data.selectedTab2 = $scope.data.selectedTab2 || 0;
@@ -47,7 +49,11 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.init()', $routeParams.id);
 		if ($scope.data.authenticated) {
 			$scope.data.user = GWF_USER;
-			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom)['catch']($scope.catchUnknown);
+			$scope.data.roomLoadFailed = false;
+			RoomSrvc.withRoom($routeParams.id).then($scope.loadedRoom)['catch'](function(error) {
+				$scope.data.roomLoadFailed = true;
+				$scope.catchUnknown(error);
+			});
 			$scope.data.topComments = $scope.data.topComments || [CommentSrvc.BLANK_COMMENT()];
 			HelpSrvc.showHelp('help_location', $translate.instant('HELP_LOCATION'));
 		}
@@ -56,6 +62,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadedRoom = function(room) {
 		console.log('LocationCtrl.loadedRoom()', room);
 		$scope.data.room = room;
+		$scope.data.roomReady = true;
 		$scope.afterLoadedRoom();
 	};
 	
@@ -232,7 +239,8 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.onVoteDialog = function(event) {
 		console.log('LocationCtrl.onVoteDialog()');
 		var room = $scope.data.room;
-		var oldRating = $scope.data.rating;
+		var oldRating = Number($scope.data.rating);
+		if (!Number.isFinite(oldRating) || oldRating < 1 || oldRating > 10) { oldRating = 3; }
 		var oldComment = $scope.data.commentInput;
 		var scope = $scope;
 		
@@ -342,6 +350,19 @@ angular.module('LUP').config(function($routeProvider) {
 	// The top "Chat" control is always a valid way to inspect a location's
 	// conversation. Joining remains protected by the same GPS radius check as
 	// the primary "Chat betreten" action.
+	// Use the existing location check and server membership flow for the new CTA.
+	$scope.openPlaceChat = function(event) {
+		var selectChat = function() {
+			if ($scope.inChatRange()) {
+				$scope.data.manualLocationTab = true;
+				$scope.data.selectedTab = 1;
+			}
+		};
+		if ($scope.inChatRange()) { selectChat(); return; }
+		var result = $scope.joinChat(event);
+		return result && result.then ? result.then(selectChat) : result;
+	};
+
 	$scope.openChatTab = function() {
 		if ($scope.inChatRange()) {
 			return $scope.chatVisible();
