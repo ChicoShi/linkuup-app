@@ -581,4 +581,41 @@ angular.module('LUP').config(function($routeProvider) {
 		return users.length;
 	};
 
+	// Listing visible visitors is read-only until both people share this room.
+	// Recheck at the time of the action as well as when rendering its control:
+	// GPS and the server's room membership can change while the tab stays open.
+	$scope.visitorActionsAvailable = function() {
+		var room = $scope.data.room;
+		return !!($scope.data.authenticated && $scope.data.roomReady && room &&
+			PositionSrvc.hasPosition(true) && $scope.inChatRange() && room.isSelfInRoom());
+	};
+	$scope.canContactVisitor = function(user) {
+		return !!(user && !user.isSelf() && $scope.visitorActionsAvailable() &&
+			$scope.data.room.USERS.some(function(present) {return present.id() === user.id();}));
+	};
+	$scope.openVisitorProfile = function(user) {
+		if ($scope.canContactVisitor(user)) return $scope.gotoProfile(user);
+	};
+	$scope.openVisitorChat = function(user) {
+		if ($scope.canContactVisitor(user)) return $scope.gotoQuery(user);
+	};
+	$scope.visitorFriendState = function(user) {
+		if (user.isFriend()) return 'friend';
+		if (user.JSON.relation_incoming) return 'incoming';
+		return user.JSON.relation_pending ? 'pending' : 'new';
+	};
+	$scope.visitorActionPending = {};
+	$scope.changeVisitorFriend = function(user, action) {
+		if (!$scope.canContactVisitor(user) || !user.isMember() ||
+			!$scope.data.user.isMember() || $scope.visitorActionPending[user.id()]) return;
+		var state = $scope.visitorFriendState(user);
+		var methods = {new:'addFriend', pending:'cancelFriendRequest', incoming:'acceptFriendRequest', friend:'removeFriend'};
+		if (action === 'decline' && state !== 'incoming') return;
+		var method = action === 'decline' ? 'denyFriendRequest' : methods[state];
+		$scope.visitorActionPending[user.id()] = true;
+		return FriendSrvc[method](user, function() {return $scope.canContactVisitor(user);})
+			.finally(function() {delete $scope.visitorActionPending[user.id()];})
+			['catch']($scope.catchUnknown);
+	};
+
 });

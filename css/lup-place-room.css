@@ -231,8 +231,8 @@
 .lup-place .place-review-delete i {font-size:16px;}
 .lup-place .place-voices-loading,.lup-place .place-voices-retry {padding:20px 0;text-align:center;font-size:13px;color:var(--place-muted);}
 .lup-place .place-load-more {width:100%;margin-top:16px;}
-.lup-place .lup-avatar {overflow:hidden;border-radius:50%;box-shadow:none!important;}
-.lup-place .lup-avatar > .img {width:100%!important;height:100%!important;background-size:cover!important;}
+.lup-place .lup-avatar {position:relative!important;top:0!important;padding:0!important;box-sizing:border-box;overflow:hidden;border:1px solid #b4dfff38;border-radius:50%;box-shadow:none!important;}
+.lup-place .lup-avatar > .img,.lup-place .lup-avatar > span {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;background-size:cover!important;background-position:center!important;}
 /* Location dialogs are deliberately scoped; account and other global dialogs
    retain their behavior. The body scrolls while close and action stay reachable. */
 md-dialog.place-dialog {width:min(480px,calc(100vw - 32px))!important;min-width:0!important;max-width:480px!important;max-height:calc(var(--lup-viewport-height,100dvh) - 40px)!important;border:1px solid #ffffff1c!important;border-radius:26px!important;background:#162238!important;color:#f1f5fc!important;box-shadow:0 24px 80px #05081780!important;overflow:hidden!important;font-family:Roboto,Arial,sans-serif;}
@@ -462,19 +462,15 @@ md-dialog.place-dialog.place-legal-dialog {width:min(720px,calc(100vw - 32px))!i
 .place-legal-document pre {white-space:pre-wrap;font:inherit;}
 /* A slow, low-contrast route gives the two room views a shared atmosphere.
    It never captures taps or moves any text; hidden Material panels do not animate. */
-.lup-place .place-chat,.lup-place .place-people {position:relative;isolation:isolate;}
-.lup-place .place-ambient-route {position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 90% 12%,#9bcfff09,transparent 55%),radial-gradient(ellipse at 0 85%,#9edeca07,transparent 55%);}
-.lup-place .place-ambient-route::before {content:'';position:absolute;width:200%;height:85%;left:-65%;top:12%;border:1px solid #9bcfff0c;border-radius:48% 52% 42% 58%;transform:rotate(-23deg);}
-.lup-place .place-ambient-route::after {content:'';position:absolute;width:150%;height:75%;left:-15%;top:60%;border:1px solid #9bcfff09;border-radius:50%;transform:rotate(24deg);}
-.lup-place .place-ambient-route span {position:absolute;top:15%;left:25%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#9bcfff12,transparent 70%);animation:place-route-breathe 24s ease-in-out infinite alternate;}
-@keyframes place-route-breathe {from {transform:translate3d(-35px,0,0);opacity:.45;}to {transform:translate3d(55px,140px,0);opacity:1;}}
+.lup-place .place-chat,.lup-place .place-people {position:relative;}
+/* One atmosphere belongs to the complete shell, not each Material tab. */
+.lup-place .place-ambient-route {display:none;}
 @media (max-width:359px) {
  .place-settings .lup-settings-list {padding:18px 14px 28px;}
  .place-settings .lup-setting-card {padding:14px;}
  .place-settings .place-settings-nav button {font-size:10px;}
  .place-legal-dialog .place-legal-document {padding:20px;font-size:13px;}
 }
-@media (prefers-reduced-motion:reduce) {.lup-place .place-ambient-route span {animation:none;opacity:.6;}}
 
 /* Preserve upstream Shout with the same touch target and palette as the composer. */
 .location-page.lup-place .place-chat .place-composer button.place-icon-button {mask:none!important;-webkit-mask:none!important;max-width:none!important;display:grid!important;place-items:center;flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border:1px solid #9bcfff25!important;border-radius:14px!important;background:#1b2c44!important;color:#c2e1ff!important;cursor:pointer;}
