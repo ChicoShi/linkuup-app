@@ -175,10 +175,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.withRooms = function(includeAll) {
-		// Discovery is location based. Do not silently substitute a global room
-		// catalogue when the browser has not supplied a real GPS position: that is
-		// both expensive for the carousel and misleading for a nearby view.
-		if (!PositionSrvc.hasPosition(true)) {
+		// Nearby discovery is location based. The complete public catalogue is a
+		// separate, explicit search/category action and uses the backend's 0,0
+		// discovery sentinel. It may therefore be browsed without GPS; entering a
+		// room and every presence action still enforce the real location radius.
+		if (!includeAll && !PositionSrvc.hasPosition(true)) {
 			return $q.reject('GPS position required for locations.');
 		}
 		if (includeAll && RoomSrvc.ALL_ROOMS) {
@@ -190,10 +191,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		if (!includeAll && RoomSrvc.ROOMS_LOADING) {
 			return RoomSrvc.ROOMS_LOADING;
 		}
-		// The backend applies every room's visibility radius and orders the result
-		// from this concrete position.  There is deliberately no (0,0) discovery
-		// fallback; callers wait for GPS instead of rendering every public room.
-		var position = PositionSrvc.CURRENT;
+		// The backend applies every room's visibility radius for a nearby request.
+		// For a full catalogue request it recognises (0,0) as a public discovery
+		// query and deliberately skips that radius filter. Do not use a user's real
+		// coordinates here or category/search results silently lose distant rooms.
+		var position = includeAll ? {lat: 0.0, lng: 0.0} : PositionSrvc.CURRENT;
 		var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(position.lat).writeFloat(position.lng);
 		// Return the parser's promise as well. An exception must reject this
 		// request instead of leaving a separate deferred pending forever.

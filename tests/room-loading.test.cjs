@@ -20,9 +20,10 @@ function setup() {
  type.TYPES = {'GDO\\Maps\\GDT_Polygon': ['GDO\\Core\\GDT_JSON', 'GDO\\Core\\GDT_String']};
  type.FIELDS = {};
  const socket = {sendBinary: () => Promise.resolve(null)};
+ const position = {hasPosition: () => true, CURRENT: {lat: 52.27, lng: 10.53}};
  const rooms = new services.RoomSrvc(q, {getOrCreate: id => ({id: () => id})}, {}, {},
-  {hasPosition: () => true, CURRENT: {lat: 52.27, lng: 10.53}}, socket, type);
- return {context, type, rooms, socket};
+  position, socket, type);
+ return {context, type, rooms, socket, position};
 }
 
 function message(context, ...strings) {
@@ -114,6 +115,25 @@ if (process.env.LUP_BINARY_ROOMS_JSON && process.env.LUP_TYPES_JSON) {
   assert.equal(m.TRUNCATED, false);
  });
 }
+
+test('Complete catalogue uses the backend discovery sentinel and stays separate from nearby GPS', async () => {
+ const {context, rooms, socket, position} = setup();
+ let request;
+ socket.sendBinary = message => {
+  request = message;
+  return Promise.resolve(new context.GWS_Message(new ArrayBuffer(0)));
+ };
+ rooms.parseRoomsMessage = () => [];
+ position.hasPosition = () => false;
+
+ assert.deepEqual(await rooms.withRooms(true), []);
+ const wire = new context.GWS_Message(request.binaryBuffer());
+ assert.equal(wire.readCmd(), 0x1101);
+ wire.readMid();
+ assert.equal(wire.readFloat(), 0);
+ assert.equal(wire.readFloat(), 0);
+ await assert.rejects(rooms.withRooms(false), /GPS position required/);
+});
 
 test('A single room failure rejects, releases its request and retries its blank placeholder', async () => {
  const {rooms,socket}=setup();let calls=0;
