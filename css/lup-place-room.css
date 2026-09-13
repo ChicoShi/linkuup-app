@@ -127,10 +127,11 @@
 .lup-place .place-message-meta {display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 3px 6px;line-height:1.3;font-size:10px;}
 .lup-place .place-message-meta strong {color:#d6cbed;font-weight:500;overflow-wrap:anywhere;}
 .lup-place .place-message-meta time {color:#aabbd0;font-size:9px;}
-.lup-place .place-bubble {display:block;margin:0;padding:11px 14px;background:#1b2c44;border:1px solid #ffffff0d;border-radius:17px 17px 17px 5px;color:var(--place-ink);font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;}
+.lup-place .place-bubble {position:relative;display:block;margin:0;padding:11px 14px;background:#1b2c44;border:1px solid #ffffff0d;border-radius:17px 17px 17px 5px;color:var(--place-ink);font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;}
 .location-page.lup-place .place-chat .place-message.lup-own-msg {justify-content:flex-end;text-align:left!important;}
 .lup-place .lup-own-msg .place-message-meta {justify-content:flex-end;}
-.lup-place .lup-own-msg .place-bubble {border-color:#9bcfff22;border-radius:17px 17px 5px 17px;background:#284564;}
+.lup-place .lup-own-msg .place-bubble {padding-right:36px;border-color:#9bcfff22;border-radius:17px 17px 5px 17px;background:#284564;}
+.lup-place .place-bubble .lup-message-state {right:8px!important;bottom:4px!important;left:auto!important;margin:0;}
 .location-page.lup-place .place-chat .place-message.lup-system-msg {justify-content:center!important;}
 .lup-place .lup-system-msg .place-message-content {max-width:92%;}
 .lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aabbd0;text-align:center;}
