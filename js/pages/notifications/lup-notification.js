@@ -211,8 +211,11 @@ angular.module('LUP').config(function($routeProvider) {
 		if ($scope.data.authenticated) {
 			if ($scope.data.loadingChats === null) {
 				$scope.data.loadingChats = true;
-				ChatSrvc.loadChats(window.GWF_USER.id()).
-					then($scope.loadedChats)['catch']($scope.catchUnknown);
+				return ChatSrvc.loadChats(window.GWF_USER.id()).
+					then($scope.loadedChats)['catch'](function(error) {
+						$scope.data.loadingChats = null; // A later tab selection may retry.
+						$scope.catchUnknown(error);
+					});
 			}
 		}
 	};

@@ -41,13 +41,13 @@
 .location-page.lup-place md-tabs.place-tabs md-pagination-wrapper {display:flex!important; width:100%!important;}
 .location-page.lup-place md-tabs.place-tabs md-tab-item {display:flex!important;justify-content:center!important;align-items:center!important;flex:1 1 0!important;min-width:0!important;max-width:none!important;height:42px!important;min-height:42px!important;margin:0!important;padding:0 4px!important;border:0!important;border-radius:12px!important;background:transparent!important;color:var(--place-muted)!important;text-transform:none!important;letter-spacing:0!important;font-size:12px!important;line-height:1!important;box-shadow:none!important;}
 .location-page.lup-place md-tabs.place-tabs md-tab-item::before,.location-page.lup-place md-tabs.place-tabs md-tab-item::after,.location-page.lup-place md-tabs.place-tabs .md-tab-label::before,.location-page.lup-place md-tabs.place-tabs .md-tab-label::after {display:none!important;content:none!important;}
-.location-page.lup-place md-tabs.place-tabs md-tab-item.md-active {background:#9bcfff!important;color:#211b40!important;box-shadow:none!important;}
+.location-page.lup-place md-tabs.place-tabs md-tab-item.md-active {background:#9bcfff!important;color:#162b42!important;box-shadow:none!important;}
 .location-page.lup-place md-tabs.place-tabs md-tab-item[disabled] {opacity:.42!important;}
 .lup-place .place-tab-label {display:flex;align-items:center;justify-content:center;gap:6px;font-family:Roboto,Arial,sans-serif;font-size:12px;font-weight:600;line-height:1.2;white-space:nowrap;}
 .lup-place .place-tab-label > .material-icons {font-size:19px;}
 .lup-place .place-tab-label > .place-tab-lock {font-size:12px;}
 .lup-place .place-tab-count {display:inline-grid;place-items:center;min-width:17px;min-height:17px;padding:0 3px;box-sizing:border-box;border-radius:6px;background:#9bcfff1f;font-size:10px;font-weight:600;}
-.lup-place .md-active .place-tab-count {background:#211b4015;}
+.lup-place .md-active .place-tab-count {background:#162b4215;}
 .location-page.lup-place .place-tabs md-ink-bar {display:none!important;}
 .location-page.lup-place md-tabs.place-tabs > md-tabs-content-wrapper {position:relative!important;top:0!important;flex:1 1 0!important;min-height:0!important;height:auto!important;overflow:clip!important;}
 .location-page.lup-place md-tabs.place-tabs md-tab-content {height:100%!important;min-height:0!important;overflow:hidden!important;transform:none!important;transition:none!important;left:0!important;right:0!important;}
@@ -84,7 +84,7 @@
 .lup-place .place-presence i {font-size:16px;color:var(--place-muted);}
 .lup-place .place-distance {display:flex;align-items:center;gap:5px;color:var(--place-muted);font-size:11px;padding-right:8px;}
 .lup-place .place-distance i {font-size:14px;color:var(--place-category);}
-.lup-place .place-primary {display:grid;grid-template-columns:38px minmax(0,1fr) 20px;align-items:center;gap:12px;width:100%;min-height:76px;margin:14px 0 18px;padding:14px 16px;border:1px solid #d4caff22;border-radius:19px;background:#9bcfff;color:#211b40;text-align:left;transition:transform 180ms ease;}
+.lup-place .place-primary {display:grid;grid-template-columns:38px minmax(0,1fr) 20px;align-items:center;gap:12px;width:100%;min-height:76px;margin:14px 0 18px;padding:14px 16px;border:1px solid #c2e1ff22;border-radius:19px;background:#9bcfff;color:#162b42;text-align:left;transition:transform 180ms ease;}
 .lup-place .place-primary:hover {background:#c2b4ff;}
 .lup-place .place-primary:active,.lup-place .place-tool:active,.lup-place .place-person-actions button:active {transform:scale(.98);}
 .lup-place .place-primary-icon {display:grid;place-items:center;width:38px;height:38px;background:#29203b0e;border:1px solid #29203b15;border-radius:12px;}
@@ -126,18 +126,18 @@
 .lup-place .place-message-content {min-width:0;max-width:82%;}
 .lup-place .place-message-meta {display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 3px 6px;line-height:1.3;font-size:10px;}
 .lup-place .place-message-meta strong {color:#d6cbed;font-weight:500;overflow-wrap:anywhere;}
-.lup-place .place-message-meta time {color:#aaa4be;font-size:9px;}
-.lup-place .place-bubble {display:block;margin:0;padding:11px 14px;background:#23253e;border:1px solid #ffffff0d;border-radius:17px 17px 17px 5px;color:var(--place-ink);font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;}
+.lup-place .place-message-meta time {color:#aabbd0;font-size:9px;}
+.lup-place .place-bubble {display:block;margin:0;padding:11px 14px;background:#1b2c44;border:1px solid #ffffff0d;border-radius:17px 17px 17px 5px;color:var(--place-ink);font-size:14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;}
 .location-page.lup-place .place-chat .place-message.lup-own-msg {justify-content:flex-end;text-align:left!important;}
 .lup-place .lup-own-msg .place-message-meta {justify-content:flex-end;}
-.lup-place .lup-own-msg .place-bubble {border-color:#9bcfff22;border-radius:17px 17px 5px 17px;background:#373052;}
+.lup-place .lup-own-msg .place-bubble {border-color:#9bcfff22;border-radius:17px 17px 5px 17px;background:#284564;}
 .location-page.lup-place .place-chat .place-message.lup-system-msg {justify-content:center!important;}
 .lup-place .lup-system-msg .place-message-content {max-width:92%;}
-.lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aaa4be;text-align:center;}
+.lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aabbd0;text-align:center;}
 .location-page.lup-place .place-chat .chatbottom.place-composer {display:flex!important;align-items:center!important;gap:10px!important;position:relative!important;left:auto!important;bottom:auto!important;flex:0 0 auto!important;width:100%!important;max-width:780px!important;min-height:72px!important;height:auto!important;box-sizing:border-box!important;margin:0 auto!important;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px))!important;border:0!important;border-top:1px solid var(--place-line)!important;background:var(--place-bg)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
-.location-page.lup-place .place-chat .place-composer input {float:none!important;flex:1 1 0!important;width:0!important;min-width:0!important;height:46px!important;margin:0!important;padding:0 14px!important;box-sizing:border-box!important;border:1px solid #ffffff1a!important;border-radius:15px!important;background:#202238!important;box-shadow:none!important;color:var(--place-ink)!important;font:400 16px Roboto,Arial,sans-serif!important;}
-.lup-place .place-composer input::placeholder {color:#aea7bf!important;font-size:13px;}
-.location-page.lup-place .place-chat .place-composer .place-send {display:grid!important;place-items:center!important;flex:0 0 46px!important;width:46px!important;max-width:none!important;height:46px!important;min-height:46px!important;min-width:46px!important;margin:0!important;padding:0!important;border:0!important;border-radius:15px!important;background:#9bcfff!important;color:#211b40!important;mask:none!important;-webkit-mask:none!important;box-shadow:none!important;cursor:pointer;}
+.location-page.lup-place .place-chat .place-composer input {float:none!important;flex:1 1 0!important;width:0!important;min-width:0!important;height:46px!important;margin:0!important;padding:0 14px!important;box-sizing:border-box!important;border:1px solid #ffffff1a!important;border-radius:15px!important;background:#182c43!important;box-shadow:none!important;color:var(--place-ink)!important;font:400 16px Roboto,Arial,sans-serif!important;}
+.lup-place .place-composer input::placeholder {color:#aabbd0!important;font-size:13px;}
+.location-page.lup-place .place-chat .place-composer .place-send {display:grid!important;place-items:center!important;flex:0 0 46px!important;width:46px!important;max-width:none!important;height:46px!important;min-height:46px!important;min-width:46px!important;margin:0!important;padding:0!important;border:0!important;border-radius:15px!important;background:#9bcfff!important;color:#162b42!important;mask:none!important;-webkit-mask:none!important;box-shadow:none!important;cursor:pointer;}
 .lup-place .place-send:disabled {opacity:.4;cursor:default!important;}
 .lup-place .place-send i {font-size:23px;}
 .lup-place .place-join-state {padding:15px 20px;color:var(--place-muted);font-size:12px;text-align:center;border-top:1px solid var(--place-line);}
@@ -147,7 +147,7 @@
 .lup-place .place-people-count {display:flex;align-items:center;gap:7px;flex-shrink:0;padding:10px 12px;background:#ffffff05;border:1px solid var(--place-line);border-radius:14px;color:var(--place-ink);font-size:17px;}
 .lup-place .place-people-count i {font-size:20px;color:var(--place-category);}
 .lup-place .place-people-list {display:flex;flex-direction:column;gap:10px;}
-.lup-place .place-person {min-width:0;padding:13px;border:1px solid var(--place-line);border-radius:19px;background:#202238;}
+.lup-place .place-person {min-width:0;padding:13px;border:1px solid var(--place-line);border-radius:19px;background:#182c43;}
 .lup-place .place-person-profile {display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:0;border:0;background:transparent;text-align:left;color:var(--place-ink);}
 .lup-place .place-person-profile lup-avatar,.lup-place .place-person-profile .lup-avatar {display:block;flex:0 0 46px;width:46px!important;height:46px!important;min-width:46px!important;margin:0!important;}
 .lup-place .place-person-profile > span {display:flex;flex:1;flex-direction:column;gap:5px;min-width:0;}
@@ -203,7 +203,7 @@
 .lup-place .place-voices-intro {padding:8px 0 24px;}
 .lup-place .place-voices-intro h1 {margin:8px 0 12px;font:500 30px/1.15 Ubuntu,Roboto,Arial,sans-serif;letter-spacing:-.04em;color:var(--place-ink);overflow-wrap:anywhere;}
 .lup-place .place-voices-intro > p:last-child {max-width:440px;margin:0;color:var(--place-muted);font-size:13px;line-height:1.7;}
-.lup-place .place-rating-summary {display:flex;align-items:center;gap:14px;padding:18px 20px;border:1px solid var(--place-line);border-radius:20px;background:#202238;}
+.lup-place .place-rating-summary {display:flex;align-items:center;gap:14px;padding:18px 20px;border:1px solid var(--place-line);border-radius:20px;background:#182c43;}
 .lup-place .place-rating-symbol {display:grid;place-items:center;width:42px;height:48px;flex-shrink:0;color:#e4bb8c;}
 .lup-place .place-rating-symbol i {font-size:34px;}
 .lup-place .place-rating-summary > div {display:flex;flex:1;align-items:baseline;flex-wrap:wrap;gap:8px;}
@@ -332,7 +332,7 @@ body:has(md-dialog.place-dialog) .md-dialog-backdrop {background:#070919;opacity
 .lup-place .place-friend-actions .place-friend-remove {padding:0;background:transparent;border-color:transparent;color:#a89fb8;}
 .lup-place .place-inbox-switch {display:flex;flex:0 0 auto;gap:4px;margin:2px 20px 8px;padding:4px;border:1px solid #ffffff16;border-radius:17px;background:#0c0e1c80;}
 .lup-place .place-inbox-switch button {display:flex;align-items:center;justify-content:center;flex:1;gap:7px;min-height:44px;min-width:0;padding:0 8px;border:0;border-radius:12px;background:transparent;color:#afbed2;font:500 12px Roboto,Arial,sans-serif;cursor:pointer;}
-.lup-place .place-inbox-switch button.active {background:#9bcfff;color:#211b40;}
+.lup-place .place-inbox-switch button.active {background:#9bcfff;color:#162b42;}
 .lup-place .place-inbox-switch button i {font-size:19px;}
 .lup-place .place-inbox-switch button b {width:6px;height:6px;border-radius:50%;background:#9edeca;}
 .lup-place .place-inbox-switch button.active b {background:#40306b;}
@@ -345,8 +345,8 @@ body:has(md-dialog.place-dialog) .md-dialog-backdrop {background:#070919;opacity
 .lup-place .place-thread-open > span:first-child {display:flex;align-items:baseline;gap:8px;justify-content:space-between;}
 .lup-place .place-thread-open strong {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:500;}
 .lup-place .place-thread-open time {flex-shrink:0;font-size:10px;color:#a1b2c9;}
-.lup-place .place-thread-preview {display:block;max-width:100%;padding-right:25px;margin-top:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#b2abc4;font-size:12px;line-height:1.5;}
-.lup-place .place-thread-unread {position:absolute;right:0;bottom:0;display:grid;place-items:center;min-width:18px;height:18px;padding:0 3px;border-radius:6px;background:#9bcfff;color:#211b40;font-size:10px;}
+.lup-place .place-thread-preview {display:block;max-width:100%;padding-right:25px;margin-top:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#afbed2;font-size:12px;line-height:1.5;}
+.lup-place .place-thread-unread {position:absolute;right:0;bottom:0;display:grid;place-items:center;min-width:18px;height:18px;padding:0 3px;border-radius:6px;background:#9bcfff;color:#162b42;font-size:10px;}
 .lup-place .place-thread-delete {display:grid;place-items:center;min-width:44px;min-height:44px;padding:0;border:0;border-radius:12px;background:transparent;color:#a197b3;}
 .lup-place .place-thread-delete i {font-size:17px;}
 .lup-place .place-events {display:flex!important;flex-direction:column!important;flex:1 1 0!important;min-height:0!important;overflow:hidden!important;background:transparent!important;}
@@ -475,3 +475,8 @@ md-dialog.place-dialog.place-legal-dialog {width:min(720px,calc(100vw - 32px))!i
  .place-legal-dialog .place-legal-document {padding:20px;font-size:13px;}
 }
 @media (prefers-reduced-motion:reduce) {.lup-place .place-ambient-route span {animation:none;opacity:.6;}}
+
+/* Preserve upstream Shout with the same touch target and palette as the composer. */
+.location-page.lup-place .place-chat .place-composer button.place-icon-button {mask:none!important;-webkit-mask:none!important;max-width:none!important;display:grid!important;place-items:center;flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border:1px solid #9bcfff25!important;border-radius:14px!important;background:#1b2c44!important;color:#c2e1ff!important;cursor:pointer;}
+.location-page.lup-place .place-chat .place-composer button.place-icon-button .material-icons {font-size:21px!important;}
+.lup-place .place-shout-label {display:inline-block;margin:0 0 5px;padding:3px 7px;border:1px solid #9bcfff35;border-radius:6px;color:#b8ddff;font-size:10px;letter-spacing:.04em;}

@@ -108,3 +108,7 @@
 /* Settle once after swiping; no overlapping landmark entrance animation. */
 .navigator-view .lup-room-slide-current .nav-landmark {animation:none;}
 .navigator-view .nav-landscape::before,.navigator-view .nav-landscape::after {display:none;}
+
+/* Selected filter and category of the currently centred room are separate states. */
+.navigator-view .nav-categories button {position:relative;}
+.navigator-view .nav-categories button.is-current-category::after {content:'';position:absolute;bottom:4px;left:calc(50% - 6px);width:12px;height:2px;border-radius:2px;background:currentColor;}
