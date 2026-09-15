@@ -1,9 +1,10 @@
 <md-content layout="column" flex class="place-events">
   <header class="place-social-heading place-events-heading"><span class="place-eyebrow">{{'PLACE_EVENTS_EYEBROW'|translate}}</span><h1>{{'TAB_NOTIFICATIONS'|translate}}</h1><p>{{'PLACE_EVENTS_COPY'|translate}}</p></header>
   <section class="place-empty" ng-if="NotificationSrvc.COUNT === 0"><span class="place-empty-mark"><i class="material-icons" aria-hidden="true">notifications_none</i></span><h3>{{'PLACE_EVENTS_EMPTY'|translate}}</h3><p>{{'PLACE_EVENTS_EMPTY_COPY'|translate}}</p></section>
-  <md-list id="lup-notification-list" class="lup-notification-list place-event-list" md-virtual-repeat-container md-dense flex>
+  <md-list id="lup-notification-list" class="lup-notification-list place-event-list" lup-glass-scroll md-virtual-repeat-container md-dense flex>
     <md-list-item md-on-demand md-virtual-repeat="notification in data.notifications" data-index="{{$index}}" class="lup-swipeable place-event-row" in-view="$inview&&markRead(notification)" ng-class="{'lup-notification-unread':notification.unread()}">
       <div class="place-event-card">
+        <span class="lup-glass-optics" aria-hidden="true"></span>
         <button class="place-event-avatar" type="button" ng-click="gotoProfile(notification.friend)" ng-disabled="!notification.friend" aria-label="{{notification.friend.displayName()}}"><lup-avatar ng-user="notification.friend"></lup-avatar></button>
         <div class="place-event-copy">
           <button class="place-event-name" type="button" ng-click="gotoProfile(notification.friend)" ng-if="notification.friend">{{notification.friend.displayName()}}</button>
