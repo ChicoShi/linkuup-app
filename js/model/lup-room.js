@@ -38,7 +38,11 @@ function LUPRoom(json) {
 		return [firstLine, this.city()].filter(Boolean).join(' · ');
 	};
 	this.openTimes = function() { return this.JSON.room_hours; };
-	this.showDistance = function() { return this.JSON.room_show_distance > 0; };
+	// Older WebSocket schemas did not include this optional privacy flag. Treat a
+	// missing value as the database default (visible), but honour an explicit 0.
+	this.showDistance = function() {
+		return this.JSON.room_show_distance === undefined || this.JSON.room_show_distance > 0;
+	};
 
 	this.isOpen = function() {
 		const hours = this.openTimes();
