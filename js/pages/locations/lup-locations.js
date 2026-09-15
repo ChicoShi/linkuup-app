@@ -83,10 +83,6 @@ angular.module('LUP').config(function($routeProvider) {
             slide.style.setProperty('--nav-scale', (1 - Math.abs(offset) * .08).toFixed(4));
             slide.style.setProperty('--nav-opacity', (1 - Math.abs(offset) * .30).toFixed(4));
             slide.style.setProperty('--nav-drift', (offset * 24).toFixed(2) + 'px');
-            // Glass tracks touch, mouse drag and arrow navigation alike.
-            slide.style.setProperty('--glass-x', (-offset * 100).toFixed(2) + 'px');
-            slide.style.setProperty('--glass-y', (offset * 18).toFixed(2) + 'px');
-            slide.style.setProperty('--glass-roll', (-offset * 6).toFixed(2) + 'deg');
         }
         if (card === currentLandmarkCard) return;
         if (currentLandmarkCard) currentLandmarkCard.classList.remove('lup-room-slide-current');

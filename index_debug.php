@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-local-glass354", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-local-glass356", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -178,7 +178,6 @@ window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
   <script src="js/effects/lup-effect.js<?=$v?>"></script>
   <script src="js/directives/compile.js<?=$v?>"></script>
   <script src="js/directives/lup-avatar.js<?=$v?>"></script>
-  <script src="js/directives/lup-glass-scroll.js<?=$v?>"></script>
   <script src="js/directives/lup-message-state.js<?=$v?>"></script>
   <script src="js/directives/ng-enter.js<?=$v?>"></script>
   <script src="js/directives/ng-file-select.js<?=$v?>"></script>

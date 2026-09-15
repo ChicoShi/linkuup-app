@@ -1,6 +1,5 @@
-/* One clear, blue-tinted glass material for discovery and event cards.
- * The frame never moves out of its bounds. Only its clipped reflections move;
- * the actual backdrop remains visible through the surface. */
+/* Clear, lightly tinted glass for discovery and event cards.
+ * The real backdrop remains visible; no decorative reflection streaks. */
 .navigator-view .nav-place,
 .lup-place .place-event-card {
  --glass-inset:-6px -10px -8px;
@@ -18,10 +17,15 @@
 .navigator-view .location-rail .lup-room-slide-outer {
  opacity:1;
  will-change:auto;
+ perspective:none;
 }
-/* Opacity below 1 establishes a backdrop root and flattens the glass during
- * a swipe. Depth is already conveyed by the rail's existing transform. */
-.navigator-view .nav-place { opacity:1; }
+/* Preserve the real backdrop during swipes. Keep the pane stable while
+ * its landmark retains the native rail feedback. */
+.navigator-view .nav-place {
+ opacity:1;
+ transform:none;
+ transition:none;
+}
 .lup-place .place-event-card {
  --glass-inset:-2px -8px -3px;
  --glass-radius:27px;
@@ -35,15 +39,14 @@
  position:absolute;
  z-index:0;
  inset:var(--glass-inset);
- border:1px solid rgba(212,237,255,.32);
+ border:1px solid rgba(212,237,255,.065);
  border-radius:var(--glass-radius);
- background:linear-gradient(148deg,rgba(228,246,255,.10),rgba(163,208,239,.025) 38%,rgba(9,20,37,.12) 76%);
- box-shadow:inset 0 1px 1px rgba(255,255,255,.33),
-   inset 1px 0 1px rgba(213,238,255,.10),
-   inset 0 -1px 1px rgba(176,215,248,.18),
-   0 12px 28px rgba(2,9,22,.12);
- backdrop-filter:blur(7px) saturate(1.35) brightness(1.08);
- -webkit-backdrop-filter:blur(7px) saturate(1.35) brightness(1.08);
+ background:linear-gradient(148deg,rgba(228,246,255,.026),rgba(163,208,239,.008) 38%,rgba(9,20,37,.025) 76%);
+ box-shadow:inset 0 1px 1px rgba(255,255,255,.14),
+   inset 0 -1px 1px rgba(176,215,248,.07),
+   0 10px 24px rgba(2,9,22,.07);
+ backdrop-filter:blur(1.5px) saturate(1.08) brightness(1.03);
+ -webkit-backdrop-filter:blur(1.5px) saturate(1.08) brightness(1.03);
  pointer-events:none;
 }
 /* Fixed polished edge. Unlike the old translated border it cannot overlap
@@ -57,7 +60,7 @@
  inset:var(--glass-inset);
  padding:1px;
  border-radius:var(--glass-radius);
- background:linear-gradient(132deg,rgba(243,252,255,.70),rgba(196,231,255,.12) 22%,transparent 43%,rgba(173,215,252,.32) 70%,rgba(242,252,255,.55));
+ background:linear-gradient(132deg,rgba(243,252,255,.24),transparent 19% 69%,rgba(242,252,255,.16) 88%,transparent);
  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
  -webkit-mask-composite:xor;
  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
@@ -66,32 +69,6 @@
 }
 .navigator-view .nav-place > *,
 .lup-place .place-event-card > * { position:relative; z-index:1; }
-/* A highlight is clipped inside the same surface, not another card. The
- * diagonal soft reflection follows native scroll in either direction. */
-.navigator-view .nav-place > .lup-glass-optics,
-.lup-place .place-event-card > .lup-glass-optics {
- position:absolute;
- z-index:0;
- inset:var(--glass-inset);
- overflow:hidden;
- border-radius:var(--glass-radius);
- pointer-events:none;
-}
-.lup-glass-optics::before,
-.lup-glass-optics::after {
- content:"";
- position:absolute;
- inset:-38%;
- pointer-events:none;
-}
-.lup-glass-optics::before {
- background:linear-gradient(118deg,transparent 26%,rgba(222,245,255,.018) 33%,rgba(239,251,255,.085) 37%,rgba(216,238,255,.025) 41%,transparent 48%,transparent 61%,rgba(153,211,247,.035) 65%,transparent 70%);
- transform:translate3d(var(--glass-x,0px),var(--glass-y,0px),0) rotate(var(--glass-roll,0deg));
-}
-.lup-glass-optics::after {
- background:radial-gradient(ellipse 42% 28% at 74% 81%,rgba(143,208,247,.09),transparent 70%);
- transform:translate3d(calc(var(--glass-x,0px) * -.35),calc(var(--glass-y,0px) * -.35),0);
-}
 /* Keep the category icon recognizable, with a translucent polished bevel. */
 .navigator-view .nav-landmark {
  background:linear-gradient(145deg,rgba(230,249,255,.69),rgba(167,190,227,.40) 52%,rgba(107,155,201,.31));
@@ -108,8 +85,8 @@
  background:transparent!important;
 }
 .lup-place .place-event-row.lup-notification-unread .place-event-card::before {
- border-color:rgba(175,226,255,.52);
- box-shadow:inset 0 1px 1px rgba(241,252,255,.42),0 0 20px rgba(108,190,248,.09),0 12px 28px rgba(2,9,22,.12);
+ border-color:rgba(175,226,255,.11);
+ box-shadow:inset 0 1px 1px rgba(241,252,255,.20),0 0 20px rgba(108,190,248,.04),0 10px 24px rgba(2,9,22,.07);
 }
 .lup-place .place-event-card:focus-within::after { opacity:1; }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
@@ -120,14 +97,4 @@
 }
 @media (max-width:360px) {
  .navigator-view .nav-place { --glass-inset:-5px -8px -7px; --glass-radius:28px; }
-}
-@media (prefers-reduced-motion:reduce) {
- .navigator-view .lup-glass-optics::before,
- .navigator-view .lup-glass-optics::after,
- .lup-place .lup-glass-optics::before,
- .lup-place .lup-glass-optics::after {
-  transform:none!important;
-  animation:none!important;
-  transition:none!important;
- }
 }
