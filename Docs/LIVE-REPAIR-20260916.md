@@ -39,3 +39,10 @@ Kein physisches iPhone/Safari verfügbar. Private Nachrichten wurden visuell mit
 - Tatsächlicher lokaler Chatbeitritt im Produktionsbundle: Mitgliedschaft bestätigt, Online-Zahl 1, Nachrichtenfeld sichtbar und keine zusätzliche Chatnachricht. Keine Nachricht versendet. Private Nachrichtengestaltung mit ausschließlich lokalen Layoutdaten geprüft.
 
 Lokaler Vorschlag zur gemeinsamen Durchsicht; kein Deployment. Test mit physischem iPhone/Safari und produktiven Konten bleibt ausstehend.
+
+### Nachkorrektur: klare Tropfenkante und kurzer Wischwechsel
+
+- Glasmitte nahezu ungefüllt (Alpha 0,006), ohne flächigen Backdrop-Weichzeichner. Gewölbte Kante mit schmalen, maskierten Randreflexen; vorhandene Hintergrundlinien bleiben sichtbar. Veraltete dunkle Kartenfüllung aus der gemeinsamen Hintergrunddatei entfernt.
+- Wischschwelle 24 CSS-Pixel. CSS-Snapping bleibt bis zum Abschluss des Übergangs deaktiviert; ein kurzes Wischen springt dadurch nicht vorzeitig zur Ausgangskarte zurück. Fingerbewegungen werden einmal pro Bild zusammengefasst, die Auswahl erst nach dem Übergang aktualisiert.
+- Unveränderte GPS-Updates lösen keine erneute Zentrierung aus. Während einer Geste oder des Übergangs unterbrechen Hintergrundupdates die Karte nicht. Vertikale Gesten, Abbruch, reduzierte Bewegung und der Schutz gegen versehentliche Klicks bleiben berücksichtigt.
+- 31 Tests erfolgreich, einschließlich kurzem Wechsel, Abbruch, GPS während der Geste und gebündelten Bewegungen. Produktionsbuild 593 erstellt. Im bereits geöffneten Chromium-Tab mit iPhone-Emulation wechselte ein 28-Pixel-Zug genau von Karte 7 auf Karte 8; klare Glasfläche dort visuell kontrolliert. Kein zusätzliches Browserfenster geöffnet.

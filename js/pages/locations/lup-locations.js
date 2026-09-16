@@ -51,6 +51,11 @@ angular.module('LUP').config(function($routeProvider) {
 	var nativeRailScrollTimer = null;
 	var nativeRailFrame = null;
 	var nativeRailSelectionFrame = null;
+	var nativeRailDragFrame = null;
+	var nativeRailSettleTimer = null;
+	var nativeRailTarget = null;
+	var nativeRailDragging = false;
+	var railIsBusy = function() { return nativeRailDragging || nativeRailTarget !== null; };
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
@@ -125,10 +130,12 @@ angular.module('LUP').config(function($routeProvider) {
 		var target = rail.scrollLeft + card.getBoundingClientRect().left - rail.getBoundingClientRect().left -
 			(rail.clientWidth - card.offsetWidth) / 2;
 		target = Math.max(0, Math.min(maxScroll, target));
-		rail.scrollTo({left: target, top: 0, behavior: behavior || 'auto'});
+		rail.scrollTo({left: target, top: 0, behavior: behavior || 'instant'});
+		return target;
 	};
 	var scrollSelectedRoomIntoView = function(behavior) {
 		$timeout(function() {
+			if (railIsBusy()) return;
 			var rail = getLocationRail();
 			if (!rail || !$scope.data.currentRoom) {
 				return;
@@ -141,10 +148,11 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 0);
 	};
 	var nearestRailCard = function(rail) {
-		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
+		var cards = rail.children;
 		if (cards.length && rail.closest('.navigator-view') && rail.clientWidth) {
 			return cards[Math.max(0, Math.min(cards.length - 1, Math.round(rail.scrollLeft / rail.clientWidth)))];
 		}
+		cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
 		if (!cards.length) {
 			return null;
 		}
@@ -167,6 +175,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		var roomId = String(nearest.getAttribute('data-room-id'));
+		if ($scope.data.currentRoom && String($scope.data.currentRoom.id()) === roomId) return;
 		var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
 			return String(room.id()) === roomId;
 		});
@@ -187,40 +196,83 @@ angular.module('LUP').config(function($routeProvider) {
 			syncSelectedRoomFromRail(rail);
 		});
 	};
+	var stopRailSettle = function(keepSnapDisabled) {
+		if (nativeRailSettleTimer !== null) window.clearTimeout(nativeRailSettleTimer);
+		nativeRailSettleTimer = null;
+		if (nativeRailTarget) {
+			var rail = nativeRailTarget.rail;
+			rail.scrollTo({left: rail.scrollLeft, top: 0, behavior: 'instant'});
+			if (!keepSnapDisabled) rail.classList.remove('location-rail-dragging');
+		}
+		nativeRailTarget = null;
+	};
+	var finishRailSettle = function() {
+		if (!nativeRailTarget || nativeRailDragging) return;
+		var target = nativeRailTarget;
+		nativeRailTarget = null;
+		if (nativeRailSettleTimer !== null) window.clearTimeout(nativeRailSettleTimer);
+		nativeRailSettleTimer = null;
+		// Restore CSS snapping only AFTER the requested adjacent card arrived.
+		// Restoring it at finger-up snapped short gestures back before the glide.
+		target.rail.scrollTo({left: target.left, top: 0, behavior: 'instant'});
+		target.rail.classList.remove('location-rail-dragging');
+		syncSelectedRoomFromRail(target.rail);
+	};
 	var settleNativeRail = function(rail, target) {
-		rail.classList.remove('location-rail-dragging');
+		stopRailSettle();
 		var nearest = target || nearestRailCard(rail);
-		if (nearest) centerRailCard(rail, nearest, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+		if (!nearest) { rail.classList.remove('location-rail-dragging'); return; }
+		rail.classList.add('location-rail-dragging');
+		var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		nativeRailTarget = {rail: rail, left: centerRailCard(rail, nearest, reduced ? 'instant' : 'smooth')};
+		if (reduced || Math.abs(rail.scrollLeft - nativeRailTarget.left) < 1) finishRailSettle();
+		else nativeRailSettleTimer = window.setTimeout(finishRailSettle, 650);
 	};
 	var initialiseNativeRail = function(rail) {
 		if (rail.dataset.lupNativeRail) return;
 		rail.dataset.lupNativeRail = '1';
 		var gesture = new window.LupLocationGesture();
-		var startScroll = 0, startCard = null, activePointer = null;
+		var startScroll = 0, startCard = null, activePointer = null, railWidth = 0, dragLeft = 0;
+		var paintDrag = function() {
+			nativeRailDragFrame = null;
+			rail.scrollLeft = dragLeft;
+		};
 		var begin = function(x, y) {
+			stopRailSettle(true);
+			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
+			rail.scrollTo({left: rail.scrollLeft, top: 0, behavior: 'instant'});
+			nativeRailDragging = true;
 			gesture.start(x, y);
 			startScroll = rail.scrollLeft;
 			startCard = nearestRailCard(rail);
+			railWidth = rail.clientWidth;
 		};
 		var move = function(x, y, event) {
 			if (!gesture.move(x, y)) return;
 			rail.classList.add('location-rail-dragging');
 			if (event.cancelable) event.preventDefault();
-			var travel = Math.max(-rail.clientWidth * .95, Math.min(rail.clientWidth * .95, gesture.dx));
-			rail.scrollLeft = startScroll - travel;
+			var travel = Math.max(-railWidth * .95, Math.min(railWidth * .95, gesture.dx));
+			dragLeft = startScroll - travel;
+			if (nativeRailDragFrame === null) nativeRailDragFrame = window.requestAnimationFrame(paintDrag);
 			suppressRoomOpenUntil = Date.now() + 450;
 		};
 		var finish = function(cancelled) {
+			if (nativeRailDragFrame !== null) {
+				window.cancelAnimationFrame(nativeRailDragFrame);
+				paintDrag();
+			}
 			var dragged = gesture.horizontal;
 			var step = cancelled ? 0 : gesture.step();
 			gesture.cancel();
+			nativeRailDragging = false;
 			if (dragged) {
-				var cards = Array.prototype.slice.call(rail.querySelectorAll('.lup-room-slide-outer[data-room-id]'));
+				var cards = Array.prototype.slice.call(rail.children);
 				var index = cards.indexOf(startCard);
 				var target = cards[Math.max(0, Math.min(cards.length - 1, index + step))];
 				suppressRoomOpenUntil = Date.now() + 450;
 				settleNativeRail(rail, target);
 			}
+			else if (!nativeRailTarget) rail.classList.remove('location-rail-dragging');
 			startCard = null;
 		};
 		rail.addEventListener('touchstart', function(event) {
@@ -263,6 +315,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}, true);
 		rail.addEventListener('scroll', function() {
 			scheduleRailDepth(rail);
+			// Do not digest hundreds of offscreen Angular cards while the finger
+			// or compositor is moving. Commit selection once the glide finishes.
+			if (railIsBusy()) return;
 			scheduleRailSelection(rail);
 			if (nativeRailScrollTimer) {
 				$timeout.cancel(nativeRailScrollTimer);
@@ -270,13 +325,18 @@ angular.module('LUP').config(function($routeProvider) {
 			nativeRailScrollTimer = $timeout(function() {
 				nativeRailScrollTimer = null;
 				syncSelectedRoomFromRail(rail);
-			}, 70);
+			}, 90, false);
+		}, {passive: true});
+		rail.addEventListener('scrollend', function() {
+			if (nativeRailTarget && nativeRailTarget.rail === rail &&
+				Math.abs(rail.scrollLeft - nativeRailTarget.left) < 1) finishRailSettle();
 		}, {passive: true});
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
 	var railSettleTimer = null;
 	var restoreHorizontalRail = function() {
+		if (railIsBusy()) return;
 		if ($scope.data.rooms.length) {
 			$scope.initialiseRail();
 		}
@@ -307,6 +367,9 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+		stopRailSettle();
+		if (nativeRailDragFrame !== null) window.cancelAnimationFrame(nativeRailDragFrame);
+		nativeRailDragging = false;
 		if (nativeRailScrollTimer) {
 			$timeout.cancel(nativeRailScrollTimer);
 		}
@@ -417,11 +480,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.$on('lup-rooms-resorted', function(event, roomId) {
-		if (!locationsInitialized || !roomId) {
+		if (!locationsInitialized || !roomId || railIsBusy()) {
 			return;
 		}
 		// Sorting must never throw the visitor back to the first card.
 		$timeout(function() {
+			if (railIsBusy()) return;
 			if (!restoreSelectedRoom(roomId, false)) {
 				return; // It is intentionally hidden by the active category/search.
 			}
@@ -429,6 +493,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 40);
 	});
 	$scope.$on('gwf-position-changed', function() {
+		if (railIsBusy()) return;
 		// Distance labels are calculated live on the room model. Ensure this
 		// screen receives an Angular render immediately when GPS arrives, even if
 		// it was opened from the sidenav while the first probe was pending.
@@ -439,9 +504,8 @@ angular.module('LUP').config(function($routeProvider) {
 				settleHorizontalRail();
 			}, 0);
 		}
-		else {
-			$timeout(settleHorizontalRail, 0);
-		}
+		// An unchanged GPS order only updates labels. Recentring on every fix
+		// interrupted touch input even though no location had moved in the list.
 	});
 	$scope.routeOrChat = function(room, event) {
 		if (room && room.inChatRange()) {
@@ -717,6 +781,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.selectCategory = function(categories) {
+		stopRailSettle();
 		var categoryKey = categories.join(',');
 		if ($scope.isCategoryFilterActive(categories)) {
 			// Repeating the active category is a small navigation shortcut: keep

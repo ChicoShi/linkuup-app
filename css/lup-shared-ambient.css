@@ -92,13 +92,7 @@ md-sidenav.navigator-sidebar .sidenav-brand span,.navigator-view .nav-address {c
 .navigator-view .nav-actions>* {font-size:13px;}
 .navigator-view .nav-landmark {background:linear-gradient(145deg,#e0f2fc,#b6b4e6 58%,#788bb8);border-color:#e0efff99;box-shadow:-4px 5px 0 #6e7fa333,0 12px 25px #060c2055,inset 0 2px 3px #ffffff66;}
 .navigator-view .nav-place-category {color:var(--lup-ui-accent);letter-spacing:.08em;font-size:11px;}
-.navigator-view .nav-place {
- background:linear-gradient(145deg,rgba(45,65,94,.72),rgba(18,27,45,.76));
- border:1px solid rgba(178,220,248,.24);
- border-radius:22px;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 16px 36px rgba(3,9,24,.32);
- backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
-}
+/* The transparent card surface is owned by lup-location-glass-frame.css. */
 .navigator-view .nav-pagination button {background:#bce8fa08;border-color:var(--lup-app-line);}
 md-sidenav.navigator-sidebar md-list-item p {font-size:14px;color:var(--lup-app-ink);}
 md-sidenav.navigator-sidebar .md-subheader {color:var(--lup-app-muted);font-size:11px;}

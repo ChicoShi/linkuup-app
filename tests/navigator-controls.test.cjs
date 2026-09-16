@@ -4,11 +4,11 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 
-function setup(overrides = {}) {
+function setup(overrides = {}, browser = {}) {
  let ctor;
  const chain = {config() {return chain;}, controller(name, fn) {ctor = fn; return chain;}};
  const element = {off() {return element;}, on() {return element;}};
- const context = vm.createContext({console: {log() {}}, window: {matchMedia: () => ({matches: true})},
+ const context = vm.createContext({console: {log() {}}, window: {matchMedia: () => ({matches: true}), ...browser},
   angular: {module: () => chain, element: () => element}});
  vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/pages/locations/lup-locations.js'), 'utf8'), context);
  const scope = {data: {}, $on() {}};
@@ -16,8 +16,44 @@ function setup(overrides = {}) {
  const args = ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(x => x.trim());
  Object.assign(deps, overrides);
  ctor(...args.map(x => deps[x] || {}));
- return scope;
+ return deps.$scope;
 }
+
+test('Short drags glide one card before snap returns; GPS cannot interrupt, moves share one paint', () => {
+ const frames=new Map(), timers=new Map(), events={}, classes=new Set(), listeners={};let serial=0,digests=0,writes=0,left=0;
+ const request=fn=>{frames.set(++serial,fn);return serial;};
+ const later=fn=>{timers.set(++serial,fn);return serial;};later.cancel=id=>timers.delete(id);
+ const flush=q=>{const entries=[...q.values()];q.clear();entries.forEach(fn=>fn());};
+ const rail={dataset:{},clientWidth:390,scrollWidth:780,style:{},
+  closest:()=>true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},
+  addEventListener:(type,fn)=>{listeners[type]=fn;},getBoundingClientRect:()=>({left:0}),
+  querySelector:selector=>rail.children.find(c=>selector.includes('"'+c.id+'"')),
+  querySelectorAll:()=>rail.children,
+  scrollTo({left:next,behavior}){if(behavior==='smooth'){rail.destination=next;}else{left=next;}}
+ };
+ Object.defineProperty(rail,'scrollLeft',{get:()=>left,set:v=>{left=v;writes++;if(listeners.scroll)listeners.scroll();}});
+ rail.children=[1,2].map((id,index)=>({id,offsetWidth:390,style:{setProperty(){}},getAttribute:()=>String(id),getBoundingClientRect:()=>({left:index*390-left})}));
+ const jq={length:1,filter(){return jq;},last(){return jq;},get(){return rail;}};
+ const gestureContext=vm.createContext({window:{}});
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/pages/locations/lup-location-gesture.js'),'utf8'),gestureContext);
+ const s={data:{},$on:(name,fn)=>{events[name]=fn;},$evalAsync:fn=>{digests++;fn();}};
+ setup({$scope:s,$timeout:later,LoadingSrvc:{removeTask(){}}},
+  {jQuery:()=>jq,LupLocationGesture:gestureContext.window.LupLocationGesture,
+   requestAnimationFrame:request,cancelAnimationFrame:id=>frames.delete(id),setTimeout:later,clearTimeout:id=>timers.delete(id),matchMedia:()=>({matches:false})});
+ s.data.visibleRooms=s.data.rooms=[{id:()=>1},{id:()=>2}];s.data.currentRoom=s.data.rooms[0];s.data.currentRoomIndex=0;
+ s.initialiseRail();flush(timers);flush(frames);
+ const touch=(x,y=300)=>({touches:[{clientX:x,clientY:y}],cancelable:true,preventDefault(){}});
+ listeners.touchstart(touch(220));listeners.touchmove(touch(208));listeners.touchmove(touch(202));listeners.touchmove(touch(196));
+ assert.equal(writes,0);flush(frames);assert.equal(writes,1);assert.equal(left,24);assert.equal(digests,0);
+ events['gwf-position-changed']();assert.equal(left,24);
+ listeners.touchend();assert.equal(rail.destination,390);assert.ok(classes.has('location-rail-dragging'));assert.equal(left,24);
+ rail.scrollLeft=390;listeners.scrollend();assert.equal(s.data.currentRoomIndex,1);assert.equal(classes.has('location-rail-dragging'),false);
+ // Reverse short gesture, cancelled by a second touch, returns to this card.
+ listeners.touchstart(touch(220));listeners.touchmove(touch(244));flush(frames);listeners.touchcancel();
+ assert.equal(rail.destination,390);rail.scrollLeft=390;listeners.scrollend();assert.equal(s.data.currentRoomIndex,1);
+ // Native vertical scrolling never requests the next location.
+ listeners.touchstart(touch(220));listeners.touchmove(touch(224,350));listeners.touchend();assert.equal(s.data.currentRoomIndex,1);
+});
 
 test('The discovery template has working category, arrow, reset and GPS controls', () => {
  const s = setup();
