@@ -280,6 +280,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	// No coordinate has been sent yet. The first valid position must always
 	// refresh rooms, including an explicitly configured debug patch.
 	PositionSrvc.LAST = null;
+	PositionSrvc.POSITIONS_RECORDED = 0;
 	PositionSrvc.EVENT_TOLERANCE_KM = 0.025;
 	PositionSrvc.setCoordinates = function(lat, lng) {
 		console.log('PositionSrvc.setCoordinates()', lat, lng);
@@ -295,12 +296,15 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 
 	PositionSrvc.hasPositionChangedSignificantly = function(current) {
 		
-		// Always announce the first valid coordinate. Further updates need an
-		// actual 25 metre movement, whether they originate from GPS or a patch.
+		// Seed the server with five positions. GPS may deliver the same position
+		// repeatedly after a fresh watch starts, but the server needs enough
+		// samples for its movement history before the normal movement threshold
+		// becomes useful.
 		var last = PositionSrvc.LAST;
-		if (last === null) {
+		if (last === null || PositionSrvc.POSITIONS_RECORDED < 5) {
 			PositionSrvc.LAST = { lat: current.lat, lng: current.lng };
-			console.log('PositionSrvc.hasPositionChangedSignificantly() FIRST');
+			PositionSrvc.POSITIONS_RECORDED++;
+			console.log('PositionSrvc.hasPositionChangedSignificantly() SEED', PositionSrvc.POSITIONS_RECORDED);
 			return true;
 		}
 
