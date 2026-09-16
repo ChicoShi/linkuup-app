@@ -1,15 +1,9 @@
-<md-toolbar class="lup-top-bar">
+<md-toolbar class="lup-top-bar place-topbar">
   <div class="md-toolbar-tools">
-  
-    <i class="material-icons" ng-click="openLeft()">menu</i>
-  
-    <md-button class="md-icon-button" aria-label="Back" ng-click="gotoReferrer()">
-      <i class="material-icons">arrow_back</i>
-    </md-button>
-
-    <h2 flex md-truncate>{{'TITLE_DEBUG'|translate}}</h2>
-	
+    <button class="place-icon-button" type="button" ng-click="openLeft()" aria-label="{{'PLACE_MENU'|translate}}"><i class="material-icons" aria-hidden="true">menu</i></button>
+    <button class="place-icon-button" type="button" ng-click="gotoReferrer()" aria-label="{{'PLACE_BACK'|translate}}"><i class="material-icons" aria-hidden="true">arrow_back</i></button>
+    <div class="place-topbar-copy" flex><strong>{{'TITLE_DEBUG'|translate}}</strong></div>
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
-
+    <button class="place-profile-button" type="button" ng-click="gotoOwnProfile()" aria-label="{{'PLACE_MY_PROFILE'|translate}}"><lup-avatar ng-user="data.ownUser"></lup-avatar></button>
   </div>
 </md-toolbar>

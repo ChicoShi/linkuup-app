@@ -27,7 +27,6 @@
  animation:place-neighborhood-walk 28s linear infinite;
 }
 .lup-place .place-shell > * {position:relative;z-index:1;}
-.lup-place .place-topbar {background:#111a2dcc;}
 .lup-place .place-overview,.lup-place .place-people,
 .location-page.lup-place .location-chat-surface.place-chat,
 .location-page.lup-place .place-private-chat {background:transparent;}

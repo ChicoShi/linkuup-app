@@ -1,4 +1,4 @@
-<md-content layout="column" flex=100 style="height: 100%;">
+<section class="profile-gallery">
   <div class="error" ng-if="data.galleryError">{{'GALLERY_LOAD_ERROR'|translate}}</div>
   <div class="gallery-grid" ng-if="data.galleryReady">
     <div class="gallery-upload"
@@ -24,4 +24,4 @@
   <div class="gallery-empty" ng-if="data.galleryReady && !data.galleryLoading && !data.galleryImages.length">
     <i class="material-icons">photo_library</i><span>{{'GALLERY_EMPTY'|translate}}</span>
   </div>
-</md-content>
+</section>

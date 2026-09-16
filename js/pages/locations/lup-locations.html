@@ -12,8 +12,6 @@
       <span class="profile-ambient-signal"></span>
     </div>
   <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
-  <header class="nav-intro"><span class="nav-eyebrow">LINKUUP / {{'NAV_DISCOVER'|translate}}</span></header>
-  <div class="search-input-wrap"><i class="material-icons" aria-hidden="true">search</i><input type="search" class="search-input" aria-label="{{'NAV_SEARCH'|translate}}" placeholder="{{'NAV_SEARCH'|translate}}" ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" /><button type="button" class="location-search-clear" ng-if="data.searchvalue" ng-click="clearLocationSearch()" aria-label="{{'NAV_RESET'|translate}}" title="{{'NAV_RESET'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></div>
   <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}">
    <button class="nav-reset" type="button" ng-click="resetNavigator($event)" aria-label="{{'NAV_RESET_START'|translate}}" title="{{'NAV_RESET_START'|translate}}">
     <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g class="nav-reset-pins"><g transform="rotate(-35 16 16)"><path class="nav-reset-pin-one" d="M11 3a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6Z"/><circle cx="11" cy="9" r="2.15"/><path class="nav-reset-pin-two" d="M21 29a6 6 0 0 0 6-6c0-4.5-6-11-6-11s-6 6.5-6 11a6 6 0 0 0 6 6Z"/><circle cx="21" cy="23" r="2.15"/></g></g></svg>
