@@ -46,3 +46,16 @@ Lokaler Vorschlag zur gemeinsamen Durchsicht; kein Deployment. Test mit physisch
 - Wischschwelle 24 CSS-Pixel. CSS-Snapping bleibt bis zum Abschluss des Übergangs deaktiviert; ein kurzes Wischen springt dadurch nicht vorzeitig zur Ausgangskarte zurück. Fingerbewegungen werden einmal pro Bild zusammengefasst, die Auswahl erst nach dem Übergang aktualisiert.
 - Unveränderte GPS-Updates lösen keine erneute Zentrierung aus. Während einer Geste oder des Übergangs unterbrechen Hintergrundupdates die Karte nicht. Vertikale Gesten, Abbruch, reduzierte Bewegung und der Schutz gegen versehentliche Klicks bleiben berücksichtigt.
 - 31 Tests erfolgreich, einschließlich kurzem Wechsel, Abbruch, GPS während der Geste und gebündelten Bewegungen. Produktionsbuild 593 erstellt. Im bereits geöffneten Chromium-Tab mit iPhone-Emulation wechselte ein 28-Pixel-Zug genau von Karte 7 auf Karte 8; klare Glasfläche dort visuell kontrolliert. Kein zusätzliches Browserfenster geöffnet.
+
+
+## Glaslinse und Avatarplatzierung – lokale Überarbeitung
+
+- Dieselbe blaue Vektorszene wird außerhalb und innerhalb der Karte abgebildet; im Zentrum 1,055-fach, im schmalen Rand 1,16-fach vergrößert. Hintergrundkoordinaten bleiben beim Wischen synchron. Kein SVG-Backdrop-Filter und keine Verzerrung von Schrift oder Bedienelementen. Der Effekt ist auf dieses gemeinsame Hintergrundmotiv beschränkt.
+- Nur aktuelle Karte und je zwei Nachbarn erhalten vollständige Angular-Inhalte. Der Katalog bleibt vollständig erhalten. Keine Layoutmessungen pro Wischframe; Glasbewegung über Transform.
+- Snap wird bereits beim Gestenbeginn deaktiviert. Kurze horizontale Gesten wechseln eine Karte; vertikale Bewegung und kleine unbeabsichtigte Bewegungen bleiben davon getrennt. Namen, Adressen und Präsenzbereich reservieren Höhe gegen Versatz.
+- Pfeilbuttons entfallen; Avatare und ein Online-Zähler sitzen unter den Aktionen. Acht Gesichter separat, anschließend bis 45 % Überlappung bei maximal 20; Gesamtzahl zählt weiter. Keine erfundenen Besucher in der Anwendung. Fokus auf der Leiste unterstützt Pfeile, Home und End.
+- Chat-Verfügbarkeit erhält grünen Rand und Statusschein. Vorhandene CSS-Dateien bearbeitet, keine neuen Imports und kein `!important`.
+
+Prüfung: 31 Node-Tests; Syntax- und Diff-Prüfung. Chromium mit 390 px: neun Touchsequenzen mit 28 px vor/zurück bzw. 18 px ohne Wechsel bestanden; maximal fünf vollständige Karten, durchgehend 529 px Leistenhöhe im geprüften Ausschnitt, p95 Frameabstand rund 16,7 ms, keine Long Tasks im Messlauf. Browser-Testdaten für 0/8/9/20/103 Online-Gäste bei 320/390/1440 px: Avatare innerhalb der Karte, unter den Aktionen, korrekter Gesamtzähler. Testdaten anschließend im isolierten Testbrowser entfernt; keine Serverdaten geändert. Kategorie, leeres Suchergebnis, erster/letzter Eintrag per Tastatur, Detailansicht und Rückkehr sowie reduzierte Bewegung geprüft.
+
+Grenze: Chromium-Emulation und lokale Daten, kein Leistungstest auf einem physischen iPhone/Safari. Sichtbare Freigabe durch Shippi steht aus.

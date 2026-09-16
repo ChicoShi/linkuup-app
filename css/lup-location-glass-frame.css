@@ -1,5 +1,4 @@
-/* A single transparent lens per item. All shapes behind it remain real page
-   content, so the backdrop moves naturally through the lens during a swipe. */
+/* Clear surfaces; the navigator's optical layer samples the shared blue field. */
 .navigator-view .nav-place,
 .lup-place .place-event-card,
 .lup-place .place-thread,
@@ -16,6 +15,7 @@
 .nearby.navigator-view .location-rail .lup-room-slide-outer {
  opacity:1;transform:none;transition:none;will-change:auto;perspective:none;
  background:transparent;padding:0;
+ content-visibility:visible;contain-intrinsic-block-size:none;contain:layout style;
 }
 .nearby.navigator-view .location-rail .nav-place {
  display:flex;flex-direction:column;
@@ -23,32 +23,21 @@
  margin:3px auto 12px;padding:4px 12px 12px;
  border-radius:32px;overflow:visible;
  opacity:1;transform:none;transition:none;
+ background:transparent;border-color:rgba(216,243,255,.09);box-shadow:0 6px 18px #040c1612;
 }
 .navigator-view .location-rail {padding-block:3px;scroll-behavior:auto;}
-/* Very thin, curved highlights at the edge: no opaque second pane or sweeping
-   light stripe over the text. Only the two visible cards update --glass-shift. */
+/* One quiet highlight follows the clear lens edge, never the text. */
 .nearby.navigator-view .location-rail .nav-place::before {
- content:'';display:block;position:absolute;inset:0;z-index:0;
+ content:'';display:block;position:absolute;inset:0;z-index:1;
  border-radius:inherit;padding:1px;pointer-events:none;
- background:linear-gradient(135deg,rgba(245,253,255,.78),rgba(198,233,252,.07) 21%,transparent 43%,rgba(222,246,255,.40) 83%,transparent);
+ background:linear-gradient(132deg,#e8faffb3,transparent 28%,#b8e4f31c 64%,#d6f6ff80 86%,transparent);
  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
  -webkit-mask-composite:xor;
  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
  mask-composite:exclude;
- opacity:.8;
+ opacity:.46;
 }
-.nearby.navigator-view .location-rail .nav-place::after {
- content:'';display:block;position:absolute;inset:2px;z-index:0;
- border-radius:30px;padding:7px;pointer-events:none;
- /* A curved meniscus only at the edge; the whole centre stays clear. */
- background:radial-gradient(ellipse 90% 72% at 0% 0%,rgba(231,248,255,.22),transparent 60%),radial-gradient(ellipse 100% 90% at 100% 100%,rgba(188,233,255,.15),transparent 60%);
- box-shadow:inset 2px 3px 4px rgba(237,251,255,.15),inset -2px -3px 4px rgba(191,230,249,.13);
- -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
- -webkit-mask-composite:xor;
- mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
- mask-composite:exclude;
- transform:translateX(calc(var(--glass-shift,0px) * .2));
-}
+.nearby.navigator-view .location-rail .nav-place::after {display:none;}
 .navigator-view .nav-landscape,.navigator-view .nav-place-content {position:relative;z-index:1;}
 .lup-place .place-event-card::before,.lup-place .place-event-card::after,
 .lup-place .place-thread::before,.lup-place .place-thread::after {display:none;}
@@ -66,11 +55,10 @@
 }
 .lup-place .place-thread:focus-within,.lup-place .place-event-card:focus-within {border-color:rgba(173,224,255,.65);}
 .navigator-view .nav-presence {
- display:block;width:100%;min-height:38px;padding:3px 0 8px;margin:0;
+ display:block;width:100%;min-height:44px;padding:16px 0 4px;margin:0;
  font:inherit;color:#c3d7e8;border:0;background:none;cursor:pointer;
 }
 .navigator-view .nav-actions .nav-route-chat {position:relative;background:rgba(99,157,187,.07);}
-.navigator-view .nav-actions .nav-route-chat.is-here {color:#c0f1de;border-color:rgba(166,231,202,.34);background:rgba(82,170,145,.10);}
 .navigator-view .nav-route-chat.is-here i {animation:nav-chat-arrival 420ms cubic-bezier(.2,.8,.2,1);}
 .navigator-view .nav-route-chat.is-opening i {transform:translateX(3px) scale(.9);}
 @keyframes nav-chat-arrival {from{transform:translateY(4px) scale(.7);opacity:.2;}to{transform:translateY(0) scale(1);opacity:1;}}
@@ -89,9 +77,48 @@
 }
 @media(max-width:360px) {
  .nearby.navigator-view .location-rail .nav-place {width:calc(100% - 32px);padding-inline:10px;border-radius:24px;}
- .nearby.navigator-view .location-rail .nav-place::after {border-radius:22px;}
 }
 @media(prefers-reduced-motion:reduce) {
  .navigator-view .nav-route-chat.is-here i {animation:none;}
- .nearby.navigator-view .location-rail .nav-place::after {transform:none;}
 }
+
+/* The shared background is magnified at the centre and curved edge. */
+.navigator-view .nav-glass-lens {position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0;}
+.navigator-view .nav-lens-world {
+ position:absolute;top:0;left:0;display:block;background-size:100% 100%;background-repeat:no-repeat;
+ transform-origin:0 0;pointer-events:none;
+}
+.navigator-view .nav-lens-rim {
+ position:absolute;inset:0;padding:7px;border-radius:inherit;overflow:hidden;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;
+ opacity:.8;
+}
+.navigator-view .has-discovery-lens > .profile-ambient-map {background:none;}
+.navigator-view .has-discovery-lens > .profile-ambient-map::before,
+.navigator-view .has-discovery-lens > .profile-ambient-map::after,
+.navigator-view .has-discovery-lens > .profile-ambient-map > :not(.nav-glass-field) {display:none;}
+.navigator-view .nav-lens-signal {
+ position:absolute;left:7%;top:56%;width:6px;height:6px;border-radius:50%;
+ background:#b8e5f1;box-shadow:0 0 15px 3px #69c9e54a;opacity:.52;
+ animation:nav-lens-drift 18s ease-in-out infinite;
+}
+@keyframes nav-lens-drift {
+ 0%,100% {transform:translate3d(0,0,0);}
+ 50% {transform:translate3d(95px,46px,0);}
+}
+.navigator-view .nav-place h2 {min-height:76px;display:flex;align-items:center;justify-content:center;line-height:1.18;overflow-wrap:anywhere;}
+.navigator-view .nav-place h2.room-hero-name--long {font-size:21px;}
+.navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
+.navigator-view .nav-address {min-height:30px;line-height:15px;}
+.navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
+.navigator-view .nav-position {display:block;margin-top:9px;text-align:center;font:11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#b0c7d7;}
+.navigator-view .nav-position > span {color:#7f9aaf;}
+.navigator-view .nav-actions .nav-route-chat.is-here {
+ color:#caffdf;border-color:#8de6b87a;background:#86deb412;
+ box-shadow:inset 0 0 12px #90e9bb0a,0 0 13px #72dba324;
+}
+.navigator-view .is-available .nav-status-dot {background:#a1f0c2;box-shadow:0 0 0 3px #80e5a912,0 0 9px #88edb880;}
+.navigator-view .location-rail:focus-visible {outline:2px solid #a9ddff;outline-offset:-2px;border-radius:28px;}
+@supports not (mask-composite:exclude) {.navigator-view .nav-lens-rim {display:none;}}
+@media(prefers-reduced-motion:reduce) {.navigator-view .nav-lens-signal {animation:none;}}

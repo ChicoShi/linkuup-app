@@ -55,6 +55,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var nativeRailSettleTimer = null;
 	var nativeRailTarget = null;
 	var nativeRailDragging = false;
+	var discoveryGlass = null;
 	var railIsBusy = function() { return nativeRailDragging || nativeRailTarget !== null; };
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
@@ -86,16 +87,8 @@ angular.module('LUP').config(function($routeProvider) {
 	// flowing movement instead of becoming a sequence of discrete slider steps.
 	var updateRailDepth = function(rail) {
 		nativeRailFrame = null;
-		if (rail && rail.closest('.navigator-view')) {
-			if (!rail.clientWidth) return;
-			var position = rail.scrollLeft / rail.clientWidth;
-			var first = Math.max(0, Math.floor(position));
-			for (var i = first; i <= Math.min(rail.children.length - 1, first + 1); i++) {
-				var offset = Math.max(-1, Math.min(1, i - position));
-				rail.children[i].style.setProperty('--glass-shift', (-offset * 7).toFixed(2) + 'px');
-			}
-			return;
-		}
+		if (discoveryGlass) discoveryGlass.paint();
+		if (rail && rail.closest('.navigator-view')) return;
 		if (!rail || !rail.clientWidth) {
 			return;
 		}
@@ -246,6 +239,8 @@ angular.module('LUP').config(function($routeProvider) {
 			startScroll = rail.scrollLeft;
 			startCard = nearestRailCard(rail);
 			railWidth = rail.clientWidth;
+			// Disable snap before the first drag frame, not halfway through it.
+			rail.classList.add('location-rail-dragging');
 		};
 		var move = function(x, y, event) {
 			if (!gesture.move(x, y)) return;
@@ -331,6 +326,17 @@ angular.module('LUP').config(function($routeProvider) {
 			if (nativeRailTarget && nativeRailTarget.rail === rail &&
 				Math.abs(rail.scrollLeft - nativeRailTarget.left) < 1) finishRailSettle();
 		}, {passive: true});
+		rail.addEventListener('keydown', function(event) {
+			if (event.target !== rail || event.altKey || event.ctrlKey || event.metaKey ||
+				!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+			event.preventDefault();
+			stopRailSettle();
+			var next = event.key === 'Home' ? 0 : event.key === 'End' ? $scope.data.visibleRooms.length - 1 :
+				$scope.data.currentRoomIndex + (event.key === 'ArrowRight' ? 1 : -1);
+			next = Math.max(0, Math.min($scope.data.visibleRooms.length - 1, next));
+			$scope.$evalAsync(function() { $scope.focusRoom(next); scrollSelectedRoomIntoView('instant'); });
+		});
+		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
@@ -368,6 +374,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 	$scope.$on('$destroy', function() {
 		stopRailSettle();
+		if (discoveryGlass) discoveryGlass.destroy();
 		if (nativeRailDragFrame !== null) window.cancelAnimationFrame(nativeRailDragFrame);
 		nativeRailDragging = false;
 		if (nativeRailScrollTimer) {
