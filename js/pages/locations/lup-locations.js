@@ -17,6 +17,15 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.visibleRooms = $scope.data.visibleRooms || [];
 	$scope.data.searchvalue = $scope.data.searchvalue || '';
 	$scope.data.category = Array.isArray($scope.data.category) ? $scope.data.category : [];
+	// The compact rail deliberately groups the full catalogue into useful
+	// discovery paths. Culture includes education, so a library is one tap away.
+	$scope.navigatorCategories = [
+		{ids: ['3', '4', '5', '14'], icon: 'local_cafe', label: 'NAV_CAFE'},
+		{ids: ['11'], icon: 'nightlife', label: 'NAV_NIGHT'},
+		{ids: ['12', '16', '17', '18', '19'], icon: 'theater_comedy', label: 'NAV_CULTURE'},
+		{ids: ['13', '15', '20'], icon: 'park', label: 'NAV_OUTDOORS'},
+		{ids: ['2', '10'], icon: 'location_city', label: 'NAV_CITIES'},
+	];
 	// These flags belong to this concrete screen instance. Keeping them on the
 	// shared root data object made a return from profile/course reuse stale rail
 	// state from a destroyed view.

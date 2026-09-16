@@ -58,4 +58,20 @@
 		});
 		return animation;
 	};
+
+	/* A brief, non-blocking presence flash for room joins and parts. */
+	Effects.presenceFlash = function(element, options) {
+		if (Effects.reducedMotion() || typeof element.animate !== 'function') {
+			return null;
+		}
+		return element.animate([
+			{ opacity: 0, transform: 'translateY(-8px) scale(.96)' },
+			{ opacity: 1, transform: 'translateY(0) scale(1)', offset: .38 },
+			{ opacity: 1, transform: 'translateY(0) scale(1)' }
+		], {
+			duration: options.duration || 480,
+			easing: 'cubic-bezier(.16,1,.3,1)',
+			fill: 'none'
+		});
+	};
 })(window);

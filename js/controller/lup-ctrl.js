@@ -761,9 +761,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (room) {
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);
-			const message = room.addMessage(time, user, room, $translate.instant('has joined'), true);
-			message.effect = 'blubble';
-			$rootScope.$broadcast('lup-room-message', room, message);
+			$rootScope.$broadcast('lup-room-presence', room, user, 'join', time);
+			if (!user.isSelf()) {
+				FXSrvc.play('event');
+			}
 		}
 	};
 	
@@ -774,9 +775,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (room) {
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.removeUser(user);
-			const message = room.addMessage(time, user, room, $translate.instant('has left'), true);
-			message.effect = 'blubble';
-			$rootScope.$broadcast('lup-room-message', room, message);
+			$rootScope.$broadcast('lup-room-presence', room, user, 'part', time);
+			if (!user.isSelf()) {
+				FXSrvc.play('event');
+			}
 		}
 	};
 	

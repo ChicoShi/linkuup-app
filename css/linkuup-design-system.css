@@ -3652,6 +3652,9 @@ md-list.usernavigation .presence-actions .usericon {
 .location-chat-surface .chat-location-atmosphere { position:absolute; z-index:0; top:-34px; right:-26px; display:grid; place-items:center; width:178px; height:178px; border:1px solid color-mix(in srgb,var(--chat-accent) 23%,transparent); border-radius:50%; box-shadow:0 0 0 25px color-mix(in srgb,var(--chat-accent) 5%,transparent),0 0 42px var(--chat-glow); color:color-mix(in srgb,var(--chat-accent) 34%,#fff); opacity:.28; pointer-events:none; transform:rotate(-14deg); }
 .location-chat-surface .chat-location-atmosphere .material-icons { font-size:96px; text-shadow:0 0 22px var(--chat-glow); }
 .location-chat-surface .chat-msgs { position:relative; z-index:1; background:linear-gradient(180deg,rgba(16,18,29,.25),rgba(16,18,29,.60)) !important; }
+.location-chat-surface .place-presence-event { position:relative; z-index:2; display:flex; align-items:center; gap:8px; min-height:34px; padding:7px 14px; border-bottom:1px solid color-mix(in srgb,var(--chat-accent) 24%,rgba(255,255,255,.08)); background:color-mix(in srgb,var(--chat-accent) 10%,rgba(18,20,31,.84)); color:#dce8fa; font-size:12px; line-height:1.25; box-shadow:inset 0 1px 0 rgba(255,255,255,.08); }
+.location-chat-surface .place-presence-event .material-icons { color:var(--chat-accent); font-size:17px; text-shadow:0 0 12px var(--chat-glow); }
+.location-chat-surface .place-presence-event strong { color:#fff; font-weight:780; }
 
 /* Quiet parks and similar places deliberately share the calm outdoor palette. */
 .nearby .room-category-hero.category-relaxation { --lup-place-accent:#8fcb8a; --lup-place-glow:rgba(143,203,138,.18); }
