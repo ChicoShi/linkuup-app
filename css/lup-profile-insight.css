@@ -43,6 +43,9 @@
 @media(prefers-reduced-motion:reduce){.profile-journal .profile-portrait-image::after{animation:none;}}
 
 .profile-journal .profile-body {flex:none;min-width:0;width:100%;padding-bottom:24px;}
+.profile-journal .profile-gallery {box-sizing:border-box;width:min(100%,760px);margin:0 auto;padding:0 20px;background:transparent;}
+.profile-journal .profile-gallery .gallery-grid {padding:0 0 18px;}
+.profile-journal .profile-gallery .gallery-empty {margin:10px 0 28px;background:transparent;}
 .profile-journal.profile-page .profile-section-nav {box-sizing:border-box;flex:none;width:min(100%,760px);margin:0 auto 24px;padding-inline:20px;}
 .profile-journal .place-topbar {flex:none;min-height:56px;background:#111a2de8;border-bottom:1px solid #ceeaff0c;box-shadow:none;}
 .profile-journal .place-topbar .md-toolbar-tools {display:flex;height:56px;min-height:56px;padding:0 12px;gap:6px;}
