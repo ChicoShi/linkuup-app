@@ -39,16 +39,16 @@
 
 /** List avatars **/
 md-list .lup-avatar {
-	width: 46px!important;
-	height: 46px!important;
+	width: 46px;
+	height: 46px;
 	margin: auto;
 	margin-right: 10px;
 }
 md-list .lup-avatar .img,
 md-list .lup-avatar span {
-	width: 46px!important;
-	height: 46px!important;
-	margin: 0!important;
+	width: 46px;
+	height: 46px;
+	margin: 0;
 }
 
 /** Header avatars **/
@@ -64,3 +64,17 @@ md-list .lup-avatar span {
 .lup-avatar.lup-female {
 	background: #FF69B4;
 }
+
+/* Read-only presence strip, shared by discovery and the chat's online badge. */
+.lup-presence {display:flex;flex-direction:column;align-items:center;gap:7px;max-width:100%;}
+.lup-presence-avatars {display:flex;justify-content:center;align-items:center;max-width:100%;--presence-size:clamp(20px,6.5vw,26px);}
+.lup-presence-avatars .lup-avatar {
+ box-sizing:border-box;position:relative;flex:none;
+ width:var(--presence-size);height:var(--presence-size);padding:0;
+ border:1.5px solid #182e42;background:#91abc0;border-radius:50%;
+}
+.lup-presence-avatars .lup-avatar + .lup-avatar {margin-left:calc(var(--presence-gap,2px) - var(--presence-size) * var(--presence-overlap,0));}
+.lup-presence-avatars .lup-avatar .img,.lup-presence-avatars .lup-avatar span {inset:0;width:100%;height:100%;border-radius:inherit;}
+.lup-presence-summary {display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;font-size:12px;line-height:1.4;}
+.lup-presence-number {display:inline-block;min-width:1ch;font-weight:650;font-variant-numeric:tabular-nums;color:#d5f5ec;}
+.lup-presence.is-compact {display:inline-flex;}

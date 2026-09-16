@@ -81,8 +81,16 @@ angular.module('LUP').config(function($routeProvider) {
 	// flowing movement instead of becoming a sequence of discrete slider steps.
 	var updateRailDepth = function(rail) {
 		nativeRailFrame = null;
-		// Flat glass cards need no per-frame style writes across the full catalogue.
-		if (rail && rail.closest('.navigator-view')) return;
+		if (rail && rail.closest('.navigator-view')) {
+			if (!rail.clientWidth) return;
+			var position = rail.scrollLeft / rail.clientWidth;
+			var first = Math.max(0, Math.floor(position));
+			for (var i = first; i <= Math.min(rail.children.length - 1, first + 1); i++) {
+				var offset = Math.max(-1, Math.min(1, i - position));
+				rail.children[i].style.setProperty('--glass-shift', (-offset * 7).toFixed(2) + 'px');
+			}
+			return;
+		}
 		if (!rail || !rail.clientWidth) {
 			return;
 		}
@@ -435,6 +443,14 @@ angular.module('LUP').config(function($routeProvider) {
 			$timeout(settleHorizontalRail, 0);
 		}
 	});
+	$scope.routeOrChat = function(room, event) {
+		if (room && room.inChatRange()) {
+			event.preventDefault();
+			event.stopPropagation();
+			return $scope.enterChatDoor(room);
+		}
+		return $scope.requestLocation(room, event);
+	};
 	$scope.requestLocation = function(room, event) {
 		event.stopPropagation();
 		if (PositionSrvc.hasPosition(true)) {
@@ -513,8 +529,8 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.doorOpeningRoomId = room.id();
 		doorEntryTimer = $timeout(function() {
 			$scope.data.doorOpeningRoomId = null;
-			$scope.gotoChat(room);
-		}, 330, false);
+			if (room.inChatRange()) $scope.gotoChat(room);
+		}, 220);
 	};
 	$scope.$on('$destroy', function() {
 		if (doorEntryTimer) {
@@ -603,14 +619,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
-	$scope.navigatorCategories = [
-		{ids:[], icon:'explore', label:'NAV_ALL'},
-		{ids:['3','4','5','14'], icon:'local_cafe', label:'NAV_CAFE'},
-		{ids:['11'], icon:'nightlife', label:'NAV_NIGHT'},
-		{ids:['12','16','17'], icon:'account_balance', label:'NAV_CULTURE'},
-		{ids:['13','15','18'], icon:'park', label:'NAV_OUTDOORS'},
-		{ids:['1','2','10'], icon:'location_city', label:'NAV_CITIES'}
-	];
 	$scope.resetNavigator = function() {
 		$scope.data.searchvalue = '';
 		$scope.selectCategory([]);
@@ -909,21 +917,6 @@ angular.module('LUP').config(function($routeProvider) {
 		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
 	};
 
-	$scope.sortedVisitors = function(room) {
-		return UserSrvc.sortedUsers(room.USERS);
-	};
-
-	$scope.visitorOverflowLabel = function(room) {
-		// Two compact rows keep ten faces recognisable on a phone; the badge
-		// represents everyone beyond the visible preview.
-		var remaining = Math.max(0, (room.USERS || []).length - 10);
-		return remaining > 99 ? '99+' : remaining;
-	};
-
-	$scope.visitorCountLabel = function(room) {
-		var count = (room.USERS || []).length;
-		return count > 99 ? '99+' : count;
-	};
 	
 
 });

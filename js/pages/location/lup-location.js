@@ -43,9 +43,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.commentText = '';
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
-	$scope.data.presenceStatus = null;
 	var visitorCache = {source: null, signature: '', users: []};
-	var presenceStatusTimeout = null;
 	
 	$scope.init = function() {
 		console.log('LocationCtrl.init()', $routeParams.id);
@@ -365,6 +363,15 @@ angular.module('LUP').config(function($routeProvider) {
 	// conversation. Joining remains protected by the same GPS radius check as
 	// the primary "Chat betreten" action.
 	// Use the existing location check and server membership flow for the new CTA.
+	$scope.primaryLocationAction = function(event) {
+		if ($scope.inChatRange() || $scope.isRegionalRoom($scope.data.room)) {
+			event.preventDefault();
+			return $scope.openPlaceChat(event);
+		}
+		// Outside a venue this remains an ordinary directions link. Chat's
+		// separate GPS and server membership checks are unchanged.
+	};
+
 	$scope.openPlaceChat = function(event) {
 		var selectChat = function() {
 			if ($scope.inChatRange()) {
@@ -459,28 +466,6 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.$on('lup-room-message', function(event, room, message) {
 		if (message && message.isOwnMessage() && room && room.id() === $scope.data.room.id()) {
 			$scope.scrollChatToBottom(false);
-		}
-	});
-	$scope.$on('lup-room-presence', function(event, room, user, action) {
-		if (!room || !user || user.isSelf() || room.id() !== $scope.data.room.id()) {
-			return;
-		}
-		if (presenceStatusTimeout) {
-			$timeout.cancel(presenceStatusTimeout);
-		}
-		$scope.data.presenceStatus = {user: user, action: action, effect: 'presenceFlash'};
-		presenceStatusTimeout = $timeout(function() {
-			// Keep the newest presence event visible until another one arrives;
-			// only its attention animation is transient.
-			if ($scope.data.presenceStatus) {
-				$scope.data.presenceStatus.effect = null;
-			}
-			presenceStatusTimeout = null;
-		}, 2800);
-	});
-	$scope.$on('$destroy', function() {
-		if (presenceStatusTimeout) {
-			$timeout.cancel(presenceStatusTimeout);
 		}
 	});
 	//////////

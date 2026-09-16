@@ -21,3 +21,21 @@
 Nach dem Merge auf der Zielinstallation regulär `php build.php` ausführen und die zugehörigen HTML-Templates mit ausliefern. Keine lokalen Konfigurationen, Cachedateien, Buildwerkzeuge oder Testkonten im Commit. Keine Live-Datenbank geändert, keine Nachrichten an Nutzer versendet.
 
 Kein physisches iPhone/Safari verfügbar. Private Nachrichten wurden visuell mit lokalen Daten geprüft, nicht zwischen zwei echten produktiven Konten verschickt. Kauf-, Admin- und Produktiv-GPS-Abläufe sind keine vollständig geprüften End-to-End-Prozesse. Bitte diese geräte-/kontobezogenen Freigabechecks vor Deployment ergänzen. Die öffentliche Version bleibt bis zum Merge und Deployment durch Mira/Gizmore unverändert.
+
+## Ergänzung: Glas und Online-Anzeige
+
+- Alle `!important`-Zusätze aus den eigenen Styles entfernt. Vorhandene Dateien und Imports weiterverwendet; keine neuen CSS-Dateien. Angular-Toolbar, Suchfeld und Dialog erhalten gezielt passende Selektoren für die normale Kaskade.
+- Location-Karte als weitgehend transparente Glasschicht mit schmalen Kantenreflexen. Beim Wischen werden nur die zwei sichtbaren Karten aktualisiert. Linie unter der Kategorieauswahl entfernt und Abstand zur Karte verkleinert.
+- Route und Chat betreten teilen sich ein Bedienelement. Das Standortsignal bestimmt dessen Funktion; unmittelbar vor dem Chatwechsel wird die Reichweite erneut geprüft. Serverseitige Zutritts- und Besucherkontaktsperren bleiben erhalten.
+- Beitritts-/Austrittsbanner entfernt. Der Online-Zähler animiert echte Änderungen an `room.USERS`; beim ersten Rendern und bei reduzierter Bewegung bleibt er ruhig. Acht Avatare stehen separat, danach steigt die Überlappung bis 45 % bei zwanzig Avataren. Zusätzliche Besucher erhöhen den ungekürzten Gesamtzähler.
+- Aktuellen Upstream einschließlich Kategoriezuordnungen übernommen und eine doppelte, ältere Kategoriedefinition entfernt.
+
+### Prüfung dieser Ergänzung
+
+- 30 Node-Tests erfolgreich, einschließlich Standortwechsel zwischen Klick und Chatöffnung, Avatargrenzen, Zähler, reduzierter Bewegung und Aufräumen beim Verlassen der Ansicht.
+- Produktionsbuild erstellt und JavaScript-/PHP-Syntax sowie Diff geprüft. Eigene CSS-, JS- und Template-Dateien enthalten keine `!important`-Zusätze.
+- Browser mit Touch bei 320/390 px und Desktop bei 1440 px. Kurze 36-px-Gesten wechseln jeweils eine Karte; 5-px-Zittern und vertikale Gesten wechseln keine Karte.
+- Avatarbelegung 0/8/14/20/45 bei drei Breiten: keine Überstände, höchstens zwanzig Gesichter, Gesamtzahl bleibt vollständig.
+- Tatsächlicher lokaler Chatbeitritt im Produktionsbundle: Mitgliedschaft bestätigt, Online-Zahl 1, Nachrichtenfeld sichtbar und keine zusätzliche Chatnachricht. Keine Nachricht versendet. Private Nachrichtengestaltung mit ausschließlich lokalen Layoutdaten geprüft.
+
+Lokaler Vorschlag zur gemeinsamen Durchsicht; kein Deployment. Test mit physischem iPhone/Safari und produktiven Konten bleibt ausstehend.

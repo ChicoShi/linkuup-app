@@ -27,13 +27,13 @@
 }
 
 .lup-add-room-map-status {
-	margin: 10px 0 0 !important;
-	color: #a897ff !important;
+	margin: 10px 0 0;
+	color: #a897ff;
 }
 
 .lup-add-room-view-radius {
-	margin: 11px 0 0 !important;
-	color: #efecff !important;
+	margin: 11px 0 0;
+	color: #efecff;
 	font-weight: 700;
 }
 

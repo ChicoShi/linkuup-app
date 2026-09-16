@@ -1,59 +1,89 @@
-/* One glass surface per item. The neighbourhood stays visible through it.
-   Shared by discovery, events, private inbox and private message bubbles. */
+/* A single transparent lens per item. All shapes behind it remain real page
+   content, so the backdrop moves naturally through the lens during a swipe. */
 .navigator-view .nav-place,
 .lup-place .place-event-card,
 .lup-place .place-thread,
 .lup-place .place-private-chat .place-bubble {
  position:relative;
  isolation:isolate;
- border:1px solid rgba(206,233,252,.13)!important;
- background:linear-gradient(145deg,rgba(184,224,250,.065),rgba(16,34,55,.16) 70%)!important;
- box-shadow:inset 0 1px 0 rgba(245,252,255,.14),0 8px 24px rgba(3,12,27,.08)!important;
- backdrop-filter:blur(6px) saturate(1.15);
- -webkit-backdrop-filter:blur(6px) saturate(1.15);
+ border:1px solid rgba(218,240,255,.10);
+ background:linear-gradient(135deg,rgba(210,238,255,.045),rgba(125,178,209,.015) 42%,rgba(20,38,58,.055));
+ box-shadow:inset 1px 1px 1px rgba(240,251,255,.24),inset -1px -1px 1px rgba(190,228,250,.10),0 8px 24px rgba(3,12,27,.09);
+ backdrop-filter:blur(3px) saturate(1.18) brightness(1.04);
+ -webkit-backdrop-filter:blur(3px) saturate(1.18) brightness(1.04);
 }
-/* No second pane, moving reflection stripe or mask-composite dependency. */
-.navigator-view .nav-place::before,.navigator-view .nav-place::after,
-.lup-place .place-event-card::before,.lup-place .place-event-card::after,
-.lup-place .place-thread::before,.lup-place .place-thread::after {
- display:none!important;
+/* Keep legacy orbit/card rules outside the current navigator. */
+.nearby.navigator-view .location-rail .lup-room-slide-outer {
+ opacity:1;transform:none;transition:none;will-change:auto;perspective:none;
+ background:transparent;padding:0;
 }
-.navigator-view .nav-place {
- width:calc(100% - 44px)!important;
- max-width:360px;
- margin:8px auto 12px!important;
- padding:4px 12px 12px!important;
- border-radius:28px!important;
- overflow:visible!important;
+.nearby.navigator-view .location-rail .nav-place {
+ display:flex;flex-direction:column;
+ width:calc(100% - 44px);max-width:360px;height:auto;min-height:0;
+ margin:3px auto 12px;padding:4px 12px 12px;
+ border-radius:28px;overflow:visible;
  opacity:1;transform:none;transition:none;
 }
-.navigator-view .location-rail { padding-block:6px!important; }
-.navigator-view .location-rail .lup-room-slide-outer {
- opacity:1!important;will-change:auto;perspective:none;
+.navigator-view .location-rail {padding-block:3px;}
+/* Very thin, curved highlights at the edge: no opaque second pane or sweeping
+   light stripe over the text. Only the two visible cards update --glass-shift. */
+.nearby.navigator-view .location-rail .nav-place::before {
+ content:'';display:block;position:absolute;inset:0;z-index:0;
+ border-radius:inherit;padding:1px;pointer-events:none;
+ background:linear-gradient(135deg,rgba(238,252,255,.72),rgba(187,229,253,.08) 23%,transparent 48%,rgba(197,236,255,.36) 81%,transparent);
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ mask-composite:exclude;
+ opacity:.72;
 }
-.lup-place .place-thread-list { display:grid;gap:12px;padding-block:3px 12px; }
-.lup-place .place-thread { border-radius:22px; }
-.lup-place .place-event-card { border-radius:22px; }
-.lup-place .place-event-list .md-virtual-repeat-offsetter { padding-block:3px 8px!important; }
+.nearby.navigator-view .location-rail .nav-place::after {
+ content:'';display:block;position:absolute;inset:2px;z-index:0;
+ border-radius:inherit;pointer-events:none;
+ background:radial-gradient(ellipse 42% 12% at 12% 0%,rgba(210,245,255,.12),transparent 80%),radial-gradient(ellipse 32% 16% at 100% 96%,rgba(159,218,247,.09),transparent 78%);
+ transform:translateX(var(--glass-shift,0px));
+}
+.navigator-view .nav-landscape,.navigator-view .nav-place-content {position:relative;z-index:1;}
+.lup-place .place-event-card::before,.lup-place .place-event-card::after,
+.lup-place .place-thread::before,.lup-place .place-thread::after {display:none;}
+.lup-place .place-thread-list {display:grid;gap:12px;padding-block:3px 12px;}
+.lup-place .place-thread,.lup-place .place-event-card {border-radius:22px;}
+.lup-place .place-event-list .md-virtual-repeat-offsetter {padding-block:3px 8px;}
 .lup-place .place-thread.is-unread,
 .lup-place .place-event-row.lup-notification-unread .place-event-card {
- border-color:rgba(154,215,251,.29)!important;
- background:linear-gradient(145deg,rgba(127,197,238,.11),rgba(16,34,55,.18))!important;
+ border-color:rgba(154,215,251,.29);
+ background:linear-gradient(145deg,rgba(127,197,238,.09),rgba(16,34,55,.10));
 }
 .lup-place .place-private-chat .lup-own-msg .place-bubble {
- background:linear-gradient(145deg,rgba(139,209,248,.20),rgba(56,120,163,.13))!important;
- border-color:rgba(163,222,255,.25)!important;
+ background:linear-gradient(145deg,rgba(139,209,248,.18),rgba(56,120,163,.10));
+ border-color:rgba(163,222,255,.25);
 }
-.lup-place .place-thread:focus-within,.lup-place .place-event-card:focus-within {
- border-color:rgba(173,224,255,.65)!important;
+.lup-place .place-thread:focus-within,.lup-place .place-event-card:focus-within {border-color:rgba(173,224,255,.65);}
+.navigator-view .nav-presence {
+ display:block;width:100%;min-height:38px;padding:3px 0 8px;margin:0;
+ font:inherit;color:#c3d7e8;border:0;background:none;cursor:pointer;
 }
-/* Fallback retains text contrast on browsers without backdrop blur. */
+.navigator-view .nav-actions .nav-route-chat {position:relative;background:rgba(99,157,187,.07);}
+.navigator-view .nav-actions .nav-route-chat.is-here {color:#c0f1de;border-color:rgba(166,231,202,.34);background:rgba(82,170,145,.10);}
+.navigator-view .nav-route-chat.is-here i {animation:nav-chat-arrival 420ms cubic-bezier(.2,.8,.2,1);}
+.navigator-view .nav-route-chat.is-opening i {transform:translateX(3px) scale(.9);}
+@keyframes nav-chat-arrival {from{transform:translateY(4px) scale(.7);opacity:.2;}to{transform:translateY(0) scale(1);opacity:1;}}
+/* One ambient field, clearly visible through the card, in the app's blue. */
+.navigator-view > md-content > .profile-ambient-map {
+ background:radial-gradient(ellipse 48% 28% at 15% 50%,rgba(48,136,184,.18),transparent 80%),radial-gradient(ellipse 42% 27% at 96% 73%,rgba(84,155,200,.16),transparent 78%);
+}
+/* A plain translucent edge still works where composited masks are absent. */
+@supports not (mask-composite:exclude) {
+ .nearby.navigator-view .location-rail .nav-place::before {display:none;}
+}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
  .navigator-view .nav-place,.lup-place .place-event-card,
- .lup-place .place-thread,.lup-place .place-private-chat .place-bubble {
-  background:rgba(24,42,64,.94)!important;
- }
+ .lup-place .place-thread,.lup-place .place-private-chat .place-bubble {background:rgba(24,42,64,.92);}
 }
 @media(max-width:360px) {
- .navigator-view .nav-place { width:calc(100% - 32px)!important;padding-inline:10px!important;border-radius:24px!important; }
+ .nearby.navigator-view .location-rail .nav-place {width:calc(100% - 32px);padding-inline:10px;border-radius:24px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .navigator-view .nav-route-chat.is-here i {animation:none;}
+ .nearby.navigator-view .location-rail .nav-place::after {transform:none;}
 }
