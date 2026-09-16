@@ -1,6 +1,6 @@
 <section
  ng-class="{'has-own-user':data.user.isSelf()}"
- class="profile-page" layout="row" flex>
+ class="profile-page profile-journal" layout="row" flex>
 
   <ng-include class="left-sidebar"src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
 
@@ -21,8 +21,8 @@
       
 	<!-- CONTENT -->
     <!-- Other's avatar -->
-	<div class="avatar-bg" ng-class="{'profile-online': data.user && data.user.isSelf() && data.authenticated}">
-		<div class="avatar" ng-if="!canUploadProfile()">
+	<div class="profile-portrait" ng-class="{'profile-online': data.user && data.user.isSelf() && data.authenticated}">
+		<div class="profile-portrait-image" ng-if="!canUploadProfile()">
 		  <lup-avatar
 		   class="large-avatar"
 		   ng-user="data.user"></lup-avatar>
@@ -30,7 +30,7 @@
 
     <!-- Own avatar with upload -->
 
-		<div class="avatar" ng-if="canUploadProfile()">
+		<div class="profile-portrait-image" ng-if="canUploadProfile()">
 			  <div
 			   ng-init="initConfig({maxSize: 10485760})"
 			   ng-controller="GDOUploadCtrl"
@@ -45,7 +45,7 @@
 					 <lup-avatar flow-btn class="large-avatar" ng-user="data.user"></lup-avatar>
 				  </div>
 		</div>
-		<div class="profile-identity" ng-if="data.user">
+		<div class="profile-portrait-identity" ng-if="data.user">
 			<h2>{{data.user.displayName()}}</h2>
 			<span class="profile-role" ng-style="profileRoleStyle(data.user)">{{profileRole(data.user)|translate}}</span>
 		</div>
@@ -63,45 +63,19 @@
 	
 	<div class="cb"></div>
 
-	  <div class="profile-section-nav" ng-if="data.user && (data.user.isMember() || data.user.isSelf())" role="tablist" aria-label="Profilbereiche">
-		<button type="button" ng-class="{active: data.selectedTab === 0}" ng-click="data.selectedTab = 0" role="tab">
-		  <i class="material-icons">person_outline</i><span>Über mich</span>
+	  <div class="profile-section-nav" ng-if="data.user && (data.user.isMember() || data.user.isSelf())" role="tablist" aria-label="{{'TITLE_PROFILE'|translate}}">
+		<button type="button" ng-class="{active: data.selectedTab === 0}" ng-click="selectProfileTab(0)" role="tab" aria-selected="{{data.selectedTab === 0}}" aria-controls="profile-about-panel">
+		  <i class="material-icons" aria-hidden="true">person_outline</i><span>{{'SHD_PROFILE_ABOUT'|translate}}</span>
 		</button>
-		<button type="button" ng-class="{active: data.selectedTab === 1}" ng-click="data.selectedTab = 1" role="tab">
-		  <i class="material-icons">photo_library</i><span>Galerie</span>
+		<button type="button" ng-class="{active: data.selectedTab === 1}" ng-click="selectProfileTab(1)" role="tab" aria-selected="{{data.selectedTab === 1}}" aria-controls="profile-gallery-panel">
+		  <i class="material-icons" aria-hidden="true">photo_library</i><span>{{'TAB_GALLERY'|translate}}</span>
 		</button>
 	  </div>
 	
-	  <md-tabs
-	   ng-if="data.user && (data.user.isMember() || data.user.isSelf())"
-	   class="information-tabs"
-       md-selected="data.selectedTab"
-	   md-border-bottom
-       md-stretch-tabs="always"
-       layout="column">
-
-		  <md-tab
-		   label="Über mich"
-		   flex layout="column"
-		   md-on-select="loadInformation()">
-			<ng-include src="'js/pages/profile/lup-profile-information.html?v='+V"></ng-include>
-		  </md-tab>
-		  
-<!-- 	  <md-tab
-           label="{{'TAB_COURSE'|translate}}"
-           md-on-select="showCourse()"
-           flex layout="column">
-			<ng-include src="'js/pages/profile/lup-profile-course.html?v='+V"></ng-include>
-		  </md-tab>  -->
-		  
-		  <md-tab
-		   label="Galerie"
-		   md-on-select="showGallery()"
-		   flex layout="column">
-			<ng-include src="'js/pages/profile/lup-profile-gallery.html?v='+V"></ng-include>
-		  </md-tab>
-		  
-	  </md-tabs>
+      <section class="profile-body" ng-if="data.user && (data.user.isMember() || data.user.isSelf())">
+        <div id="profile-about-panel" role="tabpanel" ng-show="data.selectedTab === 0"><ng-include src="'js/pages/profile/lup-profile-information.html?v='+V"></ng-include></div>
+        <div id="profile-gallery-panel" role="tabpanel" ng-if="data.selectedTab === 1"><ng-include src="'js/pages/profile/lup-profile-gallery.html?v='+V"></ng-include></div>
+      </section>
 
 	  <div class="only-registered" ng-if="(data.user.isSelf()) && !data.ownUser.isMember()">
 		{{'ERR_ONLY_REGISTERED'|translate}}

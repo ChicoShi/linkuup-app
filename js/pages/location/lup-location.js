@@ -39,13 +39,13 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.selectedTab = $scope.data.selectedTab || 0;
 	$scope.data.selectedTab2 = $scope.data.selectedTab2 || 0;
 	$scope.data.manualLocationTab = false;
+ $scope.isPresencePreview = function(){return RoomSrvc.isPreviewRoom ? RoomSrvc.isPreviewRoom($scope.data.room) : false;};
+ $scope.previewGuests = function(){return RoomSrvc.displayUsers ? RoomSrvc.displayUsers($scope.data.room) : [];};
 	$scope.data.rating = 3;
 	$scope.data.commentText = '';
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
-	$scope.data.presenceStatus = null;
 	var visitorCache = {source: null, signature: '', users: []};
-	var presenceStatusTimeout = null;
 	
 	$scope.init = function() {
 		console.log('LocationCtrl.init()', $routeParams.id);
@@ -135,7 +135,7 @@ angular.module('LUP').config(function($routeProvider) {
 			/* Reading who is visibly present is an information view. Only Chat is
 			 * access-controlled by the physical radius; otherwise Online visibly
 			 * opens and then gets reset to Location after the room payload arrives. */
-			if (tab === 1 && !$scope.inChatRange()) {
+			if (tab === 1 && !$scope.inChatRange() && !$scope.isPresencePreview()) {
 				tab = 0;
 			}
 			$scope.data.selectedTab = tab;
@@ -344,6 +344,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.chatVisible = function() {
+        if ($scope.isPresencePreview()) return;
 		console.log('LocationCtrl.chatVisible()', $scope.data.room);
 		// The room payload can briefly still show the own avatar after a route or
 		// websocket transition.  That visual state is not proof of a live server
@@ -365,6 +366,15 @@ angular.module('LUP').config(function($routeProvider) {
 	// conversation. Joining remains protected by the same GPS radius check as
 	// the primary "Chat betreten" action.
 	// Use the existing location check and server membership flow for the new CTA.
+	$scope.primaryLocationAction = function(event) {
+		if ($scope.inChatRange() || $scope.isRegionalRoom($scope.data.room)) {
+			event.preventDefault();
+			return $scope.openPlaceChat(event);
+		}
+		// Outside a venue this remains an ordinary directions link. Chat's
+		// separate GPS and server membership checks are unchanged.
+	};
+
 	$scope.openPlaceChat = function(event) {
 		var selectChat = function() {
 			if ($scope.inChatRange()) {
@@ -403,6 +413,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.sendMessage = function() {
+        if ($scope.isPresencePreview()) return;
 		console.log('LocationCtrl.sendMessage()');
 		var message = ($scope.data.message || '').trim();
 		if (message) {
@@ -459,28 +470,6 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.$on('lup-room-message', function(event, room, message) {
 		if (message && message.isOwnMessage() && room && room.id() === $scope.data.room.id()) {
 			$scope.scrollChatToBottom(false);
-		}
-	});
-	$scope.$on('lup-room-presence', function(event, room, user, action) {
-		if (!room || !user || user.isSelf() || room.id() !== $scope.data.room.id()) {
-			return;
-		}
-		if (presenceStatusTimeout) {
-			$timeout.cancel(presenceStatusTimeout);
-		}
-		$scope.data.presenceStatus = {user: user, action: action, effect: 'presenceFlash'};
-		presenceStatusTimeout = $timeout(function() {
-			// Keep the newest presence event visible until another one arrives;
-			// only its attention animation is transient.
-			if ($scope.data.presenceStatus) {
-				$scope.data.presenceStatus.effect = null;
-			}
-			presenceStatusTimeout = null;
-		}, 2800);
-	});
-	$scope.$on('$destroy', function() {
-		if (presenceStatusTimeout) {
-			$timeout.cancel(presenceStatusTimeout);
 		}
 	});
 	//////////
@@ -585,7 +574,7 @@ angular.module('LUP').config(function($routeProvider) {
 		 * during that very short hand-over avoids a render error.  More
 		 * importantly, do not sort the same live array during every Angular digest:
 		 * with a busy room that caused visibly jerky visitor cards. */
-		var users = ($scope.data.room && $scope.data.room.USERS) || [];
+		var users = RoomSrvc.displayUsers ? RoomSrvc.displayUsers($scope.data.room) : ($scope.data.room && $scope.data.room.USERS) || [];
 		var signature = users.map(function(user) {
 			return user.id() + ':' + user.likes() + ':' + (user.isFriend() ? '1' : '0');
 		}).join('|');
@@ -601,7 +590,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.visitorCount = function() {
-		var users = ($scope.data.room && $scope.data.room.USERS) || [];
+		var users = RoomSrvc.displayUsers ? RoomSrvc.displayUsers($scope.data.room) : ($scope.data.room && $scope.data.room.USERS) || [];
 		return users.length;
 	};
 
@@ -614,7 +603,7 @@ angular.module('LUP').config(function($routeProvider) {
 			PositionSrvc.hasPosition(true) && $scope.inChatRange() && room.isSelfInRoom());
 	};
 	$scope.canContactVisitor = function(user) {
-		return !!(user && !user.isSelf() && $scope.visitorActionsAvailable() &&
+		return !!(user && !user.isPreview && !user.isSelf() && $scope.visitorActionsAvailable() &&
 			$scope.data.room.USERS.some(function(present) {return present.id() === user.id();}));
 	};
 	$scope.openVisitorProfile = function(user) {

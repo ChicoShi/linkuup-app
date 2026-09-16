@@ -92,7 +92,7 @@ function LUPNotification() {
 		console.log('LUPNotification.resolveFriendRequest()', this);
 		this.TYPE = 3;
 		var that = this;
-		this.us().withUser(this.data().user).then(function(friend){
+		this.us().withUser(this.data().user, true).then(function(friend){
 			var nid = that.id();
 			var uid = that.data().user;
 			var fid = that.data().friend;
@@ -105,7 +105,7 @@ function LUPNotification() {
 		console.log('LUPNotification.resolveFriendRequested()', this);
 		this.TYPE = 4;
 		var that = this;
-		this.us().withUser(this.data().friend).then(function(friend){
+		this.us().withUser(this.data().friend, true).then(function(friend){
 			that.friend = friend;
 		})['catch'](this.catchUnknown);
 	};

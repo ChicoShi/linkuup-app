@@ -5,6 +5,27 @@
 angular.module('LUP').
 service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc, WebsocketSrvc, TypeSrvc) {
 	var RoomSrvc = this;
+ // Development-only, explicitly labelled preview. Server membership, GPS,
+ // messages and the user cache are never changed by these display fixtures.
+ var previewHost=/^(localhost|app\.localhost|127\.0\.0\.1|\[::1\])$/.test(window.location && window.location.hostname || '');
+ var previewKey='lup-local-presence-preview',previewOn=false;
+ try {previewOn=previewHost && (new URLSearchParams(window.location.search).get('preview')==='presence' || window.sessionStorage.getItem(previewKey)==='1');}catch(e){}
+ RoomSrvc.PREVIEW={enabled:previewOn,users:[]};
+ RoomSrvc.previewPossible=function(room){return previewHost && !!room && /^Braunschweig Chat$/i.test(room.name());};
+ RoomSrvc.isPreviewRoom=function(room){return RoomSrvc.PREVIEW.enabled && RoomSrvc.previewPossible(room);};
+ RoomSrvc.togglePreview=function(){RoomSrvc.PREVIEW.enabled=!RoomSrvc.PREVIEW.enabled;try{window.sessionStorage.setItem(previewKey,RoomSrvc.PREVIEW.enabled?'1':'0');}catch(e){}};
+ RoomSrvc.displayUsers=function(room){
+  if(!RoomSrvc.isPreviewRoom(room))return room ? room.USERS : [];
+  if(!RoomSrvc.PREVIEW.users.length){
+   RoomSrvc.PREVIEW.users=Array.from({length:20},function(_,i){
+    var colors=['#78c6df','#a8bfe6','#d6b58c','#9fcebe','#c7b6dc'],skin=['#e6b995','#bd8567','#845744','#f0cfaf'];
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="'+colors[i%5]+'"/><path d="M5 64Q6 40 32 40Q58 40 59 64" fill="'+['#284b68','#405677','#735565'][i%3]+'"/><ellipse cx="32" cy="29" rx="13" ry="16" fill="'+skin[i%4]+'"/><path d="M18 27Q13 8 32 9Q53 9 46 29L42 19Q31 25 22 18Z" fill="'+['#36303b','#624a3d','#a38162'][i%3]+'"/><path d="M26 30h2m8 0h2" stroke="#33303a" stroke-width="2" stroke-linecap="round"/><path d="M28 37q4 3 8 0" stroke="#865f55" fill="none" stroke-linecap="round"/></svg>';
+    return {isPreview:true,JSON:{},id:function(){return -1000-i;},displayName:function(){return window.t('PREVIEW_GUEST')+' '+String(i+1).padStart(2,'0');},avatarURI:function(){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);},isMale:function(){return false;},isFemale:function(){return false;},isMember:function(){return false;},isSelf:function(){return false;},isFriend:function(){return false;},likes:function(){return 0;}};
+   });
+  }
+  return RoomSrvc.PREVIEW.users;
+ };
+
 
 	// Assign services to LUPRoom model.
 	LUPRoom.LogoSrvc = LogoSrvc;

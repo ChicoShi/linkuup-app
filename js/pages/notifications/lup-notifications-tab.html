@@ -11,15 +11,16 @@
           <p ng-if="notification.TYPE === 0">{{'LOADING_NOTIFICATION'|translate}}</p>
           <p ng-if="notification.TYPE === 1">{{'PLACE_EVENT_VISIT'|translate}}</p>
           <p ng-if="notification.TYPE === 2">{{'PLACE_EVENT_REVIEW'|translate}}</p>
-          <p ng-if="notification.TYPE === 3">{{'PLACE_EVENT_REQUEST'|translate}}</p>
-          <p ng-if="notification.TYPE === 4">{{'PLACE_EVENT_REQUESTED'|translate}}</p>
+          <p ng-if="notification.TYPE === 3">{{(notification.friend.JSON.relation_incoming ? 'PLACE_EVENT_REQUEST' : 'PLACE_EVENT_REQUEST_CLOSED')|translate}}</p>
+          <p ng-if="notification.TYPE === 4">{{(notification.friend.JSON.relation_pending ? 'PLACE_EVENT_REQUESTED' : 'PLACE_EVENT_REQUEST_CLOSED')|translate}}</p>
           <p ng-if="notification.TYPE === 5 && notification.other.isSelf()">{{'PLACE_EVENT_CONNECTED'|translate}}</p>
           <p ng-if="notification.TYPE === 5 && notification.other.isNotSelf()">{{'PLACE_EVENT_CONNECTED_WITH'|translate}} {{notification.other.displayName()}}.</p>
           <p ng-if="notification.TYPE === 6 && notification.other.isSelf()">{{'PLACE_EVENT_REMOVED'|translate}}</p>
           <p ng-if="notification.TYPE === 6 && notification.other.isNotSelf()">{{'PLACE_EVENT_REMOVED_WITH'|translate}} {{notification.other.displayName()}}.</p>
           <div class="place-event-links"><button type="button" ng-if="notification.room" ng-click="gotoRoom(notification.room)"><i class="material-icons" aria-hidden="true">place</i><span>{{notification.room.name()}}</span></button><button type="button" ng-if="notification.TYPE === 2" ng-click="showComment(notification.data().comment, notification.data().rating)">{{'PLACE_EVENT_READ'|translate}}</button></div>
         </div>
-        <button type="button" class="place-event-accept" ng-if="notification.TYPE === 3" ng-click="acceptFriendRequest(notification.frqid)" aria-label="{{'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST'|translate}}"><i class="material-icons" aria-hidden="true">done</i></button>
+        <button type="button" class="place-event-accept" ng-if="notification.TYPE === 3 && notification.friend.JSON.relation_incoming" ng-click="acceptFriendRequest(notification)" ng-disabled="!notification.friend || notification.working" aria-label="{{'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST'|translate}}"><i class="material-icons" aria-hidden="true">done</i></button>
+      <button type="button" class="place-event-decline" ng-if="notification.TYPE === 3 && notification.friend.JSON.relation_incoming" ng-click="acceptFriendRequest(notification,true)" ng-disabled="!notification.friend || notification.working" aria-label="{{'PROFILE_ACTION_DENY_FRIEND_REQUEST'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button>
       </div>
     </md-list-item>
   </md-list>

@@ -1,0 +1,133 @@
+/* Clear surfaces; the navigator's optical layer samples the shared blue field. */
+.navigator-view .nav-place,
+.navigator-view .nav-categories button,
+.lup-place .place-event-card,
+.lup-place .place-thread,
+.lup-place .place-person,
+.lup-place .place-chat .place-message:not(.lup-system-msg) .place-bubble,
+.lup-place .place-private-chat .place-bubble {
+ position:relative;
+ isolation:isolate;
+ border:1px solid rgba(218,240,255,.065);
+ background:rgba(235,249,255,.006);
+ box-shadow:inset 1px 1px 1px rgba(245,253,255,.26),inset -1px -1px 1px rgba(200,234,252,.12),0 3px 8px rgba(3,12,27,.05);
+ backdrop-filter:none;
+ -webkit-backdrop-filter:none;
+}
+/* Keep legacy orbit/card rules outside the current navigator. */
+.nearby.navigator-view .location-rail .lup-room-slide-outer {
+ opacity:1;transform:none;transition:none;will-change:auto;perspective:none;
+ background:transparent;padding:0;
+ content-visibility:visible;contain-intrinsic-block-size:none;contain:layout style;
+}
+.nearby.navigator-view .location-rail .nav-place {
+ display:flex;flex-direction:column;
+ width:calc(100% - 44px);max-width:360px;height:auto;min-height:0;
+ margin:3px auto 12px;padding:4px 12px 12px;
+ border-radius:32px;overflow:visible;
+ opacity:1;transform:none;transition:none;
+ background:transparent;border-color:rgba(216,243,255,.09);box-shadow:0 6px 18px #040c1612;
+}
+.navigator-view .location-rail {padding-block:3px;scroll-behavior:auto;}
+/* One quiet highlight follows the clear lens edge, never the text. */
+.nearby.navigator-view .location-rail .nav-place::before {
+ content:'';display:block;position:absolute;inset:0;z-index:1;
+ border-radius:inherit;padding:1px;pointer-events:none;
+ background:linear-gradient(132deg,#e8faffb3,transparent 28%,#b8e4f31c 64%,#d6f6ff80 86%,transparent);
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ mask-composite:exclude;
+ opacity:.46;
+}
+.nearby.navigator-view .location-rail .nav-place::after {display:none;}
+.navigator-view .nav-landscape,.navigator-view .nav-place-content {position:relative;z-index:1;}
+.lup-place .place-event-card::before,.lup-place .place-event-card::after,
+.lup-place .place-thread::before,.lup-place .place-thread::after {display:none;}
+.lup-place .place-thread-list {display:grid;gap:12px;padding-block:3px 12px;}
+.lup-place .place-thread,.lup-place .place-event-card {border-radius:22px;}
+.lup-place .place-event-list .md-virtual-repeat-offsetter {padding-block:3px 8px;}
+.lup-place .place-thread.is-unread,
+.lup-place .place-event-row.lup-notification-unread .place-event-card {
+ border-color:rgba(154,215,251,.29);
+ background:rgba(170,223,250,.02);
+}
+.lup-place .place-private-chat .lup-own-msg .place-bubble,
+.lup-place .place-chat .place-message.lup-own-msg .place-bubble {
+ background:rgba(162,222,252,.045);
+ border-color:rgba(163,222,255,.25);
+}
+.lup-place .place-thread:focus-within,.lup-place .place-event-card:focus-within {border-color:rgba(173,224,255,.65);}
+.navigator-view .nav-presence {
+ display:block;width:100%;min-height:44px;padding:16px 0 4px;margin:0;
+ font:inherit;color:#c3d7e8;border:0;background:none;cursor:pointer;
+}
+.navigator-view .nav-actions .nav-route-chat {position:relative;background:rgba(99,157,187,.07);}
+.navigator-view .nav-route-chat.is-here i {animation:nav-chat-arrival 420ms cubic-bezier(.2,.8,.2,1);}
+.navigator-view .nav-route-chat.is-opening i {transform:translateX(3px) scale(.9);}
+@keyframes nav-chat-arrival {from{transform:translateY(4px) scale(.7);opacity:.2;}to{transform:translateY(0) scale(1);opacity:1;}}
+/* One ambient field, clearly visible through the card, in the app's blue. */
+.navigator-view > md-content > .profile-ambient-map {
+ background:radial-gradient(ellipse 48% 28% at 15% 50%,rgba(48,136,184,.18),transparent 80%),radial-gradient(ellipse 42% 27% at 96% 73%,rgba(84,155,200,.16),transparent 78%);
+}
+/* A plain translucent edge still works where composited masks are absent. */
+@supports not (mask-composite:exclude) {
+ .nearby.navigator-view .location-rail .nav-place::before,
+ .nearby.navigator-view .location-rail .nav-place::after {display:none;}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+ .navigator-view .nav-place,.lup-place .place-event-card,
+ .lup-place .place-thread,.lup-place .place-private-chat .place-bubble {background:rgba(235,249,255,.006);}
+}
+@media(max-width:360px) {
+ .nearby.navigator-view .location-rail .nav-place {width:calc(100% - 32px);padding-inline:10px;border-radius:24px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .navigator-view .nav-route-chat.is-here i {animation:none;}
+}
+
+/* The shared background is magnified at the centre and curved edge. */
+.navigator-view .nav-glass-lens {position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0;}
+.navigator-view .nav-lens-world {
+ position:absolute;top:0;left:0;display:block;background-size:100% 100%;background-repeat:no-repeat;
+ transform-origin:0 0;pointer-events:none;
+}
+.navigator-view .nav-lens-rim {
+ position:absolute;inset:0;padding:7px;border-radius:inherit;overflow:hidden;
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;
+ opacity:.8;
+}
+.navigator-view .has-discovery-lens > .profile-ambient-map {background:none;}
+.navigator-view .has-discovery-lens > .profile-ambient-map::before,
+.navigator-view .has-discovery-lens > .profile-ambient-map::after,
+.navigator-view .has-discovery-lens > .profile-ambient-map > :not(.nav-glass-field) {display:none;}
+.navigator-view .nav-lens-signal {
+ position:absolute;left:7%;top:56%;width:6px;height:6px;border-radius:50%;
+ background:#b8e5f1;box-shadow:0 0 15px 3px #69c9e54a;opacity:.52;
+ animation:nav-lens-drift 18s ease-in-out infinite;
+}
+@keyframes nav-lens-drift {
+ 0%,100% {transform:translate3d(0,0,0);}
+ 50% {transform:translate3d(95px,46px,0);}
+}
+.navigator-view .nav-place h2 {min-height:76px;display:flex;align-items:center;justify-content:center;line-height:1.18;overflow-wrap:anywhere;}
+.navigator-view .nav-place h2.room-hero-name--long {font-size:21px;}
+.navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
+.navigator-view .nav-address {min-height:30px;line-height:15px;}
+.navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
+.navigator-view .nav-position {display:block;margin-top:9px;text-align:center;font:11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#b0c7d7;}
+.navigator-view .nav-position > span {color:#7f9aaf;}
+.navigator-view .nav-actions .nav-route-chat.is-here {
+ color:#caffdf;border-color:#8de6b87a;background:#86deb412;
+ box-shadow:inset 0 0 12px #90e9bb0a,0 0 13px #72dba324;
+}
+.navigator-view .is-available .nav-status-dot {background:#a1f0c2;box-shadow:0 0 0 3px #80e5a912,0 0 9px #88edb880;}
+.navigator-view .location-rail:focus-visible {outline:2px solid #a9ddff;outline-offset:-2px;border-radius:28px;}
+@supports not (mask-composite:exclude) {.navigator-view .nav-lens-rim {display:none;}}
+@media(prefers-reduced-motion:reduce) {.navigator-view .nav-lens-signal {animation:none;}}
+
+/* Dialogs use one blue translucent material as well, including legacy alerts. */
+md-dialog.place-dialog,md-dialog.md-default-theme:not(.place-dialog) {background:linear-gradient(145deg,#16334bed,#13273af7);border:1px solid #d1edfa2b;box-shadow:inset 0 1px 0 #f4fcff1f,0 22px 64px #020b1e70;color:#edf7ff;}
+md-dialog.place-dialog md-dialog-content,md-dialog.place-dialog .md-dialog-content,md-dialog.place-dialog .place-dialog-body {background:transparent;color:inherit;}
+md-dialog.place-dialog .place-dialog-header,md-dialog.place-dialog .place-dialog-actions {background:transparent;}

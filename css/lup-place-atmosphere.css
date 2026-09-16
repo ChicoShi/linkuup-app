@@ -1,8 +1,8 @@
 /* A shared, decorative neighbourhood. No live positions or activity implied. */
 .lup-place .place-shell {
- position:relative!important;
+ position:relative;
  isolation:isolate;
- background:var(--lup-app-field,#111a2d)!important;
+ background:var(--lup-app-field,#111a2d);
 }
 .lup-place .place-shell::before {
  content:'';
@@ -27,10 +27,10 @@
  animation:place-neighborhood-walk 28s linear infinite;
 }
 .lup-place .place-shell > * {position:relative;z-index:1;}
-.lup-place .place-topbar {background:#111a2dcc!important;}
+.lup-place .place-topbar {background:#111a2dcc;}
 .lup-place .place-overview,.lup-place .place-people,
 .location-page.lup-place .location-chat-surface.place-chat,
-.location-page.lup-place .place-private-chat {background:transparent!important;}
+.location-page.lup-place .place-private-chat {background:transparent;}
 .lup-place .place-thread,.lup-place .place-event-card,.lup-place .place-friend,
 .lup-place .place-person,.place-settings .lup-setting-card {
  background:linear-gradient(130deg,#20334cf2,#17263ceb);
@@ -71,7 +71,7 @@
 .lup-place .place-search-qr,.lup-place .place-person-actions .place-person-chat {color:#c2e4fc;}
 .lup-place .place-message-meta strong {color:#c5def4;}
 .lup-place .place-composer {z-index:2;}
-.lup-place .place-composer:focus-within {border-top-color:#8ec9ef55!important;}
+.lup-place .place-composer:focus-within {border-top-color:#8ec9ef55;}
 .lup-place .place-thread,.lup-place .place-friend,.lup-place .place-person {
  transition:transform 180ms ease;
 }
@@ -91,7 +91,7 @@
 }
 @media(prefers-reduced-motion:reduce) {
  .lup-place .place-shell::after {animation:none;transform:translate3d(352px,265px,0);opacity:.45;}
- .lup-place .place-thread,.lup-place .place-friend,.lup-place .place-person {transition:none;transform:none!important;}
+ .lup-place .place-thread,.lup-place .place-friend,.lup-place .place-person {transition:none;transform:none;}
 }
 @media print {
  .lup-place .place-shell::before,.lup-place .place-shell::after {display:none;}
@@ -189,7 +189,7 @@
  .lup-place .place-person {padding:11px 10px;}
  .lup-place .place-person-profile {gap:8px;}
  .lup-place .place-person.has-incoming .place-person-profile {flex-basis:100%;}
- .lup-place .place-person-profile .lup-avatar {flex-basis:38px;width:38px!important;height:38px!important;min-width:38px!important;}
+ .lup-place .place-person-profile .lup-avatar {flex-basis:38px;width:38px;height:38px;min-width:38px;}
 }
 @media(prefers-reduced-motion:reduce) {
  .lup-place .journey-stop,.lup-place .journey-island-pin {transition:none;transform:none;}

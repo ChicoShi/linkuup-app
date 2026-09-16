@@ -1,4 +1,4 @@
-<md-button class="md-icon-button lup-top-notification" aria-label="MainMenu" ng-click="gotoNotification()">
-  <p class="navnotification-count" ng-if="data.notificationcount > 0"></p>
+<md-button class="md-icon-button lup-top-notification" aria-label="{{'TAB_NOTIFICATIONS'|translate}}" ng-click="gotoNotification()">
+  <span class="navnotification-count" ng-if="data.notificationcount > 0" aria-label="{{data.notificationcount}}"></span>
   <i class="material-icons navnotification" aria-hidden="true">notifications_none</i>
 </md-button>

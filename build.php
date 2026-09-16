@@ -15,9 +15,14 @@ use GDO\Util\FileUtil;
 $srcpath = str_replace("\\", '/', __DIR__.'/');
 $destpath = str_replace("\\", '/', __DIR__.'/app/');
 
-unlink($destpath.'linkuup.temp.css');
-unlink($destpath.'linkuup.merged.js');
-unlink($destpath.'linkuup.annotated.js');
+if (!is_dir($destpath) && !mkdir($destpath, 0775, true))
+{
+	throw new RuntimeException('Cannot create build directory.');
+}
+foreach (['linkuup.temp.css', 'linkuup.merged.js', 'linkuup.annotated.js'] as $temporary)
+{
+	if (is_file($destpath.$temporary)) unlink($destpath.$temporary);
+}
 
 # Patch build number
 $file = file_get_contents('config/lup-php-config.php');
@@ -154,11 +159,19 @@ $annotate = 'node ' . escapeshellarg($srcpath . 'tools/ng-annotate-wrapper.js') 
 	' ' . escapeshellarg($destpath . 'linkuup.merged.js') .
 	' ' . escapeshellarg($destpath . 'linkuup.annotated.js');
 echo "$annotate\n";
-system($annotate);
+system($annotate, $status);
+if ($status !== 0 || !is_file($destpath.'linkuup.annotated.js'))
+{
+	throw new RuntimeException('JavaScript annotation failed; index not replaced.');
+}
 
 $uglify = "uglifyjs -c drop_console=true --mangle -o linkuup.js linkuup.annotated.js";
 echo "$uglify\n";
-system($uglify);
+system($uglify, $status);
+if ($status !== 0 || !is_file($destpath.'linkuup.js') || filesize($destpath.'linkuup.js') === 0)
+{
+	throw new RuntimeException('JavaScript minification failed; index not replaced.');
+}
 
 # Hook JS into index
 $output = str_replace("</body>", "  <script type=\"text/javascript\" src=\"app/linkuup.js?v={$v}\"></script>\n</body>", $output);

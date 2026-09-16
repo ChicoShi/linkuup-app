@@ -51,6 +51,25 @@ angular.module('LUP').config(function($routeProvider) {
 	var nativeRailScrollTimer = null;
 	var nativeRailFrame = null;
 	var nativeRailSelectionFrame = null;
+	var nativeRailDragFrame = null;
+	var nativeRailSettleTimer = null;
+	var nativeRailTarget = null;
+	var nativeRailDragging = false;
+	var discoveryGlass = null;
+	var navigatorResetPending = false, navigatorResetTimer = null, navigatorResetFrame = null, navigatorResetRail = null;
+	var cancelNavigatorReset = function() {
+		if (navigatorResetTimer) $timeout.cancel(navigatorResetTimer);
+		if (navigatorResetFrame !== null) window.cancelAnimationFrame(navigatorResetFrame);
+		if (navigatorResetRail) navigatorResetRail.classList.remove('location-rail-dragging');
+		navigatorResetTimer = navigatorResetFrame = navigatorResetRail = null;
+		navigatorResetPending = false;
+	};
+	var resetAnimations = [];
+	var stopResetFeedback = function() {
+		resetAnimations.forEach(function(animation) { animation.cancel(); });
+		resetAnimations = [];
+	};
+	var railIsBusy = function() { return nativeRailDragging || nativeRailTarget !== null || navigatorResetPending; };
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
@@ -81,6 +100,8 @@ angular.module('LUP').config(function($routeProvider) {
 	// flowing movement instead of becoming a sequence of discrete slider steps.
 	var updateRailDepth = function(rail) {
 		nativeRailFrame = null;
+		if (discoveryGlass) discoveryGlass.paint();
+		if (rail && rail.closest('.navigator-view')) return;
 		if (!rail || !rail.clientWidth) {
 			return;
 		}
@@ -115,10 +136,12 @@ angular.module('LUP').config(function($routeProvider) {
 		var target = rail.scrollLeft + card.getBoundingClientRect().left - rail.getBoundingClientRect().left -
 			(rail.clientWidth - card.offsetWidth) / 2;
 		target = Math.max(0, Math.min(maxScroll, target));
-		rail.scrollTo({left: target, top: 0, behavior: behavior || 'auto'});
+		rail.scrollTo({left: target, top: 0, behavior: behavior || 'instant'});
+		return target;
 	};
 	var scrollSelectedRoomIntoView = function(behavior) {
 		$timeout(function() {
+			if (railIsBusy()) return;
 			var rail = getLocationRail();
 			if (!rail || !$scope.data.currentRoom) {
 				return;
@@ -131,7 +154,11 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 0);
 	};
 	var nearestRailCard = function(rail) {
-		var cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
+		var cards = rail.children;
+		if (cards.length && rail.closest('.navigator-view') && rail.clientWidth) {
+			return cards[Math.max(0, Math.min(cards.length - 1, Math.round(rail.scrollLeft / rail.clientWidth)))];
+		}
+		cards = rail.querySelectorAll('.lup-room-slide-outer[data-room-id]');
 		if (!cards.length) {
 			return null;
 		}
@@ -149,16 +176,19 @@ angular.module('LUP').config(function($routeProvider) {
 		return nearest;
 	};
 	var syncSelectedRoomFromRail = function(rail) {
+		if (navigatorResetPending) return;
 		var nearest = nearestRailCard(rail);
 		if (!nearest) {
 			return;
 		}
 		var roomId = String(nearest.getAttribute('data-room-id'));
+		if ($scope.data.currentRoom && String($scope.data.currentRoom.id()) === roomId) return;
 		var roomIndex = $scope.data.visibleRooms.findIndex(function(room) {
 			return String(room.id()) === roomId;
 		});
 		if (roomIndex >= 0 && roomIndex !== $scope.data.currentRoomIndex) {
 			$scope.$evalAsync(function() {
+				if (navigatorResetPending) return;
 				$scope.focusRoom(roomIndex);
 			});
 		}
@@ -174,127 +204,130 @@ angular.module('LUP').config(function($routeProvider) {
 			syncSelectedRoomFromRail(rail);
 		});
 	};
-	var settleNativeRail = function(rail) {
-		rail.classList.remove('location-rail-dragging');
-		var nearby = rail.closest('.nearby');
-		if (nearby) {
-			var categories = nearby.querySelector('.location-categories');
-			if (categories) {
-				categories.classList.remove('category-rail-dragging');
-			}
+	var stopRailSettle = function(keepSnapDisabled) {
+		if (nativeRailSettleTimer !== null) window.clearTimeout(nativeRailSettleTimer);
+		nativeRailSettleTimer = null;
+		if (nativeRailTarget) {
+			var rail = nativeRailTarget.rail;
+			rail.scrollTo({left: rail.scrollLeft, top: 0, behavior: 'instant'});
+			if (!keepSnapDisabled) rail.classList.remove('location-rail-dragging');
 		}
-		$timeout(function() {
-			var nearest = nearestRailCard(rail);
-			if (nearest) {
-				var center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
-				var nearestCenter = nearest.getBoundingClientRect().left + nearest.offsetWidth / 2;
-				centerRailCard(rail, nearest, Math.abs(nearestCenter - center) > 8 ? 'smooth' : 'auto');
-			}
-		}, 0);
+		nativeRailTarget = null;
+	};
+	var finishRailSettle = function() {
+		if (!nativeRailTarget || nativeRailDragging) return;
+		var target = nativeRailTarget;
+		nativeRailTarget = null;
+		if (nativeRailSettleTimer !== null) window.clearTimeout(nativeRailSettleTimer);
+		nativeRailSettleTimer = null;
+		// Restore CSS snapping only AFTER the requested adjacent card arrived.
+		// Restoring it at finger-up snapped short gestures back before the glide.
+		target.rail.scrollTo({left: target.left, top: 0, behavior: 'instant'});
+		target.rail.classList.remove('location-rail-dragging');
+		syncSelectedRoomFromRail(target.rail);
+	};
+	var settleNativeRail = function(rail, target) {
+		stopRailSettle();
+		var nearest = target || nearestRailCard(rail);
+		if (!nearest) { rail.classList.remove('location-rail-dragging'); return; }
+		rail.classList.add('location-rail-dragging');
+		var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		nativeRailTarget = {rail: rail, left: centerRailCard(rail, nearest, reduced ? 'instant' : 'smooth')};
+		if (reduced || Math.abs(rail.scrollLeft - nativeRailTarget.left) < 1) finishRailSettle();
+		else nativeRailSettleTimer = window.setTimeout(finishRailSettle, 650);
 	};
 	var initialiseNativeRail = function(rail) {
-		if (rail.dataset.lupNativeRail) {
-			return;
-		}
+		if (rail.dataset.lupNativeRail) return;
 		rail.dataset.lupNativeRail = '1';
-		var touchStartX = null;
-		var touchStartY = null;
-		var touchStartScrollLeft = 0;
-		var draggingHorizontally = false;
-		var finishTouchDrag = function() {
-			var wasDragging = draggingHorizontally;
-			touchStartX = null;
-			touchStartY = null;
-			draggingHorizontally = false;
-			if (wasDragging) {
-				suppressRoomOpenUntil = Date.now() + 450;
-				settleNativeRail(rail);
+		var gesture = new window.LupLocationGesture();
+		var startScroll = 0, startCard = null, activePointer = null, railWidth = 0, dragLeft = 0;
+		var paintDrag = function() {
+			nativeRailDragFrame = null;
+			rail.scrollLeft = dragLeft;
+		};
+		var begin = function(x, y) {
+			stopRailSettle(true);
+			if (nativeRailScrollTimer) $timeout.cancel(nativeRailScrollTimer);
+			rail.scrollTo({left: rail.scrollLeft, top: 0, behavior: 'instant'});
+			nativeRailDragging = true;
+			gesture.start(x, y);
+			startScroll = rail.scrollLeft;
+			startCard = nearestRailCard(rail);
+			railWidth = rail.clientWidth;
+			// Disable snap before the first drag frame, not halfway through it.
+			rail.classList.add('location-rail-dragging');
+		};
+		var move = function(x, y, event) {
+			if (!gesture.move(x, y)) return;
+			rail.classList.add('location-rail-dragging');
+			if (event.cancelable) event.preventDefault();
+			var travel = Math.max(-railWidth * .95, Math.min(railWidth * .95, gesture.dx));
+			dragLeft = startScroll - travel;
+			if (nativeRailDragFrame === null) nativeRailDragFrame = window.requestAnimationFrame(paintDrag);
+			suppressRoomOpenUntil = Date.now() + 450;
+		};
+		var finish = function(cancelled) {
+			if (nativeRailDragFrame !== null) {
+				window.cancelAnimationFrame(nativeRailDragFrame);
+				paintDrag();
 			}
+			var dragged = gesture.horizontal;
+			var step = cancelled ? 0 : gesture.step();
+			gesture.cancel();
+			nativeRailDragging = false;
+			if (dragged) {
+				var cards = Array.prototype.slice.call(rail.children);
+				var index = cards.indexOf(startCard);
+				var target = cards[Math.max(0, Math.min(cards.length - 1, index + step))];
+				suppressRoomOpenUntil = Date.now() + 450;
+				settleNativeRail(rail, target);
+			}
+			else if (!nativeRailTarget) rail.classList.remove('location-rail-dragging');
+			startCard = null;
 		};
 		rail.addEventListener('touchstart', function(event) {
-			var touch = event.touches[0];
-			touchStartX = touch ? touch.clientX : null;
-			touchStartY = touch ? touch.clientY : null;
-			touchStartScrollLeft = rail.scrollLeft;
-			draggingHorizontally = false;
-		}, {passive: true});
+			if (event.touches.length !== 1) { finish(true); return; }
+			var touch = event.touches[0]; begin(touch.clientX, touch.clientY);
+		}, {passive:true});
 		rail.addEventListener('touchmove', function(event) {
-			var touch = event.touches[0];
-			if (touchStartX === null || !touch) {
-				return;
-			}
-			var deltaX = touch.clientX - touchStartX;
-			var deltaY = touch.clientY - touchStartY;
-			if (!draggingHorizontally && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingHorizontally = true;
-				rail.classList.add('location-rail-dragging');
-			}
-			if (draggingHorizontally) {
-				// Take ownership of horizontal drags so nested card click handlers
-				// cannot turn a short swipe into opening the location.
-				event.preventDefault();
-				rail.scrollLeft = touchStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 450;
-			}
-		}, {passive: false});
-		rail.addEventListener('touchend', finishTouchDrag, {passive: true});
-		// Browsers can cancel a touch for example when focus changes or a system
-		// gesture takes over. It must release the temporary drag state too.
-		rail.addEventListener('touchcancel', finishTouchDrag, {passive: true});
-		// Desktop users used Slick's mouse dragging too. Keep the same affordance
-		// for every PointerEvent-capable browser without involving a slider plugin.
-		var pointerStartX = null;
-		var pointerStartY = null;
-		var pointerStartScrollLeft = 0;
-		var draggingPointer = false;
-		var finishPointerDrag = function(event) {
-			var wasDragging = draggingPointer;
-			pointerStartX = null;
-			pointerStartY = null;
-			draggingPointer = false;
-			if (event && rail.hasPointerCapture(event.pointerId)) {
-				rail.releasePointerCapture(event.pointerId);
-			}
-			if (wasDragging) {
-				suppressRoomOpenUntil = Date.now() + 500;
-				settleNativeRail(rail);
-			}
-		};
+			if (event.touches.length !== 1) { finish(true); return; }
+			var touch = event.touches[0]; move(touch.clientX, touch.clientY, event);
+		}, {passive:false});
+		rail.addEventListener('touchend', function() { finish(false); }, {passive:true});
+		rail.addEventListener('touchcancel', function() { finish(true); }, {passive:true});
 		rail.addEventListener('pointerdown', function(event) {
-			if (event.pointerType === 'touch') {
-				return; // The touch fallback above owns this gesture.
-			}
-			pointerStartX = event.clientX;
-			pointerStartY = event.clientY;
-			pointerStartScrollLeft = rail.scrollLeft;
-			draggingPointer = false;
+			if (event.pointerType === 'touch' || event.button !== 0 || event.isPrimary === false) return;
+			activePointer = event.pointerId; begin(event.clientX, event.clientY);
 		});
 		rail.addEventListener('pointermove', function(event) {
-			if (pointerStartX === null) {
-				return;
-			}
-			var deltaX = event.clientX - pointerStartX;
-			var deltaY = event.clientY - pointerStartY;
-			if (!draggingPointer && Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)) {
-				draggingPointer = true;
-				rail.setPointerCapture(event.pointerId);
-				rail.classList.add('location-rail-dragging');
-			}
-			if (draggingPointer) {
-				event.preventDefault();
-				rail.scrollLeft = pointerStartScrollLeft - deltaX;
-				suppressRoomOpenUntil = Date.now() + 500;
-			}
+			if (event.pointerId !== activePointer) return;
+			move(event.clientX, event.clientY, event);
+			if (gesture.horizontal && !rail.hasPointerCapture(event.pointerId)) rail.setPointerCapture(event.pointerId);
 		});
-		rail.addEventListener('pointerup', finishPointerDrag);
-		rail.addEventListener('pointercancel', finishPointerDrag);
-		rail.addEventListener('lostpointercapture', function(event) {
-			if (pointerStartX !== null) {
-				finishPointerDrag(event);
-			}
+		var finishPointer = function(event) {
+			if (event.pointerId !== activePointer) return;
+			activePointer = null;
+			finish(event.type !== 'pointerup');
+			if (rail.hasPointerCapture(event.pointerId)) rail.releasePointerCapture(event.pointerId);
+		};
+		rail.addEventListener('pointerup', finishPointer);
+		rail.addEventListener('pointercancel', finishPointer);
+		rail.addEventListener('lostpointercapture', finishPointer);
+		rail.addEventListener('pointerleave', function(event) {
+			if (!rail.hasPointerCapture(event.pointerId)) finishPointer(event);
 		});
+		// All card controls ignore the synthetic click after a drag, not only
+		// the primary room button. Normal taps and keyboard activation remain.
+		rail.addEventListener('click', function(event) {
+			if (event.detail && Date.now() < suppressRoomOpenUntil) {
+				event.preventDefault(); event.stopImmediatePropagation();
+			}
+		}, true);
 		rail.addEventListener('scroll', function() {
 			scheduleRailDepth(rail);
+			// Do not digest hundreds of offscreen Angular cards while the finger
+			// or compositor is moving. Commit selection once the glide finishes.
+			if (railIsBusy()) return;
 			scheduleRailSelection(rail);
 			if (nativeRailScrollTimer) {
 				$timeout.cancel(nativeRailScrollTimer);
@@ -302,13 +335,29 @@ angular.module('LUP').config(function($routeProvider) {
 			nativeRailScrollTimer = $timeout(function() {
 				nativeRailScrollTimer = null;
 				syncSelectedRoomFromRail(rail);
-			}, 70);
+			}, 90, false);
 		}, {passive: true});
+		rail.addEventListener('scrollend', function() {
+			if (nativeRailTarget && nativeRailTarget.rail === rail &&
+				Math.abs(rail.scrollLeft - nativeRailTarget.left) < 1) finishRailSettle();
+		}, {passive: true});
+		rail.addEventListener('keydown', function(event) {
+			if (event.target !== rail || event.altKey || event.ctrlKey || event.metaKey ||
+				!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+			event.preventDefault();
+			stopRailSettle();
+			var next = event.key === 'Home' ? 0 : event.key === 'End' ? $scope.data.visibleRooms.length - 1 :
+				$scope.data.currentRoomIndex + (event.key === 'ArrowRight' ? 1 : -1);
+			next = Math.max(0, Math.min($scope.data.visibleRooms.length - 1, next));
+			$scope.$evalAsync(function() { $scope.focusRoom(next); scrollSelectedRoomIntoView('instant'); });
+		});
+		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
 	// The discovery surface is a rail, never a vertically stacked feed.
 	var resizeRecovery = null;
 	var railSettleTimer = null;
 	var restoreHorizontalRail = function() {
+		if (railIsBusy()) return;
 		if ($scope.data.rooms.length) {
 			$scope.initialiseRail();
 		}
@@ -339,6 +388,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+		stopRailSettle();
+		cancelNavigatorReset();
+		stopResetFeedback();
+		if (discoveryGlass) discoveryGlass.destroy();
+		if (nativeRailDragFrame !== null) window.cancelAnimationFrame(nativeRailDragFrame);
+		nativeRailDragging = false;
 		if (nativeRailScrollTimer) {
 			$timeout.cancel(nativeRailScrollTimer);
 		}
@@ -449,11 +504,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	});
 	$scope.$on('lup-rooms-resorted', function(event, roomId) {
-		if (!locationsInitialized || !roomId) {
+		if (!locationsInitialized || !roomId || railIsBusy()) {
 			return;
 		}
 		// Sorting must never throw the visitor back to the first card.
 		$timeout(function() {
+			if (railIsBusy()) return;
 			if (!restoreSelectedRoom(roomId, false)) {
 				return; // It is intentionally hidden by the active category/search.
 			}
@@ -461,6 +517,7 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 40);
 	});
 	$scope.$on('gwf-position-changed', function() {
+		if (railIsBusy()) return;
 		// Distance labels are calculated live on the room model. Ensure this
 		// screen receives an Angular render immediately when GPS arrives, even if
 		// it was opened from the sidenav while the first probe was pending.
@@ -471,10 +528,17 @@ angular.module('LUP').config(function($routeProvider) {
 				settleHorizontalRail();
 			}, 0);
 		}
-		else {
-			$timeout(settleHorizontalRail, 0);
-		}
+		// An unchanged GPS order only updates labels. Recentring on every fix
+		// interrupted touch input even though no location had moved in the list.
 	});
+	$scope.routeOrChat = function(room, event) {
+		if (room && room.inChatRange()) {
+			event.preventDefault();
+			event.stopPropagation();
+			return $scope.enterChatDoor(room);
+		}
+		return $scope.requestLocation(room, event);
+	};
 	$scope.requestLocation = function(room, event) {
 		event.stopPropagation();
 		if (PositionSrvc.hasPosition(true)) {
@@ -503,7 +567,9 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
 		sortAndSelectNearestRoom();
-		restoreSelectedRoom(roomId, !roomId && nearestRoomInitiallySelected);
+		// A newly loaded category may exclude the previous room. Its first
+		// visible card must own pagination immediately, even before a scroll.
+		restoreSelectedRoom(roomId, true);
 		locationsRoomsRendered = true;
 		LoadingSrvc.addTask('location_rail');
 		$timeout(function() {
@@ -551,8 +617,8 @@ angular.module('LUP').config(function($routeProvider) {
 		$scope.data.doorOpeningRoomId = room.id();
 		doorEntryTimer = $timeout(function() {
 			$scope.data.doorOpeningRoomId = null;
-			$scope.gotoChat(room);
-		}, 330, false);
+			if (room.inChatRange()) $scope.gotoChat(room);
+		}, 220);
 	};
 	$scope.$on('$destroy', function() {
 		if (doorEntryTimer) {
@@ -640,17 +706,79 @@ angular.module('LUP').config(function($routeProvider) {
 		return true;
 	};
 
+	$scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
+	var playResetFeedback = function(button) {
+		stopResetFeedback();
+		if (!button || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		var play = function(element, frames, timing) {
+			if (element && element.animate) resetAnimations.push(element.animate(frames, timing));
+		};
+		play(button.querySelector('.nav-reset-pins'), [
+			{transform:'rotate(0deg) scale(1)',opacity:1},
+			{transform:'rotate(165deg) scale(.16)',opacity:.9,offset:.4},
+			{transform:'rotate(190deg) scale(.05)',opacity:0,offset:.49},
+			{transform:'rotate(210deg) scale(.1)',opacity:0,offset:.58},
+			{transform:'rotate(350deg) scale(1.08)',opacity:1,offset:.88},
+			{transform:'rotate(360deg) scale(1)',opacity:1}
+		], {duration:820,easing:'cubic-bezier(.22,.7,.24,1)'});
+		play(button.querySelector('.nav-reset-burst'), [
+			{transform:'scale(.15)',opacity:0},
+			{transform:'scale(.6)',opacity:.8,offset:.25},
+			{transform:'scale(1.55)',opacity:0}
+		], {duration:330,delay:310,easing:'ease-out'});
+		Array.prototype.forEach.call(button.parentElement.querySelectorAll('.nav-category-glint'), function(icon,index) {
+			play(icon, [
+				{transform:'scale(.85)',opacity:0},
+				{transform:'scale(1.13)',opacity:.9,offset:.4},
+				{transform:'scale(1)',opacity:0}
+			], {duration:330,delay:330+index*65,easing:'ease-out'});
+		});
+	};
+	$scope.resetNavigator = function(event) {
+		$scope.data.searchvalue = '';
+		$scope.selectCategory([]);
+		$scope.searchLocation('');
+		// Clearing the filter can retain a later room that is still in the list.
+		// A reset always starts at its first card, even on repeated taps.
+		$scope.data.currentRoom = $scope.data.visibleRooms[0] || null;
+		$scope.data.currentRoomIndex = $scope.data.visibleRooms.length ? 0 : -1;
+		// A filtered card reused by ng-repeat can become a later snap anchor.
+		// Keep scroll callbacks quiet until the new list has painted at its start.
+		navigatorResetPending = true;
+		navigatorResetTimer = $timeout(function() {
+			navigatorResetTimer = null;
+			var rail = navigatorResetRail = getLocationRail();
+			if (!rail) { cancelNavigatorReset(); return; }
+			rail.classList.add('location-rail-dragging');
+			rail.scrollTo({left:0,top:0,behavior:'instant'});
+			navigatorResetFrame = window.requestAnimationFrame(function() {
+				rail.scrollTo({left:0,top:0,behavior:'instant'});
+				navigatorResetFrame = window.requestAnimationFrame(function() {
+					navigatorResetFrame = null;
+					cancelNavigatorReset();
+				});
+			});
+		}, 0);
+		playResetFeedback(event && event.currentTarget);
+	};
+	$scope.stepNavigator = function(direction) {
+		var index = Math.max(0, Math.min($scope.data.visibleRooms.length - 1, $scope.data.currentRoomIndex + direction));
+		if (!$scope.data.visibleRooms[index]) return;
+		$scope.focusRoom(index);
+		scrollSelectedRoomIntoView(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
+	};
+	var normalizeSearch = function(value) {
+		return String(value || '').toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ß/g, 'ss');
+	};
 	$scope.updateVisibleRooms = function() {
 		var categories = $scope.data.category;
-		var query = ($scope.data.searchvalue || '').trim().toLocaleLowerCase();
+		var terms = normalizeSearch($scope.data.searchvalue).trim().split(/\s+/).filter(Boolean);
 		$scope.data.visibleRooms = $scope.data.rooms.filter(function(room) {
 			var categoryMatches = !categories.length || categories.indexOf(String(room.category())) >= 0;
-			if (!categoryMatches || !query) {
-				return categoryMatches;
-			}
-			var haystack = [room.name(), room.city(), room.street(), room.zip(), room.categoryName()]
-				.filter(Boolean).join(' ').toLocaleLowerCase();
-			return haystack.indexOf(query) >= 0;
+			if (!categoryMatches) return false;
+			var haystack = normalizeSearch([room.name(), room.city(), room.street(), room.zip(), room.categoryName()]
+				.filter(Boolean).join(' '));
+			return terms.every(function(term) { return haystack.indexOf(term) >= 0; });
 		});
 	};
 
@@ -726,6 +854,8 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.selectCategory = function(categories) {
+		cancelNavigatorReset();
+		stopRailSettle();
 		var categoryKey = categories.join(',');
 		if ($scope.isCategoryFilterActive(categories)) {
 			// Repeating the active category is a small navigation shortcut: keep
@@ -931,21 +1061,6 @@ angular.module('LUP').config(function($routeProvider) {
 		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
 	};
 
-	$scope.sortedVisitors = function(room) {
-		return UserSrvc.sortedUsers(room.USERS);
-	};
-
-	$scope.visitorOverflowLabel = function(room) {
-		// Two compact rows keep ten faces recognisable on a phone; the badge
-		// represents everyone beyond the visible preview.
-		var remaining = Math.max(0, (room.USERS || []).length - 10);
-		return remaining > 99 ? '99+' : remaining;
-	};
-
-	$scope.visitorCountLabel = function(room) {
-		var count = (room.USERS || []).length;
-		return count > 99 ? '99+' : count;
-	};
 	
 
 });

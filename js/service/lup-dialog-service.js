@@ -11,37 +11,28 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 	// --- Base --- //
 	//////////////////
 	DialogSrvc.lastDialog = [];
+	var dialogActive = false;
+	var showNextDialog = function() {
+		var next = DialogSrvc.lastDialog[0];
+		if (dialogActive || !next) return;
+		dialogActive = true;
+		var finish = function(accepted, value) {
+			DialogSrvc.lastDialog.shift();
+			dialogActive = false;
+			if (accepted) next.q.resolve(value);
+			else next.q.reject(value);
+			showNextDialog();
+		};
+		// Handle both outcomes on this promise. An ignored finally() used to
+		// create an extra unhandled rejection whenever a queued dialog closed.
+		$mdDialog.show(next.config).then(function(value) { finish(true, value); },
+			function(reason) { finish(false, reason); });
+	};
 	DialogSrvc.show = function(config) {
 		console.log('DialogSrvc.show()', config, DialogSrvc.lastDialog);
-		var dlgs = DialogSrvc.lastDialog;
 		var q = $q.defer();
-		var last = dlgs.length ? dlgs[dlgs.length-1] : null;
-		var next = { config: config, q: q };
-		dlgs.push(next)
-		if (last) {
-			last.q.promise['finally'](function() {
-				var next = dlgs[0];
-				$mdDialog.show(next.config).then(function(){
-					dlgs[0].q.resolve();
-					dlgs.shift();
-				}, function(){
-					dlgs[0].q.reject();
-					dlgs.shift();
-				});
-			});
-		}
-		else
-		{
-			$mdDialog.show(config).then(function(){
-				dlgs[0].q.resolve();
-				dlgs.shift();
-			},
-			function(){
-				dlgs[0].q.reject();
-				dlgs.shift();
-			});
-		}
-		
+		DialogSrvc.lastDialog.push({config: config, q: q});
+		showNextDialog();
 		return q.promise;
 	};
 	
@@ -130,7 +121,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: false,
-		})['catch'](angular.noop);
+		})['catch'](function(reason) { defer.reject(reason); });
 
 		return defer.promise;
 	};
@@ -156,7 +147,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: true,
-		})['catch'](angular.noop);
+		})['catch'](function(reason) { defer.reject(reason); });
 		return defer.promise;
 	};
 	

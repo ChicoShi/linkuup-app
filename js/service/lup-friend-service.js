@@ -3,6 +3,15 @@ angular.module('LUP').
 service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrvc) {
 	
 	var FriendSrvc = this;
+ FriendSrvc.busy = {};
+ FriendSrvc.perform = function(user, message, success) {
+  if (user.isPreview) return $q.reject();
+  var id=user.id();if(FriendSrvc.busy[id])return FriendSrvc.busy[id];
+  var operation=WebsocketSrvc.sendBinary(message).then(success);
+  FriendSrvc.busy[id]=operation;
+  operation.then(function(){delete FriendSrvc.busy[id];},function(){delete FriendSrvc.busy[id];});
+  return operation;
+ };
 	
 	FriendSrvc.addFriend = function(user) {
 		console.log('FriendSrvc.addFriend()', user);
@@ -12,15 +21,13 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 			.write32(user.id())
 			.writeString('')
 			.write16(1); // friend
-		return WebsocketSrvc.sendBinary(gwsMessage).then(
-			FriendSrvc.sentRequest.bind(FriendSrvc, user),
-			FriendSrvc.cannnotAddFriend);
+		return FriendSrvc.perform(user,gwsMessage,FriendSrvc.sentRequest.bind(FriendSrvc,user));
 	};
 	
 	FriendSrvc.sentRequest = function(user) {
 		console.log('FriendSrvc.sentRequest()', user);
 		user.JSON.relation_pending = 1;
-		UserSrvc.withUser(user.id(), true);
+		UserSrvc.withUser(user.id(), true).catch(angular.noop);
 		ErrorSrvc.showMessage(
 				window.t('MSGP_SENT_FRIEND_REQUEST'),
 				window.t('MSGT_SENT_FRIEND_REQUEST'));
@@ -32,32 +39,32 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	FriendSrvc.cancelFriendRequest = function(user) {
 		console.log('FriendSrvc.cancelFriendRequest()', user);
 		var gwsMessage = new GWS_Message().cmd(0x1136).sync().write32(user.id());
-		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+		return FriendSrvc.perform(user,gwsMessage,function(response) {
 			user.JSON.relation_pending = 0;
-			UserSrvc.withUser(user.id(), true);
+			UserSrvc.withUser(user.id(), true).catch(angular.noop);
 			return response;
-		}, ErrorSrvc.websocketJSONError);
+		});
 	};
 
 	FriendSrvc.acceptFriendRequest = function(user) {
 		console.log('FriendSrvc.acceptFriendRequest()', user);
 		var gwsMessage = new GWS_Message().cmd(0x1132).sync()
 			.write32(user.id()).write32(window.GWF_USER.id());
-		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+		return FriendSrvc.perform(user,gwsMessage,function(response) {
 			UserSrvc.gotUserMessage(response);
 			user.JSON.relation_incoming = 0;
 			return response;
-		}, ErrorSrvc.websocketJSONError);
+		});
 	};
 
 	FriendSrvc.denyFriendRequest = function(user) {
 		console.log('FriendSrvc.denyFriendRequest()', user);
 		var gwsMessage = new GWS_Message().cmd(0x1137).sync().write32(user.id());
-		return WebsocketSrvc.sendBinary(gwsMessage).then(function(response) {
+		return FriendSrvc.perform(user,gwsMessage,function(response) {
 			UserSrvc.gotUserMessage(response);
 			user.JSON.relation_incoming = 0;
 			return response;
-		}, ErrorSrvc.websocketJSONError);
+		});
 	};
 	
 	FriendSrvc.cannnotAddFriend = function(response) {
@@ -91,9 +98,7 @@ service('FriendSrvc', function($q, WebsocketSrvc, ErrorSrvc, DialogSrvc, UserSrv
 	FriendSrvc.reallyRemoveFriend = function(friend, defer) {
 		console.log("FriendSrvc.reallyRemoveFriend()", friend, defer);
 		var gwsMessage = new GWS_Message().cmd(0x1134).sync().write32(friend.id());
-		return WebsocketSrvc.sendBinary(gwsMessage).then(
-				FriendSrvc.removedFriend.bind(FriendSrvc, friend, defer),
-				ErrorSrvc.websocketJSONError);
+		return FriendSrvc.perform(friend,gwsMessage,FriendSrvc.removedFriend.bind(FriendSrvc,friend,defer)).catch(defer.reject);
 	};
 	
 	FriendSrvc.removedFriend = function(friend, defer, gwsMessage) {

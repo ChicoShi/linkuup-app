@@ -8,16 +8,16 @@
   <md-toolbar class="sidenav-brand">
    <div class="md-toolbar-tools">
     <button type="button" class="nav-close" ng-click="closeLeft()" ng-if="!$mdMedia('gt-lg')" aria-label="{{'SIDEBAR_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button>
-    <div><h1>LinkUUp</h1><span>{{'SIDEBAR_TAGLINE'|translate}}</span></div>
+    <div class="sidebar-wordmark"><h1>link<span>uup</span></h1><span>{{'SIDEBAR_TAGLINE'|translate}}</span></div>
    </div>
   </md-toolbar>
 
-  <md-content>
-	<div class="sidebar-user-card" ng-if="data.ownUser.isAuthed()" ng-click="gotoOwnProfile()">
+  <md-content class="sidebar-scroll" flex>
+	<button type="button" class="sidebar-user-card" ng-if="data.ownUser.isAuthed()" ng-click="gotoOwnProfile()">
 	  <lup-avatar ng-user="data.ownUser"></lup-avatar>
 	  <div><strong>{{data.ownUser.displayName()}}</strong><span>{{'SIDEBAR_PROFILE'|translate}}</span></div>
-	  <i class="material-icons">chevron_right</i>
-	</div>
+	  <i class="material-icons" aria-hidden="true">chevron_right</i>
+	</button>
     
 	<md-list class="md-dense" flex layout="column">
 	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">{{'NAV_DISCOVER'|translate}}</md-subheader>
@@ -37,6 +37,10 @@
 			<p>{{data.pmCount}} {{'TITLE_PRIVATE_MESSAGES'|translate}}</p>
 	  </md-list-item>
 	  
+      <md-list-item class="md-1-line nav-events" ng-click="gotoNotification()" ng-if="data.ownUser.isAuthed()">
+        <i class="material-icons nav-icon">notifications_none</i><p>{{'TAB_NOTIFICATIONS'|translate}}</p>
+      </md-list-item>
+
 	  <md-list-item class="md-1-line" ng-click="gotoRegister()" ng-if="!data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">person_add</i>
 		<p>{{'BTN_REGISTER'|translate}}</p>

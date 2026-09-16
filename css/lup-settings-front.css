@@ -7,258 +7,258 @@
   background:
     radial-gradient(58% 25% at 102% 2%,rgba(66,175,228,.13),transparent 76%),
     radial-gradient(48% 27% at -9% 78%,rgba(126,91,214,.09),transparent 75%),
-    linear-gradient(156deg,#111d30 0%,#0b1423 49%,#080e18 100%) !important;
+    linear-gradient(156deg,#111d30 0%,#0b1423 49%,#080e18 100%);
 }
 .settings-page > md-content::before,
-.settings-page > md-content::after { display:none !important; }
+.settings-page > md-content::after { display:none; }
 
 .settings-page .lup-settings-list {
-  width:min(100%,700px) !important;
-  max-width:700px !important;
-  margin:0 auto !important;
-  padding:22px 18px 44px !important;
-  background:transparent !important;
+  width:min(100%,700px);
+  max-width:700px;
+  margin:0 auto;
+  padding:22px 18px 44px;
+  background:transparent;
 }
 
 /* The page header is a calm orientation point, not a feature card. */
 .settings-page .settings-hero {
-  position:relative !important;
-  display:block !important;
-  min-height:0 !important;
-  margin:0 0 24px !important;
-  padding:4px 0 19px !important;
-  overflow:visible !important;
-  border:0 !important;
-  border-bottom:1px solid rgba(157,220,246,.18) !important;
-  border-radius:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
+  position:relative;
+  display:block;
+  min-height:0;
+  margin:0 0 24px;
+  padding:4px 0 19px;
+  overflow:visible;
+  border:0;
+  border-bottom:1px solid rgba(157,220,246,.18);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
 }
 .settings-page .settings-hero::before,
 .settings-page .settings-hero::after,
-.settings-page .settings-hero-route { display:none !important; }
+.settings-page .settings-hero-route { display:none; }
 .settings-page .settings-hero small {
-  color:#8fd9f4 !important;
-  font-size:8px !important;
-  font-weight:850 !important;
-  letter-spacing:.19em !important;
-  line-height:1 !important;
+  color:#8fd9f4;
+  font-size:8px;
+  font-weight:850;
+  letter-spacing:.19em;
+  line-height:1;
 }
 .settings-page .settings-hero h1 {
-  margin:8px 0 6px !important;
-  color:#f2f8fe !important;
-  font-size:27px !important;
-  font-weight:730 !important;
-  letter-spacing:-.045em !important;
-  line-height:1.05 !important;
+  margin:8px 0 6px;
+  color:#f2f8fe;
+  font-size:27px;
+  font-weight:730;
+  letter-spacing:-.045em;
+  line-height:1.05;
 }
 .settings-page .settings-hero p {
-  max-width:470px !important;
-  margin:0 !important;
-  color:#91a8be !important;
-  font-size:12px !important;
-  line-height:1.5 !important;
+  max-width:470px;
+  margin:0;
+  color:#91a8be;
+  font-size:12px;
+  line-height:1.5;
 }
 
 /* The profile visibility choice is intentionally one compact status row. */
 .settings-page .lup-settings-profile-visibility {
-  position:relative !important;
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) auto !important;
-  align-items:center !important;
-  gap:16px !important;
-  margin:0 0 26px !important;
-  padding:13px 15px !important;
-  border:1px solid rgba(151,216,243,.14) !important;
-  border-radius:13px !important;
-  background:linear-gradient(105deg,rgba(72,154,198,.12),rgba(13,25,42,.32) 72%) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.045) !important;
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:16px;
+  margin:0 0 26px;
+  padding:13px 15px;
+  border:1px solid rgba(151,216,243,.14);
+  border-radius:13px;
+  background:linear-gradient(105deg,rgba(72,154,198,.12),rgba(13,25,42,.32) 72%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
 }
-.settings-page .lup-settings-profile-visibility::before { display:none !important; }
-.settings-page .settings-visibility-heading { min-width:0 !important; }
-.settings-page .settings-visibility-heading > .material-icons { display:none !important; }
+.settings-page .lup-settings-profile-visibility::before { display:none; }
+.settings-page .settings-visibility-heading { min-width:0; }
+.settings-page .settings-visibility-heading > .material-icons { display:none; }
 .settings-page .settings-visibility-heading strong {
-  display:block !important;
-  color:#e8f4fb !important;
-  font-size:12px !important;
-  font-weight:700 !important;
+  display:block;
+  color:#e8f4fb;
+  font-size:12px;
+  font-weight:700;
 }
 .settings-page .settings-visibility-heading small {
-  display:block !important;
-  margin-top:3px !important;
-  color:#809bb3 !important;
-  font-size:10px !important;
-  line-height:1.3 !important;
+  display:block;
+  margin-top:3px;
+  color:#809bb3;
+  font-size:10px;
+  line-height:1.3;
 }
 
 /* A group is one finished object.  Individual preferences only get a divider. */
 .settings-page .lup-settings-group {
-  margin:0 0 26px !important;
-  padding:0 !important;
+  margin:0 0 26px;
+  padding:0;
   /* Select and visibility menus are real controls, not decoration. They must
      be able to leave the visual group instead of being clipped by it. */
-  overflow:visible !important;
-  border:1px solid rgba(156,216,243,.14) !important;
-  border-radius:16px !important;
-  background:linear-gradient(145deg,rgba(25,46,72,.54),rgba(11,20,34,.50)) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 13px 28px rgba(0,5,17,.12) !important;
+  overflow:visible;
+  border:1px solid rgba(156,216,243,.14);
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(25,46,72,.54),rgba(11,20,34,.50));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 13px 28px rgba(0,5,17,.12);
 }
-.settings-page .lup-settings-group::before { display:none !important; }
+.settings-page .lup-settings-group::before { display:none; }
 .settings-page .lup-settings-group-heading {
-  min-height:0 !important;
-  margin:0 !important;
-  padding:14px 15px 12px !important;
-  border:0 !important;
-  border-bottom:1px solid rgba(156,216,243,.13) !important;
-  background:linear-gradient(90deg,rgba(92,181,224,.08),transparent 62%) !important;
+  min-height:0;
+  margin:0;
+  padding:14px 15px 12px;
+  border:0;
+  border-bottom:1px solid rgba(156,216,243,.13);
+  background:linear-gradient(90deg,rgba(92,181,224,.08),transparent 62%);
 }
-.settings-page .lup-settings-group-heading::before { display:none !important; }
+.settings-page .lup-settings-group-heading::before { display:none; }
 .settings-page .lup-settings-group-heading small {
-  display:block !important;
-  color:#bce8fa !important;
-  font-size:9px !important;
-  font-weight:830 !important;
-  letter-spacing:.145em !important;
-  line-height:1.1 !important;
+  display:block;
+  color:#bce8fa;
+  font-size:9px;
+  font-weight:830;
+  letter-spacing:.145em;
+  line-height:1.1;
 }
 .settings-page .lup-settings-group-heading p {
-  margin:5px 0 0 !important;
-  color:#839bb1 !important;
-  font-size:10px !important;
-  line-height:1.4 !important;
+  margin:5px 0 0;
+  color:#839bb1;
+  font-size:10px;
+  line-height:1.4;
 }
 
 .settings-page .lup-setting-card {
-  position:relative !important;
-  display:grid !important;
-  grid-template-columns:minmax(0,1fr) minmax(138px,auto) !important;
-  grid-template-areas:'label value' 'visibility visibility' !important;
-  gap:7px 16px !important;
-  align-items:center !important;
-  min-height:70px !important;
-  margin:0 !important;
-  padding:12px 15px !important;
-  border:0 !important;
-  border-bottom:1px solid rgba(156,216,243,.105) !important;
-  border-radius:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  transition:background .16s ease !important;
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(138px,auto);
+  grid-template-areas:'label value' 'visibility visibility';
+  gap:7px 16px;
+  align-items:center;
+  min-height:70px;
+  margin:0;
+  padding:12px 15px;
+  border:0;
+  border-bottom:1px solid rgba(156,216,243,.105);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transition:background .16s ease;
 }
-.settings-page .lup-setting-card:last-child { border-bottom:0 !important; }
+.settings-page .lup-setting-card:last-child { border-bottom:0; }
 .settings-page .lup-setting-card:hover,
 .settings-page .lup-setting-card:focus-within {
-  border-color:rgba(156,216,243,.105) !important;
-  background:linear-gradient(90deg,rgba(92,188,229,.10),rgba(100,83,185,.035) 75%,transparent) !important;
-  box-shadow:none !important;
+  border-color:rgba(156,216,243,.105);
+  background:linear-gradient(90deg,rgba(92,188,229,.10),rgba(100,83,185,.035) 75%,transparent);
+  box-shadow:none;
 }
-.settings-page .lup-setting-card-heading { grid-area:label !important; min-width:0 !important; }
-.settings-page .lup-setting-icon { display:none !important; }
+.settings-page .lup-setting-card-heading { grid-area:label; min-width:0; }
+.settings-page .lup-setting-icon { display:none; }
 .settings-page .lup-setting-card-heading h3 {
-  margin:0 !important;
-  color:#e7f1f9 !important;
-  font-size:12px !important;
-  font-weight:680 !important;
-  line-height:1.25 !important;
+  margin:0;
+  color:#e7f1f9;
+  font-size:12px;
+  font-weight:680;
+  line-height:1.25;
 }
 .settings-page .lup-setting-card-heading p {
-  margin:4px 0 0 !important;
-  color:#8199b0 !important;
-  font-size:10px !important;
-  line-height:1.3 !important;
+  margin:4px 0 0;
+  color:#8199b0;
+  font-size:10px;
+  line-height:1.3;
 }
 .settings-page .lup-setting-value {
-  grid-area:value !important;
-  display:flex !important;
-  min-width:138px !important;
-  justify-content:flex-end !important;
+  grid-area:value;
+  display:flex;
+  min-width:138px;
+  justify-content:flex-end;
 }
-.settings-page .lup-setting-value > md-switch { margin:0 1px 0 auto !important; }
+.settings-page .lup-setting-value > md-switch { margin:0 1px 0 auto; }
 .settings-page .lup-setting-value md-select,
 .settings-page .lup-setting-value .lup-setting-input,
 .settings-page .lup-setting-value .lup-setting-input input,
 .settings-page .lup-setting-value .lup-setting-input textarea {
-  min-width:0 !important;
-  margin:0 !important;
+  min-width:0;
+  margin:0;
 }
 .settings-page .lup-setting-value md-select,
 .settings-page .lup-setting-value .lup-setting-input input,
 .settings-page .lup-setting-value .lup-setting-input textarea,
 .settings-page .lup-visibility-trigger {
-  border:1px solid rgba(154,217,245,.19) !important;
-  border-radius:9px !important;
-  background:rgba(5,13,25,.46) !important;
-  color:#e4f3fc !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+  border:1px solid rgba(154,217,245,.19);
+  border-radius:9px;
+  background:rgba(5,13,25,.46);
+  color:#e4f3fc;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
 }
-.settings-page .lup-setting-value md-select { min-width:138px !important; padding:7px 9px 4px !important; }
-.settings-page .lup-setting-value .lup-setting-input input { min-height:34px !important; padding:0 9px !important; }
-.settings-page .lup-setting-value .lup-setting-input input[type='color'] { width:46px !important; min-width:46px !important; padding:3px !important; }
+.settings-page .lup-setting-value md-select { min-width:138px; padding:7px 9px 4px; }
+.settings-page .lup-setting-value .lup-setting-input input { min-height:34px; padding:0 9px; }
+.settings-page .lup-setting-value .lup-setting-input input[type='color'] { width:46px; min-width:46px; padding:3px; }
 .settings-page .lup-setting-card--country .lup-setting-value md-select,
-.settings-page .lup-setting-card--language .lup-setting-value md-select { min-width:176px !important; }
-.settings-page .lup-setting-card--timezone .lup-setting-value md-select { min-width:196px !important; }
-.settings-page .lup-setting-card--switch .lup-setting-value { min-height:34px !important; }
-.settings-page .lup-setting-card--switch .md-switch-thumb { background:#eaf8ff !important; }
-.settings-page .lup-setting-card--switch .md-switch.md-checked .md-bar { background:rgba(87,196,230,.48) !important; }
+.settings-page .lup-setting-card--language .lup-setting-value md-select { min-width:176px; }
+.settings-page .lup-setting-card--timezone .lup-setting-value md-select { min-width:196px; }
+.settings-page .lup-setting-card--switch .lup-setting-value { min-height:34px; }
+.settings-page .lup-setting-card--switch .md-switch-thumb { background:#eaf8ff; }
+.settings-page .lup-setting-card--switch .md-switch.md-checked .md-bar { background:rgba(87,196,230,.48); }
 .settings-page .lup-setting-card--switch .md-switch.md-checked .md-thumb {
-  background:#91e5f6 !important;
-  box-shadow:0 0 10px rgba(108,218,242,.42) !important;
+  background:#91e5f6;
+  box-shadow:0 0 10px rgba(108,218,242,.42);
 }
 .settings-page .lup-setting-visibility {
-  grid-area:visibility !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  min-height:30px !important;
-  padding-top:4px !important;
-  border-top:1px solid rgba(156,216,243,.075) !important;
+  grid-area:visibility;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:30px;
+  padding-top:4px;
+  border-top:1px solid rgba(156,216,243,.075);
 }
 .settings-page .lup-setting-visibility > span {
-  color:#738fa8 !important;
-  font-size:9px !important;
-  letter-spacing:.02em !important;
+  color:#738fa8;
+  font-size:9px;
+  letter-spacing:.02em;
 }
-.settings-page .lup-setting-visibility > span .material-icons { font-size:13px !important; }
+.settings-page .lup-setting-visibility > span .material-icons { font-size:13px; }
 .settings-page .lup-visibility-trigger {
-  min-height:30px !important;
-  padding:5px 9px !important;
-  color:#bfe5f7 !important;
-  font-size:10px !important;
+  min-height:30px;
+  padding:5px 9px;
+  color:#bfe5f7;
+  font-size:10px;
 }
 .settings-page .lup-visibility-menu {
-  z-index:80 !important;
-  border-color:rgba(154,217,245,.25) !important;
-  border-radius:10px !important;
-  background:#12233b !important;
-  box-shadow:0 16px 34px rgba(0,4,16,.48) !important;
+  z-index:80;
+  border-color:rgba(154,217,245,.25);
+  border-radius:10px;
+  background:#12233b;
+  box-shadow:0 16px 34px rgba(0,4,16,.48);
 }
-.settings-page .lup-setting-card--textarea { grid-template-columns:1fr !important; grid-template-areas:'label' 'value' 'visibility' !important; }
-.settings-page .lup-setting-card--textarea .lup-setting-value { justify-content:stretch !important; }
+.settings-page .lup-setting-card--textarea { grid-template-columns:1fr; grid-template-areas:'label' 'value' 'visibility'; }
+.settings-page .lup-setting-card--textarea .lup-setting-value { justify-content:stretch; }
 .settings-page .lup-setting-card--textarea .lup-setting-input,
-.settings-page .lup-setting-card--textarea textarea { width:100% !important; }
-.settings-page .lup-setting-card--textarea textarea { min-height:104px !important; padding:10px !important; }
+.settings-page .lup-setting-card--textarea textarea { width:100%; }
+.settings-page .lup-setting-card--textarea textarea { min-height:104px; padding:10px; }
 .settings-page .lup-setting-emoji-picker {
-  gap:4px !important;
-  margin-top:7px !important;
-  padding-top:7px !important;
-  border-top:1px solid rgba(156,216,243,.075) !important;
+  gap:4px;
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px solid rgba(156,216,243,.075);
 }
 .settings-page .lup-setting-emoji-picker button {
-  width:26px !important;
-  height:26px !important;
-  border:0 !important;
-  border-radius:6px !important;
-  background:rgba(119,176,218,.08) !important;
-  box-shadow:none !important;
+  width:26px;
+  height:26px;
+  border:0;
+  border-radius:6px;
+  background:rgba(119,176,218,.08);
+  box-shadow:none;
 }
 
 /* Country and language choices keep their real flag sprite, but no longer
  * make the select row look like a large legacy widget. */
 .settings-page .lup-setting-value .country-flag,
 .md-select-menu-container .country-option .country-flag {
-  border:1px solid rgba(193,230,248,.28) !important;
-  border-radius:3px !important;
-  box-shadow:0 1px 4px rgba(0,0,0,.24) !important;
+  border:1px solid rgba(193,230,248,.28);
+  border-radius:3px;
+  box-shadow:0 1px 4px rgba(0,0,0,.24);
 }
 .settings-page .lup-setting-value .country-flag {
   transform:scale(.66);
@@ -266,11 +266,11 @@
   margin-right:-10px;
 }
 .md-select-menu-container .country-option {
-  min-height:42px !important;
-  padding-right:15px !important;
-  padding-left:13px !important;
-  color:#e6f2fb !important;
-  font-size:12px !important;
+  min-height:42px;
+  padding-right:15px;
+  padding-left:13px;
+  color:#e6f2fb;
+  font-size:12px;
 }
 .md-select-menu-container .country-option .country-flag {
   transform:scale(.72);
@@ -280,28 +280,28 @@
 .md-select-menu-container .country-option:hover,
 .md-select-menu-container .country-option:focus,
 .md-select-menu-container .country-option.md-selected {
-  background:linear-gradient(90deg,rgba(91,189,230,.18),rgba(103,80,183,.08)) !important;
+  background:linear-gradient(90deg,rgba(91,189,230,.18),rgba(103,80,183,.08));
 }
-.md-select-menu-container .country-option.md-selected .country-flag { border-color:rgba(142,224,247,.60) !important; }
+.md-select-menu-container .country-option.md-selected .country-flag { border-color:rgba(142,224,247,.60); }
 
 @media (max-width:520px) {
-  .settings-page .lup-settings-list { padding:17px 12px 34px !important; }
-  .settings-page .settings-hero h1 { font-size:24px !important; }
+  .settings-page .lup-settings-list { padding:17px 12px 34px; }
+  .settings-page .settings-hero h1 { font-size:24px; }
   .settings-page .lup-settings-profile-visibility,
   .settings-page .lup-setting-card {
-    grid-template-columns:1fr !important;
+    grid-template-columns:1fr;
   }
-  .settings-page .lup-setting-card { grid-template-areas:'label' 'value' 'visibility' !important; align-items:stretch !important; }
+  .settings-page .lup-setting-card { grid-template-areas:'label' 'value' 'visibility'; align-items:stretch; }
   .settings-page .lup-profile-visibility-choice,
-  .settings-page .lup-setting-value { justify-self:stretch !important; justify-content:stretch !important; }
+  .settings-page .lup-setting-value { justify-self:stretch; justify-content:stretch; }
   .settings-page .lup-profile-visibility-choice .lup-visibility-trigger,
   .settings-page .lup-setting-value md-select,
-  .settings-page .lup-setting-value .lup-setting-input { width:100% !important; }
+  .settings-page .lup-setting-value .lup-setting-input { width:100%; }
   .settings-page .lup-setting-card--country .lup-setting-value md-select,
   .settings-page .lup-setting-card--language .lup-setting-value md-select,
-  .settings-page .lup-setting-card--timezone .lup-setting-value md-select { min-width:0 !important; }
-  .settings-page .lup-setting-value > md-switch { margin-left:0 !important; }
+  .settings-page .lup-setting-card--timezone .lup-setting-value md-select { min-width:0; }
+  .settings-page .lup-setting-value > md-switch { margin-left:0; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .settings-page .lup-setting-card { transition:none !important; }
+  .settings-page .lup-setting-card { transition:none; }
 }

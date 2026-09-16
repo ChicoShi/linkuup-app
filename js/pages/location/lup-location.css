@@ -312,11 +312,11 @@ ul.chat-msgs li.lup-msg {
 }
 
 .room-open {
-    background: #00aa00 !important;
+    background: #00aa00;
 }
 
 .room-closed {
-    background: #aa0000 !important;
+    background: #aa0000;
 }
 
 .roominfosingle .address, .roominfosingle .phone, .roominfosingle .opening {
@@ -467,7 +467,7 @@ ul.chat-msgs li.lup-msg {
 .write-comments textarea{
 	padding: 10px;
     border-radius: 10px;
-    height: 150px !important;
+    height: 150px;
     border: 1px solid rgba(0,0,0,0.12);
 }
 .write-comments .save-button{

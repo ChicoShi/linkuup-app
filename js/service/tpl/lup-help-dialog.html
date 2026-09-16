@@ -1,25 +1,5 @@
-<md-dialog class="lup-dialog-shell lup-help-dialog" aria-label="Help">
-  <form ng-cloak>
-
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2>Hilfe</h2>
-        <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
-          <i class="material-icons">close</i>
-        </md-button>
-      </div>
-    </md-toolbar>
-
-    <md-dialog-content>
-      <div class="md-dialog-content" compile="data.html">
-      </div>
-    </md-dialog-content>
-
-    <md-dialog-actions layout="row">
-      <md-button ng-click="cancel()">Später</md-button>
-      <md-button ng-click="ok()">Verstanden</md-button>
-    </md-dialog-actions>
-    
-  </form>
-</md-dialog>
+<md-dialog class="place-dialog lup-help-dialog" aria-label="{{'HELP_WELCOME_TITLE'|translate}}"><form ng-cloak>
+<header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">explore</i></span><div><h2>{{'HELP_WELCOME_TITLE'|translate}}</h2></div><button type="button" class="place-dialog-close" ng-click="ok()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
+<md-dialog-content><div class="place-dialog-body" compile="data.html"></div></md-dialog-content>
+<footer class="place-dialog-actions"><button type="button" class="place-dialog-primary" ng-click="ok()">{{'HELP_UNDERSTOOD'|translate}}</button></footer>
+</form></md-dialog>

@@ -22,6 +22,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// fragile with changed image data. Open profiles on the stable About tab;
 	// load the gallery only after the user explicitly selects it.
 	$scope.data.selectedTab = 0;
+	$scope.selectProfileTab = function(tab) { $scope.data.selectedTab=tab; return tab===1 ? $scope.showGallery() : $scope.loadInformation(); };
 	
 	$scope.galleryAPI = null; // gallery handle for unitegallery
 	
@@ -133,6 +134,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (user.isFriend()) {
 			return 'PROFILE_ACTION_FRIENDS';
 		}
+		if (user.JSON.relation_incoming) return 'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST';
 		return user.JSON.relation_pending ? 'PROFILE_ACTION_FRIEND_PENDING' : 'PROFILE_ACTION_ADD_FRIEND';
 	};
 	$scope.profileFriendActionIcon = function() {
@@ -158,7 +160,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return $scope.gotoFriends(user);
 		}
 		var ownUser = $scope.data.ownUser;
-		var available = user.isSelf() || (user.isMember() && ownUser && ownUser.isMember());
+		var available = !!(ownUser && ownUser.isAuthed() && !user.isPreview);
 		var data = {
 			user: user,
 			canManage: available && !user.isSelf(),
@@ -269,12 +271,71 @@ angular.module('LUP').config(function($routeProvider) {
 		return ProfileSrvc.withProfile($scope.data.user).then(
 				$scope.loadedInformation, ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
 	};
+	// The settings endpoint and the profile websocket are separate requests.
+	// During a backend rollout the websocket can still return an older field
+	// frame, even though AjaxSettings already contains the owner's saved story.
+	// Use that value only for the signed-in owner's own card; visitors continue
+	// to see exactly the server-filtered profile response.
+	$scope.ownSettingSnapshot = function(key, setting) {
+		var candidate = setting;
+		if (!candidate || candidate.name !== key) {
+			var cache = SettingsSrvc.CACHE;
+			if (!cache) { return {present: false}; }
+			for (var moduleName in cache) {
+				if (cache[moduleName] && cache[moduleName][key]) {
+					candidate = cache[moduleName][key];
+					break;
+				}
+			}
+		}
+		if (!candidate) { return {present: false}; }
+		var options = candidate.options || {};
+		if (Object.prototype.hasOwnProperty.call(options, 'var') && options.var !== undefined && options.var !== null) {
+			return {present: true, value: options.var};
+		}
+		if (Object.prototype.hasOwnProperty.call(options, 'selected') && options.selected !== undefined && options.selected !== null) {
+			return {present: true, value: options.selected};
+		}
+		// Keep an explicitly empty field meaningful: clearing the textarea should
+		// bring back the translated placeholder instead of leaving stale text.
+		if (Object.prototype.hasOwnProperty.call(options, 'var') || Object.prototype.hasOwnProperty.call(options, 'selected')) {
+			return {present: true, value: ''};
+		}
+		if (Object.prototype.hasOwnProperty.call(candidate, 'value')) {
+			return {present: true, value: candidate.value};
+		}
+		return {present: false};
+	};
+
+	$scope.syncOwnProfileAbout = function(profile, setting) {
+		if (!profile || !$scope.data.user || !$scope.data.user.isSelf()) {
+			return;
+		}
+		var snapshot = $scope.ownSettingSnapshot('about_me', setting);
+		if (!snapshot.present) { return; }
+		var value = snapshot.value;
+		// A textarea is scalar, but older renderers may wrap a select-like value.
+		// Unwrap those shapes without turning a missing value into the string
+		// "undefined" (an empty string is intentional and restores the hint).
+		if (value && typeof value === 'object') {
+			if (typeof value.id === 'function') { value = value.id(); }
+			else if (value.id !== undefined) { value = value.id; }
+			else if (value.value !== undefined) { value = value.value; }
+			else if (value.key !== undefined) { value = value.key; }
+		}
+		profile.JSON = profile.JSON || {};
+		profile.JSON.about_me = value === undefined || value === null ? '' : value;
+		if (profile.ERRORS) { delete profile.ERRORS.about_me; }
+		if (profile.EMPTY) { delete profile.EMPTY.about_me; }
+	};
+
 	$scope.loadedInformation = function(profile) {
 		console.log('ProfileCtrl.loadedInformation()', profile);
 		if (!profile) {
 			return;
 		}
 		$scope.data.profile = profile;
+		$scope.syncOwnProfileAbout(profile);
 		// The colour belongs to the profile response because its visibility is
 		// user-controlled. Keep a display-only copy on the cached user for the
 		// header badge; it grants no privilege and is never sent back to GWS.
@@ -287,6 +348,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// rendered anonymous/empty cards and never revisited them.
 		if (!SettingsSrvc.CACHE) {
 			SettingsSrvc.withConfig().then(function() {
+				$scope.syncOwnProfileAbout($scope.data.profile);
 				$scope.rebuildProfileGroups();
 			}, angular.noop)['catch']($scope.catchUnknown);
 		}
@@ -330,6 +392,8 @@ angular.module('LUP').config(function($routeProvider) {
 		// Only the signed-in person's profile can be affected by Settings. Reload
 		// its server-filtered public data so privacy changes are reflected too.
 		if ($scope.data.user && $scope.data.user.isSelf() && setting) {
+			$scope.syncOwnProfileAbout($scope.data.profile, setting);
+			$scope.rebuildProfileGroups();
 			$scope.loadInformation();
 		}
 	});
