@@ -61,9 +61,3 @@ angular.module('LUP').directive('lupPresence', function(RoomSrvc) {
 		}
 	};
 });
-
-angular.module('LUP').directive('lupPresencePreview',function(RoomSrvc){return {
- restrict:'E',scope:{ngRoom:'='},
- template:'<div class="place-preview-note" ng-if="possible()"><span ng-if="active()">{{"PREVIEW_GUESTS"|translate}}</span><button type="button" ng-click="toggle()">{{(active()?"PREVIEW_GUESTS_OFF":"PREVIEW_GUESTS_ON")|translate}}</button><small ng-if="active()">{{"PREVIEW_NOTE"|translate}}</small></div>',
- link:function(scope){scope.possible=function(){return RoomSrvc.previewPossible(scope.ngRoom);};scope.active=function(){return RoomSrvc.isPreviewRoom(scope.ngRoom);};scope.toggle=RoomSrvc.togglePreview;}
-};});

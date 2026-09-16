@@ -565,6 +565,7 @@
 	"NAV_EMPTY": "Hier ist noch kein Treffer.",
 	"NAV_EMPTY_HINT": "Ändere die Suche, Kategorie oder Entfernung.",
 	"NAV_RESET": "Auswahl zurücksetzen",
+	"NAV_RESET_START": "Alle Kategorien · Zur ersten Location",
 	"NAV_BROWSE": "Orte durchblättern",
 	"NAV_PREVIOUS": "Vorheriger Ort",
 	"NAV_NEXT": "Nächster Ort",

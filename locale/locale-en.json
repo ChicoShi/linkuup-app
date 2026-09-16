@@ -565,6 +565,7 @@
 	"NAV_EMPTY": "No matches here yet.",
 	"NAV_EMPTY_HINT": "Change search, category or distance.",
 	"NAV_RESET": "Reset selection",
+	"NAV_RESET_START": "All categories · Back to the first location",
 	"NAV_BROWSE": "Browse places",
 	"NAV_PREVIOUS": "Previous place",
 	"NAV_NEXT": "Next place",

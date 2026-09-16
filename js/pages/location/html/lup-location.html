@@ -3,7 +3,6 @@
   <md-content class="place-shell" layout="column" flex>
     <ng-include src="'js/pages/location/html/header-bar-location.html?v='+V"></ng-include>
     <section class="place-loading" ng-if="!data.roomReady" aria-live="polite"><i class="material-icons" aria-hidden="true">location_on</i><p>{{(data.roomLoadFailed ? 'PLACE_LOAD_ERROR' : 'PLACE_LOADING')|translate}}</p><button class="place-tool" type="button" ng-if="data.roomLoadFailed" ng-click="init()">{{'PLACE_RETRY'|translate}}</button></section>
-    <lup-presence-preview ng-room="data.room"></lup-presence-preview>
     <md-tabs ng-if="data.roomReady" class="place-tabs" md-selected="data.selectedTab" flex md-stretch-tabs="always" layout="column">
       <md-tab>
         <md-tab-label><span class="place-tab-label"><i class="material-icons" aria-hidden="true">place</i><span>{{'TAB_LOCATION'|translate}}</span></span></md-tab-label>

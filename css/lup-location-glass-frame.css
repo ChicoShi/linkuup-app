@@ -1,7 +1,10 @@
 /* Clear surfaces; the navigator's optical layer samples the shared blue field. */
 .navigator-view .nav-place,
+.navigator-view .nav-categories button,
 .lup-place .place-event-card,
 .lup-place .place-thread,
+.lup-place .place-person,
+.lup-place .place-chat .place-message:not(.lup-system-msg) .place-bubble,
 .lup-place .place-private-chat .place-bubble {
  position:relative;
  isolation:isolate;
@@ -49,7 +52,8 @@
  border-color:rgba(154,215,251,.29);
  background:rgba(170,223,250,.02);
 }
-.lup-place .place-private-chat .lup-own-msg .place-bubble {
+.lup-place .place-private-chat .lup-own-msg .place-bubble,
+.lup-place .place-chat .place-message.lup-own-msg .place-bubble {
  background:rgba(162,222,252,.045);
  border-color:rgba(163,222,255,.25);
 }

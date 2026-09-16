@@ -53,6 +53,13 @@ test('Short drags glide one card before snap returns; GPS cannot interrupt, move
  assert.equal(rail.destination,390);rail.scrollLeft=390;listeners.scrollend();assert.equal(s.data.currentRoomIndex,1);
  // Native vertical scrolling never requests the next location.
  listeners.touchstart(touch(220));listeners.touchmove(touch(224,350));listeners.touchend();assert.equal(s.data.currentRoomIndex,1);
+ // A scroll callback from the old filtered list cannot undo a reset.
+ s.selectCategory=()=>{};s.searchLocation=()=>{};
+ s.resetNavigator();listeners.scroll();flush(frames);
+ assert.equal(s.data.currentRoomIndex,0);
+ flush(timers);flush(frames);flush(frames);
+ assert.equal(left,0);assert.equal(s.data.currentRoomIndex,0);
+ assert.equal(classes.has('location-rail-dragging'),false);
 });
 
 test('The discovery template has working category, arrow, reset and GPS controls', () => {
@@ -68,8 +75,27 @@ test('The discovery template has working category, arrow, reset and GPS controls
  const calls = [];
  s.selectCategory = ids => calls.push(Array.from(ids));
  s.searchLocation = value => calls.push(value);
+ s.data.currentRoom = b; s.data.currentRoomIndex = 1;
  s.data.searchvalue = 'missing'; s.resetNavigator();
  assert.equal(s.data.searchvalue, ''); assert.deepEqual(calls, [[], '']);
+ assert.equal(s.data.currentRoom, a); assert.equal(s.data.currentRoomIndex, 0);
+});
+
+test('Repeated reset taps replace feedback; reduced motion and leaving the page stop it', () => {
+ let reduced=false;const callbacks={},animations=[];
+ const scope={data:{},$on:(name,fn)=>{(callbacks[name] ||= []).push(fn);}};
+ const s=setup({$scope:scope},{matchMedia:()=>({matches:reduced})});
+ s.selectCategory=()=>{};s.searchLocation=()=>{};
+ const landmark={animate(){const a={cancelled:false,cancel(){this.cancelled=true;}};animations.push(a);return a;}};
+ const button={querySelector:()=>landmark,parentElement:{querySelectorAll:()=>Array(5).fill(landmark)}};
+ s.resetNavigator({currentTarget:button});assert.equal(animations.length,7);
+ s.resetNavigator({currentTarget:button});assert.equal(animations.length,14);
+ assert.ok(animations.slice(0,7).every(a=>a.cancelled));
+ assert.equal(animations.filter(a=>!a.cancelled).length,7);
+ reduced=true;s.resetNavigator({currentTarget:button});assert.ok(animations.every(a=>a.cancelled));
+ assert.equal(animations.length,14);assert.equal(s.data.currentRoom,null);
+ reduced=false;s.resetNavigator({currentTarget:button});callbacks['$destroy'].forEach(fn=>fn());
+ assert.ok(animations.every(a=>a.cancelled));
 });
 
 test('Category filtering and address/name terms combine without accent or word-order failures', () => {

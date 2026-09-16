@@ -488,9 +488,6 @@ md-dialog.place-dialog.place-legal-dialog {width:min(720px,calc(100vw - 32px));m
 .lup-place .place-presence > .place-status-dot {flex-shrink:0;}
 
 /* Preview stays visibly distinct and exists only on loopback development hosts. */
-.place-preview-note {box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px;position:relative;z-index:1;margin:5px 18px 10px;padding:8px 12px;border:1px dashed #b8dfed32;border-radius:12px;background:#a5d9ff05;color:#b5dbe9;font-size:11px;line-height:1.4;}
-.place-preview-note button {min-height:32px;padding:0 6px;border:0;background:none;color:#d6f4ff;font:inherit;text-decoration:underline;cursor:pointer;}
-.place-preview-note small {width:100%;text-align:center;color:#93adbf;font-size:10px;}
 .place-preview-conversation {padding:16px 20px;overflow-y:auto;min-height:0;}
 .place-preview-conversation > p {margin:6px 0 22px;font-size:11px;color:#9db9cc;text-align:center;}
 .place-preview-conversation .place-message {display:flex;gap:10px;margin:20px 0;}

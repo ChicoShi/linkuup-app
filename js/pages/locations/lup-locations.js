@@ -56,7 +56,20 @@ angular.module('LUP').config(function($routeProvider) {
 	var nativeRailTarget = null;
 	var nativeRailDragging = false;
 	var discoveryGlass = null;
-	var railIsBusy = function() { return nativeRailDragging || nativeRailTarget !== null; };
+	var navigatorResetPending = false, navigatorResetTimer = null, navigatorResetFrame = null, navigatorResetRail = null;
+	var cancelNavigatorReset = function() {
+		if (navigatorResetTimer) $timeout.cancel(navigatorResetTimer);
+		if (navigatorResetFrame !== null) window.cancelAnimationFrame(navigatorResetFrame);
+		if (navigatorResetRail) navigatorResetRail.classList.remove('location-rail-dragging');
+		navigatorResetTimer = navigatorResetFrame = navigatorResetRail = null;
+		navigatorResetPending = false;
+	};
+	var resetAnimations = [];
+	var stopResetFeedback = function() {
+		resetAnimations.forEach(function(animation) { animation.cancel(); });
+		resetAnimations = [];
+	};
+	var railIsBusy = function() { return nativeRailDragging || nativeRailTarget !== null || navigatorResetPending; };
 	var doorEntryTimer = null;
 	// The selected room belongs to the shared app state, not one concrete
 	// LocationsCtrl instance. Preserve it when returning from a room detail.
@@ -163,6 +176,7 @@ angular.module('LUP').config(function($routeProvider) {
 		return nearest;
 	};
 	var syncSelectedRoomFromRail = function(rail) {
+		if (navigatorResetPending) return;
 		var nearest = nearestRailCard(rail);
 		if (!nearest) {
 			return;
@@ -174,6 +188,7 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 		if (roomIndex >= 0 && roomIndex !== $scope.data.currentRoomIndex) {
 			$scope.$evalAsync(function() {
+				if (navigatorResetPending) return;
 				$scope.focusRoom(roomIndex);
 			});
 		}
@@ -374,6 +389,8 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 	$scope.$on('$destroy', function() {
 		stopRailSettle();
+		cancelNavigatorReset();
+		stopResetFeedback();
 		if (discoveryGlass) discoveryGlass.destroy();
 		if (nativeRailDragFrame !== null) window.cancelAnimationFrame(nativeRailDragFrame);
 		nativeRailDragging = false;
@@ -690,10 +707,59 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.navigatorHasGPS = function() { return PositionSrvc.hasPosition(true); };
-	$scope.resetNavigator = function() {
+	var playResetFeedback = function(button) {
+		stopResetFeedback();
+		if (!button || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		var play = function(element, frames, timing) {
+			if (element && element.animate) resetAnimations.push(element.animate(frames, timing));
+		};
+		play(button.querySelector('.nav-reset-pins'), [
+			{transform:'rotate(0deg) scale(1)',opacity:1},
+			{transform:'rotate(165deg) scale(.16)',opacity:.9,offset:.4},
+			{transform:'rotate(190deg) scale(.05)',opacity:0,offset:.49},
+			{transform:'rotate(210deg) scale(.1)',opacity:0,offset:.58},
+			{transform:'rotate(350deg) scale(1.08)',opacity:1,offset:.88},
+			{transform:'rotate(360deg) scale(1)',opacity:1}
+		], {duration:820,easing:'cubic-bezier(.22,.7,.24,1)'});
+		play(button.querySelector('.nav-reset-burst'), [
+			{transform:'scale(.15)',opacity:0},
+			{transform:'scale(.6)',opacity:.8,offset:.25},
+			{transform:'scale(1.55)',opacity:0}
+		], {duration:330,delay:310,easing:'ease-out'});
+		Array.prototype.forEach.call(button.parentElement.querySelectorAll('.nav-category-glint'), function(icon,index) {
+			play(icon, [
+				{transform:'scale(.85)',opacity:0},
+				{transform:'scale(1.13)',opacity:.9,offset:.4},
+				{transform:'scale(1)',opacity:0}
+			], {duration:330,delay:330+index*65,easing:'ease-out'});
+		});
+	};
+	$scope.resetNavigator = function(event) {
 		$scope.data.searchvalue = '';
 		$scope.selectCategory([]);
 		$scope.searchLocation('');
+		// Clearing the filter can retain a later room that is still in the list.
+		// A reset always starts at its first card, even on repeated taps.
+		$scope.data.currentRoom = $scope.data.visibleRooms[0] || null;
+		$scope.data.currentRoomIndex = $scope.data.visibleRooms.length ? 0 : -1;
+		// A filtered card reused by ng-repeat can become a later snap anchor.
+		// Keep scroll callbacks quiet until the new list has painted at its start.
+		navigatorResetPending = true;
+		navigatorResetTimer = $timeout(function() {
+			navigatorResetTimer = null;
+			var rail = navigatorResetRail = getLocationRail();
+			if (!rail) { cancelNavigatorReset(); return; }
+			rail.classList.add('location-rail-dragging');
+			rail.scrollTo({left:0,top:0,behavior:'instant'});
+			navigatorResetFrame = window.requestAnimationFrame(function() {
+				rail.scrollTo({left:0,top:0,behavior:'instant'});
+				navigatorResetFrame = window.requestAnimationFrame(function() {
+					navigatorResetFrame = null;
+					cancelNavigatorReset();
+				});
+			});
+		}, 0);
+		playResetFeedback(event && event.currentTarget);
 	};
 	$scope.stepNavigator = function(direction) {
 		var index = Math.max(0, Math.min($scope.data.visibleRooms.length - 1, $scope.data.currentRoomIndex + direction));
@@ -788,6 +854,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.selectCategory = function(categories) {
+		cancelNavigatorReset();
 		stopRailSettle();
 		var categoryKey = categories.join(',');
 		if ($scope.isCategoryFilterActive(categories)) {
