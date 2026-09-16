@@ -137,7 +137,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.data.countries = CountrySrvc.CACHE || [];
 	$scope.data.timezones = TimezoneSrvc.options();
-	// LinkUUp deliberately ships these five UI languages. Language ISO codes do
+	// LinkUUp deliberately ships these six UI languages. Language ISO codes do
 	// not always map to a country, hence the explicit flag mapping for English.
 	$scope.data.languages = [
 		{id: 'en', text: 'English', flag: 'gb'},
@@ -145,6 +145,7 @@ angular.module('LUP').config(function($routeProvider) {
 		{id: 'it', text: 'Italiano', flag: 'it'},
 		{id: 'fr', text: 'Français', flag: 'fr'},
 		{id: 'es', text: 'Español', flag: 'es'},
+		{id: 'ko', text: '한국어', flag: 'kr'},
 	];
 
 	$scope.controlIs = function(setting, control) {
