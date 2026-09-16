@@ -347,7 +347,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.updatePosition = function(pos) {
 		console.log('LUPCtrl.updatePosition()', pos);
 		if ($scope.authenticated()) {
-			var gwsMessage = new GWS_Message().cmd(0x1112).writeFloat(pos.lat).writeFloat(pos.lng);
+			var keypresses = PositionSrvc.keypressCount();
+			var gwsMessage = new GWS_Message().cmd(0x1112).writeFloat(pos.lat).writeFloat(pos.lng).write16(keypresses);
 			return WebsocketSrvc.sendBinary(gwsMessage);
 		}
 	};

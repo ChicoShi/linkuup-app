@@ -164,7 +164,13 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 		NotificationSrvc.COUNT=Math.max(0,NotificationSrvc.COUNT-1);
 		NotificationSrvc.resort();
 		$rootScope.updateNotificationCount();
-		return notification;
+		// A visible event may have been marked read before its action completes.
+		// Reconcile the badge with the authoritative server counter so an accepted
+		// friendship request cannot leave a stale notification dot behind.
+		return NotificationSrvc.queryUnreadNotificationCount().then(function() {
+			$rootScope.updateNotificationCount();
+			return notification;
+		});
 	};
 
 

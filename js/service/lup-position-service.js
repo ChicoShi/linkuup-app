@@ -32,6 +32,34 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	PositionSrvc.REFRESHING = false;
 	PositionSrvc.LAST_REFRESH = 0;
 	PositionSrvc.REFRESH_INTERVAL = 5000;
+	// A small activity signal accompanies the next GPS update. Deliberately
+	// retain timestamps only: neither the pressed key nor focused input is kept.
+	// Several rapid key presses are one input burst; the value is a rolling
+	// one-minute burst count, independent of GPS update cadence.
+	PositionSrvc.KEYPRESS_WINDOW_MS = 60 * 1000;
+	PositionSrvc.KEYPRESS_BURST_MS = 1500;
+	PositionSrvc.KEYPRESS_TIMES = [];
+	PositionSrvc.MAX_KEYPRESSES = 65535;
+	window.addEventListener('keydown', function() {
+		var now = Date.now();
+		var previous = PositionSrvc.KEYPRESS_TIMES[PositionSrvc.KEYPRESS_TIMES.length - 1];
+		if (previous === undefined || now - previous > PositionSrvc.KEYPRESS_BURST_MS) {
+			PositionSrvc.KEYPRESS_TIMES.push(now);
+		}
+		PositionSrvc.pruneKeypresses(now);
+	}, {passive: true});
+
+	PositionSrvc.pruneKeypresses = function(now) {
+		var cutoff = now - PositionSrvc.KEYPRESS_WINDOW_MS;
+		while (PositionSrvc.KEYPRESS_TIMES.length && PositionSrvc.KEYPRESS_TIMES[0] < cutoff) {
+			PositionSrvc.KEYPRESS_TIMES.shift();
+		}
+	};
+
+	PositionSrvc.keypressCount = function() {
+		PositionSrvc.pruneKeypresses(Date.now());
+		return Math.min(PositionSrvc.MAX_KEYPRESSES, PositionSrvc.KEYPRESS_TIMES.length);
+	};
 	
 	window.GWF_POSITION = PositionSrvc.CURRENT = {
 			latlng: null,   // google maps
