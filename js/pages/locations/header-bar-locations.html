@@ -1,13 +1,6 @@
-<md-toolbar class="md-hue-2 lup-top-bar">
-  <div class="md-toolbar-tools">
-  
-    <i class="material-icons" ng-click="openLeft()">menu</i>
-
-    <h2 flex md-truncate></h2>
-
-    <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
-
-    <lup-avatar ng-user="data.ownUser" aria-label="Profile" ng-click="gotoOwnProfile()"></lup-avatar>
-
-  </div>
-</md-toolbar>
+<header class="nav-topbar">
+  <button type="button" class="nav-topbar-control" ng-click="openLeft()" aria-label="{{'PLACE_MENU'|translate}}"><i class="material-icons" aria-hidden="true">menu</i></button>
+  <ng-include class="nav-topbar-notifications" src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
+  <button type="button" class="nav-topbar-control nav-topbar-profile" ng-click="gotoOwnProfile()" aria-label="{{'TITLE_PROFILE'|translate}}"><lup-avatar ng-user="data.ownUser"></lup-avatar></button>
+  <div class="search-input-wrap"><i class="material-icons" aria-hidden="true">search</i><input type="search" class="search-input" aria-label="{{'NAV_SEARCH'|translate}}" placeholder="{{'NAV_SEARCH'|translate}}" ng-change="searchLocation(data.searchvalue)" ng-model="data.searchvalue" /><button type="button" class="location-search-clear" ng-if="data.searchvalue" ng-click="clearLocationSearch()" aria-label="{{'NAV_RESET'|translate}}" title="{{'NAV_RESET'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></div>
+</header>

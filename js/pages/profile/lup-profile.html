@@ -39,10 +39,11 @@
 			   flow-file-success="onFlowSuccess($file, $flow, $message);"
 			   flow-file-removed="onRemoveFile($file, $flow);"
 			   flow-file-error="onFlowError($file, $flow, $message);"
-				   xxxflow-error="onFlowError($file, $flow, $message);"
 				   flow-files-submitted="onFlowSubmitted($flow);">
-					 <!--<i class="material-icons edit" flow-btn>edit</i>-->
-					 <lup-avatar flow-btn class="large-avatar" ng-user="data.user"></lup-avatar>
+                 <button type="button" class="profile-avatar-upload" flow-btn flow-single-file aria-label="{{'PROFILE_UPLOAD_PHOTO'|translate}}">
+                   <lup-avatar class="large-avatar" ng-user="data.user"></lup-avatar>
+                   <i class="material-icons profile-avatar-edit" aria-hidden="true">photo_camera</i>
+                 </button>
 				  </div>
 		</div>
 		<div class="profile-portrait-identity" ng-if="data.user">

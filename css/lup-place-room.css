@@ -19,19 +19,7 @@
 .lup-place .place-content button,.lup-place .place-content a {font-family:inherit; cursor:pointer;}
 .lup-place button:focus-visible,.lup-place a:focus-visible,.lup-place input:focus-visible,.lup-place md-tab-item:focus-visible {outline:2px solid var(--place-accent); outline-offset:3px;}
 .lup-place .place-sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
-/* Compact header, full-size tap targets. */
-.lup-place .place-topbar {flex:0 0 auto; min-height:64px; height:auto; border:0; background:var(--place-bg); box-shadow:none;}
-.lup-place .place-topbar .md-toolbar-tools {height:64px; min-height:64px; padding:4px 10px; gap:2px;}
-.lup-place .place-topbar .place-icon-button {display:grid;place-items:center;flex:0 0 44px; width:44px;height:44px;min-width:44px; padding:0; margin:0; border:0; border-radius:14px; color:#d5e4f2; background:transparent;cursor:pointer;}
-.lup-place .place-topbar .place-icon-button .material-icons {font-size:22px;}
-.lup-place .place-topbar .place-icon-button:hover {background:#ffffff0b;}
-.lup-place .place-topbar-copy {display:flex;flex-direction:column;gap:4px;min-width:0; padding:0 4px;}
-.lup-place .place-topbar-copy strong {font-size:13px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--place-ink);}
-.lup-place .place-topbar-copy > span {display:flex;align-items:center;gap:5px;color:var(--place-muted);font-size:10px;letter-spacing:.01em;line-height:1.2;}
-.lup-place .place-profile-button {display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:4px;border:0;background:transparent;border-radius:50%;cursor:pointer;}
-.lup-place .place-profile-button lup-avatar,.lup-place .place-profile-button .lup-avatar {display:block;width:32px;height:32px;min-width:32px;margin:0;}
-.lup-place .place-topbar ng-include {display:flex;align-items:center;flex:0 0 auto;}
-.lup-place .place-topbar ng-include .md-button {min-width:44px;width:44px;min-height:44px;height:44px;margin:0;}
+/* Utility header styling is shared in lup-shared-ambient.css. */
 .lup-place .place-status-dot {display:inline-block;flex:0 0 6px;width:6px;height:6px;border-radius:50%;background:var(--place-mint);}
 .lup-place .place-status-dot.is-quiet {background:#aaa6bd;}
 /* Actual Material tabs retain keyboard navigation and disabled semantics. */
@@ -136,8 +124,6 @@
 .lup-place .place-bubble .lup-message-state.lms-3::after {color:#a0e5ed;}
 .lup-place .place-private-chat .place-message-content {flex:0 1 auto;width:fit-content;max-width:82%;}
 .lup-place .place-private-chat .place-bubble {min-width:28px;box-sizing:border-box;}
-.lup-place .place-topbar .place-profile-button .lup-avatar {box-sizing:border-box;width:32px;height:32px;padding:0;}
-.lup-place .place-topbar .place-profile-button .lup-avatar .img,.lup-place .place-topbar .place-profile-button .lup-avatar span {inset:0;width:100%;height:100%;}
 .location-page.lup-place .place-chat .place-message.lup-system-msg {justify-content:center;}
 .lup-place .lup-system-msg .place-message-content {max-width:92%;}
 .lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aabbd0;text-align:center;}
@@ -182,7 +168,6 @@
  .lup-place .place-hero::after {background:linear-gradient(90deg,#1d2035b8,transparent),linear-gradient(0deg,#1d2035 4%,transparent 75%);}
  .lup-place .place-primary {min-height:78px;}
  .lup-place .place-tools {padding-bottom:26px;}
- .lup-place .place-topbar .md-toolbar-tools {padding-right:24px;padding-left:20px;}
 }
 @media(max-width:360px) {
  .lup-place .place-content {padding:14px 14px 22px;}
@@ -190,8 +175,6 @@
  .lup-place .place-tab-label {gap:4px;font-size:11px;}
  .lup-place .place-tab-label > .material-icons {font-size:17px;}
  .lup-place .place-tab-count {font-size:9px;min-width:14px;}
- .lup-place .place-topbar .md-toolbar-tools {padding-left:4px;padding-right:4px;}
- .lup-place .place-topbar-copy strong {font-size:12px;}
  .lup-place .place-hero-copy,.lup-place .place-hero-top {padding-left:17px;padding-right:17px;}
  .lup-place .place-primary {gap:9px;padding:13px;grid-template-columns:32px minmax(0,1fr) 17px;}
  .lup-place .place-primary-icon {width:32px;height:34px;}

@@ -1,20 +1,9 @@
-<md-toolbar class="md-hue-2 lup-top-bar">
+<md-toolbar class="lup-top-bar place-topbar">
   <div class="md-toolbar-tools">
-
-    <i class="material-icons" ng-click="openLeft()">menu</i>
-  
-    <md-button class="md-icon-button" aria-label="Nearby" ng-click="gotoReferrer()">
-      <i class="material-icons">arrow_back</i>
-    </md-button>
-
-    <!-- The page itself carries the Ups heading. Keep this flexible spacer so
-         the utility actions retain their established position without a
-         duplicate title in the top bar. -->
+    <button class="place-icon-button" type="button" ng-click="openLeft()" aria-label="{{'PLACE_MENU'|translate}}"><i class="material-icons" aria-hidden="true">menu</i></button>
+    <button class="place-icon-button" type="button" ng-click="gotoReferrer()" aria-label="{{'PLACE_BACK'|translate}}"><i class="material-icons" aria-hidden="true">arrow_back</i></button>
     <span flex aria-hidden="true"></span>
-
     <ng-include src="'js/pages/topnav/lup-topnav-notifications.html?v='+V"></ng-include>
-
-	<lup-avatar ng-user="data.ownUser" aria-label="Your own profile" ng-click="gotoOwnProfile()"></lup-avatar>
-
+    <button class="place-profile-button" type="button" ng-click="gotoOwnProfile()" aria-label="{{'PLACE_MY_PROFILE'|translate}}"><lup-avatar ng-user="data.ownUser"></lup-avatar></button>
   </div>
 </md-toolbar>
