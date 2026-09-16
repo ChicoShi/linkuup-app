@@ -103,8 +103,8 @@ service('ConfigSrvc', function(RequestSrvc) {
 		return unit > 0 ? unit : .5;
 	};
 
-	ConfigSrvc.shoutCost = function() {
-		return Number((ConfigSrvc.CACHE.LinkUUp || {}).shout_cost || 0);
+	ConfigSrvc.shoutCreditsKM = function() {
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_credits_km || 0);
 	};
 
 	ConfigSrvc.roomCreationCost = function(viewRadius) {

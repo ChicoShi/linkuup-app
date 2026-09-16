@@ -68,11 +68,12 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	};
 
 	/** Send a paid broadcast without pretending the sender joined every room. */
-	ChatSrvc.sendShout = function(message) {
-		var gwsMessage = new GWS_Message().cmd(0x1166).sync().writeString(message);
+	ChatSrvc.sendShout = function(radius, message) {
+		var gwsMessage = new GWS_Message().cmd(0x1166).sync().write32(radius).writeString(message);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(reply) {
 			var result = {
 				credits: reply.read32(),
+				radius: reply.read32(),
 				locations: reply.read32(),
 				recipients: reply.read32()
 			};
