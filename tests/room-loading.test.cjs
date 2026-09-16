@@ -32,6 +32,16 @@ function message(context, ...strings) {
  return new context.GWS_Message(m.binaryBuffer());
 }
 
+test('Missing room distance flag keeps the server default visible', () => {
+ const {context} = setup();
+ const missing = new context.LUPRoom({room_id: 1});
+ const hidden = new context.LUPRoom({room_id: 2, room_show_distance: 0});
+ const visible = new context.LUPRoom({room_id: 3, room_show_distance: 1});
+ assert.equal(missing.showDistance(), true);
+ assert.equal(hidden.showDistance(), false);
+ assert.equal(visible.showDistance(), true);
+});
+
 test('Nullable JSON and Array read the next field without losing byte alignment', () => {
  const {context, type} = setup();
  for (const klass of ['GDO\\Core\\GDT_JSON', 'GDO\\Core\\GDT_Array']) {
