@@ -39,3 +39,12 @@ if(process.env.LUP_IMPORTED_ROOMS_JSON){
   }
  });
 }
+
+test('A short 32px swipe selects one adjacent card; jitter and vertical scrolling do not',()=>{
+ const g=new Gesture();
+ g.start(220,300);g.move(188,302);assert.equal(g.step(),1);
+ g.start(220,300);g.move(252,301);assert.equal(g.step(),-1);
+ g.start(220,300);g.move(205,301);assert.equal(g.step(),0);
+ g.start(220,300);g.move(225,340);g.move(180,380);assert.equal(g.step(),0);
+ g.cancel();assert.equal(g.step(),0);
+});

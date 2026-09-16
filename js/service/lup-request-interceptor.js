@@ -2,6 +2,11 @@
 angular.module('LUP').
 factory('RequestInterceptor', function($q, $injector) {
 	var ErrorSrvc;
+	var errorText = function(rejection) {
+		var data = rejection && rejection.data;
+		var message = data && (data.error || (data.topResponse && data.topResponse.error));
+		return typeof message === 'string' ? message : null;
+	};
 	return {
 		'request': function(config) {
 			  return config;
@@ -9,7 +14,7 @@ factory('RequestInterceptor', function($q, $injector) {
 		'requestError': function(rejection) {
 	        if (!ErrorSrvc) { ErrorSrvc = $injector.get('ErrorSrvc'); }
 	        console.log(rejection);
-			ErrorSrvc.showNetworkError(rejection.data.error);
+			ErrorSrvc.showNetworkError(errorText(rejection) || t('err_no_connection'));
 			return $q.reject(rejection);
 		},
 		'response': function(response) {
@@ -18,23 +23,23 @@ factory('RequestInterceptor', function($q, $injector) {
 		'responseError': function(rejection) {
 	        if (!ErrorSrvc) { ErrorSrvc = $injector.get('ErrorSrvc'); }
 	        console.log(rejection);
-			let code = rejection.status;
-			let msg = rejection.data.error;
-			if (!msg) {
-				msg = rejection.data.topResponse.error;
-			}
+			// Cancelled requests and non-JSON responses must preserve the original
+			// rejection, not throw a second TypeError while reading its payload.
+			if (rejection && rejection.xhrStatus === 'abort') return $q.reject(rejection);
+			let code = rejection && rejection.status;
+			let msg = errorText(rejection);
 			if (!msg && (code == 404)) {
-				ErrorSrvc.show404Error("File not found: " + rejection.config.url);
+				ErrorSrvc.show404Error('HTTP 404');
 			}
-//			if ((code == 403)) {
-//			}
-//			else if (code == 404) {
-//				ErrorSrvc.show404Error("File not found: " + rejection.config.url);
-//			}
-//			else {
-	if (msg)
+			else if (msg) {
 				ErrorSrvc.showServerError(msg);
-//			}
+			}
+			else if (code > 0) {
+				ErrorSrvc.showServerError('HTTP ' + code);
+			}
+			else {
+				ErrorSrvc.showNetworkError(t('err_no_connection'));
+			}
 			return $q.reject(rejection);
 		}
 	};

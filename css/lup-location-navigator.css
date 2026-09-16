@@ -41,7 +41,7 @@
 .navigator-view .nav-categories button[data-category="NAV_CITIES"] { --category-color:#92caff; }
 .navigator-view .nav-categories button.active { color:var(--category-color); }
 .navigator-view .nav-categories button.active>i { text-shadow:0 0 9px color-mix(in srgb,var(--category-color) 35%,transparent); }
-.navigator-view .location-rail { position:relative; display:flex!important; gap:0!important; width:100%; max-width:480px; box-sizing:border-box; padding:8px 0!important; margin:0 auto!important; background:transparent!important; overflow-x:auto!important; overflow-y:hidden!important; min-height:0!important; scroll-snap-type:x mandatory; scroll-padding:0!important; scrollbar-width:none; touch-action:pan-x pan-y; }
+.navigator-view .location-rail { position:relative; display:flex!important; gap:0!important; width:100%; max-width:480px; box-sizing:border-box; padding:8px 0!important; margin:0 auto!important; background:transparent!important; overflow-x:auto!important; overflow-y:hidden!important; min-height:0!important; scroll-snap-type:x mandatory; scroll-padding:0!important; scrollbar-width:none; touch-action:pan-y pinch-zoom; }
 .navigator-view .location-rail::-webkit-scrollbar { display:none; }.navigator-view .location-rail.location-rail-dragging { scroll-snap-type:none!important; }
 .navigator-view .lup-room-slide-outer { flex:0 0 100%!important; width:100%!important; overflow:hidden; min-width:0!important; height:auto!important; padding:0!important; margin:0!important; transform:none!important; transition:none!important; scroll-snap-align:center; }
 .navigator-view .nav-place { display:flex!important; flex-direction:column; width:calc(100% - 48px)!important; max-width:320px; height:auto!important; min-height:0!important; padding:0!important; margin:0 auto!important; background:transparent!important; box-shadow:none!important; border:0!important; border-radius:0!important; overflow:hidden!important; opacity:1; transform:none; }
@@ -112,3 +112,6 @@
 /* Selected filter and category of the currently centred room are separate states. */
 .navigator-view .nav-categories button {position:relative;}
 .navigator-view .nav-categories button.is-current-category::after {content:'';position:absolute;bottom:4px;left:calc(50% - 6px);width:12px;height:2px;border-radius:2px;background:currentColor;}
+
+/* Keep offscreen catalogue cards out of painting and glass compositing. */
+.navigator-view .lup-room-slide-outer {content-visibility:auto;contain-intrinsic-block-size:auto 510px;}

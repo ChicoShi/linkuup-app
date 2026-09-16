@@ -1,4 +1,4 @@
-/* Pure gesture classification; browser owns touch momentum and snapping. */
+/* One short deliberate horizontal gesture advances exactly one card. */
 (function(root) {
  'use strict';
  function Gesture(){this.cancel();}
@@ -9,6 +9,7 @@
   if(!this.axis&&Math.max(Math.abs(this.dx),Math.abs(dy))>10)this.axis=Math.abs(this.dx)>Math.abs(dy)?'x':'y';
   this.horizontal=this.axis==='x';return this.horizontal;
  };
+ Gesture.prototype.step=function(){return this.horizontal&&Math.abs(this.dx)>=28?(this.dx<0?1:-1):0;};
  Gesture.prototype.end=function(){var dragged=this.horizontal;this.cancel();return dragged;};
  Gesture.prototype.cancel=function(){this.x=null;this.y=null;this.dx=0;this.axis=null;this.horizontal=false;};
  root.LupLocationGesture=Gesture;
