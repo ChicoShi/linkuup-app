@@ -9,6 +9,7 @@ use GDO\LinkUUp\Module_LinkUUp;
 use GDO\Core\ModuleLoader;
 use GDO\Core\Application;
 use GDO\DB\Database;
+use GDO\Core\Logger;
 use GDO\Util\FileUtil;
 
 # Path
@@ -82,14 +83,15 @@ final class Builder extends Application
 	public function isCLI() : bool { return true; }
 }
 $app = Builder::init();
+Logger::init();
 Database::init();
 $loader = ModuleLoader::instance();
 $loader->loadModulesCache();
 $loader->initModules();
 
-# Load page
-$url = Module_LinkUUp::instance()->cfgAppUrl() . 'index_debug.php';
-$page = HTTP::getFromURL($url);
+# Load the local page template. Building must not depend on the currently
+# deployed app or on outbound HTTP being available to the CLI process.
+$page = file_get_contents($srcpath . 'index_debug.php');
 $page = str_replace("\r", "", $page);
 $lines = explode("\n", $page);
 
@@ -101,13 +103,13 @@ echo "Parsing index_debug.php\n";
 foreach ($lines as $line)
 {
 	$match = '';
-	if (preg_match("/script.*src=\"([^?\"]+)/", $line, $match))
+	if (preg_match("/script.*src=\"([^?\"<]+)/", $line, $match))
 	{
 		$javascripts[] = $match[1];
 		continue;
 	}
 	
-	if (preg_match("/stylesheet.*href=\"([^?\"]+)/", $line, $match))
+	if (preg_match("/stylesheet.*href=\"([^?\"<]+)/", $line, $match))
 	{
 		if ((strpos($match[1], "bower") === false) &&
 			(!str_starts_with($match[1], 'http')) )
