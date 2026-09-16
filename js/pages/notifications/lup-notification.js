@@ -10,7 +10,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 }).controller('NotificationCtrl', function($scope, $rootScope, $q, $translate,
 		ErrorSrvc, WebsocketSrvc, TypeSrvc, UserSrvc, RoomSrvc,
-		ChatSrvc, NotificationSrvc, HelpSrvc, DialogSrvc) {
+		ChatSrvc, NotificationSrvc, HelpSrvc, DialogSrvc, FriendSrvc) {
 	var swipeInterval = null;
 	var destroyed = false;
 	// Hook Service into view
@@ -72,8 +72,7 @@ angular.module('LUP').config(function($routeProvider) {
 	///////////////////////////
 	$scope.onNotification = function(event, notification) {
 		console.log('NotificationCtrl.onNotification()', notification);
-		$scope.data.notifications.items.unshift(notification);
-		NotificationSrvc.COUNT++;
+		$scope.data.notifications.items = NotificationSrvc.SORTED;
 		setTimeout($scope.updateTabHighlights);
 		$scope.showNotifications();
 	};
@@ -115,26 +114,14 @@ angular.module('LUP').config(function($routeProvider) {
 	/////////////////////
 	// --- Actions --- //
 	/////////////////////
-	$scope.acceptFriendRequest = function(ids) {
-		console.log('NotificationCtrl.acceptFriendRequest()', ids);
-		var data = ids.split(',');
-		var gwsMessage = new GWS_Message().cmd(0x1132).sync();
-		gwsMessage.write32(data[1]).write32(data[2]);
-		return WebsocketSrvc.sendBinary(gwsMessage).then(
-				$scope.acceptedFriendRequest.bind($scope, data[0]),
-				ErrorSrvc.websocketError)['catch']($scope.catchUnknown);
-	};
-	
-	$scope.acceptedFriendRequest = function(notificationid, gwsMessage) {
-		console.log('NotificationCtrl.acceptedFriendRequest()', notificationid, gwsMessage);
-		UserSrvc.gotUserMessage(gwsMessage);
-		var notification = NotificationSrvc.CACHE[notificationid];
-		if (notification) {
-			$scope.deleteNotification(notification);
-		}
-		return gwsMessage;
-	};
-	
+	$scope.acceptFriendRequest = function(notification, deny) {
+  if (!notification || !notification.friend || notification.working) return;
+  notification.working=true;
+  var action=deny ? FriendSrvc.denyFriendRequest : FriendSrvc.acceptFriendRequest;
+  return action(notification.friend).then(function(){return $scope.deleteNotification(notification);})
+   .finally(function(){notification.working=false;}).catch($scope.catchUnknown);
+ };
+
 	///////////////////////
 	// --- Mark Read --- //
 	///////////////////////
@@ -154,7 +141,7 @@ angular.module('LUP').config(function($routeProvider) {
 		var gwsMessage = new GWS_Message().cmd(0x1142).sync().write32(lupNotification.id());
 		// Send and set success/failure handlers.
 		WebsocketSrvc.sendBinary(gwsMessage).then(
-				$scope.markedRead, WebsocketSrvc.onError)['catch']($scope.catchUnknown);
+				$scope.markedRead, function(error){lupNotification.loading=false;return $q.reject(error);})['catch']($scope.catchUnknown);
 	};
 	
 	$scope.markedRead = function(gwsMessage) {
@@ -254,7 +241,10 @@ angular.module('LUP').config(function($routeProvider) {
 	 */
 	$scope.showNotifications = function() {
 		console.log('NotificationCtrl.showNotifications()');
-		setTimeout($scope.readfix, 800);
+		if (NotificationSrvc.shouldLoadMore()) {
+   return NotificationSrvc.loadMore().then(function(items){$scope.data.notifications.items=items;setTimeout($scope.readfix,100);}).catch($scope.catchUnknown);
+  }
+  setTimeout($scope.readfix,100);
 	};
 	
 	/**
@@ -291,14 +281,7 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.deletedNotification = function(lupNotification) {
 		console.log('NotificationCtrl.deletedNotification()', lupNotification);
-		setTimeout(function(){
-			var items = $scope.data.notifications.items;
-			var index = items.indexOf(lupNotification);
-			if (index > -1) {
-				items.splice(index, 1);
-			}
-			$scope.$apply();
-		});
+		$scope.data.notifications.items=NotificationSrvc.SORTED;
 	};
 	
 	//////////////////

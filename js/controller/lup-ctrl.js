@@ -88,8 +88,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			return;
 		}
 		$scope.friendCountNotifications[notification.id()] = true;
-		$scope.data.friendsCount = Math.max(0, $scope.data.friendsCount + delta);
-		window.GWF_USER.JSON.lup_friends = $scope.data.friendsCount;
+		// Events may be replayed or delivered after a newer relationship change.
+		// Read the authoritative total instead of adding a stale +1/-1 again.
+		UserSrvc.withUser(ownId, true).then($rootScope.updateFriendsCount)['catch']($scope.catchUnknown);
 	};
 	// A notification id is unique. Remembering it prevents duplicate arrival
 	// pop-ups if the WebSocket reconnects while the same payload is replayed.
@@ -479,10 +480,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoProfileSettings = function() { return $scope.goto('/settings'); };
 	$scope.gotoSettings = function() { return $scope.goto('/settings'); };
 	$scope.gotoSearch = function() { return $scope.goto('/search'); };
-	$scope.gotoNotification = function() { return $scope.goto('/notifications'); };
+	$scope.gotoNotification = function() { $scope.data.activeTab3 = 1; return $scope.goto('/notifications'); };
 	$scope.gotoMessages = function() {
 		$scope.data.activeTab3 = 0;
-		return $scope.gotoNotification();
+		return $scope.goto('/notifications');
 	};
 	$scope.gotoCourse = function(user) { return $scope.goto('/course/'+user.id()); };
 	$scope.gotoCuddles = function(user) { return $scope.goto('/cuddles/'+user.id()); };
@@ -747,10 +748,17 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	});
 
 	$scope.cmd_0601 = function friendRequest(gwsMessage) {
-		console.log('LUPCtrl.friendRequest()', gwsMessage.dump());
-		UserSrvc.withUser(gwsMessage.read32()).then(function(user){
-			alert('You got a friend request from ' + user.displayName());
-		})['catch']($scope.catchUnknown);
+		// The styled event inbox handles the message; no second native alert.
+		UserSrvc.withUser(gwsMessage.read32(), true)['catch']($scope.catchUnknown);
+	};
+	$scope.cmd_0602 = function relationshipChanged(gwsMessage) {
+		// Core Friends uses this frame for both acceptance and removal.
+		var first = gwsMessage.read32(), second = gwsMessage.read32();
+		[first, second].forEach(function(id) {
+			UserSrvc.withUser(id, true).then(function(user) {
+				if (user.isSelf()) $rootScope.updateFriendsCount();
+			})['catch']($scope.catchUnknown);
+		});
 	};
 
 	

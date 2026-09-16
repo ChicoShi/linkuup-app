@@ -1,80 +1,30 @@
-/* Shared navigation, matched to the quiet violet discovery surface. */
-md-sidenav.navigator-sidebar { width:300px; max-width:calc(100vw - 32px); overflow:hidden; background:#141528; border-right:1px solid #aaa2d726; box-shadow:12px 0 32px #08091755; }
-md-sidenav.navigator-sidebar .sidenav-brand { min-height:88px; background:transparent; border-bottom:0; }
-md-sidenav.navigator-sidebar .sidenav-brand::before,md-sidenav.navigator-sidebar .sidenav-brand::after,md-sidenav.navigator-sidebar md-list-item::before { display:none; }
-md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools { min-height:88px; height:88px; padding:0 24px; gap:12px; }
-md-sidenav.navigator-sidebar .sidenav-brand h1 { margin:0; font-size:24px; font-weight:600; color:#f1f0fc; letter-spacing:-.8px; }
-md-sidenav.navigator-sidebar .sidenav-brand span { color:#aaaac5; font-size:11px; letter-spacing:0; }
-md-sidenav.navigator-sidebar .nav-close { order:2; margin-left:auto; flex:0 0 44px; display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; border-radius:12px; background:transparent; color:#aaaac5; cursor:pointer; }
-md-sidenav.navigator-sidebar > md-content { background:transparent; overflow-y:auto; overflow-x:hidden; }
-md-sidenav.navigator-sidebar .sidebar-user-card { margin:0 20px 8px; padding:14px 4px 20px; border:0; border-bottom:1px solid #aaa2d726; border-radius:0; background:none; box-shadow:none; }
-md-sidenav.navigator-sidebar .sidebar-user-card strong { color:#f1f0fc; font-size:14px; }
-md-sidenav.navigator-sidebar .sidebar-user-card span { color:#aaaac5; font-size:11px; }
-md-sidenav.navigator-sidebar .sidebar-user-card > .material-icons { color:#b8a5ff; }
-md-sidenav.navigator-sidebar md-list { padding:0 16px max(20px,env(safe-area-inset-bottom)); }
-md-sidenav.navigator-sidebar .md-subheader { background:none; margin:18px 12px 6px; color:#9291af; font-size:10px; font-weight:500; letter-spacing:1px; }
-md-sidenav.navigator-sidebar .md-subheader-inner { padding:0; }
-md-sidenav.navigator-sidebar md-list-item { min-height:48px; margin:2px 0; border:0; border-radius:12px; background:transparent; transition:none; }
-md-sidenav.navigator-sidebar md-list-item:hover { background:#b8a5ff0d; }
-md-sidenav.navigator-sidebar md-list-item .md-list-item-inner { min-height:48px; gap:12px; }
-md-sidenav.navigator-sidebar md-list-item p { font-size:13px; line-height:1.4; font-weight:400; color:#deddec; }
-md-sidenav.navigator-sidebar md-list-item .nav-icon { display:grid; place-items:center; flex:0 0 24px; width:24px; height:24px; margin:0 12px 0 0; padding:0; border:0; border-radius:0; box-shadow:none; background:none; font-size:22px; color:#aaaac5; transform:none; }
-md-sidenav.navigator-sidebar .nav-discover .nav-icon { color:#b8a5ff; }
-md-sidenav.navigator-sidebar .nav-friends .nav-icon { color:#ef9ee1; }
-md-sidenav.navigator-sidebar .nav-private-messages .nav-icon { color:#92caff; }
-md-sidenav.navigator-sidebar .nav-add-room .nav-icon { color:#91d8b2; }
-md-sidenav.navigator-sidebar .nav-logout { margin-top:12px; }
-md-sidenav.navigator-sidebar .nav-logout .nav-icon,md-sidenav.navigator-sidebar .nav-logout p { color:#c79daa; }
-md-sidenav.navigator-sidebar .sidebar-legal-title { padding-top:18px; border-top:1px solid #aaa2d726; }
-md-sidenav.navigator-sidebar md-list-item:has(.impressum) p,md-sidenav.navigator-sidebar md-list-item:has(.tos) p,md-sidenav.navigator-sidebar md-list-item:has(.privacy) p { font-size:12px; color:#aaaac5; }
-md-sidenav.navigator-sidebar button:focus-visible,md-sidenav.navigator-sidebar [role=button]:focus-visible { outline:2px solid #b8a5ff; outline-offset:-3px; }
-md-sidenav.navigator-sidebar .sidenav-brand::before,md-sidenav.navigator-sidebar .sidenav-brand::after,md-sidenav.navigator-sidebar .md-toolbar-tools::before,md-sidenav.navigator-sidebar .md-toolbar-tools::after { display:none; }
-md-sidenav.navigator-sidebar .sidenav-brand span { text-transform:none; font-weight:400; }
-md-sidenav.navigator-sidebar .md-subheader { min-height:0; padding:0; border:0; }
-md-sidenav.navigator-sidebar .md-subheader-inner { padding:8px 0; }
-md-sidenav.navigator-sidebar .sidebar-legal-title { margin-top:22px; padding-top:14px; border-top:1px solid #aaa2d726; }
-
-/* One drawer appearance across route-specific parent styles. */
-md-sidenav.md-sidenav-left.navigator-sidebar {
- background:var(--lup-app-panel,#12182b);
- color:var(--lup-app-ink,#f1f0fc);border-radius:0;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar > md-content {
- background:transparent;color:inherit;isolation:auto;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand,
-md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand .md-toolbar-tools {
- background:transparent;box-shadow:none;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand h1 {
- font-size:24px;font-weight:600;color:#f1f0fc;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .sidenav-brand span {
- font-size:11px;color:#b2c0d4;letter-spacing:0;text-transform:none;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {
- border:0;box-shadow:none;border-radius:10px;
- width:32px;height:32px;background:#bce8fa08;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar md-list-item p {font-size:14px;color:#e3edf8;}
-md-sidenav.md-sidenav-left.navigator-sidebar .nav-logout p {color:#d8aeba;}
-
-/* The same profile field follows the drawer on every app route. */
-md-sidenav.md-sidenav-left.navigator-sidebar {
- background:var(--lup-app-field,linear-gradient(160deg,#111a2d,#12182b 49%,#101522));
- border-right:1px solid var(--lup-app-line,rgba(157,211,255,.13));
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .sidebar-user-card {
- padding:14px 10px;border:1px solid rgba(157,211,255,.13);
- border-radius:16px;background:rgba(157,211,255,.035);
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .nav-close {
- width:44px;height:44px;border-radius:12px;
- background:rgba(157,211,255,.055);color:#dcefff;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:focus-within {
- outline:2px solid #a9ddff;outline-offset:-2px;
-}
-md-sidenav.md-sidenav-left.navigator-sidebar .sidebar-section-title {
- color:#b2c0d4;font-size:10px;letter-spacing:.12em;
-}
+/* One scrollable, translucent blue drawer on every route. */
+md-sidenav.md-sidenav-left.navigator-sidebar {box-sizing:border-box;display:flex;flex-direction:column;width:320px;max-width:calc(100vw - 36px);height:100%;max-height:100dvh;overflow:hidden;color:#eaf5ff;background:linear-gradient(155deg,#1c3657e8,#101d32f7 55%,#13273ceF);border-right:1px solid #d5f1ff20;box-shadow:16px 0 48px #03102450;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:0 28px 28px 0;}
+md-sidenav.navigator-sidebar .sidenav-brand {display:block;flex:none;min-height:82px;background:transparent;border:0;box-shadow:none;}
+md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools {display:flex;height:82px;min-height:82px;padding:0 22px;gap:12px;background:transparent;box-shadow:none;}
+md-sidenav.navigator-sidebar .sidenav-brand::before,md-sidenav.navigator-sidebar .sidenav-brand::after,md-sidenav.navigator-sidebar .md-toolbar-tools::before,md-sidenav.navigator-sidebar .md-toolbar-tools::after,md-sidenav.navigator-sidebar md-list-item::before {display:none;}
+md-sidenav.navigator-sidebar .sidenav-brand h1 {margin:0;color:#f2f9ff;font:600 27px/1 Ubuntu,Roboto,sans-serif;letter-spacing:-1.2px;}
+md-sidenav.navigator-sidebar .sidenav-brand h1 span {display:inline;margin:0;color:#a9dfff;font:inherit;letter-spacing:inherit;text-transform:none;}
+md-sidenav.navigator-sidebar .sidebar-wordmark > span {display:block;margin-top:7px;color:#a7c1d6;font-size:10px;font-weight:400;letter-spacing:.03em;text-transform:none;}
+md-sidenav.navigator-sidebar .nav-close {display:grid;place-items:center;order:2;flex:0 0 44px;width:44px;height:44px;margin:0 0 0 auto;padding:0;border:0;border-radius:50%;background:#ddf3ff08;color:#c5e7f8;cursor:pointer;box-shadow:none;}
+md-sidenav.navigator-sidebar .nav-close .material-icons {font-size:21px;}
+md-sidenav.md-sidenav-left.navigator-sidebar > md-content.sidebar-scroll {display:block;flex:1 1 0%;min-height:0;height:auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#a9dfff40 transparent;background:transparent;color:inherit;isolation:auto;-webkit-overflow-scrolling:touch;}
+md-sidenav.navigator-sidebar .sidebar-user-card {box-sizing:border-box;display:flex;align-items:center;gap:12px;width:calc(100% - 40px);margin:3px 20px 14px;padding:14px 12px;border:1px solid #d5efff17;border-radius:20px;background:#d0efff05;box-shadow:inset 0 1px 0 #ffffff10;text-align:left;cursor:pointer;}
+md-sidenav.navigator-sidebar .sidebar-user-card > div {flex:1;min-width:0;}
+md-sidenav.navigator-sidebar .sidebar-user-card strong {display:block;overflow:hidden;text-overflow:ellipsis;color:#ecf7ff;font-size:14px;}
+md-sidenav.navigator-sidebar .sidebar-user-card span {display:block;margin-top:4px;color:#9dbbd1;font-size:11px;letter-spacing:0;}
+md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar {box-sizing:border-box;flex:none;width:38px;height:38px;padding:0;border:1px solid #def4ff55;outline:0;}
+md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar .img,md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar span {inset:0;margin:0;width:100%;height:100%;}
+md-sidenav.navigator-sidebar .sidebar-user-card > .material-icons {font-size:19px;color:#93cfe9;}
+md-sidenav.navigator-sidebar md-list {display:block;padding:0 16px max(24px,env(safe-area-inset-bottom));background:none;}
+md-sidenav.navigator-sidebar .md-subheader {min-height:0;margin:18px 12px 6px;padding:0;border:0;background:none;color:#87a8c1;font-size:10px;font-weight:500;letter-spacing:.09em;}
+md-sidenav.navigator-sidebar .md-subheader-inner {padding:0;}
+md-sidenav.navigator-sidebar md-list-item {min-height:49px;margin:3px 0;border:0;border-radius:14px;background:none;}
+md-sidenav.navigator-sidebar md-list-item:hover,md-sidenav.navigator-sidebar md-list-item:focus-within {background:#c5ecff0a;}
+md-sidenav.navigator-sidebar md-list-item .md-list-item-inner {min-height:49px;gap:12px;}
+md-sidenav.navigator-sidebar md-list-item p {font-size:14px;line-height:1.4;font-weight:400;color:#d7e8f5;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;margin:0 12px 0 0;border:0;border-radius:10px;background:transparent;box-shadow:none;font-size:21px;color:#a1c8e0;transform:none;}
+md-sidenav.navigator-sidebar .sidebar-legal-title {margin-top:24px;padding-top:17px;border-top:1px solid #c1e4ff13;}
+md-sidenav.navigator-sidebar md-list-item:has(.impressum) p,md-sidenav.navigator-sidebar md-list-item:has(.tos) p,md-sidenav.navigator-sidebar md-list-item:has(.privacy) p {font-size:12px;color:#9db6ca;}
+md-sidenav.navigator-sidebar .nav-logout p,md-sidenav.navigator-sidebar .nav-logout .nav-icon {color:#d4a5b5;}
+md-sidenav.navigator-sidebar button:focus-visible,md-sidenav.navigator-sidebar [role=button]:focus-visible {outline:2px solid #a9dfff;outline-offset:-3px;}

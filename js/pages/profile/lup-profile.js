@@ -22,6 +22,7 @@ angular.module('LUP').config(function($routeProvider) {
 	// fragile with changed image data. Open profiles on the stable About tab;
 	// load the gallery only after the user explicitly selects it.
 	$scope.data.selectedTab = 0;
+	$scope.selectProfileTab = function(tab) { $scope.data.selectedTab=tab; return tab===1 ? $scope.showGallery() : $scope.loadInformation(); };
 	
 	$scope.galleryAPI = null; // gallery handle for unitegallery
 	
@@ -133,6 +134,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (user.isFriend()) {
 			return 'PROFILE_ACTION_FRIENDS';
 		}
+		if (user.JSON.relation_incoming) return 'PROFILE_ACTION_ACCEPT_FRIEND_REQUEST';
 		return user.JSON.relation_pending ? 'PROFILE_ACTION_FRIEND_PENDING' : 'PROFILE_ACTION_ADD_FRIEND';
 	};
 	$scope.profileFriendActionIcon = function() {
@@ -158,7 +160,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return $scope.gotoFriends(user);
 		}
 		var ownUser = $scope.data.ownUser;
-		var available = user.isSelf() || (user.isMember() && ownUser && ownUser.isMember());
+		var available = !!(ownUser && ownUser.isAuthed() && !user.isPreview);
 		var data = {
 			user: user,
 			canManage: available && !user.isSelf(),

@@ -473,7 +473,7 @@
 "PROFILE_ABOUT_EDIT": "Add about me",
 "PROFILE_INSIGHT_LABEL": "PROFILE INSIGHT",
 "PROFILE_INSIGHT_OPEN": "Discover details",
-"PROFILE_INSIGHT_CLOSE": "Close insight",
+"PROFILE_INSIGHT_CLOSE": "Show less",
 "SETTINGS_EYEBROW": "YOUR LINKUUP",
 "SETTINGS_HEADLINE": "Your settings",
 "SETTINGS_INTRO": "Choose what represents you, what is visible and how you want to use LinkUUp.",
@@ -721,5 +721,16 @@
   "PLACE_GUEST_DECLINE": "Decline request",
   "JOURNEY_VISIT": "Visit",
   "JOURNEY_ONE_VISIT": "1 visit",
-  "PLACE_PEOPLE_PREVIEW_LABEL": "At this place"
+  "PLACE_PEOPLE_PREVIEW_LABEL": "At this place",
+	"HELP_WELCOME_TITLE": "Good to know",
+	"HELP_UNDERSTOOD": "Got it",
+	"PREVIEW_GUESTS": "Preview · 20 test guests",
+	"PREVIEW_GUESTS_OFF": "End preview",
+	"PREVIEW_GUESTS_ON": "Show 20 test guests",
+	"PREVIEW_NOTE": "Local preview. These guests and messages are examples.",
+	"PREVIEW_GUEST": "Test guest",
+	"PREVIEW_MESSAGE_1": "Hi everyone! Who is in town?",
+	"PREVIEW_MESSAGE_2": "I will be at the café soon.",
+	"PREVIEW_MESSAGE_3": "Good to see you here.",
+	"PLACE_EVENT_REQUEST_CLOSED": "This request is no longer pending."
 }

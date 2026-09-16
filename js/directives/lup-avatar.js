@@ -13,7 +13,7 @@ directive('lupAvatar', function() {
 
 /* A read-only presence preview. It uses the same room.USERS as the Online tab;
  * no polling, synthetic visitors, profile links or membership changes. */
-angular.module('LUP').directive('lupPresence', function() {
+angular.module('LUP').directive('lupPresence', function(RoomSrvc) {
 	return {
 		restrict: 'E',
 		scope: {ngRoom: '=', compact: '@'},
@@ -30,7 +30,7 @@ angular.module('LUP').directive('lupPresence', function() {
 			var stopMotion = function() { if (reduced.matches && animation) animation.cancel(); };
 			if (reduced.addEventListener) reduced.addEventListener('change', stopMotion);
 			var unwatch = scope.$watchCollection(function() {
-				return scope.ngRoom && scope.ngRoom.USERS;
+				return RoomSrvc && RoomSrvc.displayUsers ? RoomSrvc.displayUsers(scope.ngRoom) : scope.ngRoom && scope.ngRoom.USERS;
 			}, function(users) {
 				users = users || [];
 				var previous = scope.count;
@@ -61,3 +61,9 @@ angular.module('LUP').directive('lupPresence', function() {
 		}
 	};
 });
+
+angular.module('LUP').directive('lupPresencePreview',function(RoomSrvc){return {
+ restrict:'E',scope:{ngRoom:'='},
+ template:'<div class="place-preview-note" ng-if="possible()"><span ng-if="active()">{{"PREVIEW_GUESTS"|translate}}</span><button type="button" ng-click="toggle()">{{(active()?"PREVIEW_GUESTS_OFF":"PREVIEW_GUESTS_ON")|translate}}</button><small ng-if="active()">{{"PREVIEW_NOTE"|translate}}</small></div>',
+ link:function(scope){scope.possible=function(){return RoomSrvc.previewPossible(scope.ngRoom);};scope.active=function(){return RoomSrvc.isPreviewRoom(scope.ngRoom);};scope.toggle=RoomSrvc.togglePreview;}
+};});

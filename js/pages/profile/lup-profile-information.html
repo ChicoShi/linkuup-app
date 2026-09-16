@@ -20,30 +20,25 @@
   </md-list-item>
 </md-list>
 
-<div class="profile-insight-control" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
-  <button type="button" class="profile-insight-toggle" ng-click="toggleProfileDetails()" ng-class="{'is-open': data.profileDetailsOpen}" ng-attr-aria-expanded="{{data.profileDetailsOpen ? 'true' : 'false'}}" aria-controls="profile-insight-content">
-    <span class="profile-insight-toggle-mark" aria-hidden="true"><i class="material-icons">{{data.profileDetailsOpen ? 'visibility_off' : 'visibility'}}</i></span>
-    <span class="profile-insight-toggle-copy">
-      <small>{{'PROFILE_INSIGHT_LABEL'|translate}}</small>
-      <strong ng-if="!data.profileDetailsOpen">{{'PROFILE_INSIGHT_OPEN'|translate}}</strong>
-      <strong ng-if="data.profileDetailsOpen">{{'PROFILE_INSIGHT_CLOSE'|translate}}</strong>
-    </span>
-    <i class="material-icons profile-insight-chevron" aria-hidden="true">{{data.profileDetailsOpen ? 'expand_less' : 'expand_more'}}</i>
+<div class="profile-disclosure" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length">
+  <button type="button" ng-click="toggleProfileDetails()" ng-attr-aria-expanded="{{!!data.profileDetailsOpen}}" aria-controls="profile-insight-content">
+    <span>{{(data.profileDetailsOpen ? 'PROFILE_INSIGHT_CLOSE' : 'PROFILE_INSIGHT_OPEN')|translate}}</span>
+    <i class="material-icons" aria-hidden="true">{{data.profileDetailsOpen ? 'expand_less' : 'expand_more'}}</i>
   </button>
 </div>
 
-<div id="profile-insight-content" class="profile-detail-reveal" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length" ng-class="{'is-open': data.profileDetailsOpen}">
-  <section class="profile-information profile-signal-board">
-    <section ng-repeat="group in data.profileGroups track by group.module" class="profile-signal-group">
-      <header class="profile-signal-group-heading"><span></span><small>{{group.label|translate}}</small></header>
-      <div class="profile-signal-grid">
-        <article class="profile-signal" ng-repeat="field in group.fields track by field.key" ng-class="['profile-signal--tone-' + profileFieldTone(field.key), {'profile-signal--denied': field.error, 'profile-signal--private': field.private, 'profile-signal--public': field.visibility === 'public', 'profile-signal--members': field.visibility === 'members', 'profile-signal--friends': field.visibility === 'friends'}]">
-          <span class="profile-signal-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
-          <div class="profile-signal-copy">
+<div id="profile-insight-content" class="profile-facts-panel" ng-if="(data.profile.canGloballySee() || data.user.isSelf()) && data.profileGroups.length" ng-show="data.profileDetailsOpen">
+  <section class="profile-facts">
+    <section ng-repeat="group in data.profileGroups track by group.module" class="profile-fact-group">
+      <header class="profile-fact-group-heading"><span></span><small>{{group.label|translate}}</small></header>
+      <div class="profile-fact-grid">
+        <article class="profile-fact" ng-repeat="field in group.fields track by field.key" ng-class="['profile-fact--tone-' + profileFieldTone(field.key), {'profile-fact--denied': field.error, 'profile-fact--private': field.private, 'profile-fact--public': field.visibility === 'public', 'profile-fact--members': field.visibility === 'members', 'profile-fact--friends': field.visibility === 'friends'}]">
+          <span class="profile-fact-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
+          <div class="profile-fact-copy">
             <small>{{field.label|translate}}</small>
             <strong ng-if="field.private"><i class="material-icons" aria-hidden="true">visibility_off</i>{{'PROFILE_FIELD_PRIVATE'|translate}}</strong>
             <strong ng-if="!field.private && field.error"><i class="material-icons" aria-hidden="true">visibility_off</i>{{field.error}}</strong>
-            <strong ng-if="!field.private && !field.error && field.empty" class="profile-signal-empty">{{'PROFILE_FIELD_EMPTY'|translate}}</strong>
+            <strong ng-if="!field.private && !field.error && field.empty" class="profile-fact-empty">{{'PROFILE_FIELD_EMPTY'|translate}}</strong>
             <strong ng-if="!field.private && !field.error && !field.empty" ng-bind-html="renderProfileSetting(field)"></strong>
           </div>
         </article>

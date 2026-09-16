@@ -122,3 +122,8 @@
 .navigator-view .location-rail:focus-visible {outline:2px solid #a9ddff;outline-offset:-2px;border-radius:28px;}
 @supports not (mask-composite:exclude) {.navigator-view .nav-lens-rim {display:none;}}
 @media(prefers-reduced-motion:reduce) {.navigator-view .nav-lens-signal {animation:none;}}
+
+/* Dialogs use one blue translucent material as well, including legacy alerts. */
+md-dialog.place-dialog,md-dialog.md-default-theme:not(.place-dialog) {background:linear-gradient(145deg,#16334bed,#13273af7);border:1px solid #d1edfa2b;box-shadow:inset 0 1px 0 #f4fcff1f,0 22px 64px #020b1e70;color:#edf7ff;}
+md-dialog.place-dialog md-dialog-content,md-dialog.place-dialog .md-dialog-content,md-dialog.place-dialog .place-dialog-body {background:transparent;color:inherit;}
+md-dialog.place-dialog .place-dialog-header,md-dialog.place-dialog .place-dialog-actions {background:transparent;}

@@ -27,29 +27,21 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 	});
 	
 	NotificationSrvc.shouldLoadMore = function() {
-		var time = NotificationSrvc.OLDEST ? NotificationSrvc.OLDEST.created() : 0;
-		var result = NotificationSrvc.WORKING !== time;
-		console.log('NotificationSrvc.shouldLoadMore()', time, result);
-		return result;
-	};
-	
-	NotificationSrvc.loadMore = function() {
-		var time = NotificationSrvc.OLDEST ? NotificationSrvc.OLDEST.created() : 0;
-		console.log('NotificationSrvc.loadMore()', time);
-		if (NotificationSrvc.WORKING === time) {
-			return $q.resolve(NotificationSrvc.SORTED);
-		}
-		NotificationSrvc.WORKING = time;
-		var gwsMessage = new GWS_Message().cmd(0x1141).sync().write32(time);
-		var promise = WebsocketSrvc.sendBinary(gwsMessage).then(
-				NotificationSrvc.gotPage, WebsocketSrvc.onError);
-		promise['catch'](function(response){
-//			NotificationSrvc.WORKING = false;
-			return response;
-		});
-		return promise;
-	};
-	
+  return !NotificationSrvc.WORKING && NotificationSrvc.SORTED.length < NotificationSrvc.COUNT;
+ };
+ NotificationSrvc.loadMore = function() {
+  if (NotificationSrvc.WORKING) return NotificationSrvc.WORKING;
+  if (!NotificationSrvc.shouldLoadMore()) return $q.resolve(NotificationSrvc.SORTED);
+  // The wire uses Unix seconds, the decoded model uses milliseconds.
+  var oldest=NotificationSrvc.OLDEST;
+  var time=oldest ? Math.floor(Number(oldest.created())/1000) : 0;
+  var message=new GWS_Message().cmd(0x1141).sync().write32(time).write32(oldest ? oldest.id() : 0);
+  var request=WebsocketSrvc.sendBinary(message).then(NotificationSrvc.gotPage);
+  NotificationSrvc.WORKING=request;
+  request.then(function(){NotificationSrvc.WORKING=false;},function(){NotificationSrvc.WORKING=false;});
+  return request;
+ };
+
 	NotificationSrvc.gotPage = function(gwsMessage) {
 		console.log('NotificationSrvc.gotPage()', gwsMessage);
 		NotificationSrvc.COUNT = gwsMessage.read32();
@@ -86,19 +78,25 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 
 		// Remember oldest note for load more
 		if ( (!NotificationSrvc.OLDEST) || 
-			 (NotificationSrvc.OLDEST.created() > NotificationSrvc.CACHE[id].created()) ) {
+			 ((NotificationSrvc.OLDEST.created() > NotificationSrvc.CACHE[id].created() || (NotificationSrvc.OLDEST.created() === NotificationSrvc.CACHE[id].created() && Number(NotificationSrvc.OLDEST.id()) > Number(id)))) ) {
 				NotificationSrvc.OLDEST = NotificationSrvc.CACHE[id];
 		}
 
-		// Return it
-		return NotificationSrvc.CACHE[id];
+		// A repeated push updates its object, never duplicates the row or badge.
+  if (fresh && recaching) {
+   NotificationSrvc.COUNT++;
+   if (!NotificationSrvc.CACHE[id].read()) NotificationSrvc.UNREAD++;
+  }
+  return NotificationSrvc.CACHE[id];
 	};
 	
 	NotificationSrvc.markedRead = function(gwsMessage) {
 		console.log('NotificationSrvc.markedRead()', gwsMessage);
 		var notification = NotificationSrvc.CACHE[gwsMessage.read32()];
 		if (notification) {
+			if (!notification.read()) NotificationSrvc.UNREAD=Math.max(0,NotificationSrvc.UNREAD-1);
 			notification.JSON.note_read = new Date().toISOString();
+			notification.loading=false;
 			$rootScope.updateNotificationCount();
 		}
 	};
@@ -120,7 +118,7 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 	NotificationSrvc.sort = function(notifications) {
 		console.log('NotificationSrvc.sort()', notifications);
 		return notifications.sort(function(a, b) {
-			return b.created() - a.created();
+			return b.created() - a.created() || Number(b.id())-Number(a.id());
 		});
 	};
 	
@@ -144,21 +142,10 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 	};
 	
 	NotificationSrvc.unreadNotificationCount = function() {
-		var gotOne = false;
-		var count = 0;
-		var notes = NotificationSrvc.CACHE;
-		for (var i in notes) {
-			count += notes[i].read() ? 0 : 1;
-			gotOne = true;
-		}
-		console.log('NotificationSrvc.unreadNotificationCount()', count);
-		if (gotOne) {
-			NotificationSrvc.UNREAD = count;
-			return count;
-		}
-		return NotificationSrvc.UNREAD;
-	};
-	
+  // A loaded page is only part of the inbox, not the server's unread total.
+  return NotificationSrvc.UNREAD;
+ };
+
 	////////////////////
 	// --- Delete --- //
 	////////////////////
@@ -166,15 +153,17 @@ angular.module('LUP').service('NotificationSrvc', function($rootScope, $q,
 		console.log('NotificationSrvc.deleteNotification()', notification);
 		var gwsMessage = new GWS_Message().cmd(0x1144).sync().write32(notification.id());
 		return WebsocketSrvc.sendBinary(gwsMessage).then(
-				NotificationSrvc.deletedNotification.bind(NotificationSrvc, notification),
-				ErrorSrvc.websocketMaybeJSONError);
+				NotificationSrvc.deletedNotification.bind(NotificationSrvc, notification));
 
 	};
 	
 	NotificationSrvc.deletedNotification = function(notification, gwsMessage) {
 		console.log('NotificationSrvc.deletedNotification()', notification);
+		if (!notification.read()) NotificationSrvc.UNREAD=Math.max(0,NotificationSrvc.UNREAD-1);
 		delete NotificationSrvc.CACHE[notification.id()];
-		NotificationSrvc.COUNT--;
+		NotificationSrvc.COUNT=Math.max(0,NotificationSrvc.COUNT-1);
+		NotificationSrvc.resort();
+		$rootScope.updateNotificationCount();
 		return notification;
 	};
 

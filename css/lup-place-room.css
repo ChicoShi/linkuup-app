@@ -131,7 +131,13 @@
 .location-page.lup-place .place-chat .place-message.lup-own-msg {justify-content:flex-end;text-align:left;}
 .lup-place .lup-own-msg .place-message-meta {justify-content:flex-end;}
 .lup-place .lup-own-msg .place-bubble {padding-right:36px;border-color:#9bcfff22;border-radius:17px 17px 5px 17px;background:#284564;}
-.lup-place .place-bubble .lup-message-state {right:8px;bottom:4px;left:auto;margin:0;}
+.lup-place .place-bubble .lup-message-state {position:absolute;right:10px;bottom:7px;left:auto;margin:0;width:18px;height:14px;line-height:14px;white-space:nowrap;}
+.lup-place .place-bubble .lup-message-state::after {position:static;inset:auto;display:block;font-size:12px;letter-spacing:-4px;line-height:14px;color:#9bb2c8;}
+.lup-place .place-bubble .lup-message-state.lms-3::after {color:#a0e5ed;}
+.lup-place .place-private-chat .place-message-content {flex:0 1 auto;width:fit-content;max-width:82%;}
+.lup-place .place-private-chat .place-bubble {min-width:28px;box-sizing:border-box;}
+.lup-place .place-topbar .place-profile-button .lup-avatar {box-sizing:border-box;width:32px;height:32px;padding:0;}
+.lup-place .place-topbar .place-profile-button .lup-avatar .img,.lup-place .place-topbar .place-profile-button .lup-avatar span {inset:0;width:100%;height:100%;}
 .location-page.lup-place .place-chat .place-message.lup-system-msg {justify-content:center;}
 .lup-place .lup-system-msg .place-message-content {max-width:92%;}
 .lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aabbd0;text-align:center;}
@@ -480,3 +486,26 @@ md-dialog.place-dialog.place-legal-dialog {width:min(720px,calc(100vw - 32px));m
 
 .lup-place a.place-primary {box-sizing:border-box;text-decoration:none;}
 .lup-place .place-presence > .place-status-dot {flex-shrink:0;}
+
+/* Preview stays visibly distinct and exists only on loopback development hosts. */
+.place-preview-note {box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px;position:relative;z-index:1;margin:5px 18px 10px;padding:8px 12px;border:1px dashed #b8dfed32;border-radius:12px;background:#a5d9ff05;color:#b5dbe9;font-size:11px;line-height:1.4;}
+.place-preview-note button {min-height:32px;padding:0 6px;border:0;background:none;color:#d6f4ff;font:inherit;text-decoration:underline;cursor:pointer;}
+.place-preview-note small {width:100%;text-align:center;color:#93adbf;font-size:10px;}
+.place-preview-conversation {padding:16px 20px;overflow-y:auto;min-height:0;}
+.place-preview-conversation > p {margin:6px 0 22px;font-size:11px;color:#9db9cc;text-align:center;}
+.place-preview-conversation .place-message {display:flex;gap:10px;margin:20px 0;}
+.place-preview-conversation .lup-avatar {flex:none;}
+.place-event-decline {grid-area:auto;display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#ddf3ff06;color:#b8cad9;cursor:pointer;}
+.place-event-decline:disabled,.place-event-accept:disabled {opacity:.35;cursor:default;}
+md-dialog.place-dialog {background:linear-gradient(145deg,#18364cf5,#13263aef);border-color:#d5efff26;box-shadow:inset 0 1px 0 #f0fbff18,0 22px 64px #020b1e70;}
+md-dialog.place-dialog .md-toolbar-tools,md-dialog.place-dialog md-toolbar {background:transparent;color:#eaf6ff;box-shadow:none;}
+md-dialog.place-dialog .lup-profile-friends-actions {padding:4px 18px 18px;overflow-y:auto;min-height:0;}
+md-dialog.place-dialog .lup-profile-friends-actions .md-button {box-sizing:border-box;display:flex;align-items:center;gap:12px;min-height:48px;margin:3px 0;padding:8px 12px;border:0;border-radius:12px;background:#b3e7ff05;color:#d8effb;font-weight:500;text-transform:none;text-align:left;}
+md-dialog.place-dialog .lup-profile-friends-actions .material-icons {flex:none;color:#a3dbee;font-size:20px;}
+
+/* Material's built-in success/error alerts share the app's dialog material. */
+md-dialog.md-default-theme:not(.place-dialog) {max-width:min(480px,calc(100vw - 32px));border:1px solid #d5efff26;border-radius:24px;background:linear-gradient(145deg,#18364cf5,#13263aef);color:#edf7ff;box-shadow:inset 0 1px 0 #ffffff18,0 22px 64px #020b1e70;}
+md-dialog.md-default-theme:not(.place-dialog) .md-dialog-content {padding:26px;color:inherit;font-size:14px;line-height:1.6;}
+md-dialog.md-default-theme:not(.place-dialog) .md-title {font-size:20px;font-weight:500;letter-spacing:-.025em;}
+md-dialog.md-default-theme:not(.place-dialog) .md-dialog-actions {padding:6px 16px 16px;}
+md-dialog.md-default-theme:not(.place-dialog) .md-button {border:0;border-radius:12px;background:#c4ecff0b;color:#cdeeff;text-transform:none;}

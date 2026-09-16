@@ -18,6 +18,7 @@
    <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryFilterActive(category.ids),'is-current-category':isCurrentRoomCategory(category.ids)}" ng-attr-aria-pressed="{{isCategoryFilterActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
   </nav>
 
+  <lup-presence-preview ng-room="data.currentRoom"></lup-presence-preview>
   <div class="location-rail" role="region" tabindex="0" aria-roledescription="{{'NAV_BROWSE'|translate}}" aria-label="{{'LOCATIONS'|translate}}">
    <div ng-repeat="room in data.visibleRooms track by room.id()" class="lup-room-slide-outer" ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
     <article ng-if="$index >= data.currentRoomIndex-2 && $index <= data.currentRoomIndex+2" id="room{{room.id()}}" class="lup-room-slide nav-place" ng-class="categoryVisual(room).class">

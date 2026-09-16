@@ -121,7 +121,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: false,
-		})['catch'](angular.noop);
+		})['catch'](function(reason) { defer.reject(reason); });
 
 		return defer.promise;
 	};
@@ -147,7 +147,7 @@ service('DialogSrvc', function($q, $mdDialog, $mdSidenav, RequestSrvc) {
 			parent: angular.element(document.body),
 			targetEvent: window.event,
 			clickOutsideToClose: true,
-		})['catch'](angular.noop);
+		})['catch'](function(reason) { defer.reject(reason); });
 		return defer.promise;
 	};
 	
