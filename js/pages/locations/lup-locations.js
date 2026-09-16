@@ -904,6 +904,11 @@ angular.module('LUP').config(function($routeProvider) {
 		return $scope.refreshCategoryFilter();
 	};
 
+	$scope.clearLocationSearch = function() {
+		$scope.data.searchvalue = '';
+		return $scope.searchLocation('');
+	};
+
 	//////////
 	// Maps //
 	//////////
