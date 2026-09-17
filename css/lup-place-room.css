@@ -13,6 +13,7 @@
 .lup-place.location-category-sport,.lup-place.location-category-outdoors {--place-category:#a4d4b7;}
 .lup-place.location-category-education {--place-category:#a0d6db;}
 .lup-place.location-category-health {--place-category:#edb0c4;}
+.location-page.lup-place {position:fixed;top:var(--lup-viewport-top,0px);left:0;right:0;height:var(--lup-viewport-height,100dvh);min-height:0;overflow:hidden;}
 .lup-place .place-shell {height:var(--lup-viewport-height,100dvh); min-width:0; min-height:0; overflow:hidden; background:var(--lup-app-field,var(--place-bg));}
 .lup-place button,.lup-place a { -webkit-tap-highlight-color:transparent; }
 .lup-place .place-content {width:100%; max-width:780px; margin:0 auto; padding:18px 20px 24px; box-sizing:border-box;}
@@ -127,10 +128,17 @@
 .location-page.lup-place .place-chat .place-message.lup-system-msg {justify-content:center;}
 .lup-place .lup-system-msg .place-message-content {max-width:92%;}
 .lup-place .lup-system-msg .place-bubble {padding:4px 10px;background:transparent;border:0;font-size:10px;line-height:1.5;color:#aabbd0;text-align:center;}
-.location-page.lup-place .place-chat .chatbottom.place-composer {display:flex;align-items:center;gap:10px;position:relative;left:auto;bottom:auto;flex:0 0 auto;width:100%;max-width:780px;min-height:72px;height:auto;box-sizing:border-box;margin:0 auto;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border:0;border-top:1px solid var(--place-line);background:var(--place-bg);backdrop-filter:none;-webkit-backdrop-filter:none;}
+.location-page.lup-place .place-chat .chatbottom.place-composer {display:flex;align-items:center;gap:10px;position:relative;left:auto;bottom:auto;flex:0 0 auto;width:100%;max-width:780px;min-height:72px;height:auto;box-sizing:border-box;margin:0 auto;padding:12px 18px calc(12px + var(--composer-safe-bottom,env(safe-area-inset-bottom,0px)));border:0;border-top:1px solid var(--place-line);background:var(--place-bg);backdrop-filter:none;-webkit-backdrop-filter:none;}
 .location-page.lup-place .place-chat .place-composer input {float:none;flex:1 1 0;width:0;min-width:0;height:46px;margin:0;padding:0 14px;box-sizing:border-box;border:1px solid #ffffff1a;border-radius:15px;background:#182c43;box-shadow:none;color:var(--place-ink);font:400 16px Roboto,Arial,sans-serif;}
 .lup-place .place-composer input::placeholder {color:#aabbd0;font-size:13px;}
 .location-page.lup-place .place-chat .place-composer .place-send {display:grid;place-items:center;flex:0 0 46px;width:46px;max-width:none;height:46px;min-height:46px;min-width:46px;margin:0;padding:0;border:0;border-radius:15px;background:#9bcfff;color:#162b42;mask:none;-webkit-mask:none;box-shadow:none;cursor:pointer;}
+html.lup-soft-keyboard-open .lup-place {--composer-safe-bottom:0px;}
+.location-page.lup-place .place-chat .place-composer .place-send-link {position:relative;isolation:isolate;border:1px solid #bde6ff66;border-radius:50% 50% 50% 16%;background:linear-gradient(145deg,#e4f5ff,#9bcee8 62%,#73b7d4);box-shadow:inset 0 1px 0 #ffffffd0,0 4px 14px #020b1928;transform:rotate(-6deg);transition:transform 180ms ease;}
+.lup-place .place-send-link svg {width:25px;height:25px;transform:rotate(6deg);fill:none;stroke:#16394d;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.location-page.lup-place .place-chat .place-composer .place-send-link:not(:disabled):active {transform:rotate(-6deg) scale(.92);}
+.location-page.lup-place .place-chat .place-composer .place-send-link:disabled {background:#b5d7e215;box-shadow:inset 0 1px 0 #ffffff12;border-color:#bde6ff25;opacity:.65;}
+.lup-place .place-send-link:disabled svg {stroke:#a3bfd1;}
+@media(prefers-reduced-motion:reduce){.location-page.lup-place .place-chat .place-composer .place-send-link{transition:none;}}
 .lup-place .place-send:disabled {opacity:.4;cursor:default;}
 .lup-place .place-send i {font-size:23px;}
 .lup-place .place-join-state {padding:15px 20px;color:var(--place-muted);font-size:12px;text-align:center;border-top:1px solid var(--place-line);}
@@ -470,11 +478,6 @@ md-dialog.place-dialog.place-legal-dialog {width:min(720px,calc(100vw - 32px));m
 .lup-place a.place-primary {box-sizing:border-box;text-decoration:none;}
 .lup-place .place-presence > .place-status-dot {flex-shrink:0;}
 
-/* Preview stays visibly distinct and exists only on loopback development hosts. */
-.place-preview-conversation {padding:16px 20px;overflow-y:auto;min-height:0;}
-.place-preview-conversation > p {margin:6px 0 22px;font-size:11px;color:#9db9cc;text-align:center;}
-.place-preview-conversation .place-message {display:flex;gap:10px;margin:20px 0;}
-.place-preview-conversation .lup-avatar {flex:none;}
 .place-event-decline {grid-area:auto;display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#ddf3ff06;color:#b8cad9;cursor:pointer;}
 .place-event-decline:disabled,.place-event-accept:disabled {opacity:.35;cursor:default;}
 md-dialog.place-dialog {background:linear-gradient(145deg,#18364cf5,#13263aef);border-color:#d5efff26;box-shadow:inset 0 1px 0 #f0fbff18,0 22px 64px #020b1e70;}

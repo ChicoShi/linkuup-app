@@ -1,52 +1,47 @@
-<section class="likes-page" layout="row" flex>
-
-    <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
-
-	<md-content layout="column" flex>
-
-		<ng-include src="'js/pages/likes/lup-likes-header.html?v='+V"></ng-include>
-		
-		<section class="ups-hero" aria-labelledby="ups-title">
-		  <div class="ups-hero-copy">
-		    <span>{{'UPS_EYEBROW'|translate}}</span>
-		    <h1 id="ups-title" ng-if="data.isOwnLikeList">{{'TITLE_UPS'|translate}}</h1>
-		    <h1 id="ups-title" ng-if="!data.isOwnLikeList">{{'UPS_FOR'|translate:{user:data.likeuser.displayName()} }}</h1>
-		    <p ng-if="data.totalUps">{{'UPS_TOTAL_COPY'|translate:{count:data.totalUps} }}</p>
-		    <p ng-if="!data.totalUps">{{'UPS_EMPTY_INTRO'|translate}}</p>
-		  </div>
-		  <div class="ups-hero-mark" aria-hidden="true"><i class="material-icons">favorite</i><b></b></div>
-		</section>
-
-		<section class="ups-favorite" ng-if="data.topUpGiver" aria-label="{{'UPS_FAVORITE_TITLE'|translate}}">
-		  <div class="ups-favorite-label"><i class="material-icons" aria-hidden="true">auto_awesome</i>{{'UPS_FAVORITE_TITLE'|translate}}</div>
-		  <div class="ups-favorite-person" ng-click="gotoProfile(data.topUpGiver)">
-		    <lup-avatar ng-user="data.topUpGiver"></lup-avatar>
-		    <div><strong>{{data.topUpGiver.displayName()}}</strong><span>{{'UPS_FAVORITE_COPY'|translate}}</span></div>
-		    <i class="material-icons" aria-hidden="true">arrow_forward</i>
-		  </div>
-		</section>
-
-		<section class="ups-empty-preview" ng-if="!data.topUpGiver">
-		  <i class="material-icons" aria-hidden="true">group</i>
-		  <div><strong>{{'UPS_EMPTY_TITLE'|translate}}</strong><span>{{'UPS_EMPTY_COPY'|translate}}</span></div>
-		</section>
-
-		<md-list flex class="md-dense ups-list" ng-if="data.likes.length">
-		  <div class="ups-list-label"><span>{{'UPS_ALL_TITLE'|translate}}</span></div>
-		  <div class="lup-user-list">
-			  <md-list-item class="md-2-line up-giver-card" ng-repeat="user in data.likes track by user.id()">
-				<lup-avatar ng-user="user" ng-click="gotoProfile(user)"></lup-avatar>
-				<div class="md-list-item-text" layout="column">
-				  <p class="username">{{user.displayName()}}</p>
-				  <p class="lup-user-status">{{'UPS_GIVER_COUNT'|translate:{count:user.likedMe} }}</p>
-				</div>
-				<div class="lup-user-actions">
-				  <button class="lup-user-action lup-user-action-message" type="button" aria-label="Nachricht senden" title="Nachricht senden" ng-click="gotoQuery(user)" ng-if="!user.isSelf()"><i class="material-icons">chat_bubble</i></button>
-				</div>
-			  </md-list-item>
-		   </div>
-		</md-list>
-
-	</md-content>
-
+<section class="likes-page ups-view" layout="row" flex>
+  <ng-include class="left-sidebar" src="'js/pages/sidenav/lup-sidenav.html?v='+V"></ng-include>
+  <md-content layout="column" flex>
+    <ng-include src="'js/pages/likes/lup-likes-header.html?v='+V"></ng-include>
+    <div class="ups-scroll">
+      <main class="ups-content" ng-attr-aria-busy="{{data.upsLoading}}">
+        <header class="ups-heading">
+          <span class="ups-eyebrow">{{'UPS_EYEBROW'|translate}}</span>
+          <h1 ng-if="data.isOwnLikeList || !data.likeuser">{{'TITLE_UPS'|translate}}</h1>
+          <h1 ng-if="!data.isOwnLikeList && data.likeuser">{{'UPS_FOR'|translate:{user:data.likeuser.displayName()} }}</h1>
+          <p class="ups-caption">{{'UPS_INTRO'|translate}}</p>
+        </header>
+        <div class="ups-signal" aria-hidden="true">
+          <svg viewBox="0 0 280 200" focusable="false">
+            <defs>
+              <linearGradient id="ups-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9f5ff" stop-opacity=".32"/><stop offset=".45" stop-color="#86cfff" stop-opacity=".08"/><stop offset="1" stop-color="#e1b2ce" stop-opacity=".16"/></linearGradient>
+              <linearGradient id="ups-edge" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e5f8ff" stop-opacity=".8"/><stop offset=".5" stop-color="#8ac7e7" stop-opacity=".15"/><stop offset="1" stop-color="#e4c0d1" stop-opacity=".5"/></linearGradient>
+            </defs>
+            <path ng-if="data.upConnections.length" d="M21 45Q58 45 84 85M140 147v15M258 53Q218 53 196 85" fill="none" stroke="#bddfff" stroke-opacity=".16" stroke-width="1"/>
+            <path class="ups-heart-echo" d="M140 148C119 135 75 104 75 73C75 35 119 30 140 57C161 30 205 35 205 73C205 104 161 135 140 148Z"/>
+            <path class="ups-heart" d="M140 148C119 135 75 104 75 73C75 35 119 30 140 57C161 30 205 35 205 73C205 104 161 135 140 148Z" fill="url(#ups-glass)" stroke="url(#ups-edge)" stroke-width="1.3"/>
+          </svg>
+          <span class="ups-signal-core" ng-if="data.likeuser"><lup-avatar ng-user="data.likeuser"></lup-avatar></span>
+          <span class="ups-signal-dot" ng-repeat="connection in data.upConnections | limitTo:3 track by connection.user.id()"><lup-avatar ng-user="connection.user"></lup-avatar></span>
+        </div>
+        <div class="ups-totals" ng-if="!data.upsLoading && !data.upsError"><i class="material-icons" aria-hidden="true">favorite</i><strong>{{data.totalUps}}</strong><span>{{'TITLE_UPS'|translate}}</span></div>
+        <section class="ups-state" ng-if="data.upsLoading" role="status"><p>{{'UPS_LOADING'|translate}}</p></section>
+        <section class="ups-state" ng-if="data.upsError" role="status"><p>{{'UPS_LOAD_ERROR'|translate}}</p><button type="button" ng-click="init()"><i class="material-icons" aria-hidden="true">refresh</i>{{'PLACE_RETRY'|translate}}</button></section>
+        <section class="ups-state" ng-if="!data.upsLoading && !data.upsError && !data.upConnections.length">
+          <h2>{{'UPS_EMPTY_TITLE'|translate}}</h2><p>{{'UPS_EMPTY_COPY'|translate}}</p>
+        </section>
+        <section ng-if="data.upConnections.length" aria-labelledby="ups-connections-title">
+          <header class="ups-connections-heading"><h2 id="ups-connections-title">{{'UPS_ALL_TITLE'|translate}}</h2><small>{{data.upConnections.length}}</small></header>
+          <ol class="ups-connections">
+            <li class="ups-person" ng-repeat="connection in data.upConnections track by connection.user.id()">
+              <button type="button" class="ups-person-open" ng-click="gotoProfile(connection.user)">
+                <span class="ups-person-avatar" aria-hidden="true"><lup-avatar ng-user="connection.user"></lup-avatar></span>
+                <span class="ups-person-copy"><strong>{{connection.user.displayName()}}</strong><small><i class="material-icons" aria-hidden="true">favorite</i>{{'UPS_GIVER_COUNT'|translate:{count:connection.count} }}</small></span>
+              </button>
+              <button class="ups-person-message" type="button" ng-if="!connection.user.isSelf()" ng-click="gotoQuery(connection.user)" aria-label="{{'UPS_MESSAGE'|translate:{name:connection.user.displayName()} }}"><i class="material-icons" aria-hidden="true">chat_bubble_outline</i></button>
+            </li>
+          </ol>
+        </section>
+      </main>
+    </div>
+  </md-content>
 </section>

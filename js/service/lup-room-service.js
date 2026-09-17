@@ -5,54 +5,8 @@
 angular.module('LUP').
 service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc, WebsocketSrvc, TypeSrvc) {
 	var RoomSrvc = this;
- // Development-only, explicitly labelled preview. Server membership, GPS,
- // messages and the user cache are never changed by these display fixtures.
- var previewHost=/^(localhost|app\.localhost|127\.0\.0\.1|\[::1\])$/.test(window.location && window.location.hostname || '');
- var previewKey='lup-local-presence-preview',previewOn=false;
- try {previewOn=previewHost && (/^(presence|balloons)$/.test(new URLSearchParams(window.location.search).get('preview')) || window.sessionStorage.getItem(previewKey)==='1');}catch(e){}
- RoomSrvc.PREVIEW={enabled:previewOn,users:[]};
- RoomSrvc.previewPossible=function(room){return previewHost && !!room && /^Braunschweig Chat$/i.test(room.name());};
- RoomSrvc.isPreviewRoom=function(room){return RoomSrvc.PREVIEW.enabled && RoomSrvc.previewPossible(room);};
- RoomSrvc.togglePreview=function(){RoomSrvc.PREVIEW.enabled=!RoomSrvc.PREVIEW.enabled;try{window.sessionStorage.setItem(previewKey,RoomSrvc.PREVIEW.enabled?'1':'0');}catch(e){}};
- RoomSrvc.displayUsers=function(room){
-  if(!RoomSrvc.isPreviewRoom(room))return room ? room.USERS : [];
-  if(!RoomSrvc.PREVIEW.users.length && !RoomSrvc.PREVIEW.simulating){
-   RoomSrvc.PREVIEW.users=Array.from({length:20},function(_,i){
-    var colors=['#78c6df','#a8bfe6','#d6b58c','#9fcebe','#c7b6dc'],skin=['#e6b995','#bd8567','#845744','#f0cfaf'];
-    var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="'+colors[i%5]+'"/><path d="M5 64Q6 40 32 40Q58 40 59 64" fill="'+['#284b68','#405677','#735565'][i%3]+'"/><ellipse cx="32" cy="29" rx="13" ry="16" fill="'+skin[i%4]+'"/><path d="M18 27Q13 8 32 9Q53 9 46 29L42 19Q31 25 22 18Z" fill="'+['#36303b','#624a3d','#a38162'][i%3]+'"/><path d="M26 30h2m8 0h2" stroke="#33303a" stroke-width="2" stroke-linecap="round"/><path d="M28 37q4 3 8 0" stroke="#865f55" fill="none" stroke-linecap="round"/></svg>';
-    return {isPreview:true,JSON:{},id:function(){return -1000-i;},displayName:function(){return window.t('PREVIEW_GUEST')+' '+String(i+1).padStart(2,'0');},avatarURI:function(){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);},isMale:function(){return false;},isFemale:function(){return false;},isMember:function(){return false;},isSelf:function(){return false;},isFriend:function(){return false;},likes:function(){return 0;}};
-   });
-  }
-  return RoomSrvc.PREVIEW.users;
- };
-
- // Deterministic five-minute display rehearsal. Never insert these fixtures in
- // room.USERS, UserSrvc or a WebSocket message, even when the real room updates.
- RoomSrvc.createPresenceSimulation=function(room){
-  if(!RoomSrvc.isPreviewRoom(room) || RoomSrvc.PREVIEW.simulating)return null;
-  var pool=RoomSrvc.displayUsers(room).slice(),roster=[],events=[],cursor=0;
-  function phase(count,start,step,join){
-   for(var i=0;i<count;i++){
-    if(join){var absent=pool.filter(function(user){return roster.indexOf(user)<0;});roster.push(absent[0]);}
-    else roster.splice((events.length*7+3)%roster.length,1);
-    events.push({at:start+i*step,users:roster.slice()});
-   }
-  }
-  phase(20,1000,2000,true); phase(20,52000,3000,false);
-  phase(20,132000,3000,true); phase(10,204000,3000,false);
-  phase(5,240000,2000,true); phase(3,260000,6000,false); phase(8,276000,3000,true);
-  RoomSrvc.PREVIEW.simulating=true;RoomSrvc.PREVIEW.users=[];
-  var simulation={duration:300000,elapsed:0,running:true,done:false,
-   advance:function(delta){
-    if(!simulation.running || simulation.done)return;
-    simulation.elapsed=Math.min(simulation.duration,simulation.elapsed+Math.max(0,delta));
-    while(cursor<events.length && events[cursor].at<=simulation.elapsed){RoomSrvc.PREVIEW.users=events[cursor++].users.slice();}
-    if(simulation.elapsed===simulation.duration){simulation.running=false;simulation.done=true;}
-   },
-   stop:function(){simulation.running=false;RoomSrvc.PREVIEW.simulating=false;RoomSrvc.PREVIEW.users=pool;}
-  };
-  return simulation;
- };
+	// Presence always reflects the server roster, including on local hosts.
+	RoomSrvc.displayUsers = function(room) { return room && room.USERS || []; };
 
 
 	// Assign services to LUPRoom model.

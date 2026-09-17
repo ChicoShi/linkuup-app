@@ -39,8 +39,6 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.selectedTab = $scope.data.selectedTab || 0;
 	$scope.data.selectedTab2 = $scope.data.selectedTab2 || 0;
 	$scope.data.manualLocationTab = false;
- $scope.isPresencePreview = function(){return RoomSrvc.isPreviewRoom ? RoomSrvc.isPreviewRoom($scope.data.room) : false;};
- $scope.previewGuests = function(){return RoomSrvc.displayUsers ? RoomSrvc.displayUsers($scope.data.room) : [];};
 	$scope.data.rating = 3;
 	$scope.data.commentText = '';
 	$scope.data.commentInput = '';
@@ -135,7 +133,7 @@ angular.module('LUP').config(function($routeProvider) {
 			/* Reading who is visibly present is an information view. Only Chat is
 			 * access-controlled by the physical radius; otherwise Online visibly
 			 * opens and then gets reset to Location after the room payload arrives. */
-			if (tab === 1 && !$scope.inChatRange() && !$scope.isPresencePreview()) {
+			if (tab === 1 && !$scope.inChatRange()) {
 				tab = 0;
 			}
 			$scope.data.selectedTab = tab;
@@ -344,7 +342,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.chatVisible = function() {
-        if ($scope.isPresencePreview()) return;
 		console.log('LocationCtrl.chatVisible()', $scope.data.room);
 		// The room payload can briefly still show the own avatar after a route or
 		// websocket transition.  That visual state is not proof of a live server
@@ -413,7 +410,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.sendMessage = function() {
-        if ($scope.isPresencePreview()) return;
 		console.log('LocationCtrl.sendMessage()');
 		var message = ($scope.data.message || '').trim();
 		if (message) {

@@ -3,73 +3,60 @@ angular.module('LUP').config(function($routeProvider) {
 	$routeProvider.when('/likes/:id', {
 		templateUrl: 'js/pages/likes/lup-likes.html?v='+window.LUP_BUILD,
 		controller: 'LikesCtrl',
-		params: {
-			authCheck: true,
-		}
+		params: { authCheck: true }
 	});
-}).controller('LikesCtrl', function($scope, $routeParams, $translate,
-		HelpSrvc, UserSrvc, LikeSrvc, ErrorSrvc) {
-	
-	// Main
+}).controller('LikesCtrl', function($scope, $routeParams, $q, UserSrvc, LikeSrvc) {
 	$scope.data.title = 'TITLE_UPS';
-	
-	// Data to work on
-	$scope.data.pagemenu = new GWFPagination();
-	$scope.data.likes = [];
-	$scope.data.topUpGiver = null;
+	$scope.data.likeuser = null;
+	$scope.data.upConnections = [];
 	$scope.data.totalUps = 0;
+	$scope.data.upsLoading = false;
+	$scope.data.upsError = false;
+	$scope.data.isOwnLikeList = false;
+	var pending = null, destroyed = false;
 
-	// Hook services into template
-	$scope.LikeSrvc = LikeSrvc;
-	
 	$scope.init = function() {
-		console.log('LikesCtrl.init()', $routeParams.id);
-		if ($scope.data.authenticated) {
-			$scope.data.likes = [];
-			$scope.data.user = window.GWF_USER;
-			$scope.data.pagemenu = new GWFPagination();
-			UserSrvc.withUser($routeParams.id).then($scope.loadedUser)['catch']($scope.catchUnknown);
-			HelpSrvc.showHelp('likes', $translate.instant('HELP_LIKES'));
-		}
-	};
-	
-	$scope.loadedUser = function(user) {
-		console.log('LikesCtrl.loadedUser()', user);
-		$scope.data.likeuser = user;
-		$scope.data.isOwnLikeList = $scope.data.user && user.id() === $scope.data.user.id();
-		$scope.loadLikers();
-	};
-	
-	$scope.loadLikers = function() {
-		console.log("LikesCtrl.loadLikers()", $scope.data.pagemenu.page+1);
-		var page = $scope.data.pagemenu.nextPage();
-		if (page) {
-			LikeSrvc.getLikeList($scope.data.likeuser, page).
-			then($scope.loadedLikers, ErrorSrvc.websocketError);
-		}
-	};
-	
-	$scope.loadedLikers = function(gwsMessage) {
-		var forUser = gwsMessage.read32(); // stub
-//		$scope.data.pagemenu = GWFPagination.fromGWSMessage(gwsMessage); // pager
-		console.log("LikesCtrl.loadedLikers()", $scope.data.pagemenu);
-		while (gwsMessage.hasMore()) {
-			var friend = UserSrvc.getOrCreate(gwsMessage.read32());
-			friend.likedMe = gwsMessage.read32();
-			$scope.data.likes.push(friend);
-		}
-		$scope.data.likes.sort(function(a, b) {
-			return Number(b.likedMe || 0) - Number(a.likedMe || 0);
+		if (!$scope.data.authenticated || destroyed) return;
+		if (pending) return pending;
+		var requestedId = Number($routeParams.id);
+		$scope.data.upConnections = [];
+		$scope.data.totalUps = 0;
+		$scope.data.upsError = false;
+		$scope.data.upsLoading = true;
+		pending = UserSrvc.withUser(requestedId).then(function(user) {
+			if (destroyed) return;
+			$scope.data.likeuser = user;
+			$scope.data.isOwnLikeList = user.isSelf();
+			// The current command returns the complete list, without a pager.
+			return LikeSrvc.getLikeList(user, 1);
+		}).then(function(message) {
+			if (destroyed) return;
+			if (!message || Number(message.read32()) !== requestedId) throw new Error('Ups profile mismatch');
+			var counts = {};
+			while (message.hasMore()) {
+				var id = message.read32(), count = message.read32();
+				if (!Number.isInteger(id) || id <= 0 || !Number.isInteger(count) || count < 0) throw new Error('Invalid Ups record');
+				counts[id] = count;
+			}
+			// IDs alone render blank portraits. Resolve the actual users, keeping
+			// per-profile counts out of the globally shared user cache.
+			return $q.all(Object.keys(counts).map(function(id) {
+				return UserSrvc.withUser(Number(id)).then(function(user) { return {user:user, count:counts[id]}; });
+			}));
+		}).then(function(connections) {
+			if (destroyed) return;
+			connections.sort(function(a,b) { return b.count-a.count || a.user.id()-b.user.id(); });
+			$scope.data.upConnections = connections;
+			$scope.data.totalUps = connections.reduce(function(total, connection) { return total+connection.count; },0);
+		}).catch(function() {
+			if (!destroyed) $scope.data.upsError = true;
+		}).finally(function() {
+			pending = null;
+			if (!destroyed) $scope.data.upsLoading = false;
 		});
-		$scope.data.topUpGiver = $scope.data.likes[0] || null;
-		$scope.data.totalUps = $scope.data.likes.reduce(function(total, user) {
-			return total + Number(user.likedMe || 0);
-		}, 0);
+		return pending;
 	};
-	
-	////////////////////
-	// --- Events --- //
-	////////////////////
+	$scope.$on('$destroy', function() { destroyed = true; });
 	$scope.$on('lup-inited', $scope.init);
 	$scope.$on('$viewContentLoaded', $scope.init);
 });
