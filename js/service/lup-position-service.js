@@ -20,7 +20,7 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 			// A recent position gives the discovery rail an immediate distance after
 			// refresh. The watch below still replaces it with a fresh GPS fix.
 			maximumAge: 300000,
-			timeout: 12000
+			timeout: 24000
 	};
 
 	PositionSrvc.UNKNOWN = 1;

@@ -16,6 +16,7 @@
 "PROFILE_UPLOAD_PHOTO": "Profilbild ändern",
 "ERR_OWN_AVATAR_ONLY": "Du kannst nur dein eigenes Profilbild ändern.",
 "err_position_timeout": "Die Standortermittlung hat zu lange gedauert. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+"err_no_location": "Wir können den Standort nicht ermitteln, was für LinkUUp erforderlich ist.",
 
 "load_fbinit": "Anmeldung wird vorbereitet",
 "load_http": "Server wird kontaktiert",
@@ -23,6 +24,12 @@
 "load_positioning": "Standort wird ermittelt",
 "load_ws_rooms": "Orte werden geladen",
 "load_wsconnect": "Chat wird verbunden",
+
+"PLACE_CHAT_LAST_SHOUT": "Letzter Shout",
+"PLACE_CHAT_NO_SHOUT": "Noch kein Shout",
+"PLACE_CHAT_LAST_JOIN": "Letzter Beitritt",
+"PLACE_CHAT_NO_JOIN": "Noch niemand beigetreten",
+"PLACE_CHAT_JOINED": "ist dem Chat beigetreten",
 
 "HELP_LOCATIONS": "Hier findest du alle Locations in deiner Nähe<br/>Du kannst nur Chats beitreten wenn du in der nähe bist.",
 "HELP_LOCATION": "Klicke auf die Sterne um eine Bewertung abzugeben. Klicke auf die Bewertung um mehr zu sehen.",

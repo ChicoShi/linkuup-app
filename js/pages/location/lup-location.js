@@ -30,6 +30,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.LikeSrvc = LikeSrvc;
 	$scope.FriendSrvc = FriendSrvc;
+	$scope.ChatSrvc = ChatSrvc;
 	
 	$scope.data.room = $scope.data.room||RoomSrvc.BLANK_ROOM;
 	$scope.data.message = '';

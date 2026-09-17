@@ -105,6 +105,12 @@
 .lup-place .place-panel-heading p {margin:8px 0 0;color:var(--place-muted);font-size:12px;line-height:1.6;}
 .lup-place .place-chat > .place-panel-heading {width:100%;max-width:780px;box-sizing:border-box;margin:0 auto;padding:18px 20px 16px;border-bottom:1px solid var(--place-line);flex-shrink:0;}
 .lup-place .place-chat > .place-panel-heading h2 {font-size:19px;}
+.lup-place .place-chat-events {width:100%;max-width:780px;box-sizing:border-box;margin:0 auto;padding:7px 20px;border-bottom:1px solid var(--place-line);color:var(--place-muted);font-size:11px;line-height:1.45;flex-shrink:0;}
+.lup-place .place-chat-events p {display:flex;align-items:baseline;gap:7px;min-width:0;margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lup-place .place-chat-events i {flex:0 0 auto;color:#9bcfff;font-size:15px;vertical-align:-3px;}
+.lup-place .place-chat-event-label {flex:0 0 76px;color:#aabbd0;font-size:10px;text-transform:uppercase;letter-spacing:.045em;}
+.lup-place .place-chat-events strong {color:var(--place-ink);font-weight:500;}
+.lup-place .place-chat-events em {font-style:normal;color:#7890a8;}
 .lup-place .place-small-presence {display:flex;flex-shrink:0;align-items:center;gap:6px;min-width:60px;min-height:44px;padding:0 10px;border:1px solid var(--place-line);border-radius:13px;background:#ffffff04;color:var(--place-ink);font:500 12px Roboto,Arial,sans-serif;cursor:pointer;}
 .lup-place .place-small-presence i {font-size:17px;color:var(--place-muted);}
 .location-page.lup-place .place-chat .place-messages {display:block;flex:1 1 0;min-height:0;height:auto;width:100%;max-width:780px;margin:0 auto;padding:20px;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;background:transparent;scrollbar-width:thin;scrollbar-color:#9bcfff40 transparent;}

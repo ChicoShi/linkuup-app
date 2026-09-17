@@ -15,6 +15,7 @@
 "ERR_OWN_AVATAR_ONLY": "You can only change your own profile picture.",
 "err_position_unavailable": "Your location could not be determined. Check that location services are enabled and try again.",
 "err_position_timeout": "Determining your location took too long. Check your connection and try again.",
+"err_no_location": "LinkUUp을 이용하려면 위치 정보가 필요하지만 현재 위치를 확인할 수 없습니다.",
 
 "load_fbinit": "로그인 준비 중",
 "load_http": "서버에 연결 중",
@@ -22,6 +23,12 @@
 "load_positioning": "위치를 확인 중",
 "load_ws_rooms": "장소를 불러오는 중",
 "load_wsconnect": "채팅에 연결 중",
+
+"PLACE_CHAT_LAST_SHOUT": "최근 외침",
+"PLACE_CHAT_NO_SHOUT": "아직 외침이 없습니다",
+"PLACE_CHAT_LAST_JOIN": "최근 입장",
+"PLACE_CHAT_NO_JOIN": "아직 입장한 사람이 없습니다",
+"PLACE_CHAT_JOINED": "님이 채팅에 입장했습니다",
 
 "HELP_LOCATIONS": "Here you will find all locations near you<br/>You can only join chats within the chat radius.",
 "HELP_LOCATION": "Click on the stars to rate this room. Click on the ratings to view more of them.",

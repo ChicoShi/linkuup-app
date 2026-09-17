@@ -254,12 +254,10 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			// as the discovery view renders. PositionSrvc deduplicates this request,
 			// so navigating through the app cannot create additional prompts.
 			var position = PositionSrvc.probe();
-			// GPS is useful for nearby rooms, but a temporary browser timeout must
-			// never abort the whole application or throw the user back to login.
-			// PositionSrvc will retry through its normal refresh cycle.
+			// GPS failures do not abort startup, but they must be visible because
+			// LinkUUp's room access depends on a real location.
 			position['catch'](function(error) {
-				console.warn('LinkUUp: initial GPS position unavailable; continuing.', error);
-				return null;
+				return $scope.failedPosition(error);
 			});
 			var types = TypeSrvc.withTypes();
 			types['catch']($scope.failedTypes);
@@ -310,18 +308,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	
 	$scope.failedPosition = function(error) {
 		console.log('LUPCtrl.failedPosition()', error);
-		var key = 'err_position_unavailable';
-		if (error && error.code === PositionSrvc.PERMISSION_DENIED) {
-			key = 'err_position_permission_denied';
-		}
-		else if (error && error.code === PositionSrvc.TIMEOUT) {
-			key = 'err_position_timeout';
-		}
-		return ErrorSrvc.showError($translate.instant(key), 'Position').
-			then(function(){
-				$scope.gotoLogin();
-				throw "GPS Error";
-			});
+		return ErrorSrvc.showError($translate.instant('err_no_location'), 'Position').then(function() {
+			// The alert has one affirmative action. Retrying here keeps the user in
+			// context and lets a late GPS fix or newly granted permission recover.
+			return PositionSrvc.probe().then(function(position) {
+				return $q.when($scope.updatePosition(position)).then(function() { return position; });
+			}, $scope.failedPosition);
+		});
 	};
 	
 	$scope.failedTypes = function(error) {
@@ -818,6 +811,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (room) {
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);
+			ChatSrvc.noteEvent('join', room, user, '', time);
 			$rootScope.$broadcast('lup-room-presence', room, user, 'join', time);
 			if (!user.isSelf()) {
 				FXSrvc.play('event');
@@ -892,6 +886,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		var room = RoomSrvc.getOrCreate(gwsMessage.read32());
 		var message = room.addMessage(time, user, room, gwsMessage.readString());
 		message.shout = true;
+		ChatSrvc.noteEvent('shout', room, user, message.text, time);
 		message.effect = 'blubble';
 		FXSrvc.onChat(user, room);
 		$rootScope.$broadcast('lup-room-message', room, message);

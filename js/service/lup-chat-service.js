@@ -7,9 +7,21 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	ChatSrvc.MESSAGES = {};
 	ChatSrvc.QUERIES = [];
 	ChatSrvc.CHATROOM = null;
+	// Small, live event summary shown above a room conversation. Keep only the
+	// newest relevant event of each type; full history remains in the chat.
+	ChatSrvc.EVENTS = {shout: null, join: null};
 	ChatSrvc.UNREAD = 0;
 	ChatSrvc.CHATS_LOADED = false;
 	ChatSrvc.CHATS_LOADING = null;
+
+	ChatSrvc.noteEvent = function(type, room, user, text, time) {
+		ChatSrvc.EVENTS[type] = {room: room, user: user, text: text || '', time: time};
+	};
+
+	ChatSrvc.eventForRoom = function(type, room) {
+		var event = ChatSrvc.EVENTS[type];
+		return event && room && event.room && event.room.id() === room.id() ? event : null;
+	};
 	
 	/**
 	 * Join a channel

@@ -15,6 +15,7 @@
 "ERR_OWN_AVATAR_ONLY": "You can only change your own profile picture.",
 "err_position_unavailable": "Your location could not be determined. Check that location services are enabled and try again.",
 "err_position_timeout": "Determining your location took too long. Check your connection and try again.",
+"err_no_location": "We cannot determine your location, which is required for LinkUUp.",
 
 "load_fbinit": "Preparing sign-in",
 "load_http": "Contacting the server",
@@ -22,6 +23,12 @@
 "load_positioning": "Determining your location",
 "load_ws_rooms": "Loading places",
 "load_wsconnect": "Connecting to chat",
+
+"PLACE_CHAT_LAST_SHOUT": "Last shout",
+"PLACE_CHAT_NO_SHOUT": "No shout yet",
+"PLACE_CHAT_LAST_JOIN": "Last join",
+"PLACE_CHAT_NO_JOIN": "No one joined yet",
+"PLACE_CHAT_JOINED": "joined the chat",
 
 "HELP_LOCATIONS": "Here you will find all locations near you<br/>You can only join chats within the chat radius.",
 "HELP_LOCATION": "Click on the stars to rate this room. Click on the ratings to view more of them.",
