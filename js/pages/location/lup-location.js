@@ -26,7 +26,7 @@ angular.module('LUP').config(function($routeProvider) {
 	});
 }).controller('LocationCtrl', function($scope, $location, $route, $routeParams, $mdDialog, $translate, $timeout,
 		RoomSrvc, CommentSrvc, ChatSrvc, UserSrvc, AuthSrvc, LikeSrvc, FriendSrvc,
-		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, PositionSrvc, ConfigSrvc) {
+		WebsocketSrvc, ErrorSrvc, DialogSrvc, HelpSrvc, PositionSrvc, ConfigSrvc, ShoutSrvc) {
 	
 	$scope.LikeSrvc = LikeSrvc;
 	$scope.FriendSrvc = FriendSrvc;
@@ -437,27 +437,12 @@ angular.module('LUP').config(function($routeProvider) {
 
 	$scope.sendShout = function() {
 		var message = ($scope.data.message || '').trim();
-		var creditsKM = ConfigSrvc.shoutCreditsKM();
 		if (!message) {
 			return;
 		}
-		return $mdDialog.show($mdDialog.prompt()
-			.title('Shout-Reichweite')
-			.textContent('Von deiner aktuellen GPS-Position. Kosten: ' + creditsKM + ' Credits pro km.')
-			.placeholder('Radius in km')
-			.initialValue('1')
-			.ariaLabel('Shout-Reichweite')
-			.ok('Senden')
-			.cancel('Abbrechen'))
-		.then(function(radius) {
-			radius = Math.floor(Number(radius));
-			if (radius < 1) {
-				return ErrorSrvc.showError('Bitte mindestens 1 km wählen.', 'Shout');
-			}
-			return ChatSrvc.sendShout(radius, message).then(function(result) {
-				$scope.data.message = '';
-				return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
-			}, ErrorSrvc.websocketError);
+		return ShoutSrvc.open(message).then(function(result) {
+			$scope.data.message = '';
+			return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
 		})['catch'](angular.noop);
 	};
 

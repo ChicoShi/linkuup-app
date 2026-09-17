@@ -5,7 +5,7 @@ angular.module('LUP').
 controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $location, $mdMedia, $mdSidenav, $mdToast, $mdDialog, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
-		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc,
+		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc, ShoutSrvc,
 		CategorySrvc, NotificationSrvc, CountrySrvc, TimezoneSrvc) {
 	
 	// Hook Services into model globals;
@@ -457,35 +457,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		window.location.href = window.LUP_CONFIG.server + 'index.php?_mo=PaymentCredits&_me=OrderCredits';
 	};
 	$scope.openShout = function() {
-		var creditsKM = ConfigSrvc.shoutCreditsKM();
-		return $mdDialog.show($mdDialog.prompt()
-			.title('Shout-Reichweite')
-			.textContent('Von deiner aktuellen GPS-Position. Kosten: ' + creditsKM + ' Credits pro km.')
-			.placeholder('Radius in km')
-			.initialValue('1')
-			.ariaLabel('Shout-Reichweite')
-			.ok('Weiter')
-			.cancel('Abbrechen'))
-		.then(function(radius) {
-			radius = Math.floor(Number(radius));
-			if (radius < 1) {
-				return ErrorSrvc.showError('Bitte mindestens 1 km wählen.', 'Shout');
-			}
-			return $mdDialog.show($mdDialog.prompt()
-			.title('Shout')
-			.textContent('Reichweite: ' + radius + ' km. Kosten: ' + (radius * creditsKM) + ' Credits.')
-			.placeholder('Dein Shout')
-			.ariaLabel('Shout')
-			.ok('Senden')
-			.cancel('Abbrechen')).then(function(text) {
-			text = (text || '').trim();
-			if (!text) {
-				return;
-			}
-			return ChatSrvc.sendShout(radius, text).then(function(result) {
-				return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
-			}, ErrorSrvc.websocketError);
-			});
+		return ShoutSrvc.open().then(function(result) {
+			return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
 		})['catch'](angular.noop);
 	};
 	$scope.gotoAddRoom = function() {

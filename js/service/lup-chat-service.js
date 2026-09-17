@@ -80,12 +80,19 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	};
 
 	/** Send a paid broadcast without pretending the sender joined every room. */
-	ChatSrvc.sendShout = function(radius, message) {
-		var gwsMessage = new GWS_Message().cmd(0x1166).sync().write32(radius).writeString(message);
+	ChatSrvc.sendShout = function(radius, message, center) {
+		var radiusKM = Math.max(0.001, Number(radius) || 0);
+		/* The leading integer is the legacy whole-kilometre radius. */
+		var gwsMessage = new GWS_Message().cmd(0x1166).sync().write32(Math.ceil(radiusKM)).writeString(message);
+		/* Optional centre follows the legacy payload, keeping older clients valid. */
+		if (center && Number.isFinite(Number(center.lat)) && Number.isFinite(Number(center.lng))) {
+			gwsMessage.writeFloat(Number(center.lat)).writeFloat(Number(center.lng));
+			gwsMessage.write32(Math.round(radiusKM * 1000));
+		}
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(reply) {
 			var result = {
 				credits: reply.read32(),
-				radius: reply.read32(),
+				radius: reply.read32() / 1000,
 				locations: reply.read32(),
 				recipients: reply.read32()
 			};

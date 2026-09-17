@@ -1,0 +1,12 @@
+.lup-shout-dialog { width:min(94vw,680px); background:#171827; }
+.lup-shout-dialog md-toolbar { background:#4a1020; }
+.lup-shout-dialog .md-toolbar-tools i { margin-right:10px; }
+.lup-shout-dialog-content { padding:16px 20px 4px; }
+.lup-shout-cost { margin:0 0 12px; color:#ffdbe0; font-size:18px; font-weight:700; }
+.lup-shout-cost small { color:#dba5af; font-size:12px; font-weight:500; }
+.lup-shout-map { height:330px; overflow:hidden; border:1px solid #a73a4b; border-radius:10px; background:#14131a; }
+.lup-shout-map-status { min-height:20px; margin:8px 0 2px; color:#dba5af; font-size:12px; }
+.lup-shout-radius { gap:10px; color:#f4d8dc; }
+.lup-shout-radius md-input-container { width:54px; margin:8px 0 0; }
+.lup-shout-radius input { text-align:right; color:#fff; }
+@media (max-width:600px) { .lup-shout-dialog { width:100vw; max-height:100vh; } .lup-shout-map { height:250px; } }

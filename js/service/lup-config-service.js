@@ -104,7 +104,7 @@ service('ConfigSrvc', function(RequestSrvc) {
 	};
 
 	ConfigSrvc.shoutCreditsKM = function() {
-		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_credits_km || 0);
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_cost_per_km || 0);
 	};
 
 	ConfigSrvc.roomCreationCost = function(viewRadius) {

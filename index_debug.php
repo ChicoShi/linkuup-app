@@ -94,6 +94,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   <link rel="stylesheet" href="css/lup-mira.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-tabs.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-stage.css<?=$v?>">
+	<link rel="stylesheet" href="css/lup-shout-dialog.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-voices.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-discovery-card.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-location-navigator.css<?=$v?>">
@@ -217,6 +218,7 @@ window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
   <script src="js/service/lup-request-service.js<?=$v?>"></script>
   <script src="js/service/lup-room-service.js<?=$v?>"></script>
   <script src="js/service/lup-settings-service.js<?=$v?>"></script>
+	<script src="js/service/lup-shout-service.js<?=$v?>"></script>
   <script src="js/service/lup-storage-service.js<?=$v?>"></script>
   <script src="js/service/lup-timezone-service.js<?=$v?>"></script>
   <script src="js/service/lup-type-service.js<?=$v?>"></script>
