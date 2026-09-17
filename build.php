@@ -93,6 +93,10 @@ $loader->initModules();
 # deployed app or on outbound HTTP being available to the CLI process.
 $page = file_get_contents($srcpath . 'index_debug.php');
 $page = str_replace("\r", "", $page);
+// The builder reads this template as source, not through PHP. Resolve the
+// stylesheet minification placeholder before extracting href values, otherwise
+// the parser stops at `?` and drops the framework stylesheets' `.css` suffix.
+$page = str_replace('<?=$min?>', LUPConfig::$MIN, $page);
 $lines = explode("\n", $page);
 
 # Minify

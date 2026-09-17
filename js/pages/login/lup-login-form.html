@@ -25,7 +25,7 @@
 </section>
 <section class="login-submit" layout="row" layout-padding>
   <md-button
-   aria-label="Login with this data"
+   aria-label="{{'LOGIN'|translate}}"
    ng-click="login()"
    ng-disabled="data.loginPending"
    class="md-primary md-raised login-button"
@@ -33,9 +33,9 @@
 </section>
 <section class="login-google" layout="row" layout-padding>
   <md-button
-   aria-label="Mit Google fortfahren"
+   aria-label="{{'LOGIN_GOOGLE'|translate}}"
    ng-click="initGoogleAuth()"
-   class="md-raised google-button"><span class="google-mark" aria-hidden="true">G</span><span>Mit Google fortfahren</span></md-button>
+   class="md-raised google-button"><span class="google-mark" aria-hidden="true">G</span><span>{{'LOGIN_GOOGLE'|translate}}</span></md-button>
 </section>
 <section class="login-guest" layout="row" layout-padding>
 	  <md-button

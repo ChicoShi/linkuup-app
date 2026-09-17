@@ -10,14 +10,14 @@
       <div class="auth-hero-copy">
         <span class="auth-mark"><i class="material-icons">location_on</i></span>
         <div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
-        <p class="login-brand-claim">Entdecke Orte in deiner Nähe – ohne ein eigenes Profil anzulegen.</p>
+        <p class="login-brand-claim">{{'GUEST_BRAND_CLAIM'|translate}}</p>
       </div>
     </section>
 
     <section class="auth-panel guest-panel" aria-label="Als Gast fortfahren">
-      <p class="auth-kicker">KURZER BESUCH</p>
-      <h1>Als Gast dabei</h1>
-      <p class="auth-intro">Wähle einen Namen. Du entscheidest später, ob du ein Profil erstellen möchtest.</p>
+      <p class="auth-kicker">{{'GUEST_KICKER'|translate}}</p>
+      <h1>{{'GUEST_WELCOME'|translate}}</h1>
+      <p class="auth-intro">{{'GUEST_INTRO'|translate}}</p>
       <ng-include src="'js/pages/login/lup-guest-login-form.html?v='+V"></ng-include>
     </section>
 

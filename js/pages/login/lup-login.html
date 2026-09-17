@@ -14,18 +14,18 @@
         <circle cx="617" cy="255" r="7" class="auth-route-point auth-route-point-late" />
       </svg>
       <div class="auth-hero-copy">
-        <div class="auth-hero-meta"><span></span>LIVE IN DEINER NÄHE</div>
+        <div class="auth-hero-meta"><span></span>{{'LOGIN_LIVE_NEARBY'|translate}}</div>
         <span class="auth-mark"><i class="material-icons">location_on</i></span>
         <div class="login-wordmark" aria-label="LinkUUp"><span class="login-wordmark-link">link</span><span class="login-wordmark-up">uup</span></div>
-        <p class="login-brand-claim">Raus aus dem Feed.<br>Rein ins Leben.</p>
-        <p class="auth-hero-detail">Entdecke Orte, an denen gerade wirklich etwas passiert.</p>
+        <p class="login-brand-claim" ng-bind-html="'LOGIN_BRAND_CLAIM'|translate"></p>
+        <p class="auth-hero-detail">{{'LOGIN_HERO_DETAIL'|translate}}</p>
       </div>
     </section>
 
     <section class="auth-panel" aria-label="Anmelden">
-      <p class="auth-kicker"><span></span> DEIN ZUGANG</p>
-      <h1>Willkommen zurück</h1>
-      <p class="auth-intro">Melde dich an, finde deine Orte und triff Menschen nicht nur online.</p>
+      <p class="auth-kicker"><span></span> {{'LOGIN_ACCESS'|translate}}</p>
+      <h1>{{'LOGIN_WELCOME'|translate}}</h1>
+      <p class="auth-intro">{{'LOGIN_INTRO'|translate}}</p>
       <ng-include src="'js/pages/login/lup-login-form.html?v='+V"></ng-include>
     </section>
 
