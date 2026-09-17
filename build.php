@@ -136,7 +136,7 @@ foreach ($css as $file)
 file_put_contents($destpath.'linkuup.temp.css', $cssmerge);
 echo "Running clean-css on CSS file...\n";
 $status = 0;
-system("cleancss -O2 -o \"{$destpath}linkuup.css\" \"{$destpath}linkuup.temp.css\"", $status);
+system("cleancss -O1 -o \"{$destpath}linkuup.css\" \"{$destpath}linkuup.temp.css\"", $status);
 if ($status !== 0)
 {
 	throw new RuntimeException('CSS bundling failed.');
