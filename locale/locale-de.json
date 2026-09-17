@@ -734,5 +734,16 @@
 	"PREVIEW_MESSAGE_1": "Hallo zusammen! Wer ist gerade in der Stadt?",
 	"PREVIEW_MESSAGE_2": "Ich bin gleich am Café.",
 	"PREVIEW_MESSAGE_3": "Schön, euch hier zu sehen.",
-	"PLACE_EVENT_REQUEST_CLOSED": "Diese Anfrage ist nicht mehr offen."
+	"PLACE_EVENT_REQUEST_CLOSED": "Diese Anfrage ist nicht mehr offen.",
+	"LOGIN_LIVE_NEARBY": "LIVE IN DEINER NÄHE",
+	"LOGIN_BRAND_CLAIM": "Raus aus dem Feed.<br>Rein ins Leben.",
+	"LOGIN_HERO_DETAIL": "Entdecke Orte, an denen gerade wirklich etwas passiert.",
+	"LOGIN_ACCESS": "DEIN ZUGANG",
+	"LOGIN_WELCOME": "Willkommen zurück",
+	"LOGIN_INTRO": "Melde dich an, finde deine Orte und triff Menschen nicht nur online.",
+	"LOGIN_GOOGLE": "Mit Google fortfahren",
+	"GUEST_BRAND_CLAIM": "Entdecke Orte in deiner Nähe – ohne ein eigenes Profil anzulegen.",
+	"GUEST_KICKER": "KURZER BESUCH",
+	"GUEST_WELCOME": "Als Gast dabei",
+	"GUEST_INTRO": "Wähle einen Namen. Du entscheidest später, ob du ein Profil erstellen möchtest."
 }

@@ -734,5 +734,16 @@
 	"PREVIEW_MESSAGE_1": "Hi everyone! Who is in town?",
 	"PREVIEW_MESSAGE_2": "I will be at the café soon.",
 	"PREVIEW_MESSAGE_3": "Good to see you here.",
-	"PLACE_EVENT_REQUEST_CLOSED": "This request is no longer pending."
+	"PLACE_EVENT_REQUEST_CLOSED": "This request is no longer pending.",
+	"LOGIN_LIVE_NEARBY": "LIVE NEAR YOU",
+	"LOGIN_BRAND_CLAIM": "Out of the feed.<br>Into real life.",
+	"LOGIN_HERO_DETAIL": "Discover places where something is really happening right now.",
+	"LOGIN_ACCESS": "YOUR ACCESS",
+	"LOGIN_WELCOME": "Welcome back",
+	"LOGIN_INTRO": "Sign in, find your places and meet people beyond the screen.",
+	"LOGIN_GOOGLE": "Continue with Google",
+	"GUEST_BRAND_CLAIM": "Discover places near you – without creating a profile.",
+	"GUEST_KICKER": "SHORT VISIT",
+	"GUEST_WELCOME": "Join as a guest",
+	"GUEST_INTRO": "Choose a name. You can decide later whether to create a profile."
 }
