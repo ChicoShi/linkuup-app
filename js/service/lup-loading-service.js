@@ -1,12 +1,19 @@
 'use strict';
 angular.module('LUP').
-service('LoadingSrvc', function($q, $timeout) {
+service('LoadingSrvc', function($q, $rootScope, $timeout) {
 	
 	var LoadingSrvc = this;
 	
 	LoadingSrvc.TASKS = {};
 	LoadingSrvc.WATCHDOGS = {};
 	LoadingSrvc.MAX_VISIBLE_MS = 8000;
+
+	// Geolocation and a few WebSocket callbacks originate outside Angular. Queue
+	// a digest whenever task state changes so a later addTask() re-shows the
+	// overlay immediately, rather than waiting for unrelated UI activity.
+	LoadingSrvc.refreshView = function() {
+		$rootScope.$evalAsync(angular.noop);
+	};
 
 	LoadingSrvc.watchTask = function(task, maxVisibleMs) {
 		if (LoadingSrvc.WATCHDOGS[task]) {
@@ -36,6 +43,7 @@ service('LoadingSrvc', function($q, $timeout) {
 		LoadingSrvc.TASKS[task] = LoadingSrvc.TASKS[task] || 0;
 		LoadingSrvc.TASKS[task] += 1;
 		LoadingSrvc.watchTask(task, maxVisibleMs);
+		LoadingSrvc.refreshView();
 	};
 	
 	LoadingSrvc.removeTask = function(task) {
@@ -48,12 +56,14 @@ service('LoadingSrvc', function($q, $timeout) {
 		if (LoadingSrvc.TASKS[task] === 0) {
 			LoadingSrvc.clearWatchdog(task);
 		}
+		LoadingSrvc.refreshView();
 	};
 	
 	LoadingSrvc.stopTask = function(task) {
 		console.log('LoadingSrvc.stopTask()', task);
 		LoadingSrvc.TASKS[task] = 0;
 		LoadingSrvc.clearWatchdog(task);
+		LoadingSrvc.refreshView();
 	};
 	
 	LoadingSrvc.stopTasks = function() {
@@ -62,6 +72,7 @@ service('LoadingSrvc', function($q, $timeout) {
 			LoadingSrvc.clearWatchdog(task);
 		}
 		LoadingSrvc.TASKS = {};
+		LoadingSrvc.refreshView();
 	};
 	
 	LoadingSrvc.countTasks = function() {
