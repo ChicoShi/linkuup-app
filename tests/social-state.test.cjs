@@ -54,6 +54,25 @@ test('Local guest preview never changes real membership and is unavailable on pr
  const prod=make('app.linkuup.de');assert.equal(prod.displayUsers(room),realUsers);prod.togglePreview();assert.equal(prod.isPreviewRoom(room),false);
 });
 
+test('Five-minute avatar rehearsal keeps real users intact, caps faces at twenty and can pause or stop',()=>{
+ function make(host){const {ctor}=load('lup-room-service.js',{location:{hostname:host,search:'?preview=balloons'},sessionStorage:{getItem:()=>null},t:k=>k},{LUPRoom:class{constructor(json){this.JSON=json;}}});return new ctor(q,{},{},{},{},{},{});}
+ const realUsers=[{id:()=>7}],room={name:()=> 'Braunschweig Chat',USERS:realUsers};
+ const local=make('app.localhost'),simulation=local.createPresenceSimulation(room);
+ assert.equal(local.displayUsers(room).length,0);
+ assert.equal(local.createPresenceSimulation(room),null); // One owner, no competing clocks.
+ simulation.advance(39000); assert.equal(local.displayUsers(room).length,20);
+ const firstTwenty=local.displayUsers(room).slice();
+ simulation.advance(13000); assert.equal(local.displayUsers(room).length,19);
+ assert.equal(local.displayUsers(room).includes(firstTwenty[3]),false); // Departure from the middle.
+ simulation.running=false;simulation.advance(20000);assert.equal(simulation.elapsed,52000);
+ simulation.running=true;
+ for(let time=52500;time<=300000;time+=500){simulation.advance(500);const guests=local.displayUsers(room);assert.ok(guests.length<=20);assert.equal(new Set(guests.map(u=>u.id())).size,guests.length);assert.equal(room.USERS,realUsers);}
+ assert.equal(simulation.done,true);assert.equal(simulation.elapsed,300000);assert.equal(local.displayUsers(room).length,20);
+ simulation.stop();assert.equal(local.PREVIEW.simulating,false);assert.equal(local.displayUsers(room).length,20);
+ const prod=make('app.linkuup.de');assert.equal(prod.createPresenceSimulation(room),null);assert.equal(prod.displayUsers(room),realUsers);
+ assert.equal(local.createPresenceSimulation({name:()=> 'Another room',USERS:[]}),null);
+});
+
 test('Escape and outside dismissal settle the public confirm/menu promise',async()=>{
  for(const method of ['confirm','menu']){
   const {ctor,context}=load('lup-dialog-service.js',{LUP_BUILD:'test'});
@@ -70,11 +89,11 @@ test('Friendship frames and replayed notifications refresh server totals without
  let ctor,total=3;const requests=[],own={JSON:{},id:()=>1,isSelf:()=>true,friends:()=>total};
  const scope={$on(){},$watch(){},$broadcast(){}};
  const root={$on(){},$broadcast(){}};
- const globals={window:{LUP_CONFIG:{server:'http://localhost/',cors:'local'},location:{hash:''},GWF_USER:own},console:quiet,
+ const globals={document:{cookie:''},window:{LUP_CONFIG:{server:'http://localhost/',cors:'local'},location:{hash:''},GWF_USER:own},console:quiet,
   angular:{noop(){},module:()=>({controller(n,c){ctor=c;}})}};
  for(const name of ['LUPRoom','LUPRoomVisit','LUPNotification','LUPComment','LUP_QueryThread','LUP_QueryMessage'])globals[name]={};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../js/controller/lup-ctrl.js'),'utf8'),globals);
- const deps={$scope:scope,$rootScope:root,$q:q,$interval:()=>0,$translate:{instant:k=>k},
+ const deps={$scope:scope,$rootScope:root,$q:q,$interval:()=>0,$translate:{instant:k=>k,use:()=>Promise.resolve()},
   RequestSrvc:{sendGWF:()=>new Promise(()=>{})},
   UserSrvc:{withUser(id,refresh){requests.push({id,refresh});return Promise.resolve(id===1?own:{isSelf:()=>false});}}};
  const args=ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(s=>s.trim());

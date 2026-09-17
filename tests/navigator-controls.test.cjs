@@ -160,3 +160,26 @@ test('Presence shows up to 20 faces but keeps the real total, animates changes a
  update([]); assert.equal(s.count, 0); assert.equal(s.faces.length, 0);
  destroy(); assert.equal(stopped, true); assert.ok(cancelled > 0);
 });
+
+test('Presence keeps identity on refresh, retires only departed faces and cancels a pop on re-entry', () => {
+ let directive, update, destroy, next = 0; const timers = new Map();
+ const later = fn => {const id=++next;timers.set(id, () => {timers.delete(id);fn();}); return id;}; later.cancel = id => timers.delete(id);
+ const angular = {module: () => ({directive(name, factory) {if (name === 'lupPresence') directive = factory({}, later);}})};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../js/directives/lup-avatar.js'), 'utf8'),
+  {angular, window: {matchMedia: () => ({matches: false})}});
+ const scope = {ngRoom: {id: () => 1}, $watchCollection(get, cb) {update = cb;return () => {};}, $on(name, cb) {destroy = cb;}};
+ directive.link(scope, [{querySelector: () => null}]);
+ const user = id => ({id: () => id});
+ update([user(1), user(2), user(3)]); const original = scope.renderedFaces.slice();
+ update([user(1), user(2), user(3)]);
+ assert.ok(scope.renderedFaces.every((face, i) => face === original[i])); assert.equal(timers.size, 0);
+ update([user(1), user(3)]);
+ assert.equal(scope.count, 2); assert.equal(original[1].leaving, true); assert.equal(timers.size, 1);
+ update([user(1), user(2), user(3)]);
+ assert.equal(original[1].leaving, false); assert.equal(timers.size, 0);
+ update([user(1), user(3)]); const finish = [...timers.values()][0]; finish();
+ assert.deepEqual(Array.from(scope.renderedFaces, face => face.key), ['1', '3']);
+ update([user(1)]); scope.ngRoom = {id: () => 2}; update([user(4)]);
+ assert.equal(timers.size, 0); assert.deepEqual(Array.from(scope.renderedFaces, face => face.key), ['4']);
+ destroy(); assert.equal(timers.size, 0);
+});
