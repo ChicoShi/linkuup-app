@@ -29,6 +29,7 @@
 "PLACE_CHAT_LAST_JOIN": "최근 입장",
 "PLACE_CHAT_NO_JOIN": "아직 입장한 사람이 없습니다",
 "PLACE_CHAT_JOINED": "님이 채팅에 입장했습니다",
+"PLACE_NEW_MESSAGES": "새 메시지",
 
 "HELP_LOCATIONS": "Here you will find all locations near you<br/>You can only join chats within the chat radius.",
 "HELP_LOCATION": "Click on the stars to rate this room. Click on the ratings to view more of them.",

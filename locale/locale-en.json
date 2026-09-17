@@ -29,6 +29,7 @@
 "PLACE_CHAT_LAST_JOIN": "Last join",
 "PLACE_CHAT_NO_JOIN": "No one joined yet",
 "PLACE_CHAT_JOINED": "joined the chat",
+"PLACE_NEW_MESSAGES": "New messages",
 
 "HELP_LOCATIONS": "Here you will find all locations near you<br/>You can only join chats within the chat radius.",
 "HELP_LOCATION": "Click on the stars to rate this room. Click on the ratings to view more of them.",

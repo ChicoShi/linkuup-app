@@ -36,6 +36,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.message = '';
 	$scope.data.roomReady = false;
 	$scope.data.roomLoadFailed = false;
+	$scope.data.newRoomMessages = $scope.data.newRoomMessages || false;
 	$scope.data.topComments = $scope.data.topComments || [];
 	$scope.data.selectedTab = $scope.data.selectedTab || 0;
 	$scope.data.selectedTab2 = $scope.data.selectedTab2 || 0;
@@ -47,9 +48,49 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.commentInput = '';
 	$scope.data.showInput = true;
 	var visitorCache = {source: null, signature: '', users: []};
+	var chatScrollElement = null;
+
+	function getChatScrollElement() {
+		return document.querySelector('.location-chat-surface .chat-msgs');
+	}
+
+	function isChatAtBottom(element) {
+		return element && element.scrollHeight - element.scrollTop - element.clientHeight <= 24;
+	}
+
+	function bindChatScroll(attempt) {
+		// The location template is inserted asynchronously. Bind once it exists,
+		// and clear the catch-up affordance as soon as the reader reaches bottom.
+		$timeout(function() {
+			var element = getChatScrollElement();
+			if (!element) {
+				// ng-include may finish after the route controller. Retry briefly so
+				// manual scrolling always clears the unseen-message indicator.
+				if ((attempt || 0) < 20) {
+					$timeout(function() { bindChatScroll((attempt || 0) + 1); }, 50, false);
+				}
+				return;
+			}
+			if (element === chatScrollElement) {
+				return;
+			}
+			if (chatScrollElement) {
+				window.jQuery(chatScrollElement).off('.lupRoomMessages');
+			}
+			chatScrollElement = element;
+			window.jQuery(element).on('scroll.lupRoomMessages', function() {
+				if ($scope.data.newRoomMessages && isChatAtBottom(this)) {
+					$scope.$evalAsync(function() {
+						$scope.data.newRoomMessages = false;
+					});
+				}
+			});
+		}, 0, false);
+	}
 	
 	$scope.init = function() {
 		console.log('LocationCtrl.init()', $routeParams.id);
+		bindChatScroll();
 		if ($scope.data.authenticated) {
 			$scope.data.user = GWF_USER;
 			$scope.data.roomLoadFailed = false;
@@ -402,6 +443,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.scrollChatToBottom = function(focusInput) {
 		// Wait for Angular to render the newest ng-repeat message before reading
 		// the scroll height. This also preserves the cursor after Enter/send.
+		$scope.data.newRoomMessages = false;
 		return $timeout(function() {
 			var $chat = window.jQuery('.location-chat-surface .chat-msgs:visible');
 			$chat.each(function() {
@@ -460,8 +502,18 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.$on-gwf-position-changed', position);
 	});
 	$scope.$on('lup-room-message', function(event, room, message) {
-		if (message && message.isOwnMessage() && room && room.id() === $scope.data.room.id()) {
-			$scope.scrollChatToBottom(false);
+		if (!room || room.id() !== $scope.data.room.id()) {
+			return;
+		}
+		if (!(message && message.isOwnMessage())) {
+			// Incoming chat must never move the reader. The explicit arrow is the
+			// only way to catch up with unseen lines.
+			$scope.data.newRoomMessages = true;
+		}
+	});
+	$scope.$on('$destroy', function() {
+		if (chatScrollElement) {
+			window.jQuery(chatScrollElement).off('.lupRoomMessages');
 		}
 	});
 	//////////
