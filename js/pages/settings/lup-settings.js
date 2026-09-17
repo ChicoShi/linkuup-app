@@ -8,7 +8,7 @@ angular.module('LUP').config(function($routeProvider) {
 		},
 	});
 ;
-}).controller('SettingsCtrl', function($scope, $q, $translate, SettingsSrvc, CountrySrvc, TimezoneSrvc, GDTRendererSrvc, ErrorSrvc) {
+}).controller('SettingsCtrl', function($scope, $rootScope, $q, $translate, SettingsSrvc, CountrySrvc, TimezoneSrvc, GDTRendererSrvc, ErrorSrvc) {
 
 	$scope.data.title = 'TITLE_SETTINGS';
 	$scope.data.groups = [];
@@ -344,6 +344,11 @@ angular.module('LUP').config(function($routeProvider) {
 			setting.saved = true;
 			if (setting.value === savedValue) { setting.initialValue = savedValue; }
 			if (setting.acl === savedACL) { setting.initialACL = savedACL; }
+			if (!visibilityOnly && setting.module === 'Language' && setting.name === 'language') {
+				return SettingsSrvc.useLanguage(savedValue).then(function() {
+					return $rootScope.applyLanguage(savedValue, true);
+				});
+			}
 		}, function(gwsMessage) {
 			setting.saveFailed = true;
 			// Do not overwrite text that was entered after this request started.

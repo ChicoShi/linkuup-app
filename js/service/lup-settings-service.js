@@ -109,5 +109,16 @@ service('SettingsSrvc', function($rootScope, RequestSrvc, WebsocketSrvc) {
 		});
 	};
 
+	/** Set the language of the active Dog/WebSocket session as well as the
+	 * persisted user setting. GWS_Language keeps this in lang_iso for replies
+	 * produced during the current app connection. */
+	SettingsSrvc.useLanguage = function(iso) {
+		var gwsMessage = new GWS_Message().cmd(0x0109).sync();
+		gwsMessage.writeString(String(iso || 'de').toLowerCase());
+		return WebsocketSrvc.withConnection().then(function() {
+			return WebsocketSrvc.sendBinary(gwsMessage);
+		});
+	};
+
 	return SettingsSrvc;
 });

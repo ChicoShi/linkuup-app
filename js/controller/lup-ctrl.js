@@ -30,6 +30,33 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.LUP_CONFIG = window.LUP_CONFIG;
 	$scope.ConfigSrvc = ConfigSrvc;
 
+	/* The backend persists user_language, but angular-translate does not watch
+	 * that setting by itself. Keep the current UI language in a cookie as well:
+	 * it is available before login and survives a normal browser restart. */
+	$rootScope.languageCookie = function() {
+		var match = document.cookie.match(/(?:^|;\s*)lup-language=([^;]+)/);
+		return match ? decodeURIComponent(match[1]).toLowerCase() : null;
+	};
+	$rootScope.applyLanguage = function(iso, persist) {
+		iso = String(iso || 'de').toLowerCase();
+		if (persist) {
+			document.cookie = 'lup-language=' + encodeURIComponent(iso) +
+				'; path=/; max-age=31536000; SameSite=Lax' +
+				(location.protocol === 'https:' ? '; Secure' : '');
+		}
+		return $translate.use(iso).then(function() {
+			if (window.moment) { window.moment.locale(iso); }
+			return iso;
+		}, function(error) {
+			console.warn('LinkUUp: could not load locale ' + iso + '; using English.', error);
+			return $translate.use('en').then(function() {
+				if (window.moment) { window.moment.locale('en'); }
+				return 'en';
+			});
+		});
+	};
+	$rootScope.applyLanguage($rootScope.languageCookie() || 'de')['catch']($scope.catchUnknown);
+
 	// Hook DialogSrvc in main scope
 	$scope.DialogSrvc = DialogSrvc;
 
@@ -209,6 +236,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			$scope.data.authenticated = GWF_USER.authenticated(true);
 			console.log('Got user', GWF_USER);
 			UserSrvc.CACHE[GWF_USER.id()] = GWF_USER;
+			$rootScope.applyLanguage($rootScope.languageCookie() || GWF_USER.JSON.user_language || 'de')['catch']($scope.catchUnknown);
 			
 			// Init
 			$scope.setupGPSFaker();
@@ -316,6 +344,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 			}
 			finished = true;
 			$scope.data.inited = true;
+			// The HTTP/API user setting chooses the browser locale; mirror it into
+			// the active WebSocket session after its connection is ready as well.
+			SettingsSrvc.useLanguage(window.GWF_USER.JSON.user_language)['catch'](function(error) {
+				console.warn('LinkUUp: could not set WebSocket language.', error);
+			});
 			// Location discovery is deliberately started by the first real
 			// gwf-position-changed event below.  WebSocket connection alone has no
 			// coordinates yet, so preloading here only produced a noisy rejected
@@ -392,6 +425,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		UserSrvc.withUser(window.GWF_USER.id(), true).then(function(user) {
 			$scope.data.user = user;
 			$scope.data.ownUser = user;
+			$rootScope.applyLanguage($rootScope.languageCookie() || user.JSON.user_language || 'de')['catch']($scope.catchUnknown);
 			return SettingsSrvc.withConfig();
 		}, function(error) {
 			console.warn('LUP: Could not refresh the authenticated user.', error);
