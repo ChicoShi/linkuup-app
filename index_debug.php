@@ -114,6 +114,9 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
 
   <div ng-if="isLoading()" class="lup-loading" layout="column" layout-align="center center" flex layout-fill>
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    <p class="lup-loading-status" role="status" aria-live="polite">
+      <span ng-repeat="key in loadingTaskKeys() track by key">{{key|translate}}<span ng-if="!$last"> · </span></span>
+    </p>
   </div>
 
 <script type="text/javascript">

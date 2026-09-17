@@ -6,8 +6,18 @@
 	width: 100%;
 	height: var(--lup-viewport-height, 100dvh);
 	z-index: 100;
-	background: #fff;
+	background: transparent;
 	opacity: 1;
+	pointer-events: none;
+}
+
+.lup-loading-status {
+	margin: 18px 24px 0;
+	max-width: min(32rem, 90vw);
+	color: #50606d;
+	font-size: 14px;
+	line-height: 1.45;
+	text-align: center;
 }
 
 

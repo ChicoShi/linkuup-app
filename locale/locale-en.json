@@ -16,6 +16,13 @@
 "err_position_unavailable": "Your location could not be determined. Check that location services are enabled and try again.",
 "err_position_timeout": "Determining your location took too long. Check your connection and try again.",
 
+"load_fbinit": "Preparing sign-in",
+"load_http": "Contacting the server",
+"load_location_rail": "Preparing nearby places",
+"load_positioning": "Determining your location",
+"load_ws_rooms": "Loading places",
+"load_wsconnect": "Connecting to chat",
+
 "HELP_LOCATIONS": "Here you will find all locations near you<br/>You can only join chats within the chat radius.",
 "HELP_LOCATION": "Click on the stars to rate this room. Click on the ratings to view more of them.",
 "HELP_CHAT": "Click on the avatars in a chat to see their profiles.",

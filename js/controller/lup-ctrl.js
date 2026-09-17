@@ -449,10 +449,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	// --- Routing --- //
 	/////////////////////
 	$scope.isLoading = function() {
-		// The full-screen loader belongs only to the initial connection. Once the
-		// app has an authenticated session, optional requests must stay local to
-		// their view and may never block navigation or the complete interface.
-		return !$scope.data.inited && LoadingSrvc.isLoading();
+		return LoadingSrvc.isLoading();
+	};
+
+	$scope.loadingTaskKeys = function() {
+		return LoadingSrvc.activeTaskKeys();
 	};
 
 	/** These 3 are subject to be removed soon **/

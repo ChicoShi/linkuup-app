@@ -151,7 +151,9 @@ service('PositionSrvc', function($q, $rootScope, LoadingSrvc, RequestSrvc) {
 	
 	PositionSrvc.sendProbe = function(defer) {
 		console.log('PositionSrvc.sendProbe()');
-		LoadingSrvc.addTask('positioning');
+		// Browser geolocation is allowed to take longer than the generic loading
+		// watchdog. Its own success/failure callbacks always release this task.
+		LoadingSrvc.addTask('positioning', 0);
 		navigator.geolocation.getCurrentPosition(
 				PositionSrvc.probeSuccess.bind(PositionSrvc, defer), 
 				PositionSrvc.probeFailure.bind(PositionSrvc, defer),

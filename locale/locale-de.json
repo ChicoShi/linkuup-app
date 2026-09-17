@@ -17,6 +17,13 @@
 "ERR_OWN_AVATAR_ONLY": "Du kannst nur dein eigenes Profilbild ändern.",
 "err_position_timeout": "Die Standortermittlung hat zu lange gedauert. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
 
+"load_fbinit": "Anmeldung wird vorbereitet",
+"load_http": "Server wird kontaktiert",
+"load_location_rail": "Orte in der Nähe werden vorbereitet",
+"load_positioning": "Standort wird ermittelt",
+"load_ws_rooms": "Orte werden geladen",
+"load_wsconnect": "Chat wird verbunden",
+
 "HELP_LOCATIONS": "Hier findest du alle Locations in deiner Nähe<br/>Du kannst nur Chats beitreten wenn du in der nähe bist.",
 "HELP_LOCATION": "Klicke auf die Sterne um eine Bewertung abzugeben. Klicke auf die Bewertung um mehr zu sehen.",
 "HELP_CHAT": "Klicke im Chat auf die Avatare um Profile zu sehen.",
