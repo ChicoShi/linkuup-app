@@ -804,13 +804,11 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!PositionSrvc.hasPosition(true) || !$scope.data.rooms.length) {
 			return false;
 		}
-		var orderBefore = $scope.data.rooms.map(function(room) { return room.id(); }).join(',');
-		$scope.data.rooms.sort(RoomSrvc.sortDistance);
+		// Nearby rooms arrive pre-sorted by the backend distance query.
 		$scope.updateVisibleRooms();
 		if (!$scope.data.visibleRooms.length) {
 			return false;
 		}
-		var reordered = orderBefore !== $scope.data.rooms.map(function(room) { return room.id(); }).join(',');
 		if (!nearestRoomInitiallySelected) {
 			nearestRoomInitiallySelected = true;
 			$scope.data.currentRoom = $scope.data.visibleRooms[0];
@@ -822,8 +820,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return room.id() === $scope.data.currentRoom.id();
 			});
 		}
-		// Tell the caller whether the rendered list changed order.
-		return reordered;
+		return false;
 	};
 
 	// The selected filter and the centred room category are distinct states.

@@ -246,10 +246,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		// coordinates here or category/search results silently lose distant rooms.
 		var position = includeAll ? {lat: 0.0, lng: 0.0} : PositionSrvc.CURRENT;
 		var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(position.lat).writeFloat(position.lng);
-		// Return the parser's promise as well. An exception must reject this
-		// request instead of leaving a separate deferred pending forever.
+		// A nearby response is already ordered by effective distance in the SQL
+		// query. Preserve that authoritative ordering rather than re-sorting it
+		// with client-side chat-range heuristics.
 		var request = WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
-			return RoomSrvc.parseRoomsMessage(msg).sort(RoomSrvc.sortDistance);
+			return RoomSrvc.parseRoomsMessage(msg);
 		});
 		var loadingKey = includeAll ? 'ALL_ROOMS_LOADING' : 'ROOMS_LOADING';
 		RoomSrvc[loadingKey] = request;

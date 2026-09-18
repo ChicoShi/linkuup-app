@@ -583,22 +583,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.$on-$viewContentLoaded()', event);
 //		$scope.doAuthCheck();
 	});
-	// GPS distance is calculated by the room model, so periodically re-sort the
-	// existing lists without asking the server for the same room catalogue again.
-	// This keeps an open discovery screen honest even when the browser's movement
-	// threshold did not trigger a complete nearby-room reload.
+	// Refresh browser GPS periodically. A position change triggers a fresh,
+	// database-distance-sorted room query; do not reorder cached results here.
 	var roomResortInterval = $interval(function() {
 		if (!$scope.data.inited || !Array.isArray($scope.data.rooms)) {
 			return;
 		}
-		var selectedRoomId = $scope.data.currentRoom ? $scope.data.currentRoom.id() : 0;
 		PositionSrvc.refresh();
-		$scope.data.rooms.sort(RoomSrvc.sortDistance);
-		if (Array.isArray(RoomSrvc.ALL_ROOMS) && RoomSrvc.ALL_ROOMS !== $scope.data.rooms) {
-			RoomSrvc.ALL_ROOMS.sort(RoomSrvc.sortDistance);
-		}
-		$rootScope.$broadcast('lup-rooms-ready', $scope.data.rooms);
-		$rootScope.$broadcast('lup-rooms-resorted', selectedRoomId);
 	}, 5 * 60 * 1000);
 	$scope.$on('$destroy', function() {
 		$interval.cancel(roomResortInterval);
