@@ -78,7 +78,9 @@ angular.module('LUP').config(function($routeProvider) {
 		return $scope.data.currentRoomIndex >= 0 ? $scope.data.currentRoomIndex + 1 : 0;
 	};
 	$scope.locationCounterLoaded = function() {
-		return ($scope.data.rooms || []).length;
+		// The rail is filtered by category/search, so its loaded number must be
+		// the cards the visitor can actually browse, not the hidden source list.
+		return ($scope.data.visibleRooms || []).length;
 	};
 	$scope.locationCounterAvailable = function() {
 		var includeAll = $scope.data.rooms === $scope.data.fullCatalogue;
