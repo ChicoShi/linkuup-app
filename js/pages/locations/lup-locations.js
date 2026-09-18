@@ -74,6 +74,19 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.currentRoom = $scope.data.currentRoom || null;
 	$scope.data.currentRoomIndex = $scope.data.currentRoomIndex === undefined ? -1 : $scope.data.currentRoomIndex;
 	$scope.data.doorOpeningRoomId = null;
+	$scope.locationCounterCurrent = function() {
+		return $scope.data.currentRoomIndex >= 0 ? $scope.data.currentRoomIndex + 1 : 0;
+	};
+	$scope.locationCounterLoaded = function() {
+		return ($scope.data.rooms || []).length;
+	};
+	$scope.locationCounterAvailable = function() {
+		var includeAll = $scope.data.rooms === $scope.data.fullCatalogue;
+		var total = RoomSrvc.getRoomsTotal(includeAll);
+		// A count reply can still be in flight on the first render. Loaded rooms
+		// are the only honest fallback until the authoritative total arrives.
+		return total === null ? $scope.locationCounterLoaded() : total;
+	};
 
 	// During a route transition Angular can keep a retiring view in the DOM for
 	// one digest. Prefer the active rail which already owns cards; `.last()`
@@ -188,6 +201,9 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.$evalAsync(function() {
 				if (navigatorResetPending) return;
 				$scope.focusRoom(roomIndex);
+				if (roomIndex === $scope.data.visibleRooms.length - 1) {
+					$scope.loadMoreLocations();
+				}
 			});
 		}
 	};
@@ -575,6 +591,20 @@ angular.module('LUP').config(function($routeProvider) {
 			settleHorizontalRail();
 		}, 16);
 	};
+	$scope.loadMoreLocations = function() {
+		var includeAll = $scope.data.rooms === $scope.data.fullCatalogue;
+		if ($scope.data.loadingMoreLocations || !RoomSrvc.hasMoreRooms(includeAll)) return;
+		$scope.data.loadingMoreLocations = true;
+		LoadingSrvc.addTask('ws_rooms_more');
+		RoomSrvc.loadMoreRooms(includeAll, $scope.data.rooms).then(function(rooms) {
+			$scope.gotRooms(rooms);
+		}, function(error) {
+			console.warn('LinkUUp: loading further locations failed.', error);
+		})['finally'](function() {
+			$scope.data.loadingMoreLocations = false;
+			LoadingSrvc.removeTask('ws_rooms_more');
+		});
+	};
 	
 	$scope.maybeGotoRoom = function(room, event) {
 		if (Date.now() < suppressRoomOpenUntil) {
@@ -649,6 +679,12 @@ angular.module('LUP').config(function($routeProvider) {
 				$scope.data.currentRoom = room;
 				$scope.data.currentRoomIndex = roomIndex;
 			}
+		}
+		// Focus can be changed by keyboard, a swipe settle or a programmatic
+		// recenter. Keeping the trigger here covers every path, rather than only
+		// the one scroll callback that previously missed some last cards.
+		if (roomIndex === $scope.data.visibleRooms.length - 1) {
+			$scope.loadMoreLocations();
 		}
 	};
 
@@ -875,7 +911,7 @@ angular.module('LUP').config(function($routeProvider) {
 				$currentRail.addClass('lup-category-refreshing');
 			}
 			if (!fullCataloguePromise) {
-				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
+				fullCataloguePromise = RoomSrvc.withCompleteRooms().then(function(rooms) {
 					$scope.data.fullCatalogue = rooms;
 					return rooms;
 				}).finally(function() {
@@ -1002,7 +1038,7 @@ angular.module('LUP').config(function($routeProvider) {
 				return render($scope.data.fullCatalogue);
 			}
 			if (!fullCataloguePromise) {
-				fullCataloguePromise = RoomSrvc.withRooms(true).then(function(rooms) {
+				fullCataloguePromise = RoomSrvc.withCompleteRooms().then(function(rooms) {
 					$scope.data.fullCatalogue = rooms;
 					return rooms;
 				}).finally(function() {

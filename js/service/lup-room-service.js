@@ -83,9 +83,8 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.CACHE = {};
-	// Matches the current server-side location cap. A full page means there may
-	// be more rooms, so fetch the following page before exposing the catalogue.
-	RoomSrvc.ROOM_PAGE_SIZE = 100;
+	// The server's page size is configurable. Pagination therefore uses the
+	// total prefixed to the response, never a client-side copy of that setting.
 	// One shared request prevents the initial screen and a background preload
 	// from asking the WebSocket for the same location catalogue twice.
 	RoomSrvc.ROOMS_LOADING = null;
@@ -94,6 +93,17 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	// never a second visible network wait.
 	RoomSrvc.ALL_ROOMS = null;
 	RoomSrvc.ALL_ROOMS_LOADING = null;
+	// The server supplies the exact result count separately from each paged
+	// room-list payload. This lets the rail say how much is still discoverable
+	// without eagerly loading the whole catalogue or opening a second request.
+	RoomSrvc.ROOM_TOTALS = {nearby: null, all: null};
+	// A full catalogue is intentionally fetched only for an explicit discovery
+	// action (search/category), never for the normal 25-card nearby rail.
+	RoomSrvc.COMPLETE_ROOMS_LOADING = null;
+	RoomSrvc.PAGINATION = {
+		nearby: {offset: 0, more: false, loading: null, position: null, seen: Object.create(null)},
+		all: {offset: 0, more: false, loading: null, position: null, seen: Object.create(null)}
+	};
 	RoomSrvc.BLANK_ROOM = RoomSrvc.NEW_BLANK_ROOM(0);
 
 	///////////////////////////
@@ -226,6 +236,45 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		return nameOrder || (a.id() - b.id());
 	};
 	
+	RoomSrvc.pageState = function(includeAll) {
+		return includeAll ? RoomSrvc.PAGINATION.all : RoomSrvc.PAGINATION.nearby;
+	};
+	RoomSrvc.loadRoomsPage = function(includeAll, offset, position) {
+		var gwsMessage = new GWS_Message().cmd(0x1101).sync()
+			.writeFloat(position.lat).writeFloat(position.lng).write32(offset);
+		return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
+			RoomSrvc.ROOM_TOTALS[RoomSrvc.roomsTotalKey(includeAll)] = msg.read32();
+			return RoomSrvc.parseRoomsMessage(msg);
+		});
+	};
+	RoomSrvc.roomsTotalKey = function(includeAll) {
+		return includeAll ? 'all' : 'nearby';
+	};
+	RoomSrvc.getRoomsTotal = function(includeAll) {
+		return RoomSrvc.ROOM_TOTALS[RoomSrvc.roomsTotalKey(includeAll)];
+	};
+	RoomSrvc.hasMoreRooms = function(includeAll) {
+		return RoomSrvc.pageState(includeAll).more;
+	};
+	RoomSrvc.loadMoreRooms = function(includeAll, rooms) {
+		var state = RoomSrvc.pageState(includeAll);
+		if (!state.more || !state.position) return $q.when(rooms);
+		if (state.loading) return state.loading;
+		state.loading = RoomSrvc.loadRoomsPage(includeAll, state.offset, state.position).then(function(page) {
+			var signature = page.map(function(room) { return room.id(); }).join(',');
+			if (signature && state.seen[signature]) {
+				console.warn('LinkUUp: server repeated a location page; stopping pagination.');
+				state.more = false;
+				return rooms;
+			}
+			state.seen[signature] = true;
+			Array.prototype.push.apply(rooms, page);
+			state.offset += page.length;
+			state.more = state.offset < RoomSrvc.getRoomsTotal(includeAll);
+			return rooms;
+		})['finally'](function() { state.loading = null; });
+		return state.loading;
+	};
 	RoomSrvc.withRooms = function(includeAll) {
 		// Nearby discovery is location based. The complete public catalogue is a
 		// separate, explicit search/category action and uses the backend's 0,0
@@ -248,20 +297,17 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		// query and deliberately skips that radius filter. Do not use a user's real
 		// coordinates here or category/search results silently lose distant rooms.
 		var position = includeAll ? {lat: 0.0, lng: 0.0} : PositionSrvc.CURRENT;
-		var loadPage = function(offset, rooms) {
-			var gwsMessage = new GWS_Message().cmd(0x1101).sync()
-				.writeFloat(position.lat).writeFloat(position.lng).write32(offset);
-			// A nearby response is already ordered by effective distance in the SQL
-			// query. Preserve that authoritative ordering rather than re-sorting it
-			// with client-side chat-range heuristics.
-			return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
-				var page = RoomSrvc.parseRoomsMessage(msg);
-				Array.prototype.push.apply(rooms, page);
-				return page.length === RoomSrvc.ROOM_PAGE_SIZE ?
-					loadPage(offset + page.length, rooms) : rooms;
-			});
-		};
-		var request = loadPage(0, []);
+		var state = RoomSrvc.pageState(includeAll);
+		state.offset = 0;
+		state.more = false;
+		state.seen = Object.create(null);
+		state.position = {lat: position.lat, lng: position.lng};
+		var request = RoomSrvc.loadRoomsPage(includeAll, 0, state.position).then(function(page) {
+			state.seen[page.map(function(room) { return room.id(); }).join(',')] = true;
+			state.offset = page.length;
+			state.more = state.offset < RoomSrvc.getRoomsTotal(includeAll);
+			return page;
+		});
 		var loadingKey = includeAll ? 'ALL_ROOMS_LOADING' : 'ROOMS_LOADING';
 		RoomSrvc[loadingKey] = request;
 		request.then(function(rooms) {
@@ -271,6 +317,32 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 			RoomSrvc[loadingKey] = null;
 		});
 		return request;
+	};
+	RoomSrvc.withCompleteRooms = function() {
+		if (RoomSrvc.ALL_ROOMS && !RoomSrvc.hasMoreRooms(true)) {
+			return $q.when(RoomSrvc.ALL_ROOMS);
+		}
+		if (RoomSrvc.COMPLETE_ROOMS_LOADING) {
+			return RoomSrvc.COMPLETE_ROOMS_LOADING;
+		}
+		// Start (or join) the first public page, then consume every following
+		// page in sequence. The offset is owned by the shared pagination state,
+		// therefore parallel keystrokes cannot duplicate requests or cards.
+		var firstPage = RoomSrvc.ALL_ROOMS ? $q.when(RoomSrvc.ALL_ROOMS) : RoomSrvc.withRooms(true);
+		var complete = firstPage.then(function(rooms) {
+			var nextPage = function() {
+				if (!RoomSrvc.hasMoreRooms(true)) {
+					return rooms;
+				}
+				return RoomSrvc.loadMoreRooms(true, rooms).then(nextPage);
+			};
+			return nextPage();
+		});
+		RoomSrvc.COMPLETE_ROOMS_LOADING = complete;
+		complete['finally'](function() {
+			RoomSrvc.COMPLETE_ROOMS_LOADING = null;
+		});
+		return complete;
 	};
 
 	RoomSrvc.searchRooms = function(query) {

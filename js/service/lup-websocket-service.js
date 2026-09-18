@@ -113,7 +113,9 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 		    ws.onerror = function(error) {
 				WebsocketSrvc.CONNECTING = null;
 		    	WebsocketSrvc.disconnect(true);
-				defer.reject(error);
+				// Browser Event objects stringify as "[object Event]". Keep a
+				// stable application-level failure value for all callers.
+				defer.reject('err_websocket_connection');
 		    };
 		    ws.onmessage = function(message) {
 		    	WebsocketSrvc.MSGS_RECV += 1;

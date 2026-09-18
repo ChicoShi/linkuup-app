@@ -121,7 +121,12 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LoginCtrl.loginFailure()', response);
 		$scope.data.loginPending = false;
 		LoadingSrvc.stopTask('oauth');
-		if (response === undefined) {
+		// A native WebSocket failure rejects with an Event object. It is not a
+		// form response, so never feed it into populateScope() (which would turn
+		// it into the unhelpful "[object Event]" modal).
+		if (response === undefined || response === null || response === 'err_websocket_connection' ||
+			(response && typeof response === 'object' &&
+				(typeof Event === 'undefined' || response instanceof Event || response.type === 'error'))) {
 			ErrorSrvc.showError(t('err_websocket_connection'));
 		} else {
 			ErrorSrvc.populateScope($scope, response);
