@@ -70,6 +70,16 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		var gwsMessage = new GWS_Message().cmd(0x1104).write32(room.id()); // Send PART command
 		return WebsocketSrvc.sendBinary(gwsMessage);
 	};
+
+	/* Server-side radius enforcement can part us without a local button click.
+	 * Keep the client-side active-room marker in the same state as presence, or
+	 * a later Join button would incorrectly resolve as "already joined". */
+	ChatSrvc.leftRoom = function(room, user) {
+		if (user && user.isSelf && user.isSelf() && ChatSrvc.CHATROOM &&
+			ChatSrvc.CHATROOM.id() === room.id()) {
+			ChatSrvc.CHATROOM = null;
+		}
+	};
 	
 	ChatSrvc.sendMessage = function(room, message) {
 		console.log('ChatSrvc.sendMessage()', room, message);

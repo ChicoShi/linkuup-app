@@ -26,6 +26,11 @@
 
 	window.addEventListener('resize', schedule);
 	window.addEventListener('orientationchange', schedule);
+	/* A keyboard resize can arrive just after focus on mobile browsers. Queue an
+	 * additional frame for the focus transition so page-sized surfaces already
+	 * use the visual viewport when the keyboard starts animating. */
+	window.addEventListener('focusin', schedule);
+	window.addEventListener('focusout', schedule);
 	if (viewport) {
 		viewport.addEventListener('resize', schedule);
 		viewport.addEventListener('scroll', schedule);

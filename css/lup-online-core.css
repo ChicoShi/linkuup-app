@@ -114,6 +114,15 @@
    composer never asks Safari to scroll the whole page. 16px prevents iOS
    focus-zoom on the actual text field. */
 @media (max-width:600px) {
+  /* The outer route must shrink too. Otherwise only the composer follows the
+   * software keyboard while the chat header and message stream stay in the
+   * old layout viewport. */
+  .location-page.lup-place {
+    height:var(--lup-viewport-height,100dvh);
+    min-height:0;
+    max-height:var(--lup-viewport-height,100dvh);
+    overflow:hidden;
+  }
   .location-page > md-content {
     display:flex;
     height:var(--lup-viewport-height,100dvh);
@@ -156,6 +165,12 @@
   }
   html.lup-soft-keyboard-open .location-page > md-content {
     overscroll-behavior:none;
+  }
+  html.lup-soft-keyboard-open .location-page.lup-place {
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:var(--lup-viewport-height,100dvh);
   }
 }
 

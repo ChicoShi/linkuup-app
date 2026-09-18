@@ -797,6 +797,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		if (room) {
 			const user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.removeUser(user);
+			ChatSrvc.leftRoom(room, user);
 			$rootScope.$broadcast('lup-room-presence', room, user, 'part', time);
 			if (!user.isSelf()) {
 				FXSrvc.play('event');
@@ -812,6 +813,11 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		while (gwsMessage.hasMore()) {
 			var user = UserSrvc.getOrCreate(gwsMessage.read32());
 			room.addUser(user);
+		}
+		// A snapshot is authoritative too; it covers reconnects where the
+		// individual leave frame was missed.
+		if (ChatSrvc.CHATROOM && ChatSrvc.CHATROOM.id() === room.id() && !room.isSelfInRoom()) {
+			ChatSrvc.leftRoom(room, window.GWF_USER);
 		}
 	};
 	
