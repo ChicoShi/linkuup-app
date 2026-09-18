@@ -83,6 +83,9 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	};
 	
 	RoomSrvc.CACHE = {};
+	// Matches the current server-side location cap. A full page means there may
+	// be more rooms, so fetch the following page before exposing the catalogue.
+	RoomSrvc.ROOM_PAGE_SIZE = 100;
 	// One shared request prevents the initial screen and a background preload
 	// from asking the WebSocket for the same location catalogue twice.
 	RoomSrvc.ROOMS_LOADING = null;
@@ -245,13 +248,20 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		// query and deliberately skips that radius filter. Do not use a user's real
 		// coordinates here or category/search results silently lose distant rooms.
 		var position = includeAll ? {lat: 0.0, lng: 0.0} : PositionSrvc.CURRENT;
-		var gwsMessage = new GWS_Message().cmd(0x1101).sync().writeFloat(position.lat).writeFloat(position.lng);
-		// A nearby response is already ordered by effective distance in the SQL
-		// query. Preserve that authoritative ordering rather than re-sorting it
-		// with client-side chat-range heuristics.
-		var request = WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
-			return RoomSrvc.parseRoomsMessage(msg);
-		});
+		var loadPage = function(offset, rooms) {
+			var gwsMessage = new GWS_Message().cmd(0x1101).sync()
+				.writeFloat(position.lat).writeFloat(position.lng).write32(offset);
+			// A nearby response is already ordered by effective distance in the SQL
+			// query. Preserve that authoritative ordering rather than re-sorting it
+			// with client-side chat-range heuristics.
+			return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
+				var page = RoomSrvc.parseRoomsMessage(msg);
+				Array.prototype.push.apply(rooms, page);
+				return page.length === RoomSrvc.ROOM_PAGE_SIZE ?
+					loadPage(offset + page.length, rooms) : rooms;
+			});
+		};
+		var request = loadPage(0, []);
 		var loadingKey = includeAll ? 'ALL_ROOMS_LOADING' : 'ROOMS_LOADING';
 		RoomSrvc[loadingKey] = request;
 		request.then(function(rooms) {
