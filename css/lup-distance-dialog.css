@@ -1,0 +1,10 @@
+.lup-distance-dialog { width:min(94vw,540px); background:#171827; }
+.lup-distance-dialog md-toolbar { background:#183d4b; }
+.lup-distance-dialog .md-toolbar-tools i { margin-right:10px; }
+.lup-distance-dialog-content { padding:18px 20px 4px; color:#dbeef3; }
+.lup-distance-cost { margin:14px 0 12px; color:#d8f5ff; font-size:18px; font-weight:700; }
+.lup-distance-cost small, .lup-distance-note { color:#9ec6d1; font-size:12px; font-weight:500; }
+.lup-distance-slider { gap:10px; }
+.lup-distance-slider md-input-container { width:62px; margin:8px 0 0; }
+.lup-distance-slider input { text-align:right; color:#fff; }
+@media (max-width:600px) { .lup-distance-dialog { width:100vw; } }

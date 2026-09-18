@@ -5,7 +5,7 @@ angular.module('LUP').
 controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $location, $mdMedia, $mdSidenav, $mdToast, $mdDialog, $translate,
 		WebsocketSrvc, RequestSrvc, LoadingSrvc, PositionSrvc, ErrorSrvc,
 		UserSrvc, RoomSrvc, ChatSrvc, EnumSrvc, TypeSrvc,
-		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc, ShoutSrvc,
+		SettingsSrvc, ConfigSrvc, FXSrvc, DialogSrvc, ShoutSrvc, DistanceSrvc,
 		CategorySrvc, NotificationSrvc, CountrySrvc, TimezoneSrvc) {
 	
 	// Hook Services into model globals;
@@ -459,6 +459,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.openShout = function() {
 		return ShoutSrvc.open().then(function(result) {
 			return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
+		})['catch'](angular.noop);
+	};
+	$scope.openBuyDistance = function() {
+		return DistanceSrvc.open().then(function(result) {
+			return ErrorSrvc.showMessage($translate.instant('DISTANCE_PURCHASED', {
+				meters: result.meters, credits: result.credits
+			}), $translate.instant('TITLE_BUY_DISTANCE'));
 		})['catch'](angular.noop);
 	};
 	$scope.gotoAddRoom = function() {

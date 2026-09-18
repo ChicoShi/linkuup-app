@@ -107,6 +107,10 @@ service('ConfigSrvc', function(RequestSrvc) {
 		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_cost_per_km || 0);
 	};
 
+	ConfigSrvc.toleranceCreditsKM = function() {
+		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_tolerance_credits_per_km || 0);
+	};
+
 	ConfigSrvc.roomCreationCost = function(viewRadius) {
 		var radius = Math.max(0, Number(viewRadius) || 0);
 		var viewCost = radius * ConfigSrvc.roomViewCost() / ConfigSrvc.roomViewCostUnit();
