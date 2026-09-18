@@ -56,6 +56,7 @@ service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrv
 				user_credits: gwsMessage.read32(),
 				// The title is purely decorative, so retain a safe local fallback.
 				lup_role: gwsMessage.hasMore() ? gwsMessage.readString() : '',
+				user_bot: gwsMessage.hasMore() ? gwsMessage.read8() : 0,
 			};
 		}
 	};

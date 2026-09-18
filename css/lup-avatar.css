@@ -65,6 +65,34 @@ md-list .lup-avatar span {
 	background: #FF69B4;
 }
 
+/* A bot remains a person in the interface; the small violet laptop only
+ * identifies the automated account and deliberately leaves its avatar clear. */
+.lup-avatar.bot::after,
+.lup-avatar.bot::before {
+	content:'';
+	position:absolute;
+	z-index:2;
+	pointer-events:none;
+	box-sizing:border-box;
+	background:linear-gradient(145deg,#cfb7ff,#7653c8 68%,#4c328e);
+	border:1px solid rgba(247,241,255,.88);
+	box-shadow:0 2px 5px rgba(42,20,83,.60),inset 0 1px 0 rgba(255,255,255,.40);
+}
+.lup-avatar.bot::after {
+	right:-2px;
+	bottom:3px;
+	width:38%;
+	height:28%;
+	border-radius:3px 3px 2px 2px;
+}
+.lup-avatar.bot::before {
+	right:-5px;
+	bottom:0;
+	width:47%;
+	height:9%;
+	border-radius:2px 2px 4px 4px;
+}
+
 /* Read-only presence strip, shared by discovery and the chat's online badge. */
 lup-presence {display:block;min-width:0;max-width:100%;}
 lup-presence:not([compact="true"]) {width:100%;}

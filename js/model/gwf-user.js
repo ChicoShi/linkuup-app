@@ -12,6 +12,7 @@ var GWF_User = function(json) {
 	this.isNotSelf = function() { return !this.isSelf(); };
 	this.isMale = function() { return this.gender() === 'male'; };
 	this.isFemale = function() { return this.gender() === 'female'; };
+	this.isBot = function() { return Number(this.JSON.user_bot || 0) === 1; };
 	this.isFriend = function() {
 		return this.JSON.relationship !== null && this.JSON.relationship !== 'Not specified';
 	};

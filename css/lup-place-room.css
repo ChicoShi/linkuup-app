@@ -497,3 +497,19 @@ md-dialog.md-default-theme:not(.place-dialog) .md-dialog-content {padding:26px;c
 md-dialog.md-default-theme:not(.place-dialog) .md-title {font-size:20px;font-weight:500;letter-spacing:-.025em;}
 md-dialog.md-default-theme:not(.place-dialog) .md-dialog-actions {padding:6px 16px 16px;}
 md-dialog.md-default-theme:not(.place-dialog) .md-button {border:0;border-radius:12px;background:#c4ecff0b;color:#cdeeff;text-transform:none;}
+
+/* Writing on a phone is a focused mode: preserve the Location / Chat / Online
+ * rail, but let the conversation claim all remaining visual-viewport space. */
+@media (max-width:600px) {
+ html.lup-soft-keyboard-open .location-page.lup-place .place-topbar,
+ html.lup-soft-keyboard-open .location-page.lup-place .place-chat > .place-panel-heading,
+ html.lup-soft-keyboard-open .location-page.lup-place .place-chat > .place-chat-events {
+  display:none;
+ }
+ html.lup-soft-keyboard-open .location-page.lup-place md-tabs.place-tabs > md-tabs-wrapper {
+  margin-top:6px;
+ }
+ html.lup-soft-keyboard-open .location-page.lup-place .place-chat .place-messages {
+  padding-top:12px;
+ }
+}
