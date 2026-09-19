@@ -439,7 +439,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	// --- Sidebars --- //
 	//////////////////////
 	$scope.openLeft = function() { $mdSidenav('left').open(); };
-	$scope.closeLeft = function() { $mdSidenav('left').close(); };
+	$scope.closeLeft = function() { return $mdSidenav('left').close(); };
 
 	/////////////////////
 	// --- Routing --- //
@@ -460,12 +460,12 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		window.location.href = window.LUP_CONFIG.server + 'paymentcredits.ordercredits.html';
 	};
 	$scope.openShout = function() {
-		return ShoutSrvc.open().then(function(result) {
+		return $scope.closeLeft().then(function() { return ShoutSrvc.open(); }).then(function(result) {
 			return ErrorSrvc.showMessage('Gesendet im Umkreis von ' + result.radius + ' km an ' + result.locations + ' Locations (' + result.recipients + ' Empfänger).', 'Shout');
 		})['catch'](angular.noop);
 	};
 	$scope.openBuyDistance = function() {
-		return DistanceSrvc.open().then(function(result) {
+		return $scope.closeLeft().then(function() { return DistanceSrvc.open(); }).then(function(result) {
 			return ErrorSrvc.showMessage($translate.instant('DISTANCE_PURCHASED', {
 				meters: result.meters, credits: result.credits
 			}), $translate.instant('TITLE_BUY_DISTANCE'));
