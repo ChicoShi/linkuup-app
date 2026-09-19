@@ -15,3 +15,12 @@ Enthält Wiederanbindung der bestehenden Location-Glasdarstellung, Kategorien/Re
 ## Offen vor Übernahme
 
 Echtes Mobilgerät, WebSocket-/Kartenverfügbarkeit, tatsächlicher Raum- und Zahlungsablauf sowie menschliche Designabnahme. Der lokale Backend-Protokollfix d699efa wird separat behandelt und ist nicht Bestandteil des Backend-Design-PRs. Backend und App müssen hinsichtlich RoomList-Protokoll zusammen geprüft werden. Kein Merge/Deploy durch diesen Review.
+
+## Ergänzung: Sende-Button und Safari-Tastaturversatz
+
+- Raumchat-Sende-Button: transparente blaue Fläche, heller SVG-Pfeil und feine Glaskante; doppelte unbenutzte place-send-link-Regeln entfernt. Versand-/Zugangslogik unverändert.
+- Reproduzierter Layoutfehler: Der höher spezifische Soft-Keyboard-Block in lup-online-core.css setzte inset:0 und überschrieb --lup-viewport-top aus lup-viewport.js. Die redundante Positionierung wurde entfernt; lup-place-room.css ist jetzt allein für Höhe und Offset verantwortlich.
+- Die zusätzliche focus-Regel, die die Topbar verbarg, ist entfernt. Navigation bleibt beim Schreiben sichtbar.
+- Gegenbefund von Mira im IRC vom 20.09.: unabhängig dieselbe inset:0-Ursache bestätigt; keine parallelen Änderungen durch Mira.
+- Chromium-Darstellungstest mit Angular-Komponenten und simulierten VisualViewport-resize/scroll-Ereignissen: Breiten 320/390/1440; mobil Höhe420 mit Offset0/60/130/0. Vorher Composer-Unterkante stets420, erwartet420/480/550/420. Nachher alle vier Werte korrekt. Raumchat- und Privatnachrichten-Composer geprüft, Topbar sichtbar. Isolierte Testdaten, keine Nachricht verschickt. Kein echter iPhone-/Safari-Test; dieser bleibt Abnahmepunkt.
+- Vorhandene drei mobile-viewport-Tests bestehen, PHP-Lint/index_debug und git diff --check sauber. Der frühere Gesamt-Testbefund mit neun Baseline-Fehlern bleibt unverändert; nicht erneut als vollständig grün bezeichnet.
