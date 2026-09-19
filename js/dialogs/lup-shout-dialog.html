@@ -14,6 +14,6 @@
         <md-input-container class="md-block"><label>{{'PLACE_SHOUT'|translate}}</label><textarea ng-model="data.message" maxlength="512" rows="3" required></textarea></md-input-container>
       </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="!data.message.trim()">{{'BTN_SEND'|translate}} · {{data.cost}} {{'TITLE_CREDITS'|translate}}</md-button></md-dialog-actions>
+    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="!data.message.trim()"><i class="material-icons purchase-action-icon" aria-hidden="true">send</i><span class="purchase-action-label">{{'BTN_SEND'|translate}}</span><span class="purchase-action-price">{{data.cost}} <small>{{'TITLE_CREDITS'|translate}}</small></span></md-button></md-dialog-actions>
   </form>
 </md-dialog>

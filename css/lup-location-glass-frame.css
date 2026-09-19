@@ -260,3 +260,45 @@ md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) smal
 .account-page .lup-account-action {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;padding:15px;border:1px solid #d8f3ff42;border-radius:16px;background:#bce8fa10;box-shadow:inset 0 1px 0 #f5fdff25;color:#e5f6ff;font:500 13px/1.4 Roboto,sans-serif;text-decoration:none;}
 .account-page .lup-account-action i {font-size:19px;}
 .account-page .lup-account-action:focus-visible {outline:2px solid #bce8fa;outline-offset:3px;}
+
+/* Add-room controls have their own quiet glass surfaces, including the detached menu. */
+.lup-add-room-page .add-room-section md-input-container.md-block {display:block;margin:0 0 22px;padding:0;}
+.lup-add-room-page .add-room-section md-input-container.md-block > label {position:static;display:block;transform:none;width:auto;max-width:100%;padding:0;margin:0 0 9px;color:#afcbdc;font:400 12px/1.5 Roboto,sans-serif;}
+.lup-add-room-page .add-room-section md-input-container.md-block :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select .md-select-value {box-sizing:border-box;width:100%;min-height:50px;padding:13px 14px;border:1px solid #d8f3ff30;border-radius:16px;background:linear-gradient(135deg,#d7f3ff0b,#c4e8ff03);box-shadow:inset 1px 1px 0 #f5fdff1c,inset -1px -1px 0 #c8eafc0d;color:#edf7ff;font:400 16px/1.4 Roboto,sans-serif;}
+.lup-add-room-page .add-room-section md-select {margin:0;}
+.lup-add-room-page .add-room-section md-input-container.md-block textarea.md-input {height:100px;min-height:100px;max-height:200px;resize:vertical;}
+.lup-add-room-page .add-room-section md-input-container.md-input-focused :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select:focus .md-select-value {border-color:#bce8fa90;box-shadow:inset 0 1px 0 #fff2,0 0 0 3px #9ddcff10;}
+.lup-add-room-page .add-room-section md-input-container.md-input-invalid :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select.ng-invalid.ng-touched .md-select-value {border-color:#e3a4ac;}
+.md-select-menu-container.add-room-category-menu {padding:6px;max-width:calc(100vw - 24px);}
+.add-room-category-menu md-select-menu {border:1px solid #d8f3ff40;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,#1b3046f7,#122137fc);box-shadow:inset 1px 1px 0 #f5fdff26,0 18px 48px #020b1d80;}
+.add-room-category-menu md-select-menu md-content {background:transparent;padding:6px;color:#e3f2fb;}
+.add-room-category-menu md-option {min-height:48px;margin:2px 0;padding:0 14px;border:1px solid transparent;border-radius:12px;color:#c6ddec;}
+.add-room-category-menu md-option:is(:focus,:hover) {background:#bce8fa0d;}
+.add-room-category-menu md-option[selected] {background:#bce8fa16;border-color:#bce8fa40;color:#effaff;box-shadow:inset 0 1px 0 #f5fdff12;}
+.lup-add-room-page .add-room-form > .md-button.md-raised.md-primary:not(:disabled) {background:linear-gradient(145deg,#e5f6ff,#a3d4ed);color:#153951;box-shadow:inset 0 1px 0 #fffc;}
+
+/* Keep the purchase action visible while the dialog body scrolls. */
+md-dialog.place-dialog.lup-purchase-dialog {max-height:calc(100dvh - 24px);}
+.lup-purchase-dialog > form {display:flex;flex-direction:column;min-height:0;max-height:inherit;overflow:hidden;}
+.lup-purchase-dialog .place-dialog-header,.lup-purchase-dialog md-dialog-actions {flex-shrink:0;}
+.lup-purchase-dialog md-dialog-content {min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+.lup-purchase-dialog md-dialog-actions {background:#122338;padding-bottom:max(12px,env(safe-area-inset-bottom));}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm {display:flex;align-items:center;gap:10px;min-width:0;border:1px solid #d2eeff66;border-radius:18px;background:linear-gradient(135deg,#daf2ff,#9bcce4);color:#15374c;text-align:left;line-height:1.3;}
+.lup-purchase-dialog .purchase-action-icon {font-size:22px;flex-shrink:0;}
+.lup-purchase-dialog .purchase-action-label {flex:1;}
+.lup-purchase-dialog .purchase-action-price {flex-shrink:0;padding-left:12px;border-left:1px solid #15374c30;font-size:15px;text-align:right;}
+.lup-purchase-dialog .purchase-action-price small {display:block;margin-top:2px;font-size:10px;font-weight:400;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm:disabled {background:#bce8fa0a;border-color:#bce8fa20;color:#8da9bb;box-shadow:none;}
+md-sidenav.navigator-sidebar .nav-buy-distance {background:linear-gradient(120deg,#bce8fa12,#bce8fa03);border-color:#d8f3ff36;box-shadow:inset 0 1px 0 #f5fdff14;}
+md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon {color:#bce8fa;text-shadow:0 0 14px #8bd6ff35;}
+@media(max-width:420px) {
+ .lup-purchase-dialog md-dialog-actions {display:grid;grid-template-columns:1fr;gap:4px;}
+ .lup-purchase-dialog md-dialog-actions .purchase-confirm {grid-row:1;}
+ .lup-purchase-dialog md-dialog-actions > .md-button:not(.purchase-confirm) {min-height:36px;padding:6px;}
+ .lup-shout-dialog #lup-shout-map {height:150px;min-height:150px;}
+}
+
+.lup-shout-dialog .lup-shout-dialog-content md-input-container > label {color:#afcbdc;}

@@ -21,7 +21,7 @@
         </md-input-container>
         <md-input-container class="md-block">
           <label>{{'LABEL_ROOM_CATEGORY'|translate}}</label>
-          <md-select ng-model="data.room.category" required>
+          <md-select ng-model="data.room.category" md-container-class="add-room-category-menu" required>
             <md-option ng-repeat="category in data.categories" ng-value="category.cat_id">{{category.cat_name}}</md-option>
           </md-select>
         </md-input-container>

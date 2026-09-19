@@ -11,6 +11,6 @@
       </div>
       <p class="lup-distance-note">{{'DISTANCE_NOTE'|translate}}</p>
     </div></md-dialog-content>
-    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="data.buying">{{'BTN_BUY'|translate}} · {{cost()}} {{'TITLE_CREDITS'|translate}}</md-button></md-dialog-actions>
+    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="data.buying"><i class="material-icons purchase-action-icon" aria-hidden="true">near_me</i><span class="purchase-action-label">{{'BTN_BUY'|translate}}</span><span class="purchase-action-price">{{cost()}} <small>{{'TITLE_CREDITS'|translate}}</small></span></md-button></md-dialog-actions>
   </form>
 </md-dialog>
