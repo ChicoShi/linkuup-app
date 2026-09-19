@@ -284,14 +284,10 @@ md-button.md-raised, .md-button.md-raised {
 .roominfosingle .address { display: flex; align-items: center; gap: 8px; padding: 10px 14px; text-decoration: none; }
 .roominfosingle .addressmap { flex: 0 0 32px; margin: 0; }
 .roominfosingle .room-route-address { color: var(--lup-text); font-size: 13px; text-align: left; }
-
-.slick-current .roominfo { transform: translateY(-4px); }
-.slick-current .room-category-hero { box-shadow: 0 16px 38px rgba(70,56,170,.32); }
 .roominfo, .room-category-hero, .lup-room-slide { transition: transform .28s ease, box-shadow .28s ease, opacity .28s ease; }
-.slick-slide:not(.slick-current) .roominfo { opacity: .72; transform: scale(.97); }
 
 /* Discovery is one continuous canvas; cards get depth, not hard outlines. */
-.nearby md-content.greybg, .nearby .slickit, .nearby .search-input-wrap,
+.nearby md-content.greybg, .nearby .search-input-wrap,
 .nearby .location-categories { background: transparent; }
 .nearby .roominfo {
   border: 0;
@@ -387,36 +383,6 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .chatbutton.chatbutton--locked { width:min(72%,275px); margin-top:10px; }
 .nearby .chatbutton.chatbutton--locked button { height:36px; min-height:36px; margin:0; border:1px solid rgba(255,255,255,.10); border-radius:999px; background:rgba(30,29,48,.50); color:#b9b2cc; font-size:10px; font-weight:700; letter-spacing:.035em; box-shadow:none; }
 .nearby .chatbutton.chatbutton--locked button::before { content:'location_on'; margin-right:5px; font-family:'Material Icons'; font-size:14px; vertical-align:-2px; color:#9f8bf0; }
-.nearby .slick-slide:not(.slick-current) .roominfo { opacity: 1; transform: none; }
-.nearby .slick-slide {
-  transition: opacity .36s ease, filter .36s ease;
-}
-.nearby .slick-slide .lup-room-slide {
-  opacity: .38;
-  filter: saturate(.48) brightness(.68);
-  transform: translateY(24px) scale(.84);
-  transform-origin: center center;
-  transition: transform .46s cubic-bezier(.18,.78,.22,1), opacity .34s ease, filter .38s ease;
-}
-.nearby .slick-slide.slick-current .lup-room-slide {
-  opacity: 1;
-  filter: none;
-  transform: scale(1.018);
-}
-.nearby .slick-slide .chatbutton {
-  opacity: .25;
-  transform: translateY(18px) scale(.76);
-  transform-origin: center top;
-  transition: transform .42s cubic-bezier(.18,.78,.22,1), opacity .28s ease;
-}
-.nearby .slick-slide.slick-current .chatbutton {
-  opacity: 1;
-  transform: none;
-  animation: lup-chat-ready .46s cubic-bezier(.18,.78,.22,1) both;
-}
-.nearby .slick-current .room-category-hero {
-  animation: lup-emblem-arrive .48s cubic-bezier(.22,.75,.24,1) both;
-}
 @keyframes lup-emblem-arrive {
   0% { transform: translateY(13px) scale(.86) rotate(-5deg); opacity: .35; }
   70% { transform: translateY(-3px) scale(1.035) rotate(1deg); opacity: 1; }
@@ -426,11 +392,6 @@ md-button.md-raised, .md-button.md-raised {
   0% { transform: translateY(22px) scale(.72); opacity: 0; }
   72% { transform: translateY(-3px) scale(1.045); opacity: 1; }
   100% { transform: none; opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .nearby .slick-slide .lup-room-slide,
-  .nearby .slick-slide .chatbutton,
-  .nearby .slick-current .room-category-hero { transition: none; animation: none; }
 }
 
 .nearby .roomhead,
@@ -504,27 +465,16 @@ md-button.md-raised, .md-button.md-raised {
 .room-hero-name { align-self: center; overflow: hidden; color: #fff; font-size: clamp(23px,6.5vw,31px); line-height: .98; letter-spacing: -.04em; text-shadow: 0 5px 16px rgba(0,0,0,.28); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .room-hero-hint { display: inline-flex; align-items: center; gap: 3px; align-self: end; margin-top:7px; color: rgba(255,255,255,.88); font-size: 10px; font-weight: 750; }.room-hero-hint .material-icons { font-size: 16px; }
 .nearby .roomhead { display: none; }.nearby .distrat, .nearby .room-user-preview { top: 12px; }
-.nearby .slick-current .room-category-hero:hover .room-category-orbit { transform: rotate(4deg) scale(1.08); }.nearby .slick-current .room-category-hero:hover .room-hero-hint .material-icons { transform: translateX(4px); }
-
-/* The focused place quietly comes alive while swiping; the surrounding UI stays calm. */
-.nearby .slick-current .room-category-hero { box-shadow: 0 20px 42px rgba(0,0,0,.34), 0 0 0 1px rgba(255,255,255,.10), 0 0 34px rgba(124,94,241,.22), inset 0 1px 0 rgba(255,255,255,.28); }
-.nearby .slick-current .room-category-hero::after { animation: lup-poster-drift 5.5s ease-in-out infinite; }
-.nearby .slick-current .room-category-hero::before { animation: lup-poster-orbit 5.5s ease-in-out infinite; }
-.nearby .slick-current .room-category-orbit { animation: lup-orbit-breathe 2.8s ease-in-out infinite; }
-.nearby .slick-current .room-hero-name { animation: lup-name-settle .55s cubic-bezier(.18,.78,.22,1) both; }
-.nearby .slick-current .room-hero-hint { padding: 5px 8px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(13,14,28,.17); backdrop-filter: blur(4px); }
 @keyframes lup-poster-drift { 0%,100% { opacity:.20; transform:translateX(-3px); } 50% { opacity:.34; transform:translateX(4px); } }
 @keyframes lup-poster-orbit { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(-7px,-4px) scale(1.05); } }
 @keyframes lup-orbit-breathe { 0%,100% { transform:rotate(-7deg) scale(1); } 50% { transform:rotate(-2deg) scale(1.045); } }
 @keyframes lup-name-settle { 0% { opacity:0; transform:translateY(10px); letter-spacing:.02em; } 100% { opacity:1; transform:none; } }
-@media (prefers-reduced-motion: reduce) { .nearby .slick-current .room-category-hero::after, .nearby .slick-current .room-category-hero::before, .nearby .slick-current .room-category-orbit, .nearby .slick-current .room-hero-name { animation:none; } }
 /* The place emblem has a physical, coin-like depth when the carousel settles. */
 .nearby .room-category-hero { perspective:700px; }
 .nearby .room-category-orbit { border-color:rgba(255,255,255,.46); background:linear-gradient(145deg,rgba(255,255,255,.38) 0%,rgba(158,132,255,.34) 26%,rgba(43,51,122,.62) 100%); box-shadow:0 18px 0 rgba(22,19,67,.30),0 25px 34px rgba(0,0,0,.38),inset 0 2px 1px rgba(255,255,255,.43),inset 0 -8px 12px rgba(11,10,39,.25); transform:rotate(-8deg) rotateX(8deg); }
 .room-category-orbit::before { inset:6px; border-color:rgba(255,255,255,.28); box-shadow:inset 0 1px 3px rgba(255,255,255,.35); }
 .room-category-orbit::after { width:86px; height:86px; background:radial-gradient(circle,rgba(255,255,255,.66),rgba(143,112,255,.24) 38%,transparent 72%); filter:blur(12px); opacity:.55; }
 .nearby .room-category-hero .room-category-orbit .material-icons { transform:translateY(-2px); filter:drop-shadow(0 3px 0 rgba(35,29,92,.58)) drop-shadow(0 9px 8px rgba(0,0,0,.38)); }
-.nearby .slick-current .room-category-orbit { animation:lup-orbit-3d 2.65s ease-in-out infinite; }
 @keyframes lup-orbit-3d { 0%,100% { transform:rotate(-8deg) rotateX(8deg) translateY(0) scale(1); } 50% { transform:rotate(-2deg) rotateX(-3deg) translateY(-6px) scale(1.065); } }
 /* A swipe destination gets a sculptural seal instead of a plain app-icon tile. */
 .nearby .room-category-orbit { width:78px; height:86px; border:0; border-radius:30px 30px 30px 12px; background:linear-gradient(145deg,#c5b9ff 0%,#7961e9 42%,#313d9b 100%); box-shadow:0 8px 0 rgba(35,30,104,.52),0 19px 28px rgba(0,0,0,.38),inset 0 2px 1px rgba(255,255,255,.48),inset 0 -9px 13px rgba(22,18,78,.30); }
@@ -545,7 +495,6 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .roominfo { min-height:448px; perspective:900px; }
 .nearby .room-category-hero { height:246px; padding-top:25px; padding-bottom:24px; }
 .nearby .roominfo::before { top:266px; }
-.nearby .slick-current .room-category-hero { transform:translateY(-7px) rotateX(2deg); border-color:rgba(221,213,255,.34); box-shadow:0 13px 0 rgba(19,19,52,.40),0 30px 48px rgba(0,0,0,.42),0 0 38px rgba(128,98,246,.20),inset 0 1px 0 rgba(255,255,255,.30); }
 .nearby .distrat { height:34px; margin-left:22px; margin-right:22px; padding:0 8px; border-radius:11px; opacity:.90; }.nearby .roominfo .rating { flex-basis:92px; width:92px; }.nearby .roominfo .rating .jk-rating-stars-container .button .material-icons { font-size:12px; }.nearby .roominfo .distance p { font-size:10px; }
 .nearby .room-user-preview { min-height:36px; margin:8px 22px 0; padding:5px 7px; border-radius:11px; opacity:.90; }.nearby .room-user-preview .lup-avatar { width:27px; height:27px; }.nearby .room-user-preview .lup-avatar img { width:27px; height:27px; }.nearby .room-user-preview .more-users { flex-basis:30px; width:30px; height:30px; }.nearby .room-user-preview .more-users b { font-size:9px; line-height:26px; }.nearby .room-presence-count { padding:5px 7px; font-size:10px; }.nearby .room-presence-count .material-icons { font-size:13px; }
 .nearby .room-user-preview { margin-top:13px; }
@@ -582,7 +531,6 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .room-category-hero .room-category-name { align-self:end; font-size:9px; letter-spacing:.12em; }
 .nearby .room-hero-name { align-self:start; margin-top:5px; font-size:clamp(20px,5.6vw,27px); line-height:1.02; }
 .nearby .room-hero-hint { display:none; }
-.nearby .slick-current .room-category-hero { transform:translateY(-3px) rotateX(1deg); box-shadow:0 16px 31px rgba(0,0,0,.32),0 0 25px rgba(128,98,246,.15),inset 0 1px 0 rgba(255,255,255,.25); }
 .nearby .room-user-preview { margin-top:8px; }
 
 /* Alternative direction: an editorial night-pass, deliberately flatter than the playful 3D treatment. */
@@ -594,8 +542,6 @@ md-button.md-raised, .md-button.md-raised {
 .nearby .room-category-hero .room-category-orbit .material-icons { font-size:22px; transform:none; filter:none; }
 .nearby .room-category-hero .room-category-name { align-self:center; color:#bfb6d9; font-size:8px; letter-spacing:.16em; }
 .nearby .room-hero-name { align-self:start; margin-top:4px; color:#f8f7fb; font-size:clamp(20px,5.4vw,26px); font-weight:720; letter-spacing:-.025em; line-height:1; text-shadow:none; }
-.nearby .slick-current .room-category-hero { transform:none; border-color:rgba(192,179,255,.26); box-shadow:0 15px 27px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.07); }
-.nearby .slick-current .room-category-orbit { animation:none; }
 
 /* Category-aware location card: the category itself chooses the accent, not a generic app gradient. */
 .nearby .room-category-hero { --lup-place-accent:#9a85ec; --lup-place-glow:rgba(154,133,236,.22); grid-template-columns:64px minmax(0,1fr); grid-template-rows:22px minmax(0,1fr); height:118px; padding:17px 19px; border-color:color-mix(in srgb,var(--lup-place-accent) 38%,transparent); border-radius:19px; background:linear-gradient(112deg,color-mix(in srgb,var(--lup-place-accent) 18%,#202231),#191b29 68%); box-shadow:0 16px 29px rgba(0,0,0,.27),0 0 25px var(--lup-place-glow),inset 0 1px 0 rgba(255,255,255,.08); }
@@ -1582,36 +1528,6 @@ md-list.usernavigation .presence-actions .usericon {
   text-transform: uppercase;
 }
 .lup-top-bar .location-top-copy > span .material-icons { color: #75dcb1; font-size: 9px; }
-
-/* Location changes feel like arriving at the next real place, not flipping cards. */
-.nearby .slickit { overflow: visible; }
-.nearby .slick-list { overflow: hidden; }
-.nearby .slick-slide .lup-room-slide {
-  transition-duration: .36s, .28s;
-  /* The rail is used continuously. Keep its compositor work to properties
-     that remain smooth on older phones as well as desktop browsers. */
-  will-change: transform, opacity;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-hero {
-  animation: lup-place-arrive-right .36s cubic-bezier(.18,.78,.24,1) both;
-}
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-hero {
-  animation: lup-place-arrive-left .36s cubic-bezier(.18,.78,.24,1) both;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton {
-  animation: lup-place-detail-rise .26s cubic-bezier(.16,.8,.25,1) both;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat { animation-delay: .05s; }
-.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview { animation-delay: .08s; }
-.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation-delay: .11s; }
 @keyframes lup-place-arrive-right {
   0% { opacity: .18; transform: translate3d(24px,6px,0) rotate(1deg) scale(.96); }
   72% { opacity: 1; transform: translate3d(-2px,-1px,0) rotate(0) scale(1.008); }
@@ -1625,44 +1541,6 @@ md-list.usernavigation .presence-actions .usericon {
 @keyframes lup-place-detail-rise {
   from { opacity: 0; transform: translateY(15px) scale(.96); }
   to { opacity: 1; transform: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .nearby .slickit.lup-swipe-forward .slick-current .room-category-hero,
-  .nearby .slickit.lup-swipe-backward .slick-current .room-category-hero,
-  .nearby .slickit.lup-swipe-forward .slick-current .distrat,
-  .nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-  .nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-  .nearby .slickit.lup-swipe-backward .slick-current .distrat,
-  .nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
-  .nearby .slickit.lup-swipe-backward .slick-current .chatbutton { animation: none; }
-}
-
-/* The complete location panel joins the swipe: large frame first, then its children. */
-.nearby .slick-slide .roominfo {
-  transform: translateY(7px) scale(.965);
-  transform-origin: 50% 46%;
-  opacity: .5;
-  transition: transform .36s cubic-bezier(.16,.82,.24,1), opacity .28s ease;
-}
-.nearby .slick-slide.slick-current .roominfo {
-  transform: none;
-  opacity: 1;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .roominfo,
-.nearby .slickit.lup-swipe-backward .slick-current .roominfo {
-  animation: lup-location-stage .36s cubic-bezier(.18,.78,.24,1) both;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit {
-  animation: lup-location-seal .38s cubic-bezier(.16,.82,.24,1) both;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
-.nearby .slickit.lup-swipe-backward .slick-current .room-presence-count {
-  animation: lup-location-chip .38s cubic-bezier(.18,.8,.28,1) .28s both;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .more-users,
-.nearby .slickit.lup-swipe-backward .slick-current .more-users {
-  animation: lup-location-chip .38s cubic-bezier(.18,.8,.28,1) .33s both;
 }
 @keyframes lup-location-stage {
   0% { opacity: .22; transform: translateY(14px) scale(.93); }
@@ -1678,17 +1556,6 @@ md-list.usernavigation .presence-actions .usericon {
   0% { opacity: 0; transform: scale(.55); }
   75% { opacity: 1; transform: scale(1.09); }
   100% { opacity: 1; transform: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .nearby .slick-slide .roominfo,
-  .nearby .slickit.lup-swipe-forward .slick-current .roominfo,
-  .nearby .slickit.lup-swipe-backward .slick-current .roominfo,
-  .nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
-  .nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit,
-  .nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
-  .nearby .slickit.lup-swipe-backward .slick-current .room-presence-count,
-  .nearby .slickit.lup-swipe-forward .slick-current .more-users,
-  .nearby .slickit.lup-swipe-backward .slick-current .more-users { animation: none; transition: none; }
 }
 
 /* Two distinct real-world actions: a scanned venue Cuddle and a precise route. */
@@ -2106,8 +1973,7 @@ md-list.usernavigation .presence-actions .usericon {
 }
 .nearby .room-user-preview .lup-avatar span { background:#31394b; }
 
-/* Mini presence avatars use the real background-image element only.  The
-   legacy empty span could survive in a Slick clone as a small dark shadow. */
+
 .nearby .room-user-preview .lup-avatar span { display:none; }
 .nearby .room-user-preview .lup-avatar { box-shadow:none; }
 
@@ -3184,71 +3050,19 @@ md-list.usernavigation .presence-actions .usericon {
   box-shadow:0 0 10px var(--lup-circuit-glow);
   pointer-events:none;
 }
-.nearby .slickit { position:relative; isolation:isolate; }
-.nearby md-content.greybg,
-.nearby .slickit,
-.nearby .slickit .slick-list { min-width:0; max-width:100%; }
-.nearby .slickit::before {
-  content:'';
-  position:absolute;
-  z-index:2;
-  top:1px; left:12%; right:12%; height:1px;
-  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--lup-circuit) 24%,transparent) 16%,var(--lup-circuit) 50%,color-mix(in srgb,var(--lup-circuit) 24%,transparent) 84%,transparent);
-  box-shadow:0 0 11px var(--lup-circuit-glow);
-  opacity:.72;
-  pointer-events:none;
-}
+.nearby md-content.greybg{ min-width:0; max-width:100%; }
 .nearby .location-categories:has(button:nth-child(1).active) { --lup-circuit-x:8.333%; }
 .nearby .location-categories:has(button:nth-child(2).active) { --lup-circuit-x:25%; }
 .nearby .location-categories:has(button:nth-child(3).active) { --lup-circuit-x:41.667%; }
 .nearby .location-categories:has(button:nth-child(4).active) { --lup-circuit-x:58.333%; }
 .nearby .location-categories:has(button:nth-child(5).active) { --lup-circuit-x:75%; }
 .nearby .location-categories:has(button:nth-child(6).active) { --lup-circuit-x:91.667%; }
-.nearby .slickit::after {
-  content:'';
-  position:absolute;
-  z-index:30;
-  top:1px;
-  left:var(--lup-circuit-x,50%);
-  width:2px;
-  height:46px;
-  transform:translateX(-50%);
-  background:linear-gradient(var(--lup-circuit),color-mix(in srgb,var(--lup-circuit) 22%,transparent) 76%,transparent);
-  box-shadow:0 0 10px var(--lup-circuit-glow),0 40px 0 -1px var(--lup-circuit);
-  pointer-events:none;
-}
-.nearby .slickit .slick-list,
-.nearby .slickit .slick-track { position:relative; z-index:1; }
-
-/* The discovery rail is horizontal.  It owns gestures while a finger is on a
-   location card: vertical feed-scrolling must never replace a place swipe. */
-.nearby .slickit .slick-list {
-  touch-action:none;
-  overscroll-behavior:contain;
-  cursor:grab;
-}
-.nearby .slickit .slick-list:active { cursor:grabbing; }
-
-/* A brief Angular/Slick re-render must not expose all cards as a vertical
-   fallback list. The controller restores Slick immediately after a resize. */
-.nearby .slickit:not(.slick-initialized) {
-  overflow:hidden;
-  touch-action:none;
-}
-.nearby .slickit:not(.slick-initialized) > .lup-room-slide-outer:not(:first-child) {
-  display:none;
-}
 
 /* Keep the category response, remove the visible circuit. The discovery strip
    stays calm while the matching seal still gives the user orientation. */
 .nearby .location-categories button::after { display:block; opacity:0; transform:scaleX(0); transform-origin:center; transition:transform 190ms cubic-bezier(.2,.85,.25,1),opacity 120ms ease-out; }
 .nearby .location-categories button.is-current-category::after { opacity:1; transform:scaleX(1); }
 @media (prefers-reduced-motion:reduce) { .nearby .location-categories button::after { transition:none; } }
-.nearby .slickit::before,
-.nearby .slickit::after { content:none; display:none; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:not(:nth-child(1)) {
-  transition:color .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;
-}
 
 /* Live presence is a compact guest rail: five faces stay recognisable, then
    a numeric stack takes over. This scales from an empty venue to 99+ guests. */
@@ -3348,8 +3162,6 @@ md-list.usernavigation .presence-actions .usericon {
 }
 @media (max-width:600px) {
   .nearby .location-categories button.active::after { height:30px; }
-  .nearby .slickit::before { left:12%; right:12%; }
-  .nearby .slickit::after { height:38px; box-shadow:0 0 10px var(--lup-circuit-glow),0 32px 0 -1px var(--lup-circuit); }
 }
 
 /* Category seals: one compact, technical icon family instead of six unrelated
@@ -3559,80 +3371,6 @@ md-list.usernavigation .presence-actions .usericon {
   border-radius:50%;
   background:color-mix(in srgb,var(--lup-place-accent) 45%,transparent);
   box-shadow:0 0 8px var(--lup-place-glow);
-}
-
-/* In the unrestricted discovery view, CSS can read Slick's current card
-   directly. This lets the circuit follow a swipe without touching Slick,
-   Angular or the category filter. */
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-city) .location-categories { --lup-circuit:#8fc8ff; --lup-circuit-glow:rgba(109,187,255,.34); }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-bar) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-pub) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-cafe) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-food) .location-categories { --lup-circuit:#efb17c; --lup-circuit-glow:rgba(238,145,89,.34); }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-club) .location-categories { --lup-circuit:#ea91e3; --lup-circuit-glow:rgba(222,98,214,.36); }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-community) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-university) .location-categories { --lup-circuit:#90dae7; --lup-circuit-glow:rgba(89,194,211,.34); }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-culture) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-sport) .location-categories,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-health) .location-categories { --lup-circuit:#9bcce9; --lup-circuit-glow:rgba(102,173,221,.32); }
-
-/* The down-link meets the category band of the visible card at the same
-   horizontal position as its upper seal. */
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-city) .slickit { --lup-circuit-x:25%; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-bar) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-pub) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-cafe) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-food) .slickit { --lup-circuit-x:41.667%; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-club) .slickit { --lup-circuit-x:58.333%; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-community) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-university) .slickit { --lup-circuit-x:75%; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-culture) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-sport) .slickit,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-health) .slickit { --lup-circuit-x:91.667%; }
-
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:nth-child(1) {
-  border-color:transparent;
-  background:linear-gradient(160deg,rgba(255,255,255,.028),rgba(255,255,255,0));
-  box-shadow:none;
-  color:color-mix(in srgb,var(--lup-category-ink) 60%,#a3a3b2);
-}
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:nth-child(1)::after { display:none; }
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-city) .location-categories button:nth-child(2),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-bar) .location-categories button:nth-child(3),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-pub) .location-categories button:nth-child(3),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-cafe) .location-categories button:nth-child(3),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-food) .location-categories button:nth-child(3),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-club) .location-categories button:nth-child(4),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-community) .location-categories button:nth-child(5),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-university) .location-categories button:nth-child(5),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-culture) .location-categories button:nth-child(6),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-sport) .location-categories button:nth-child(6),
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-health) .location-categories button:nth-child(6) {
-  position:relative;
-  z-index:2;
-  border-color:color-mix(in srgb,var(--lup-circuit) 52%,transparent);
-  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-category-ink) 14%,rgba(255,255,255,.07)),rgba(255,255,255,.025));
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--lup-circuit) 12%,transparent),0 0 15px var(--lup-circuit-glow),inset 0 1px 0 rgba(255,255,255,.18);
-  color:#faf9ff;
-}
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-city) .location-categories button:nth-child(2)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-bar) .location-categories button:nth-child(3)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-pub) .location-categories button:nth-child(3)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-cafe) .location-categories button:nth-child(3)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-food) .location-categories button:nth-child(3)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-club) .location-categories button:nth-child(4)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-community) .location-categories button:nth-child(5)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-university) .location-categories button:nth-child(5)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-culture) .location-categories button:nth-child(6)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-sport) .location-categories button:nth-child(6)::after,
-.nearby md-content.greybg:has(.location-categories button:nth-child(1).active):has(.slickit .slick-current .room-category-hero.category-health) .location-categories button:nth-child(6)::after {
-  content:'';
-  position:absolute;
-  z-index:-1;
-  top:100%; left:50%; width:2px; height:38px;
-  background:linear-gradient(var(--lup-circuit),color-mix(in srgb,var(--lup-circuit) 18%,transparent));
-  box-shadow:0 0 10px var(--lup-circuit-glow);
-  pointer-events:none;
 }
 
 /* A room chat inherits its venue's atmosphere without becoming a visual
@@ -5666,7 +5404,6 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .nearby .placeboard .room-user-preview::after { content:'Live vor Ort'; margin-left:auto; color:#9eafc8; font-size:9px; font-weight:780; letter-spacing:.04em; }
 .nearby .placeboard .room-presence-count { margin:0 0 0 8px; }
 .nearby .placeboard .distrat { bottom:25px; gap:11px; }
-.nearby .slick-current .placeboard { animation:lup-placeboard-arrive .34s cubic-bezier(.22,.82,.25,1) both; }
 @keyframes lup-placeboard-arrive { from { opacity:.74; transform:translateY(5px) scale(.992); } to { opacity:1; transform:translateY(0) scale(1); } }
 @media (max-width:390px) {
   .nearby .placeboard { min-height:365px; border-radius:20px; }
@@ -5677,7 +5414,6 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
   .nearby .placeboard .room-user-preview::after { display:none; }
   .nearby .placeboard .distrat { bottom:18px; }
 }
-@media (prefers-reduced-motion:reduce) { .nearby .slick-current .placeboard { animation:none; } }
 .profile-page .information-tabs md-tab-item::before { display:none; content:none; }
 .profile-page .information-tabs md-tab-item .md-tab-label::before { font-family:'Material Icons'; font-size:19px; line-height:1; color:#8d899d; transition:none; }
 .profile-page .information-tabs md-tab-item:first-child .md-tab-label::before { content:'short_text'; }
@@ -5780,24 +5516,11 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 @keyframes lup-location-ambient { 0% { transform:translate3d(-4%,-2%,0) scale(.97); opacity:.56; } 50% { transform:translate3d(4%,3%,0) scale(1.05); opacity:.92; } 100% { transform:translate3d(1%,-4%,0) scale(1); opacity:.66; } }
 @keyframes lup-location-orbit { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 @keyframes lup-location-icon-pulse { 0%,100% { opacity:.28; filter:brightness(1); } 50% { opacity:.38; filter:brightness(1.18); } }
-
-/* Discovery card atmosphere: the central swipe card receives the visible
-   ambient movement, so the location home feels alive even before opening it. */
-.nearby .slick-current .roominfo {
-  background-image:
-    radial-gradient(ellipse at 16% 16%,rgba(153,120,255,.30),transparent 34%),
-    radial-gradient(ellipse at 88% 76%,rgba(73,183,240,.20),transparent 37%),
-    radial-gradient(ellipse at 53% 108%,rgba(235,126,210,.12),transparent 36%),
-    linear-gradient(155deg,rgba(38,40,66,.99),rgba(19,21,36,.99));
-  background-size:150% 150%;
-  animation:lup-room-ambient 12s ease-in-out infinite alternate;
-}
 @keyframes lup-room-ambient {
   0% { background-position:0% 8%; }
   50% { background-position:74% 58%; }
   100% { background-position:22% 100%; }
 }
-@media (prefers-reduced-motion:reduce) { .nearby .slick-current .roominfo { animation:none; } }
 
 /* The whole discovery view gets its own quiet motion language: a slow signal
    path and drifting points sit behind the cards, like a live map at night. */
@@ -6506,18 +6229,6 @@ md-toast.lup-friend-arrival-toast .md-button { min-width:0; margin:0; padding:0 
 .md-sidenav-left md-list-item::before { background:transparent; }
 .md-sidenav-left md-list-item:hover { border-color:transparent; background:linear-gradient(90deg,rgba(84,157,223,.18),rgba(123,92,202,.07) 68%,transparent); }
 .md-sidenav-left md-list-item:hover::before { background:#9fddff; box-shadow:0 0 11px rgba(129,208,255,.62); }
-
-/* Overview means two pieces of information at once: “Alle” remains selected
-   while the matching category of the visible card is lit beside it. A direct
-   category selection still uses Angular's one-filter state and turns All off. */
-.nearby md-content.greybg:has(.location-categories button:first-child.active):has(.slickit .slick-current .room-category-hero[class*="category-"]) .location-categories button:first-child.active {
-  position:relative;
-  z-index:3;
-  border-color:color-mix(in srgb,var(--lup-category-ink) 52%,transparent);
-  background:linear-gradient(145deg,color-mix(in srgb,var(--lup-category-ink) 14%,rgba(255,255,255,.07)),rgba(255,255,255,.025));
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--lup-category-ink) 12%,transparent),0 0 15px color-mix(in srgb,var(--lup-category-ink) 25%,transparent),inset 0 1px 0 rgba(255,255,255,.18);
-  color:#faf9ff;
-}
 
 /* The overview seal is now part of the same labelled category family. */
 .nearby .location-categories button:first-child span {
@@ -7414,46 +7125,11 @@ md-backdrop.md-dialog-backdrop { z-index:10010; }
 @media (prefers-reduced-motion:reduce) {
   .nearby md-content.greybg::before,.nearby md-content.greybg::after { animation:none; }
 }
-
-/* The visible part of the ambient signal lives inside the current venue card;
-   the card otherwise covers the page-level background on a phone. */
-.nearby .slick-current .roominfo { isolation:isolate; overflow:hidden; }
-.nearby .slick-current .roominfo > * { position:relative; z-index:1; }
-.nearby .slick-current .roominfo::after {
-  content:'';
-  position:absolute;
-  z-index:0;
-  bottom:-94px;
-  left:-34%;
-  width:168%;
-  height:158px;
-  pointer-events:none;
-  border:1px solid rgba(155,137,255,.22);
-  border-top-color:rgba(181,163,255,.60);
-  border-radius:50%;
-  background:radial-gradient(ellipse at 49% 16%,rgba(126,193,255,.13),transparent 34%);
-  box-shadow:0 -1px 15px rgba(162,139,255,.20),0 -6px 36px rgba(63,171,237,.10),inset 0 1px 12px rgba(159,136,245,.08);
-  transform-origin:50% 100%;
-  animation:lup-card-signal-arc 13s ease-in-out infinite alternate;
-}
 @keyframes lup-card-signal-arc {
   0% { transform:translate3d(-2%,8px,0) scale(.96); opacity:.36; }
   52% { transform:translate3d(2%,-5px,0) scale(1.035); opacity:.88; }
   100% { transform:translate3d(-1%,-1px,0) scale(1); opacity:.52; }
 }
-@media (prefers-reduced-motion:reduce) { .nearby .slick-current .roominfo::after { animation:none; } }
-
-/* Responsive safety net: whether DevTools is wide or phone-sized, Slick owns
-   one horizontal viewport. It must never fall back to a vertical room list. */
-.nearby .slickit,
-.nearby .slickit .slick-list {
-  width:100%;
-  max-width:100%;
-  overflow:hidden;
-}
-.nearby .slickit .slick-list { touch-action:pan-y; }
-.nearby .slickit .slick-track { min-width:100%; }
-.nearby .slickit .slick-slide { height:auto; }
 
 /* Location navigation and presence: calm premium surfaces, clear current
    state, and people as the focus rather than decorative chrome. */
@@ -7805,31 +7481,6 @@ md-backdrop.md-dialog-backdrop { z-index:10010; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > .material-icons { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; margin:0; border:1px solid rgba(135,228,179,.32); border-radius:12px; background:rgba(73,186,133,.12); color:#9be4ba; font-size:21px; }
 .location-page md-list.usernavigation .location-presence-heading .md-subheader-inner > div { min-width:0; flex:1 1 auto; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner strong { display:block; overflow:hidden; color:#f5f3fb; font-size:13px; font-weight:720; line-height:1.2; text-overflow:ellipsis; white-space:nowrap; }.location-page md-list.usernavigation .location-presence-heading .md-subheader-inner span { display:block; overflow:hidden; margin-top:3px; color:#aaa6b7; font-size:10px; line-height:1.2; text-overflow:ellipsis; white-space:nowrap; }
 
-/* Keep long location rails smooth: Slick moves the card; its contents stay put. */
-.nearby .slick-slide .roominfo,
-.nearby .slick-slide.slick-current .roominfo {
-  transform:none;
-  opacity:1;
-  filter:none;
-  transition:opacity .18s ease;
-}
-.nearby .slickit.lup-swipe-forward .slick-current .roominfo,
-.nearby .slickit.lup-swipe-backward .slick-current .roominfo,
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-hero,
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-hero,
-.nearby .slickit.lup-swipe-forward .slick-current .distrat,
-.nearby .slickit.lup-swipe-backward .slick-current .distrat,
-.nearby .slickit.lup-swipe-forward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-backward .slick-current .room-user-preview,
-.nearby .slickit.lup-swipe-forward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-backward .slick-current .chatbutton,
-.nearby .slickit.lup-swipe-forward .slick-current .room-category-orbit,
-.nearby .slickit.lup-swipe-backward .slick-current .room-category-orbit,
-.nearby .slickit.lup-swipe-forward .slick-current .room-presence-count,
-.nearby .slickit.lup-swipe-backward .slick-current .room-presence-count,
-.nearby .slickit.lup-swipe-forward .slick-current .more-users,
-.nearby .slickit.lup-swipe-backward .slick-current .more-users { animation:none; }
-
 .vote-dialog-note { margin:0 0 13px; padding:9px 10px; border-left:2px solid #9bcfff; background:rgba(104,149,219,.10); color:#c7d8ed; font-size:11px; line-height:1.4; }
 
 /* Final presence header: one live signal, one total, no decorative duplicates.
@@ -7979,24 +7630,14 @@ md-backdrop.md-dialog-backdrop { z-index:10010; }
 .lup-location-cuddle-frame { position:relative; display:grid; place-items:center; width:min(67vw,222px); margin:17px auto 10px; padding:9px; border:1px solid rgba(154,211,255,.28); border-radius:22px; background:linear-gradient(135deg,rgba(93,182,239,.12),rgba(158,105,215,.08)); box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 13px 30px rgba(2,10,30,.26); }.lup-location-cuddle-frame::before { content:''; position:absolute; inset:5px; border:1px solid rgba(241,217,255,.12); border-radius:17px; pointer-events:none; }.lup-location-cuddle-frame .lup-cuddles-qr { position:relative; z-index:1; padding:8px; border:0; border-radius:14px; box-shadow:0 7px 18px rgba(0,0,0,.28); }.lup-location-cuddle-frame .lup-cuddles-qr img { width:min(59vw,190px); }.lup-location-cuddle-frame-corner { position:absolute; z-index:2; width:13px; height:13px; border-color:#b9e8ff; border-style:solid; pointer-events:none; }.corner-a { top:5px; left:5px; border-width:2px 0 0 2px; border-radius:5px 0 0; }.corner-b { top:5px; right:5px; border-width:2px 2px 0 0; border-radius:0 5px 0 0; }.corner-c { bottom:5px; left:5px; border-width:0 0 2px 2px; border-radius:0 0 0 5px; }.corner-d { right:5px; bottom:5px; border-width:0 2px 2px 0; border-radius:0 0 5px 0; }
 .lup-location-cuddle-scan { display:inline-flex; align-items:center; gap:5px; color:#bce8ff; font-size:10px; font-weight:800; letter-spacing:.055em; text-transform:uppercase; }.lup-location-cuddle-scan .material-icons { font-size:15px; color:#ffd1e3; }.lup-location-cuddle-rule { margin-top:15px; border-color:rgba(162,209,255,.16); background:rgba(96,133,207,.12); color:#d7e5f6; }.lup-location-cuddle-done { border-color:rgba(189,224,255,.25); background:linear-gradient(112deg,#477fbb,#695bb3); box-shadow:0 6px 0 rgba(28,42,99,.45),0 14px 23px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.30); }
 
-/* Category changes rebuild a filtered Slick rail. Keep that short interval on
-   the compositor: there is no visual compromise, just no competing ornament. */
+
 .nearby .location-categories { isolation:isolate; -webkit-tap-highlight-color:transparent; }
 .nearby .location-categories button { touch-action:manipulation; transform:translateZ(0); backface-visibility:hidden; will-change:transform; }
 .nearby .location-categories button:active { transform:translateZ(0) scale(.965); transition:transform 70ms linear; }
 .nearby .location-categories button:not(.active) { transition:color 150ms ease,background-color 150ms ease,border-color 150ms ease,opacity 150ms ease; }
 .nearby .location-categories button.active { transition:color 150ms ease,background-color 150ms ease,border-color 150ms ease,opacity 150ms ease,transform 120ms ease; }
-.nearby .slickit,.nearby .slickit .slick-list { transform:translateZ(0); backface-visibility:hidden; }
-.nearby .slickit .slick-track { will-change:transform; backface-visibility:hidden; }
-.nearby .slickit .slick-track { transition-timing-function:cubic-bezier(.18,.86,.2,1); }
-.nearby .slickit.lup-category-refreshing .roominfo::after,
-.nearby .slickit.lup-category-refreshing .room-category-orbit,
-.nearby .slickit.lup-category-refreshing .room-presence-count::before { animation:none; }
-.nearby .slickit .slick-list { transition:opacity 110ms ease; }
-.nearby .slickit.lup-category-refreshing .slick-list { opacity:0; pointer-events:none; }
-.nearby .slickit.lup-category-refreshing .lup-room-slide-outer { opacity:0; pointer-events:none; }
 
-@media (prefers-reduced-motion:reduce) { .nearby .slickit .slick-track,.nearby .location-categories button { will-change:auto; } }
+@media (prefers-reduced-motion:reduce) { .nearby .location-categories button { will-change:auto; } }
 
 /* Small cleanup pass: settings have no decorative colour rail, and the
    profile statistics sit directly on the page rather than in a second frame. */
@@ -8738,18 +8379,6 @@ md-backdrop.md-dialog-backdrop { z-index:10010; }
    they read like a compact identity map rather than a settings form. */
 .profile-page .profile-information.profile-signal-board { position:relative; display:block; width:min(100%,680px); margin:0 auto; padding:2px 16px 34px; background:transparent; }.profile-page .profile-signal-group { position:relative; margin:0 0 22px; padding:0; }.profile-page .profile-signal-group-heading { display:flex; align-items:center; gap:8px; height:23px; margin:0 0 6px; padding:0 2px; }.profile-page .profile-signal-group-heading > span { width:5px; height:5px; border-radius:50%; background:#9fe6ff; box-shadow:0 0 11px rgba(108,208,255,.85); }.profile-page .profile-signal-group-heading small { color:#a4c0d9; font-size:8px; font-weight:870; letter-spacing:.15em; line-height:1; text-transform:uppercase; }.profile-page .profile-signal-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; overflow:hidden; border:1px solid rgba(173,211,241,.10); border-radius:16px; background:rgba(176,214,244,.08); box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 12px 26px rgba(2,10,29,.10); }.profile-page .profile-signal { position:relative; display:grid; grid-template-columns:34px minmax(0,1fr); gap:9px; align-items:center; min-width:0; min-height:65px; margin:0; padding:10px 10px; overflow:hidden; border:0; border-radius:0; background:linear-gradient(115deg,rgba(52,81,125,.22),rgba(21,30,49,.50)); }.profile-page .profile-signal::after { content:''; position:absolute; right:-22px; bottom:-31px; width:66px; height:66px; border:1px solid rgba(148,218,255,.075); border-radius:50%; pointer-events:none; }.profile-page .profile-signal:nth-child(3n) { background:linear-gradient(115deg,rgba(78,66,134,.20),rgba(23,29,51,.52)); }.profile-page .profile-signal-icon { position:relative; z-index:1; display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(171,224,255,.20); border-radius:11px 11px 11px 4px; background:linear-gradient(145deg,rgba(108,194,234,.17),rgba(100,90,181,.08)); color:#c9efff; }.profile-page .profile-signal-icon .material-icons { font-size:17px; filter:drop-shadow(0 2px 6px rgba(91,193,255,.28)); }.profile-page .profile-signal-copy { position:relative; z-index:1; min-width:0; }.profile-page .profile-signal-copy small,.profile-page .profile-signal-copy strong { display:block; overflow:hidden; margin:0; text-overflow:ellipsis; white-space:nowrap; }.profile-page .profile-signal-copy small { color:#91aac3; font-size:8px; font-weight:790; letter-spacing:.065em; line-height:1.15; text-transform:uppercase; }.profile-page .profile-signal-copy strong { margin-top:4px; color:#f0f6ff; font-size:12px; font-weight:720; line-height:1.2; }.profile-page .profile-signal-copy strong .material-icons { margin-right:4px; color:#efb2c7; font-size:13px; vertical-align:-2px; }.profile-page .profile-signal--denied { background:rgba(64,42,62,.28); }.profile-page .profile-signal--denied .profile-signal-icon { border-color:rgba(235,176,197,.16); background:rgba(202,102,136,.10); color:#f3c5d3; }
 @media (max-width:360px) { .profile-page .profile-information.profile-signal-board { padding-right:11px; padding-left:11px; }.profile-page .profile-signal { grid-template-columns:30px minmax(0,1fr); gap:7px; min-height:60px; padding:8px; }.profile-page .profile-signal-icon { width:30px; height:30px; }.profile-page .profile-signal-copy strong { font-size:11px; } }
-
-/* Retire the old discovery circuit completely.  It used to leave a thin
-   animated divider directly below the category strip on wide displays.  The
-   category controls still keep their own selected-state feedback; only the
-   obsolete bridge into the carousel is gone. */
-.nearby .slickit::before,
-.nearby .slickit::after {
-  content:none;
-  display:none;
-  animation:none;
-  box-shadow:none;
-}
 
 /* The wide discovery canvas keeps its calm moving map points.  The separate
    diagonal flash was a leftover visual route and could cross the category

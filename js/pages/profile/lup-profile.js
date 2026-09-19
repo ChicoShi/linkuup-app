@@ -790,12 +790,12 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	
 	/**
-	 * Enable slick mode.
+	 * Initialise the optional tiled gallery.
 	 */
-	$scope.slickGallery = function(nofocus) {
-		console.log('LocationsCtrl.slickGallery()');
-		if (!$scope.data.slicked) {
-			$scope.data.slicked = true;
+	$scope.initGallery = function(nofocus) {
+		console.log('LocationsCtrl.initGallery()');
+		if (!$scope.data.galleryInitialised) {
+			$scope.data.galleryInitialised = true;
 			$scope.galleryAPI = $('#gallery-list').unitegallery({
 				tiles_type:"nested",
 				gallery_theme:"tiles"
