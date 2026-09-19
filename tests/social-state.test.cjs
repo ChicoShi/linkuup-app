@@ -47,30 +47,15 @@ test('Notifications paginate in seconds plus an id cursor, preserve unread total
  const unread={id:()=>101,read(){return !!this.JSON.note_read;},JSON:{}};service.CACHE[101]=unread;
  service.markedRead({read32:()=>101});service.markedRead({read32:()=>101});assert.equal(service.UNREAD,29);
 });
-test('Local guest preview never changes real membership and is unavailable on production hosts',()=>{
- function make(host){const {ctor}=load('lup-room-service.js',{location:{hostname:host,search:'?preview=presence'},sessionStorage:{getItem:()=>null,setItem(){}},t:k=>k},{LUPRoom:class{constructor(json){this.JSON=json;}}});return new ctor(q,{}, {},{}, {},{},{});}
- const realUsers=[{id:()=>7}],room={name:()=> 'Braunschweig Chat',USERS:realUsers};
- const local=make('app.localhost');assert.equal(local.displayUsers(room).length,20);assert.ok(local.displayUsers(room).every(u=>u.isPreview&&u.id()<0));assert.equal(room.USERS,realUsers);local.togglePreview();assert.equal(local.displayUsers(room),realUsers);
- const prod=make('app.linkuup.de');assert.equal(prod.displayUsers(room),realUsers);prod.togglePreview();assert.equal(prod.isPreviewRoom(room),false);
-});
-
-test('Five-minute avatar rehearsal keeps real users intact, caps faces at twenty and can pause or stop',()=>{
- function make(host){const {ctor}=load('lup-room-service.js',{location:{hostname:host,search:'?preview=balloons'},sessionStorage:{getItem:()=>null},t:k=>k},{LUPRoom:class{constructor(json){this.JSON=json;}}});return new ctor(q,{},{},{},{},{},{});}
- const realUsers=[{id:()=>7}],room={name:()=> 'Braunschweig Chat',USERS:realUsers};
- const local=make('app.localhost'),simulation=local.createPresenceSimulation(room);
- assert.equal(local.displayUsers(room).length,0);
- assert.equal(local.createPresenceSimulation(room),null); // One owner, no competing clocks.
- simulation.advance(39000); assert.equal(local.displayUsers(room).length,20);
- const firstTwenty=local.displayUsers(room).slice();
- simulation.advance(13000); assert.equal(local.displayUsers(room).length,19);
- assert.equal(local.displayUsers(room).includes(firstTwenty[3]),false); // Departure from the middle.
- simulation.running=false;simulation.advance(20000);assert.equal(simulation.elapsed,52000);
- simulation.running=true;
- for(let time=52500;time<=300000;time+=500){simulation.advance(500);const guests=local.displayUsers(room);assert.ok(guests.length<=20);assert.equal(new Set(guests.map(u=>u.id())).size,guests.length);assert.equal(room.USERS,realUsers);}
- assert.equal(simulation.done,true);assert.equal(simulation.elapsed,300000);assert.equal(local.displayUsers(room).length,20);
- simulation.stop();assert.equal(local.PREVIEW.simulating,false);assert.equal(local.displayUsers(room).length,20);
- const prod=make('app.linkuup.de');assert.equal(prod.createPresenceSimulation(room),null);assert.equal(prod.displayUsers(room),realUsers);
- assert.equal(local.createPresenceSimulation({name:()=> 'Another room',USERS:[]}),null);
+test('Old preview links and saved flags cannot replace the real roster',()=>{
+ for(const host of ['app.localhost','app.linkuup.de']){
+  const {ctor}=load('lup-room-service.js',{location:{hostname:host,search:'?preview=balloons'},sessionStorage:{getItem:()=> '1'}},{LUPRoom:class{constructor(json){this.JSON=json;}}});
+  const service=new ctor(q,{},{},{},{},{},{}),users=[{id:()=>7}],room={USERS:users};
+  assert.equal(service.displayUsers(room),users);
+  assert.equal(service.displayUsers(null).length,0);
+  assert.equal(service.createPresenceSimulation,undefined);
+  assert.equal(service.PREVIEW,undefined);
+ }
 });
 
 test('Escape and outside dismissal settle the public confirm/menu promise',async()=>{

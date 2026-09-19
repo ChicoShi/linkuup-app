@@ -117,10 +117,6 @@ lup-presence:not([compact="true"]) {width:100%;}
 .lup-presence-summary {display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;font-size:12px;line-height:1.4;}
 .lup-presence-number {display:inline-block;min-width:1ch;font-weight:650;font-variant-numeric:tabular-nums;color:#d5f5ec;}
 .lup-presence.is-compact {display:inline-flex;}
-.lup-presence-demo {display:flex;align-items:center;gap:4px;color:#9db9cc;font-size:10px;font-variant-numeric:tabular-nums;}
-.lup-presence-demo button {display:grid;place-items:center;width:32px;height:36px;padding:0;border:0;background:transparent;color:#c6e7f4;cursor:pointer;}
-.lup-presence-demo button .material-icons {font-size:18px;}
-.lup-presence-demo button:focus-visible {outline:2px solid #a3dbee;outline-offset:1px;border-radius:8px;}
 @keyframes lup-avatar-inflate {0%{transform:translateY(5px) scale(.12,.18);opacity:0;}60%{transform:translateY(-1px) scale(1.15,1.2);opacity:1;}82%{transform:scale(.96,.94);}100%{transform:translateY(0) scale(1);opacity:1;}}
 @keyframes lup-avatar-float {from{transform:translate3d(var(--float-side,1px),1px,0) rotate(-2deg);}to{transform:translate3d(calc(-1 * var(--float-side,1px)),-1.7px,0) rotate(2deg);}}
 @keyframes lup-avatar-pop {0%{transform:scale(1);opacity:1;}28%{transform:scale(1.18,1.22);opacity:1;}55%,100%{transform:scale(.2);opacity:0;}}

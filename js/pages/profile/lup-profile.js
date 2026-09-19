@@ -129,7 +129,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.profileFriendActionKey = function() {
 		var user = $scope.data.user;
 		if (!user || user.isSelf()) {
-			return 'FRIENDS';
+			return 'TITLE_FRIENDS';
 		}
 		if (user.isFriend()) {
 			return 'PROFILE_ACTION_FRIENDS';
@@ -462,12 +462,8 @@ angular.module('LUP').config(function($routeProvider) {
 				if (!placement || !setting) {
 					continue;
 				}
-				// Legacy display helpers initialise a few optional enums with "0".
-				// The profile frame still knows that they were actually absent, and
-				// an absent field must not turn into a visible "not specified" row.
-				if (empty[key] && !isOwnProfile) {
-					continue;
-				}
+				// Keep canonical field positions stable. Empty/denied values are
+				// blank and unlit after the final server-visibility check below.
 				var value = (profile.JSON || {})[key];
 				// Basic account fields are part of the user payload, not the profile
 				// payload. Use them for both the owner and permitted visitor views.
@@ -492,19 +488,10 @@ angular.module('LUP').config(function($routeProvider) {
 				}
 				// Do not turn an absent optional enum (often represented as 0 by a
 				// legacy endpoint) into an empty profile card.
-				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0';
+				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0' && value !== 0;
 				var error = (profile.ERRORS || {})[key];
-				// Visitors never see private facts. Their owner, however, needs one
-				// quiet confirmation that the field exists and is currently locked.
-				// This keeps privacy understandable without exposing the value.
+				// Denials override every display fallback, including owner settings.
 				var isPrivateForOwner = !!error && isOwnProfile;
-				if (error && !isPrivateForOwner) {
-					continue;
-				}
-				// Empty settings are intentionally omitted from the profile.
-				if (!hasValue && !isPrivateForOwner && !isOwnProfile) {
-					continue;
-				}
 				var section = profileSections[placement.section];
 				groups[placement.section] = groups[placement.section] || {
 					module: placement.section,
@@ -523,9 +510,9 @@ angular.module('LUP').config(function($routeProvider) {
 					private: isPrivateForOwner,
 					// This is the target user's stored ACL relation from GWS_Profile,
 					// not the module default carried by SettingsSrvc.CACHE.
-					acl: profile.ACL[key],
+					acl: (profile.ACL || {})[key],
 					visibility: $scope.profileFieldVisibility({
-						acl: profile.ACL[key],
+						acl: (profile.ACL || {})[key],
 						private: isPrivateForOwner,
 					}),
 				});
@@ -559,19 +546,32 @@ angular.module('LUP').config(function($routeProvider) {
 					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
 				}
 				groups[placement.section] = groups[placement.section] || {module: placement.section, label: profileSections[placement.section].label, sort: profileSections[placement.section].sort, fields: []};
-				groups[placement.section].fields.push({key: key, sort: placement.sort, setting: fallbackSetting, label: profileLabels[key] || key, value: value, error: null, empty: value === undefined || value === null || value === '' || value === '0', private: false, acl: null, visibility: 'private'});
+				groups[placement.section].fields.push({key: key, sort: placement.sort, setting: fallbackSetting, label: profileLabels[key] || key, value: value, error: null, empty: value === undefined || value === null || value === '' || value === '0' || value === 0, private: false, acl: null, visibility: 'private'});
 			});
 		}
 		var result = Object.keys(groups).map(function(module) { return groups[module]; }).sort(function(a, b) {
 			return a.sort - b.sort || a.module.localeCompare(b.module);
 		});
 		result.forEach(function(group) {
+			group.fields.forEach(function(field) {
+				field.acl = (profile.ACL || {})[field.key];
+				field.error = (profile.ERRORS || {})[field.key];
+				field.empty = field.empty || !!empty[field.key] ||
+					(field.key === 'gender' && field.value === 'no_gender') ||
+					(field.key === 'country_of_origin' && String(field.value).toLowerCase() === 'zz');
+				field.private = !!field.error || field.acl === 'acl_noone' || field.acl === 'acl_hidden';
+				field.visible = !field.private && !field.empty;
+				// Hidden/absent fields share the same unlit state. Never retain their
+				// values in the view model or recover them from account settings.
+				if (!field.visible) field.value = undefined;
+			});
 			group.fields.sort(function(a, b) { return a.sort - b.sort; });
 		});
 		return result;
 	};
 
 	$scope.renderProfileSetting = function(field) {
+		if (!field || !field.visible) return '';
 		var value = field.value;
 		// Account basics are transported with GWF_User, while optional profile
 		// facts arrive in GDO_Profile. Keep the insight view consistent when the
