@@ -455,6 +455,9 @@ angular.module('LUP').config(function($routeProvider) {
 		// settings refresh can briefly hand us its plain transport object first.
 		// Missing metadata means "not explicitly empty", not a fatal profile.
 		var empty = profile.EMPTY || {};
+		var missingFactValue = function(value) {
+			return value === undefined || value === null || value === '' || value === '0' || value === 0;
+		};
 		for (var module in cache) {
 			for (var key in cache[module]) {
 				var setting = cache[module][key];
@@ -478,17 +481,20 @@ angular.module('LUP').config(function($routeProvider) {
 						value = $scope.data.user.JSON[key];
 					}
 				}
-				if (isOwnProfile && (value === undefined || value === null || value === '') && setting.options) {
+				// Older profile frames omit some optional facts; ProfileSrvc fills
+				// their enums with 0. That placeholder must not mask the owner's
+				// saved setting. Visitors never use this private settings fallback.
+				if (isOwnProfile && missingFactValue(value) && setting.options) {
 					value = setting.options.var !== undefined && setting.options.var !== null ? setting.options.var : setting.options.selected;
 					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
 				}
-				if (isOwnProfile && (value === undefined || value === null || value === '') && setting.value !== undefined && setting.value !== null) {
+				if (isOwnProfile && missingFactValue(value) && setting.value !== undefined && setting.value !== null) {
 					value = setting.value;
 					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
 				}
 				// Do not turn an absent optional enum (often represented as 0 by a
 				// legacy endpoint) into an empty profile card.
-				var hasValue = value !== undefined && value !== null && value !== '' && value !== '0' && value !== 0;
+				var hasValue = !missingFactValue(value);
 				var error = (profile.ERRORS || {})[key];
 				// Denials override every display fallback, including owner settings.
 				var isPrivateForOwner = !!error && isOwnProfile;
@@ -537,16 +543,16 @@ angular.module('LUP').config(function($routeProvider) {
 					if (key === 'country_of_origin' && $scope.data.user.countryId) { value = $scope.data.user.countryId(); }
 					if ((value === undefined || value === null || value === '') && $scope.data.user.JSON) { value = $scope.data.user.JSON[key]; }
 				}
-				if ((value === undefined || value === null || value === '') && fallbackSetting.options) {
+				if (missingFactValue(value) && fallbackSetting.options) {
 					value = fallbackSetting.options.var !== undefined && fallbackSetting.options.var !== null ? fallbackSetting.options.var : fallbackSetting.options.selected;
 					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
 				}
-				if ((value === undefined || value === null || value === '') && fallbackSetting.value !== undefined && fallbackSetting.value !== null) {
+				if (missingFactValue(value) && fallbackSetting.value !== undefined && fallbackSetting.value !== null) {
 					value = fallbackSetting.value;
 					if (value && typeof value === 'object') { value = typeof value.id === 'function' ? value.id() : (value.id !== undefined ? value.id : (value.value !== undefined ? value.value : value.key)); }
 				}
 				groups[placement.section] = groups[placement.section] || {module: placement.section, label: profileSections[placement.section].label, sort: profileSections[placement.section].sort, fields: []};
-				groups[placement.section].fields.push({key: key, sort: placement.sort, setting: fallbackSetting, label: profileLabels[key] || key, value: value, error: null, empty: value === undefined || value === null || value === '' || value === '0' || value === 0, private: false, acl: null, visibility: 'private'});
+				groups[placement.section].fields.push({key: key, sort: placement.sort, setting: fallbackSetting, label: profileLabels[key] || key, value: value, error: null, empty: missingFactValue(value), private: false, acl: null, visibility: 'private'});
 			});
 		}
 		var result = Object.keys(groups).map(function(module) { return groups[module]; }).sort(function(a, b) {
@@ -559,7 +565,10 @@ angular.module('LUP').config(function($routeProvider) {
 				field.empty = field.empty || !!empty[field.key] ||
 					(field.key === 'gender' && field.value === 'no_gender') ||
 					(field.key === 'country_of_origin' && String(field.value).toLowerCase() === 'zz');
-				field.private = !!field.error || field.acl === 'acl_noone' || field.acl === 'acl_hidden';
+				// The stored ACL restricts visitors, not the owner's own view.
+				// Explicit server denials still take precedence for every viewer.
+				field.private = !!field.error || (!isOwnProfile &&
+					(field.acl === 'acl_noone' || field.acl === 'acl_hidden'));
 				field.visible = !field.private && !field.empty;
 				// Hidden/absent fields share the same unlit state. Never retain their
 				// values in the view model or recover them from account settings.
