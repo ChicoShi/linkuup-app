@@ -62,6 +62,8 @@ Grenze: Chromium-Emulation und lokale Daten, kein Leistungstest auf einem physis
 
 ## Profil, soziale Aktionen und lokale Präsenzvorschau
 
+Historischer Prüfstand vom 16.09.2026: Die nachfolgend beschriebene lokale Präsenzvorschau wurde am 17.09.2026 vollständig aus dem App-Code entfernt. Die alten Vorschau-Links sind nicht mehr aktiv; Chat und Gästelisten verwenden ausschließlich Serverdaten.
+
 - Profilkopf und Avatar zentriert; vorhandene animierte Statistikschalter erhalten. Die Profilbereiche nutzen eine begrenzte Inhaltsbreite, eine ruhige Informationsmatrix und den rahmenlosen Schalter „Details entdecken“. Die zuvor beim Fokussieren seitlich verschobene Tab-Fläche ist ersetzt.
 - Seitenleiste mit blauer Glasfläche, kompaktem Profilkopf, eigenem scrollbarem Menü und erreichbarem Schließen-Button. Glocke und Ereignis-Menü öffnen gezielt Ereignisse, private Nachrichten gezielt den Posteingang.
 - Freundschaftsaktionen warten auf die Serverbestätigung. Fehler und abgebrochene Dialoge lösen die Sperre wieder; abgesagte Aktionen werden nicht als Erfolg dargestellt. Freundschaftszahlen werden nach Ereignissen vom Server aktualisiert, statt bei wiederholten Ereignissen hochgezählt zu werden. Anfragen aus Profil und Suche bleiben möglich; Besucherkontakte außerhalb eines Standorts bleiben gesperrt.
@@ -82,3 +84,13 @@ Backend und App gehören zu diesem gemeinsamen Prüfstand. Die lokale WebSocket-
 - 39 Node-Tests erfolgreich, einschließlich veralteter Scrollereignisse während Reset, Wiederholung, Aufräumen und reduzierter Bewegung. Build 602 erstellt und geprüft. Produktionsbundle im Chromium bei 320/390/1440 px: Reset nach Filterwechsel auf Index 0; acht schnelle Tipps ohne laufende Restanimation; sechs Buttons passen ohne Überlauf. Chat und Online zeigen 20 lokale Demo-Gäste mit transparenter Fläche, ohne obere Vorschauleiste. Keine JavaScript-Ausnahmen im Ablauf.
 
 Aktueller Stand für den gemeinsamen App-/Backend-PR; noch kein Live-Deployment. Die oben beschriebenen Geräte-/Kontotests bleiben vor der Freigabe ausstehend.
+
+## Bereinigung und Profil/Ups vom 17.09.2026
+
+- Die 20-Personen-Simulation, Demo-Nachrichten, Vorschau-Steuerung, URL-/Storage-Schalter und zugehörigen Übersetzungen wurden entfernt. Die Ballon-Bewegung nutzt nur echte Präsenzdaten; stabile IDs verhindern ein erneutes Aufploppen bei unveränderten Listen. Bestehende Standort- und Kontosperren bleiben bestehen.
+- Ups zeigt zentrierte Avatare, ein ruhig animiertes Glasherz und die tatsächlich vom Server geladenen Verbindungen. Lade-, Leer- und Fehlerzustände sind getrennt. Zähler pro Verbindung werden nicht mehr auf gemeinsam verwendete Nutzerobjekte geschrieben.
+- Profilwerte erhalten dezente Lichtlinien und farbige Symbole nur bei sichtbaren, ausgefüllten Angaben. Verweigerte, private und leere Felder bleiben unbeleuchtet und ohne Wert. Die fünf ziehbaren Profilsymbole sind größer; die Nachrichten-Kachel heißt kurz „Chat“.
+- Mobile Chatflächen folgen Höhe und Versatz des sichtbaren Viewports gemeinsam pro Bild. Berühren des Senden-Knopfs erhält den Eingabefokus. Privatnachrichten haben einen eigenen Papierflieger-Knopf. Es gibt keine neuen CSS-Dateien und keine `!important`-Ergänzungen.
+- Separat und nur lokal wurden auf ausdrücklichen Wunsch die 20 alten LUP-Testfreund-Konten mit ihren Test-Verknüpfungen entfernt. Keine Datenbankmigration und keine Testkonten sind Bestandteil des PRs.
+
+Prüfgrenzen: Chromium in mobiler und Desktop-Breite, automatisierte Zustandsprüfungen und simulierte Tastatur-/Viewport-Änderungen. Ein physisches iPhone/Safari und privater Versand zwischen registrierten Konten bleiben vor der Live-Freigabe zu prüfen. Kein Deployment.

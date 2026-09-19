@@ -11,24 +11,21 @@ directive('lupAvatar', function() {
 	};
 });
 
-/* A read-only presence preview. It uses the same room.USERS as the Online tab;
+/* A read-only presence strip. It uses the same room.USERS as the Online tab;
  * no polling, synthetic visitors, profile links or membership changes. */
 angular.module('LUP').directive('lupPresence', function(RoomSrvc, $timeout) {
 	return {
 		restrict: 'E',
-		scope: {ngRoom: '=', compact: '@', simulate: '@'},
+		scope: {ngRoom: '=', compact: '@'},
 		template: '<span class="lup-presence" ng-class="{\'is-compact\':compact === \'true\'}">' +
-			'<span class="lup-presence-avatars" ng-if="compact !== \'true\' && (renderedFaces.length || simulate === \'true\')" aria-hidden="true" ng-style="stackStyle">' +
+			'<span class="lup-presence-avatars" ng-if="compact !== \'true\' && renderedFaces.length" aria-hidden="true" ng-style="stackStyle">' +
 			'<span class="lup-presence-face" ng-repeat="face in renderedFaces track by face.key" data-presence-id="{{face.key}}" ng-class="{\'is-leaving\':face.leaving}" ng-style="face.motion">' +
 			'<span class="lup-presence-float"><span class="lup-presence-balloon"><lup-avatar ng-user="face.user"></lup-avatar></span></span></span></span>' +
 			'<span class="lup-presence-summary" aria-live="polite" aria-atomic="true">' +
-			'<span class="lup-presence-number">{{count}}</span> <span>{{\'TAB_ONLINE\'|translate}}</span></span>' +
-			'<span class="lup-presence-demo" ng-if="demo"><span>{{(demo.done ? \'PREVIEW_BALLOONS_DONE\' : \'PREVIEW_BALLOONS\')|translate}} · {{remaining}}</span>' +
-			'<button type="button" ng-if="!demo.done" ng-click="pauseDemo()" aria-label="{{(demo.running ? \'PREVIEW_PAUSE\' : \'PREVIEW_RESUME\')|translate}}"><i class="material-icons" aria-hidden="true">{{demo.running ? \'pause\' : \'play_arrow\'}}</i></button>' +
-			'<button type="button" ng-click="restartDemo()" aria-label="{{\'PREVIEW_REPLAY\'|translate}}"><i class="material-icons" aria-hidden="true">replay</i></button></span></span>',
+			'<span class="lup-presence-number">{{count}}</span> <span>{{\'TAB_ONLINE\'|translate}}</span></span></span>',
 		link: function(scope, element) {
 			var initialized = false, animation = null, roomKey, destroyed = false;
-			var departures = {}, frame = null, demoTimer = null, visible = true;
+			var departures = {}, frame = null, visible = true;
 			var root = element[0], doc = root.ownerDocument;
 			scope.faces = [];
 			scope.renderedFaces = [];
@@ -129,24 +126,6 @@ angular.module('LUP').directive('lupPresence', function(RoomSrvc, $timeout) {
 			}) : null;
 			if (visibility) visibility.observe(root);
 			if (doc) doc.addEventListener('visibilitychange', rest);
-			// Only the explicitly labelled, loopback-only chat preview owns a clock.
-			var lastTick;
-			function tickDemo() {
-				var now = Date.now();
-				if (visible && !(doc && doc.hidden)) scope.demo.advance(now - lastTick);
-				lastTick = now;
-				var seconds = Math.ceil((scope.demo.duration - scope.demo.elapsed) / 1000);
-				scope.remaining = Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
-				if (!scope.demo.done) demoTimer = $timeout(tickDemo, 250);
-			}
-			scope.restartDemo = function() {
-				if (demoTimer) $timeout.cancel(demoTimer);
-				if (scope.demo) scope.demo.stop();
-				scope.demo = RoomSrvc.createPresenceSimulation(scope.ngRoom);
-				if (scope.demo) { lastTick = Date.now(); tickDemo(); }
-			};
-			scope.pauseDemo = function() { scope.demo.running = !scope.demo.running; lastTick = Date.now(); };
-			if (scope.simulate === 'true' && RoomSrvc && RoomSrvc.createPresenceSimulation) scope.restartDemo();
 			scope.$on('$destroy', function() {
 				destroyed = true;
 				unwatch();
@@ -155,8 +134,6 @@ angular.module('LUP').directive('lupPresence', function(RoomSrvc, $timeout) {
 				if (resize) resize.disconnect();
 				if (visibility) visibility.disconnect();
 				if (doc) doc.removeEventListener('visibilitychange', rest);
-				if (demoTimer) $timeout.cancel(demoTimer);
-				if (scope.demo) scope.demo.stop();
 				if (reduced.removeEventListener) reduced.removeEventListener('change', stopMotion);
 				if (animation) animation.cancel();
 			});
