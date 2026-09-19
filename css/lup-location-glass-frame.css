@@ -219,3 +219,5 @@ md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) smal
 .lup-purchase-dialog md-slider .md-sign {background:#a9ddf7;color:#132b40;}
 
 .lup-add-room-page .add-room-description textarea {min-height:90px;height:90px;max-height:180px;}
+.lup-purchase-dialog .lup-shout-dialog-content md-input-container.md-block label {position:static;display:block;transform:none;max-width:100%;width:auto;margin-bottom:10px;}
+.lup-purchase-dialog .lup-shout-dialog-content md-input-container.md-block textarea {min-height:90px;padding:10px;box-sizing:border-box;}
