@@ -1,7 +1,7 @@
 /* One scrollable, translucent blue drawer on every route. */
 md-sidenav.md-sidenav-left.navigator-sidebar {box-sizing:border-box;display:flex;flex-direction:column;width:320px;min-width:0;max-width:calc(100vw - 36px);height:100%;max-height:100dvh;overflow:hidden;color:var(--lup-app-ink);background:radial-gradient(ellipse at 0 65%,#307e9d29,transparent 65%),linear-gradient(150deg,#15243bf5,#101a2bf5);border-right:1px solid rgba(218,240,255,.12);box-shadow:inset -1px 0 1px rgba(200,234,252,.12),16px 0 48px #03102450;border-radius:0 28px 28px 0;}
 md-sidenav.navigator-sidebar .sidenav-brand {display:block;flex:none;min-height:82px;background:transparent;border:0;box-shadow:none;}
-md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools {display:flex;height:82px;min-height:82px;padding:0 22px;gap:12px;background:transparent;box-shadow:none;}
+md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools {display:flex;height:82px;min-height:82px;padding:0 24px;gap:12px;background:transparent;box-shadow:none;}
 md-sidenav.navigator-sidebar .sidenav-brand::before,md-sidenav.navigator-sidebar .sidenav-brand::after,md-sidenav.navigator-sidebar .md-toolbar-tools::before,md-sidenav.navigator-sidebar .md-toolbar-tools::after,md-sidenav.navigator-sidebar md-list-item::before {display:none;}
 md-sidenav.navigator-sidebar .sidenav-brand h1 {margin:0;color:#f2f9ff;font:600 27px/1 Ubuntu,Roboto,sans-serif;letter-spacing:-1.2px;}
 md-sidenav.navigator-sidebar .sidenav-brand h1 span {display:inline;margin:0;color:#a9dfff;font:inherit;letter-spacing:inherit;text-transform:none;}
@@ -9,19 +9,19 @@ md-sidenav.navigator-sidebar .sidebar-wordmark > span {display:block;margin-top:
 md-sidenav.navigator-sidebar .nav-close {display:grid;place-items:center;order:2;flex:0 0 44px;width:44px;height:44px;margin:0 0 0 auto;padding:0;border:0;border-radius:50%;background:#ddf3ff08;color:#c5e7f8;cursor:pointer;box-shadow:none;}
 md-sidenav.navigator-sidebar .nav-close .material-icons {font-size:21px;}
 md-sidenav.md-sidenav-left.navigator-sidebar > md-content.sidebar-scroll {display:block;flex:1 1 0%;min-height:0;height:auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;touch-action:pan-y;scrollbar-width:thin;scrollbar-color:#a9dfff40 transparent;background:transparent;color:inherit;isolation:auto;-webkit-overflow-scrolling:touch;}
-md-sidenav.navigator-sidebar .sidebar-user-card {box-sizing:border-box;display:flex;align-items:center;gap:12px;width:calc(100% - 40px);margin:3px 20px 14px;padding:14px 12px;border:1px solid rgba(218,240,255,.065);border-radius:20px;background:rgba(235,249,255,.006);box-shadow:inset 1px 1px 1px rgba(245,253,255,.26),inset -1px -1px 1px rgba(200,234,252,.12);text-align:left;cursor:pointer;}
+md-sidenav.navigator-sidebar .sidebar-user-card {box-sizing:border-box;display:flex;align-items:center;gap:12px;width:calc(100% - 40px);margin:3px 20px 18px;padding:18px 14px;border:1px solid rgba(218,240,255,.065);border-radius:20px;background:linear-gradient(125deg,#c5ecff14,#bce8fa03);box-shadow:inset 1px 1px 0 #f5fdff45,inset -1px -1px 0 #c8eafc15;text-align:left;cursor:pointer;}
 md-sidenav.navigator-sidebar .sidebar-user-card > div {flex:1;min-width:0;}
 md-sidenav.navigator-sidebar .sidebar-user-card strong {display:block;overflow:hidden;text-overflow:ellipsis;color:#ecf7ff;font-size:14px;}
 md-sidenav.navigator-sidebar .sidebar-user-card span {display:block;margin-top:4px;color:#9dbbd1;font-size:11px;letter-spacing:0;}
-md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar {box-sizing:border-box;flex:none;width:38px;height:38px;padding:0;border:1px solid #def4ff55;outline:0;}
+md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar {box-sizing:border-box;flex:none;width:44px;height:44px;padding:0;border:1px solid #def4ff55;outline:0;}
 md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar .img,md-sidenav.navigator-sidebar .sidebar-user-card .lup-avatar span {inset:0;margin:0;width:100%;height:100%;}
 md-sidenav.navigator-sidebar .sidebar-user-card > .material-icons {font-size:19px;color:#93cfe9;}
 md-sidenav.navigator-sidebar md-list {display:block;padding:0 16px max(24px,env(safe-area-inset-bottom));background:none;}
-md-sidenav.navigator-sidebar .md-subheader {min-height:0;margin:18px 12px 6px;padding:0;border:0;background:none;color:#87a8c1;font-size:10px;font-weight:500;letter-spacing:.09em;}
+md-sidenav.navigator-sidebar .md-subheader {min-height:0;margin:22px 12px 9px;padding:0;border:0;background:none;color:#87a8c1;font-size:10px;font-weight:500;letter-spacing:.09em;}
 md-sidenav.navigator-sidebar .md-subheader-inner {padding:0;}
-md-sidenav.md-sidenav-left.navigator-sidebar md-list-item {min-height:49px;margin:3px 0;border:1px solid transparent;border-radius:14px;background:none;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item {min-height:52px;margin:3px 0;border:1px solid transparent;border-radius:14px;background:none;}
 md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:hover,md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:focus-within {background:rgba(235,249,255,.035);border-color:rgba(218,240,255,.12);}
-md-sidenav.navigator-sidebar md-list-item .md-list-item-inner {min-height:49px;gap:12px;}
+md-sidenav.navigator-sidebar md-list-item .md-list-item-inner {min-height:52px;gap:0;}
 md-sidenav.navigator-sidebar md-list-item p {font-size:14px;line-height:1.4;font-weight:400;color:#d7e8f5;}
 md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {box-sizing:border-box;display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;margin:0 12px 0 0;border:1px solid rgba(218,240,255,.065);border-radius:10px;background:rgba(235,249,255,.006);box-shadow:inset 1px 1px 1px rgba(245,253,255,.26),inset -1px -1px 1px rgba(200,234,252,.12);font-size:21px;color:#bce8fa;transform:none;}
 md-sidenav.navigator-sidebar .sidebar-legal-title {margin-top:24px;padding-top:17px;border-top:1px solid #c1e4ff13;}
@@ -34,3 +34,13 @@ md-sidenav.navigator-sidebar::before {content:'';position:absolute;inset:12% -40
 md-sidenav.navigator-sidebar::after {content:'';position:absolute;inset:40% -55% -5%;border:1px solid #93c7e422;border-radius:50%;transform:rotate(18deg);pointer-events:none;}
 md-sidenav.navigator-sidebar > .sidenav-brand,md-sidenav.navigator-sidebar > .sidebar-scroll {position:relative;z-index:1;}
 md-sidenav.md-sidenav-left.navigator-sidebar {box-shadow:inset -1px 0 1px #f5fdff42,16px 0 48px #03102450;}
+
+/* Restrained category color makes the everyday routes easier to recognize. */
+md-sidenav.navigator-sidebar .nav-discover {--sidebar-accent:#9adfff;}
+md-sidenav.navigator-sidebar .nav-friends {--sidebar-accent:#a2ddd0;}
+md-sidenav.navigator-sidebar .nav-private-messages {--sidebar-accent:#b9c6ff;}
+md-sidenav.navigator-sidebar .nav-events {--sidebar-accent:#efd3a4;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {color:var(--sidebar-accent,#afcbdc);border-color:transparent;background:color-mix(in srgb,var(--sidebar-accent,#afcbdc) 7%,transparent);box-shadow:inset 0 1px 0 #edfaff12;border-radius:12px;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:is(:hover,:focus-within) .nav-icon {background:color-mix(in srgb,var(--sidebar-accent,#afcbdc) 13%,transparent);}
+md-sidenav.navigator-sidebar .sidebar-user-card:hover {border-color:#d8f3ff40;background:linear-gradient(125deg,#c5ecff1f,#bce8fa08);}
+md-sidenav.navigator-sidebar .nav-logout {margin-top:18px;border-top:1px solid #c1e4ff13;}
