@@ -8,16 +8,157 @@ function setup(overrides = {}, browser = {}) {
  let ctor;
  const chain = {config() {return chain;}, controller(name, fn) {ctor = fn; return chain;}};
  const element = {off() {return element;}, on() {return element;}};
- const context = vm.createContext({console: {log() {}}, window: {matchMedia: () => ({matches: true}), ...browser},
+ const context = vm.createContext({console: {log() {}, warn() {}}, window: {matchMedia: () => ({matches: true}), ...browser},
   angular: {module: () => chain, element: () => element}});
  vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/pages/locations/lup-locations.js'), 'utf8'), context);
  const scope = {data: {}, $on() {}};
- const deps = {$scope: scope, $timeout() {}, PositionSrvc: {hasPosition: () => false}, LoadingSrvc: {addTask() {}}};
+ const deps = {$scope: scope, $timeout() {}, PositionSrvc: {hasPosition: () => false}, LoadingSrvc: {addTask() {}},
+  RoomSrvc: {hasMoreRooms: () => false}, CategorySrvc: {
+   withCategories: () => ({then: ready => ready()}),
+   locationGroups: () => [{ids: ['5'], label: 'NAV_CAFE'}, {ids: ['11'], label: 'NAV_NIGHT'}]
+  }};
  const args = ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(x => x.trim());
  Object.assign(deps, overrides);
  ctor(...args.map(x => deps[x] || {}));
  return deps.$scope;
 }
+
+function resetFixture(hasGPS = true) {
+ const room = (id, distance, category = 5) => ({id: () => id, distance: () => distance,
+  category: () => category, name: () => 'Ort ' + id, city: () => '', street: () => '',
+  zip: () => '', categoryName: () => ''});
+ const near = room(11, 50), far = room(22, 800), distant = room(33, 90000, 11);
+ const requests = [], events = {}, timers = new Map(), frames = new Map();
+ let serial = 0, now = 0;
+ const later = (fn, ms = 0) => {timers.set(++serial, {fn, at: now + ms}); return serial;};
+ later.cancel = id => timers.delete(id);
+ const advance = ms => {
+  const end = now + ms;
+  for (let count = 0; count < 100; count++) {
+   const next = [...timers].filter(([, t]) => t.at <= end).sort((a, b) => a[1].at - b[1].at)[0];
+   if (!next) break;
+   timers.delete(next[0]); now = next[1].at; next[1].fn();
+  }
+  now = end;
+ };
+ const paint = () => {const pending = [...frames.values()]; frames.clear(); pending.forEach(fn => fn());};
+ const rail = {classList: {add() {}, remove() {}}, scrollLeft: 900,
+  scrollTo({left}) {this.scrollLeft = left;}, querySelector: () => null};
+ const jq = {length: 1, filter() {return jq;}, last() {return jq;}, get: () => rail, addClass() {}};
+ const rooms = {hasMoreRooms: () => false, sortDistance: (a,b) => a.distance() - b.distance(), withRooms() {
+  return new Promise((resolve, reject) => requests.push({resolve, reject}));
+ }};
+ const scope = setup({$scope: {data: {authenticated: true}, $on: (name, fn) => {
+  const previous = events[name];
+  events[name] = (...args) => {if (previous) previous(...args); fn(...args);};
+ }},
+  $timeout: later, RoomSrvc: rooms, PositionSrvc: {hasPosition: () => hasGPS},
+  HelpSrvc: {showHelp() {}}, $translate: {instant: () => ''},
+  LoadingSrvc: {addTask() {}, removeTask() {}, stopTask() {}}},
+  {jQuery: () => jq, requestAnimationFrame: fn => {frames.set(++serial, fn); return serial;},
+   cancelAnimationFrame: id => frames.delete(id), clearTimeout() {}});
+ scope.initialiseRail = () => {};
+ scope.data.rooms = scope.data.visibleRooms = [near, far];
+ scope.data.currentRoom = far; scope.data.currentRoomIndex = 1;
+ return {scope, near, far, distant, requests, events, rail, advance, paint, roomService: rooms};
+}
+
+test('First GPS result selects the nearest room; later refresh preserves a deliberate selection', () => {
+ const {scope: s, near, far} = resetFixture();
+ s.gotRooms([near, far]);
+ assert.equal(s.data.currentRoom, near);
+ assert.equal(s.data.currentRoomIndex, 0);
+ s.focusRoom(1);
+ s.gotRooms([near, far]);
+ assert.equal(s.data.currentRoom, far);
+ assert.equal(s.data.currentRoomIndex, 1);
+});
+
+test('Reset leaves the discovery catalogue and selects the first backend-ordered nearby result', async () => {
+ const {scope: s, near, far, distant, requests, rail, advance, paint} = resetFixture();
+ const catalogue = [distant, far, near];
+ s.data.rooms = s.data.fullCatalogue = catalogue;
+ s.data.visibleRooms = [distant]; s.data.currentRoom = distant;
+ s.data.category = ['11'];
+ const result = s.resetNavigator();
+ assert.deepEqual(Array.from(s.data.category), []);
+ assert.equal(requests.length, 1);
+ const nearby = [near, far];
+ requests[0].resolve(nearby); await result;
+ advance(0); paint(); paint(); advance(200);
+ assert.equal(s.data.rooms, nearby);
+ assert.equal(s.data.currentRoom, near);
+ assert.equal(s.data.currentRoomIndex, 0);
+ assert.equal(rail.scrollLeft, 0);
+ assert.equal(s.data.fullCatalogue, catalogue);
+});
+
+test('Repeated reset responses arriving out of order cannot undo the latest reset', async () => {
+ const {scope: s, near, far, requests} = resetFixture();
+ const old = s.resetNavigator(), latest = s.resetNavigator();
+ requests[1].resolve([near, far]); await latest;
+ requests[0].resolve([far, near]); await old;
+ assert.equal(s.data.currentRoom, near);
+ assert.deepEqual(Array.from(s.data.rooms), [near, far]);
+});
+
+test('A pending next catalogue page cannot replace the nearby list after reset', async () => {
+ const {scope: s, near, far, distant, requests, roomService} = resetFixture();
+ const catalogue = s.data.rooms = s.data.fullCatalogue = [distant, far, near];
+ s.updateVisibleRooms();
+ let resolvePage;
+ const page = new Promise(resolve => {resolvePage = resolve;});
+ roomService.hasMoreRooms = () => true;
+ roomService.loadMoreRooms = () => page;
+ s.loadMoreLocations();
+ const reset = s.resetNavigator();
+ const nearby = [near, far];
+ requests[0].resolve(nearby); await reset;
+ resolvePage(catalogue); await page; await Promise.resolve();
+ assert.equal(s.data.rooms, nearby);
+ assert.equal(s.data.currentRoom, near);
+ assert.equal(s.data.loadingMoreLocations, false);
+});
+
+for (const action of ['category', 'search', 'swipe', 'destroy']) {
+ test('Late reset response respects a subsequent ' + action, async () => {
+  const {scope: s, near, far, distant, requests, events} = resetFixture();
+  s.data.fullCatalogue = [near, far, distant];
+  const result = s.resetNavigator();
+  if (action === 'category') s.selectCategory(['11']);
+  if (action === 'search') {s.data.searchvalue = '33'; s.searchLocation('33');}
+  if (action === 'swipe') s.focusRoom(1);
+  if (action === 'destroy') events.$destroy();
+  const selected = s.data.currentRoom, rooms = s.data.rooms;
+  requests[0].resolve([near]); await result;
+  assert.equal(s.data.currentRoom, selected);
+  assert.equal(s.data.rooms, rooms);
+ });
+}
+
+test('No GPS resets the filter locally without issuing a nearby query', () => {
+ const {scope: s, near, requests} = resetFixture(false);
+ s.resetNavigator();
+ assert.equal(requests.length, 0);
+ assert.equal(s.data.currentRoom, near);
+});
+
+test('A failed reset keeps the available cards and can be retried', async () => {
+ const {scope: s, near, far, requests} = resetFixture();
+ const failed = s.resetNavigator(); requests[0].reject(new Error('offline')); await failed;
+ assert.equal(s.data.currentRoom, near);
+ const retry = s.resetNavigator(); requests[1].resolve([far]); await retry;
+ assert.equal(s.data.currentRoom, far);
+});
+
+test('An old scheduled room restore cannot pull the rail away after reset finishes painting', () => {
+ const {scope: s, near, far, events, advance, paint} = resetFixture(false);
+ s.init(); advance(20);
+ events['lup-rooms-resorted']({}, far.id());
+ s.resetNavigator(); advance(0); paint(); paint(); advance(80);
+ assert.equal(s.data.currentRoom, near);
+ assert.equal(s.data.currentRoomIndex, 0);
+});
 
 test('Short drags glide one card before snap returns; GPS cannot interrupt, moves share one paint', () => {
  const frames=new Map(), timers=new Map(), events={}, classes=new Set(), listeners={};let serial=0,digests=0,writes=0,left=0;
@@ -62,9 +203,9 @@ test('Short drags glide one card before snap returns; GPS cannot interrupt, move
  assert.equal(classes.has('location-rail-dragging'),false);
 });
 
-test('The discovery template has working category, arrow, reset and GPS controls', () => {
+test('The discovery template uses backend categories and has working arrow, reset and GPS controls', () => {
  const s = setup();
- assert.equal(s.navigatorCategories.length, 5);
+ assert.deepEqual(s.navigatorCategories.map(group => group.ids), [['5'], ['11']]);
  assert.equal(s.navigatorHasGPS(), false);
  const a = {id: () => 1}, b = {id: () => 2};
  s.data.visibleRooms = [a, b]; s.data.currentRoomIndex = 0;

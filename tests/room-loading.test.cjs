@@ -80,9 +80,13 @@ test('Malformed nonempty JSON still rejects instead of silently replacing data',
 
 for (const includeAll of [false, true]) {
  test(`Parser failure releases the ${includeAll ? 'catalogue' : 'nearby'} request for retry`, async () => {
-  const {rooms, socket} = setup();
+  const {context, rooms, socket} = setup();
   let calls = 0;
-  socket.sendBinary = () => { calls++; return Promise.resolve(null); };
+  socket.sendBinary = () => {
+   calls++;
+   // Every current page starts with its total before room parsing can fail.
+   return Promise.resolve(new context.GWS_Message(new context.GWS_Message().write32(1).binaryBuffer()));
+  };
   rooms.parseRoomsMessage = () => { throw new SyntaxError('invalid room JSON'); };
   const first = rooms.withRooms(includeAll);
   assert.equal(rooms.withRooms(includeAll), first);

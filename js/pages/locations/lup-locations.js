@@ -37,6 +37,9 @@ angular.module('LUP').config(function($routeProvider) {
 	// A category choice may start the one-time full-catalogue request. Keep a
 	// serial so an older response cannot repaint the rail after a newer choice.
 	var categorySelectionSerial = 0;
+	// User navigation invalidates delayed reset/scroll responses independently
+	// of the shared category-catalogue request.
+	var navigationSerial = 0;
 	var searchBaseRooms = null;
 	// Every usable GPS fix turns the current discovery order into a local one.
 	// Only the first fix selects the nearest room automatically; later updates
@@ -404,6 +407,8 @@ angular.module('LUP').config(function($routeProvider) {
 		}, 180);
 	});
 	$scope.$on('$destroy', function() {
+		categorySelectionSerial++;
+		navigationSerial++;
 		stopRailSettle();
 		cancelNavigatorReset();
 		stopResetFeedback();
@@ -523,9 +528,13 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!locationsInitialized || !roomId || railIsBusy()) {
 			return;
 		}
-		// Sorting must never throw the visitor back to the first card.
+		var selectionSerial = navigationSerial;
+		var currentRoomId = selectedRoomId();
+		// A queued restore belongs to the selection that scheduled it. A reset,
+		// filter change or swipe in the meantime takes precedence.
 		$timeout(function() {
-			if (railIsBusy()) return;
+			if (railIsBusy() || selectionSerial !== navigationSerial ||
+				currentRoomId !== selectedRoomId()) return;
 			if (!restoreSelectedRoom(roomId, false)) {
 				return; // It is intentionally hidden by the active category/search.
 			}
@@ -582,10 +591,12 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		$scope.data.rooms = rooms;
 		$scope.updateVisibleRooms();
+		var hadNearestSelection = nearestRoomInitiallySelected;
 		sortAndSelectNearestRoom();
 		// A newly loaded category may exclude the previous room. Its first
 		// visible card must own pagination immediately, even before a scroll.
-		restoreSelectedRoom(roomId, true);
+		// Do not overwrite the first GPS-based selection with the old room.
+		if (hadNearestSelection || !nearestRoomInitiallySelected) restoreSelectedRoom(roomId, true);
 		locationsRoomsRendered = true;
 		LoadingSrvc.addTask('location_rail');
 		$timeout(function() {
@@ -596,9 +607,12 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.loadMoreLocations = function() {
 		var includeAll = $scope.data.rooms === $scope.data.fullCatalogue;
 		if ($scope.data.loadingMoreLocations || !RoomSrvc.hasMoreRooms(includeAll)) return;
+		var sourceRooms = $scope.data.rooms;
+		var selectionSerial = navigationSerial;
 		$scope.data.loadingMoreLocations = true;
 		LoadingSrvc.addTask('ws_rooms_more');
-		RoomSrvc.loadMoreRooms(includeAll, $scope.data.rooms).then(function(rooms) {
+		RoomSrvc.loadMoreRooms(includeAll, sourceRooms).then(function(rooms) {
+			if (selectionSerial !== navigationSerial || $scope.data.rooms !== sourceRooms) return;
 			$scope.gotRooms(rooms);
 		}, function(error) {
 			console.warn('LinkUUp: loading further locations failed.', error);
@@ -770,12 +784,9 @@ angular.module('LUP').config(function($routeProvider) {
 			], {duration:330,delay:330+index*65,easing:'ease-out'});
 		});
 	};
-	$scope.resetNavigator = function(event) {
-		$scope.data.searchvalue = '';
-		$scope.selectCategory([]);
-		$scope.searchLocation('');
-		// Clearing the filter can retain a later room that is still in the list.
-		// A reset always starts at its first card, even on repeated taps.
+	var showNavigatorStart = function() {
+		cancelNavigatorReset();
+		stopRailSettle();
 		$scope.data.currentRoom = $scope.data.visibleRooms[0] || null;
 		$scope.data.currentRoomIndex = $scope.data.visibleRooms.length ? 0 : -1;
 		// A filtered card reused by ng-repeat can become a later snap anchor.
@@ -795,7 +806,30 @@ angular.module('LUP').config(function($routeProvider) {
 				});
 			});
 		}, 0);
+	};
+	$scope.resetNavigator = function(event) {
+		$scope.data.searchvalue = '';
+		$scope.selectCategory([]);
+		$scope.searchLocation('');
+		var selectionSerial = ++navigationSerial;
+		$scope.data.categoryLoading = false;
+		showNavigatorStart();
 		playResetFeedback(event && event.currentTarget);
+		// A category/search catalogue is not the nearby list. Query the current
+		// real position and retain the backend's distance ordering.
+		// No GPS means a filter reset only, not a fabricated nearest location.
+		if (!PositionSrvc.hasPosition(true)) return;
+		var resetRoomId = selectedRoomId();
+		return RoomSrvc.withRooms().then(function(rooms) {
+			if (selectionSerial !== navigationSerial || selectedRoomId() !== resetRoomId) return;
+			$scope.data.rooms = rooms;
+			$scope.updateVisibleRooms();
+			showNavigatorStart();
+			nearestRoomInitiallySelected = rooms.length > 0;
+			$scope.initialiseRail();
+		}, function(error) {
+			console.warn('LinkUUp: nearby reset failed.', error);
+		});
 	};
 	$scope.stepNavigator = function(direction) {
 		var index = Math.max(0, Math.min($scope.data.visibleRooms.length - 1, $scope.data.currentRoomIndex + direction));
@@ -889,6 +923,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.selectCategory = function(categories) {
 		cancelNavigatorReset();
 		stopRailSettle();
+		navigationSerial++;
 		var categoryKey = categories.join(',');
 		if ($scope.isCategoryFilterActive(categories)) {
 			// Repeating the active category is a small navigation shortcut: keep
@@ -1021,6 +1056,7 @@ angular.module('LUP').config(function($routeProvider) {
 	
 	$scope.searchLocation = function(query) {
 		console.log("LocationCtrl.searchLocation()", query);
+		var selectionSerial = ++navigationSerial;
 		query = (query || '').trim();
 		var render = function(rooms) {
 			if ($scope.data.rooms === rooms) {
@@ -1050,7 +1086,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return fullCataloguePromise.then(function(rooms) {
 				// Several keystrokes can share the same loading promise. Only the
 				// final query may render when that one catalogue request completes.
-				if (($scope.data.searchvalue || '').trim() === query) {
+				if (selectionSerial === navigationSerial && ($scope.data.searchvalue || '').trim() === query) {
 					render(rooms);
 				}
 			}, function(error) {
