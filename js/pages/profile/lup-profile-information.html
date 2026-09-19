@@ -32,7 +32,7 @@
     <section ng-repeat="group in data.profileGroups track by group.module" class="profile-fact-group">
       <header class="profile-fact-group-heading"><span></span><small>{{group.label|translate}}</small></header>
       <div class="profile-fact-grid">
-        <article class="profile-fact" ng-repeat="field in group.fields track by field.key" ng-class="['profile-fact--tone-' + profileFieldTone(field.key), {'profile-fact--denied': field.error, 'profile-fact--private': field.private, 'profile-fact--public': field.visibility === 'public', 'profile-fact--members': field.visibility === 'members', 'profile-fact--friends': field.visibility === 'friends'}]">
+        <article class="profile-fact" ng-repeat="field in group.fields track by field.key" ng-class="['profile-fact--tone-' + profileFieldTone(field.key), {'profile-fact--lit': !field.private && !field.error && !field.empty, 'profile-fact--denied': field.error, 'profile-fact--private': field.private, 'profile-fact--public': field.visibility === 'public', 'profile-fact--members': field.visibility === 'members', 'profile-fact--friends': field.visibility === 'friends'}]">
           <span class="profile-fact-icon" aria-hidden="true"><i class="material-icons">{{profileFieldIcon(field.key)}}</i></span>
           <div class="profile-fact-copy">
             <small>{{field.label|translate}}</small>
