@@ -28,7 +28,9 @@
 .navigator-view .nav-topbar .search-input-wrap:focus-within {border-color:#a9ddff80;}
 .navigator-view .nav-topbar .search-input-wrap input.search-input {height:42px;min-height:0;}
 .navigator-view .nav-topbar .search-input::placeholder {font-size:13px;}
-.navigator-view .nav-topbar-notifications {display:flex;grid-column:3;}
+.navigator-view .nav-topbar-notifications {display:flex;grid-column:3;grid-row:1;}
+.navigator-view .nav-topbar-profile {grid-column:4;grid-row:1;}
+.navigator-view .nav-topbar > .nav-topbar-control:first-child {grid-column:1;grid-row:1;}
 .navigator-view .nav-topbar .lup-top-notification {width:36px;height:44px;min-height:44px;margin:0;padding:6px;}
 .navigator-view .nav-topbar .lup-avatar {box-sizing:border-box;position:relative;width:32px;height:32px;padding:0;margin:0;}
 .navigator-view .nav-topbar .lup-avatar .img,.navigator-view .nav-topbar .lup-avatar span {inset:0;width:100%;height:100%;}
