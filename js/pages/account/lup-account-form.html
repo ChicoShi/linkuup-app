@@ -1,21 +1,8 @@
-<section layout="column" flex layout-padding layout-fill>
-
-<h4>{{'TITLE_ACCOUNT'|translate}}</h4>
-<p>{{'INFO_ACCOUNT'|translate}}</p>
-
-<section class="lup-account-overview" layout="column">
-  <div>
-    <strong>{{'USERNAME'|translate}}</strong>
-    <span ng-if="data.user.isGuest()">{{data.account.user_guest_name}}</span>
-    <span ng-if="data.user.isMember()">{{data.account.user_name}}</span>
-  </div>
-  <div>
-    <strong>{{'EMAIL'|translate}}</strong>
-    <span>{{data.account.user_email || ('UNKNOWN'|translate)}}</span>
-  </div>
-</section>
-
-<p class="lup-account-backend-hint">{{'INFO_ACCOUNT_BACKEND'|translate}}</p>
-<md-button class="md-raised md-primary" ng-href="{{data.backendUrl}}" target="_blank" rel="noopener">{{'BTN_BACKEND'|translate}}</md-button>
-
+<section class="lup-account-panel">
+  <header class="lup-account-hero"><span class="lup-account-mark" aria-hidden="true"><i class="material-icons">manage_accounts</i></span><div><small>LinkUUp</small><h1>{{'TITLE_ACCOUNT'|translate}}</h1><p>{{'INFO_ACCOUNT'|translate}}</p></div></header>
+  <section class="lup-account-overview" aria-label="{{'TITLE_ACCOUNT'|translate}}">
+    <div><i class="material-icons" aria-hidden="true">person_outline</i><div><strong>{{'USERNAME'|translate}}</strong><span ng-if="data.user.isGuest()">{{data.account.user_guest_name}}</span><span ng-if="data.user.isMember()">{{data.account.user_name}}</span></div></div>
+    <div><i class="material-icons" aria-hidden="true">alternate_email</i><div><strong>{{'EMAIL'|translate}}</strong><span>{{data.account.user_email || ('UNKNOWN'|translate)}}</span></div></div>
+  </section>
+  <section class="lup-account-manage"><h2>{{'ACCOUNT_MANAGE_TITLE'|translate}}</h2><p class="lup-account-backend-hint">{{'INFO_ACCOUNT_BACKEND'|translate}}</p><a class="lup-account-action" ng-href="{{data.backendUrl}}" target="_blank" rel="noopener"><span>{{'ACCOUNT_MANAGE_ACTION'|translate}}</span><i class="material-icons" aria-hidden="true">open_in_new</i></a></section>
 </section>

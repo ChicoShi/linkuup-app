@@ -783,5 +783,7 @@
 "DISTANCE_SIDEBAR_COPY": "More GPS tolerance",
 "ADD_ROOM_EYEBROW": "A new meeting place",
 "ADD_ROOM_STEP_DETAILS": "1 · Describe your place",
-"ADD_ROOM_STEP_AREA": "2 · Set the area"
+"ADD_ROOM_STEP_AREA": "2 · Set the area",
+"ACCOUNT_MANAGE_TITLE": "Manage your account",
+"ACCOUNT_MANAGE_ACTION": "Open account settings"
 }

@@ -783,5 +783,7 @@
 "DISTANCE_SIDEBAR_COPY": "Mehr GPS-Spielraum",
 "ADD_ROOM_EYEBROW": "Ein neuer Treffpunkt",
 "ADD_ROOM_STEP_DETAILS": "1 · Deinen Ort beschreiben",
-"ADD_ROOM_STEP_AREA": "2 · Bereich festlegen"
+"ADD_ROOM_STEP_AREA": "2 · Bereich festlegen",
+"ACCOUNT_MANAGE_TITLE": "Dein Konto verwalten",
+"ACCOUNT_MANAGE_ACTION": "Kontoeinstellungen öffnen"
 }
