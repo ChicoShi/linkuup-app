@@ -145,3 +145,30 @@ md-dialog.place-dialog.place-qr-dialog {width:min(420px,calc(100vw - 24px));max-
 .place-qr-dialog .place-qr-code img {display:block;width:100%;height:auto;margin:0;}
 .place-qr-dialog .place-dialog-actions {padding:8px 24px 20px;}
 .place-qr-dialog .place-dialog-primary {width:100%;border:1px solid #d8f3ff2e;background:#eaf9ff0c;color:#dcf2ff;border-radius:16px;min-height:44px;}
+
+/* Rating: ten native choices, one shared glass surface. */
+md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px));border-radius:28px;border-color:#d8f3ff38;background:radial-gradient(ellipse at 50% 45%,#32698426,transparent 70%),linear-gradient(150deg,#15243bf5,#101a2bf5);box-shadow:inset 1px 1px 1px #f5fdff42,inset -1px -1px 1px #c8eafc1f,0 24px 70px #030c1b66;}
+.lup-quick-vote-dialog .quick-vote-content {padding:20px;text-align:center;}
+.lup-quick-vote-dialog .quick-vote-content h3 {margin:0 0 10px;color:#edf7ff;font:500 24px/1.25 Ubuntu,Roboto,sans-serif;overflow-wrap:anywhere;}
+.lup-quick-vote-dialog .quick-vote-content p {color:#afc4d7;font-size:13px;line-height:1.6;}
+.lup-quick-vote-dialog .place-dialog-symbol {color:#f3d69b;}
+.lup-quick-vote-dialog .quick-vote-stars {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px 4px;min-width:0;margin:22px 0 12px;padding:14px 8px;border:1px solid #d8f3ff28;border-radius:22px;background:#eaf9ff04;box-shadow:inset 0 1px 0 #f5fdff16;}
+.lup-quick-vote-dialog .quick-vote-stars legend {padding:0 10px;color:#b6cede;font-size:12px;}
+.lup-quick-vote-dialog .quick-vote-stars label {position:relative;display:grid;justify-items:center;gap:5px;min-height:52px;padding:6px 0;border-radius:12px;cursor:pointer;color:#809ab2;}
+.lup-quick-vote-dialog .quick-vote-stars input {position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;}
+.lup-quick-vote-dialog .quick-vote-stars svg {width:29px;height:29px;fill:#9bcfff09;stroke:#9bbbd080;stroke-width:1.25;pointer-events:none;transition:transform 180ms ease;}
+.lup-quick-vote-dialog .quick-vote-stars span {font:500 10px Roboto,sans-serif;pointer-events:none;}
+.lup-quick-vote-dialog .quick-vote-stars .is-lit svg {fill:#f0cf91;stroke:#ffe9bd;filter:drop-shadow(0 0 5px #f1c97c38);}
+.lup-quick-vote-dialog .quick-vote-stars .is-selected {background:#f0cf910d;color:#ffe9bd;box-shadow:inset 0 0 0 1px #f0cf9140;}
+.lup-quick-vote-dialog .quick-vote-stars label:hover svg {transform:translateY(-2px) scale(1.07);}
+.lup-quick-vote-dialog .quick-vote-stars label:focus-within {outline:2px solid #bce8fa;outline-offset:1px;}
+.lup-quick-vote-dialog .quick-vote-score {display:block;color:#f3d69b;font:500 28px Ubuntu,Roboto,sans-serif;}
+.lup-quick-vote-dialog .quick-vote-score small {color:#9fb9cc;font:400 13px Roboto,sans-serif;}
+.lup-quick-vote-dialog .place-dialog-actions {flex-wrap:wrap;gap:8px;}
+.lup-quick-vote-dialog .place-dialog-actions .place-dialog-primary {border:1px solid #d8f3ff40;border-radius:14px;background:#bce8fa18;color:#e8f7ff;}
+@media(prefers-reduced-motion:reduce) {.lup-quick-vote-dialog .quick-vote-stars svg {transition:none;}.lup-quick-vote-dialog .quick-vote-stars label:hover svg {transform:none;}}
+
+/* The category controls share the exact discovery-card edges. */
+.navigator-view .nav-categories {width:calc(100% - 44px);max-width:360px;padding-inline:0;gap:3px;}
+.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;}
+@media(max-width:360px) {.navigator-view .nav-categories {width:calc(100% - 32px);}}

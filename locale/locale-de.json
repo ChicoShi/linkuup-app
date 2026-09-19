@@ -772,5 +772,6 @@
 	"GUEST_WELCOME": "Als Gast dabei",
 	"GUEST_INTRO": "Wähle einen Namen. Du entscheidest später, ob du ein Profil erstellen möchtest.",
 "NAV_POSITION": "{{current}} von {{total}}",
-"NAV_EVERYDAY": "Alltag & Service"
+"NAV_EVERYDAY": "Alltag & Service",
+"LUP_QUICK_VOTE_COPY": "Wie gefällt dir dieser Ort? Wähle deine Sterne."
 }
