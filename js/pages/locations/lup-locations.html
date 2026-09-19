@@ -23,12 +23,12 @@
   <div class="location-rail location-rail-ready" role="region" tabindex="0" aria-roledescription="{{'NAV_BROWSE'|translate}}" aria-label="{{'LOCATIONS'|translate}}">
    <div ng-repeat="room in data.filteredRooms track by room.id()" class="lup-room-slide-outer" ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
     <article id="room{{room.id()}}" class="lup-room-slide nav-place" ng-class="categoryVisual(room).class">
+     <span class="nav-position" ng-if="data.filteredRooms.length">{{'NAV_POSITION'|translate:{current:$index + 1,total:data.filteredRooms.length} }}</span>
      <div class="nav-landscape" aria-hidden="true"><div class="nav-landmark"><i class="material-icons">{{categoryVisual(room).icon}}</i></div></div>
      <div class="nav-place-content"><p class="nav-place-category"><i class="material-icons" aria-hidden="true">{{categoryVisual(room).icon}}</i>{{room.categoryName()}}</p><h2>{{room.name()}}</h2><p class="nav-address">{{room.city()}}<span ng-if="room.street()"> · {{room.street()}}</span></p><div class="nav-facts"><span><i class="material-icons" aria-hidden="true">near_me</i>{{room.showDistance() ? room.displayDistance() : ('NAV_DISTANCE_UNKNOWN'|translate)}}</span><button type="button" ng-click="openRoomVote(room,$event)" aria-label="Location bewerten"><i class="material-icons" aria-hidden="true">star</i>{{room.rating() ? (room.rating() | number:1) : '—'}}</button></div>
      <div class="nav-actions"><button type="button" class="nav-open" ng-click="openRoom(room)">{{'NAV_OPEN'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button><button type="button" class="nav-route-chat is-here" ng-if="room.inChatRange()" ng-click="gotoChat(room)"><i class="material-icons" aria-hidden="true">forum</i><span>{{'NAV_CHAT'|translate}}</span></button><a class="nav-route-chat" ng-if="!room.inChatRange()" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener"><i class="material-icons" aria-hidden="true">near_me</i><span>{{'NAV_ROUTE'|translate}}</span></a><button type="button" class="nav-qr" ng-click="showRoomQRCode(room,$event)" aria-label="{{'NAV_QR'|translate}}"><i class="material-icons" aria-hidden="true">qr_code_2</i></button></div>
      <button class="nav-presence" type="button" ng-click="gotoVisitors(room)" aria-label="{{'TAB_ONLINE'|translate}}"><lup-presence ng-room="room"></lup-presence></button>
      </div>
-  <span class="nav-position" ng-if="data.filteredRooms.length">{{'NAV_POSITION'|translate:{current:$index + 1,total:data.filteredRooms.length} }}</span>
     </article>
    </div>
   </div>

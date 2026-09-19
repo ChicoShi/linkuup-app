@@ -116,7 +116,7 @@
 .navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
 .navigator-view .nav-address {min-height:30px;line-height:15px;}
 .navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
-.navigator-view .nav-position {display:block;margin-top:9px;text-align:center;font:11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#b0c7d7;}
+.navigator-view .nav-position {position:absolute;top:12px;right:14px;z-index:2;display:block;margin:0;padding:5px 9px;border:1px solid #c8ecff2b;border-radius:12px;background:#10283cbd;text-align:center;font:500 12px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#e1f4ff;pointer-events:none;}
 .navigator-view .nav-position > span {color:#7f9aaf;}
 @media(max-height:740px) and (max-width:600px) {
  .navigator-view .nav-landscape {height:90px;}
