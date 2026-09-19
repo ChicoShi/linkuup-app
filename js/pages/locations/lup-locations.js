@@ -31,6 +31,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var roomsPosition = $scope.data.roomsPosition || null;
 	var railElement = null;
 	var railScrollFrame = null;
+	var discoveryGlass = null;
 	var restoringRail = false;
 	var swipeStart = null;
 	var pullStart = null;
@@ -47,7 +48,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (restoringRail || !railElement || !railElement.clientWidth || !rooms.length) {
 			return;
 		}
-		paintRailDepth();
+		if (discoveryGlass) discoveryGlass.paint();
 		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
@@ -59,26 +60,6 @@ angular.module('LUP').config(function($routeProvider) {
 		if (index === rooms.length - 1) {
 			$scope.loadNextPage();
 		}
-	};
-
-	/* The rail owns selection; this small compositor-only layer only describes
-	 * where each already-rendered card sits. It deliberately does not select,
-	 * fetch, or filter rooms, so visual motion cannot race the discovery state. */
-	var paintRailDepth = function() {
-		if (!railElement || !railElement.clientWidth) {
-			return;
-		}
-		var centre = railElement.scrollLeft + railElement.clientWidth / 2;
-		Array.prototype.forEach.call(railElement.children, function(card) {
-			var cardCentre = card.offsetLeft + card.offsetWidth / 2;
-			var progress = Math.max(-1, Math.min(1, (cardCentre - centre) / railElement.clientWidth));
-			var distance = Math.abs(progress);
-			card.style.setProperty('--nav-turn', (progress * -8).toFixed(2) + 'deg');
-			card.style.setProperty('--nav-scale', (1 - distance * .045).toFixed(3));
-			card.style.setProperty('--nav-opacity', (1 - distance * .18).toFixed(3));
-			card.style.setProperty('--nav-drift', (progress * -10).toFixed(1) + 'px');
-			card.style.setProperty('--nav-glass-shift', ((progress + 1) * 50).toFixed(1) + '%');
-		});
 	};
 
 	var onRailScroll = function() {
@@ -226,7 +207,8 @@ angular.module('LUP').config(function($routeProvider) {
 		railElement = rail;
 		railElement.addEventListener('scroll', onRailScroll, {passive: true});
 		railElement.addEventListener('pointerdown', onRailPointerDown, {capture: true, passive: true});
-		window.requestAnimationFrame(paintRailDepth);
+		if (discoveryGlass) discoveryGlass.destroy();
+		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
 
 	$scope.init = function(event) {
@@ -234,6 +216,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!$scope.data.authenticated) {
 			return;
 		}
+		$scope.loadCategories();
 		if ($scope.data.locationsInitialized) {
 			restoringRail = true;
 			$timeout(function() {
@@ -245,7 +228,6 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!PositionSrvc.hasPosition(true)) {
 			return;
 		}
-		$scope.loadCategories();
 		$scope.loadFirstPage();
 	};
 	$scope.$on('lup-inited', $scope.init);
@@ -259,6 +241,7 @@ angular.module('LUP').config(function($routeProvider) {
 		// explicitly refreshes the nearby page when they want this position used.
 	});
 	$scope.$on('$destroy', function() {
+		if (discoveryGlass) discoveryGlass.destroy();
 		if (railScrollFrame !== null) {
 			window.cancelAnimationFrame(railScrollFrame);
 		}
@@ -356,15 +339,16 @@ angular.module('LUP').config(function($routeProvider) {
 		var loadFurtherForFilter = false;
 		RoomSrvc.loadRoomsPage(roomsPosition, page, $scope.data.per_page).then(function(rooms) {
 			rooms = Array.isArray(rooms) ? rooms : [];
-			if (replace) {
-				$scope.data.rooms = rooms;
-				$scope.data.currentRoomIndex = 0;
-			} else {
-				Array.prototype.push.apply($scope.data.rooms, rooms);
-			}
+			var previousCount = replace ? 0 : $scope.data.rooms.length;
+			var uniqueRooms = new Map();
+			(replace ? rooms : $scope.data.rooms.concat(rooms)).forEach(function(room) {
+				uniqueRooms.set(String(room.id()), room);
+			});
+			$scope.data.rooms = Array.from(uniqueRooms.values());
+			if (replace) $scope.data.currentRoomIndex = 0;
 			$scope.data.page = page;
 			$scope.data.roomsTotal = RoomSrvc.NUM_ROOMS;
-			$scope.data.hasMoreLocations = rooms.length > 0 && $scope.data.rooms.length < $scope.data.roomsTotal;
+			$scope.data.hasMoreLocations = $scope.data.rooms.length > previousCount && $scope.data.rooms.length < $scope.data.roomsTotal;
 			$scope.data.roomsPosition = roomsPosition;
 			$scope.data.locationsInitialized = true;
 			applyCategoryFilter(replace);

@@ -55,7 +55,7 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		}
 		var children = {}, roots = [];
 		angular.forEach(CategorySrvc.CACHE, function(category) {
-			var parent = category.cat_parent === null || category.cat_parent === '' ? null : String(category.cat_parent);
+			var parent = category.cat_parent == null || category.cat_parent === '' ? null : String(category.cat_parent);
 			if (!parent) {
 				roots.push(category);
 			} else if (CategorySrvc.CACHE[parent]) {
@@ -74,7 +74,7 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		return roots.map(function(group) {
 			var id = String(group.cat_id);
 			return {
-				ids: descendants(id),
+				ids: [id].concat(descendants(id)),
 				icon: categoryIcons[id] || 'place',
 				label: group.cat_label || group.cat_name,
 			};

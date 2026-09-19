@@ -88,7 +88,11 @@
   });
   mutation.observe(rail,{childList:true,subtree:true});
   schedule();
-  this.destroy=function(){dead=true;resize.disconnect();mutation.disconnect();cancelAnimationFrame(frame);};
+  this.destroy=function(){
+   dead=true;resize.disconnect();mutation.disconnect();cancelAnimationFrame(frame);
+   scenery.remove();surface.classList.remove('has-discovery-lens');
+   cards.forEach(function(c){var lens=c.card.querySelector('.nav-glass-lens');if(lens)lens.remove();});
+  };
  }
  root.LupDiscoveryGlass=DiscoveryGlass;
 })(typeof window==='undefined'?globalThis:window);
