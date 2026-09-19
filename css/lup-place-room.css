@@ -141,12 +141,6 @@
 .lup-place .place-composer input::placeholder {color:#aabbd0;font-size:13px;}
 .location-page.lup-place .place-chat .place-composer .place-send {display:grid;place-items:center;flex:0 0 46px;width:46px;max-width:none;height:46px;min-height:46px;min-width:46px;margin:0;padding:0;border:0;border-radius:15px;background:#9bcfff;color:#162b42;mask:none;-webkit-mask:none;box-shadow:none;cursor:pointer;}
 html.lup-soft-keyboard-open .lup-place {--composer-safe-bottom:0px;}
-.location-page.lup-place .place-chat .place-composer .place-send-link {position:relative;isolation:isolate;border:1px solid #bde6ff66;border-radius:16px;background:linear-gradient(145deg,#bceaff30,#62bbec18);box-shadow:inset 0 1px 0 #e5f8ff70,inset 0 -1px 0 #6ebce52e;transition:transform 140ms ease,background-color 140ms ease;}
-.lup-place .place-send-link svg {width:25px;height:25px;fill:none;stroke:#d7f3ff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.location-page.lup-place .place-chat .place-composer .place-send-link:not(:disabled):active {transform:scale(.94);}
-.location-page.lup-place .place-chat .place-composer .place-send-link:disabled {background:#b5d7e215;box-shadow:inset 0 1px 0 #ffffff12;border-color:#bde6ff25;opacity:.65;}
-.lup-place .place-send-link:disabled svg {stroke:#a3bfd1;}
-@media(prefers-reduced-motion:reduce){.location-page.lup-place .place-chat .place-composer .place-send-link{transition:none;}}
 .lup-place .place-send:disabled {opacity:.4;cursor:default;}
 .lup-place .place-send i {font-size:23px;}
 .lup-place .place-join-state {padding:15px 20px;color:var(--place-muted);font-size:12px;text-align:center;border-top:1px solid var(--place-line);}

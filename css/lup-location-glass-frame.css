@@ -228,8 +228,8 @@ md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) smal
 .location-page.lup-place .place-chat .chatbottom.place-composer {gap:8px;min-height:64px;padding:8px 12px calc(8px + var(--composer-safe-bottom,env(safe-area-inset-bottom,0px)));background:linear-gradient(180deg,#13273aed,#101e32f5);border-top:1px solid #bce8fa26;box-shadow:inset 0 1px 0 #f5fdff08;}
 .location-page.lup-place .place-chat .place-composer input {height:46px;border:1px solid #c9edff35;border-radius:18px;background:#d1f0ff07;box-shadow:inset 0 1px 0 #f5fdff18;color:#edf7ff;}
 .location-page.lup-place .place-chat .place-composer input:focus {outline:none;border-color:#bce8fa99;box-shadow:inset 0 1px 0 #fff3,0 0 0 2px #9ddcff12;}
-.location-page.lup-place .place-chat .place-composer .place-send {border:1px solid #d8f3ff70;border-radius:16px;background:linear-gradient(145deg,#e5f6ff,#a3d4ed);color:#153951;box-shadow:inset 0 1px 0 #fffc,0 3px 12px #05132140;}
-.location-page.lup-place .place-chat .place-composer .place-send svg {width:27px;height:27px;fill:#1539510d;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform 160ms ease;}
+.location-page.lup-place .place-chat .place-composer .place-send {border:1px solid #d8f3ff70;border-radius:16px;background:linear-gradient(145deg,#bceaff30,#62bbec18);color:#d7f3ff;box-shadow:inset 0 1px 0 #e5f8ff70,inset 0 -1px 0 #6ebce52e;}
+.location-page.lup-place .place-chat .place-composer .place-send svg {width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform 160ms ease;}
 .location-page.lup-place .place-chat .place-composer .place-send:active:not(:disabled) svg {transform:translateX(2px) scale(.94);}
 .location-page.lup-place .place-chat .place-composer .place-send:disabled {background:#bce8fa0a;border-color:#bce8fa20;color:#7595ac;box-shadow:inset 0 1px 0 #f5fdff10;}
 .location-page.lup-place .place-chat .place-composer button.place-icon-button {background:#d1f0ff06;border-color:#c9edff25;border-radius:16px;}
