@@ -773,5 +773,15 @@
 	"GUEST_INTRO": "Choose a name. You can decide later whether to create a profile.",
 "NAV_POSITION": "{{current}} of {{total}}",
 "NAV_EVERYDAY": "Everyday & services",
-"LUP_QUICK_VOTE_COPY": "How do you like this place? Choose your stars."
+"LUP_QUICK_VOTE_COPY": "How do you like this place? Choose your stars.",
+"DISTANCE_BENEFIT_TITLE": "A little more room.",
+"SHOUT_BENEFIT_TITLE": "Reach out to your surroundings.",
+"SHOUT_BENEFIT_COPY": "Choose your radius and write your message. Check the price before sending.",
+"CREDITS_DISCOVER": "Your credits",
+"CREDITS_TOP_UP": "Top up",
+"SHOUT_SIDEBAR_COPY": "Message your surroundings",
+"DISTANCE_SIDEBAR_COPY": "More GPS tolerance",
+"ADD_ROOM_EYEBROW": "A new meeting place",
+"ADD_ROOM_STEP_DETAILS": "1 · Describe your place",
+"ADD_ROOM_STEP_AREA": "2 · Set the area"
 }

@@ -172,3 +172,50 @@ md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px)
 .navigator-view .nav-categories {width:calc(100% - 44px);max-width:360px;padding-inline:0;gap:3px;}
 .navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;}
 @media(max-width:360px) {.navigator-view .nav-categories {width:calc(100% - 32px);}}
+
+/* Paid actions share the location material and show their configured price. */
+md-dialog.place-dialog.lup-purchase-dialog {width:min(540px,calc(100vw - 24px));max-width:540px;border-radius:28px;background:radial-gradient(ellipse at 10% 35%,#307e9d26,transparent 70%),linear-gradient(150deg,#15243bf5,#101a2bf5);border-color:#d8f3ff38;box-shadow:inset 1px 1px 1px #f5fdff42,0 24px 70px #030c1b66;}
+.lup-purchase-dialog .lup-distance-dialog-content,.lup-purchase-dialog .lup-shout-dialog-content {padding:22px;color:#dbeaf5;}
+.lup-purchase-dialog h3 {margin:0 0 10px;color:#edf7ff;font:500 25px/1.2 Ubuntu,Roboto,sans-serif;letter-spacing:-.5px;}
+.lup-purchase-dialog .purchase-copy {margin:0 0 20px;color:#b4c8d9;font-size:13px;line-height:1.65;}
+.lup-purchase-dialog .lup-distance-cost,.lup-purchase-dialog .lup-shout-cost {display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin:18px 0;padding:16px;border:1px solid #d8f3ff2e;border-radius:18px;background:#bce8fa07;box-shadow:inset 0 1px 0 #f5fdff16;color:#edf7ff;font:500 22px Ubuntu,Roboto,sans-serif;}
+.lup-purchase-dialog .lup-distance-cost small,.lup-purchase-dialog .lup-shout-cost small {color:#a6c4d8;font:400 11px Roboto,sans-serif;}
+.lup-purchase-dialog .lup-distance-slider,.lup-purchase-dialog .lup-shout-radius {display:grid;grid-template-columns:minmax(0,1fr) 72px 22px;gap:8px;color:#c8ddea;}
+.lup-purchase-dialog .purchase-range-label {grid-column:1/-1;font-size:12px;}
+.lup-purchase-dialog md-input-container {max-width:100%;}
+.lup-purchase-dialog .lup-distance-slider md-input-container,.lup-purchase-dialog .lup-shout-radius md-input-container {width:72px;}
+.lup-purchase-dialog .lup-shout-map {height:220px;border:1px solid #d8f3ff30;border-radius:18px;background:#101c30;}
+.lup-purchase-dialog .lup-shout-map-status,.lup-purchase-dialog .lup-distance-note {color:#a6c4d8;font-size:12px;line-height:1.6;}
+.lup-purchase-dialog md-input-container label {color:#b4c8d9;}
+.lup-purchase-dialog md-input-container .md-input {color:#edf7ff;border-color:#bce8fa40;}
+.lup-purchase-dialog md-dialog-actions {flex-wrap:wrap;gap:6px;padding:12px 16px 16px;border-top:1px solid #bce8fa16;}
+.lup-purchase-dialog md-dialog-actions .md-button {margin:0;border-radius:14px;text-transform:none;white-space:normal;line-height:1.4;min-height:46px;padding:10px 14px;color:#c4d7e6;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm {flex:1 1 190px;background:#c3eaff;color:#132b40;box-shadow:inset 0 1px 0 #fff9,0 4px 16px #08142350;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm:disabled {background:#bce8fa16;color:#8ea6b8;box-shadow:none;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) {border-color:#d8f3ff18;background:#bce8fa04;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) p {padding:9px 0;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) small {display:block;margin-top:5px;color:#95b5cd;font:400 10px/1.5 Roboto,sans-serif;}
+
+/* Room creation follows the same blue glass, retaining its map workflow. */
+.lup-add-room-page .settings-content {background:radial-gradient(ellipse at 10% 50%,#24668524,transparent 65%),linear-gradient(150deg,#14243a,#101b2d);color:#e5f2fc;overflow-y:auto;}
+.lup-add-room-page .add-room-form {box-sizing:border-box;width:calc(100% - 32px);max-width:720px;margin:20px auto 40px;padding:0;}
+.lup-add-room-page .add-room-hero {display:flex;align-items:flex-start;gap:16px;padding:12px 4px 24px;background:none;border:0;box-shadow:none;}
+.lup-add-room-page .add-room-hero__mark {display:grid;place-items:center;flex:0 0 48px;width:48px;height:54px;border:1px solid #d8f3ff30;border-radius:16px;background:#bce8fa08;color:#bce8fa;box-shadow:inset 0 1px 0 #f5fdff35;}
+.lup-add-room-page .add-room-hero small {color:#a5cada;font-size:11px;letter-spacing:.06em;}
+.lup-add-room-page .add-room-hero h1 {margin:7px 0 12px;color:#edf7ff;font:500 28px/1.15 Ubuntu,Roboto,sans-serif;}
+.lup-add-room-page .add-room-hero p,.lup-add-room-page .lup-add-room-map-section p {color:#b4c8d9;font-size:13px;line-height:1.65;}
+.lup-add-room-page .add-room-section,.lup-add-room-page .lup-add-room-map-section {box-sizing:border-box;margin:0 0 18px;padding:20px;border:1px solid #d8f3ff24;border-radius:24px;background:#bce8fa04;box-shadow:inset 1px 1px 1px #f5fdff26,inset -1px -1px 1px #c8eafc0d;}
+.lup-add-room-page .add-room-section__label {display:block;margin-bottom:20px;color:#a5cada;font-size:11px;letter-spacing:.04em;}
+.lup-add-room-page md-input-container label,.lup-add-room-page md-select .md-select-value.md-select-placeholder {color:#aac5d9;}
+.lup-add-room-page md-input-container .md-input,.lup-add-room-page md-select .md-select-value {color:#edf7ff;border-color:#bce8fa40;}
+.lup-add-room-page .lup-add-room-map {border:1px solid #d8f3ff30;border-radius:18px;background:#101c30;}
+.lup-add-room-page .lup-add-room-map-section .lup-add-room-cost {margin:14px 0;padding:12px 16px;border:1px solid #d8f3ff28;border-radius:14px;background:#bce8fa08;color:#edf7ff;font-size:17px;}
+.lup-add-room-page .add-room-form > .md-button {width:100%;margin:0;min-height:48px;border-radius:16px;background:#c3eaff;color:#132b40;text-transform:none;}
+.lup-add-room-page .add-room-form > .md-button:disabled {background:#bce8fa16;color:#8ea6b8;}
+@media(max-width:360px) {.lup-add-room-page .add-room-section,.lup-add-room-page .lup-add-room-map-section {padding:16px;}.lup-add-room-page .add-room-hero {gap:10px;}.lup-add-room-page .add-room-hero h1 {font-size:24px;}}
+
+.lup-purchase-dialog md-slider .md-thumb:after {border-color:#a9ddf7;background:#a9ddf7;}
+.lup-purchase-dialog md-slider .md-track.md-track-fill {background:#a9ddf7;}
+.lup-purchase-dialog md-slider .md-sign {background:#a9ddf7;color:#132b40;}
+
+.lup-add-room-page .add-room-description textarea {min-height:90px;height:90px;max-height:180px;}

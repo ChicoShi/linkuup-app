@@ -1,19 +1,19 @@
-<md-dialog class="lup-shout-dialog" aria-label="{{'PLACE_SHOUT'|translate}}">
+<md-dialog class="place-dialog lup-purchase-dialog lup-shout-dialog" aria-label="{{'PLACE_SHOUT'|translate}}">
   <form ng-submit="send()">
-    <md-toolbar><div class="md-toolbar-tools"><i class="material-icons">campaign</i><h2>{{'PLACE_SHOUT'|translate}}</h2><span flex></span><md-button class="md-icon-button" ng-click="cancel()" aria-label="{{'BTN_CANCEL'|translate}}"><i class="material-icons">close</i></md-button></div></md-toolbar>
+    <header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">campaign</i></span><div><span>LinkUUp</span><h2>{{'PLACE_SHOUT'|translate}}</h2></div><button class="place-dialog-close" type="button" ng-click="cancel()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
     <md-dialog-content>
       <div class="lup-shout-dialog-content">
-        <p class="lup-shout-cost">{{data.cost}} {{'TITLE_CREDITS'|translate}} <small>· {{data.creditsPerKM}}/{{'SHOUT_KM'|translate}}</small></p>
+        <h3>{{'SHOUT_BENEFIT_TITLE'|translate}}</h3><p class="purchase-copy">{{'SHOUT_BENEFIT_COPY'|translate}}</p><p class="lup-shout-cost">{{data.cost}} {{'TITLE_CREDITS'|translate}} <small>· {{data.creditsPerKM}}/{{'SHOUT_KM'|translate}}</small></p>
         <div id="lup-shout-map" class="lup-shout-map" role="application"></div>
         <p class="lup-shout-map-status">{{data.mapStatus}}</p>
         <div class="lup-shout-radius" layout="row" layout-align="start center">
-          <span>{{'SHOUT_RADIUS'|translate}}</span>
+          <span class="purchase-range-label">{{'SHOUT_RADIUS'|translate}}</span>
           <md-slider flex min="0.001" max="100" step="0.001" ng-model="data.radius" ng-change="updateRadius()" aria-label="{{'SHOUT_RADIUS'|translate}}"></md-slider>
           <md-input-container><input type="number" min="0.001" max="100" step="0.001" ng-model="data.radius" ng-change="updateRadius()" aria-label="{{'SHOUT_RADIUS'|translate}}"></md-input-container><span>km</span>
         </div>
         <md-input-container class="md-block"><label>{{'PLACE_SHOUT'|translate}}</label><textarea ng-model="data.message" maxlength="512" rows="3" required></textarea></md-input-container>
       </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row"><md-button ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-warn" type="submit" ng-disabled="!data.message.trim()">{{'BTN_SEND'|translate}} · {{data.cost}} {{'TITLE_CREDITS'|translate}}</md-button></md-dialog-actions>
+    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="!data.message.trim()">{{'BTN_SEND'|translate}} · {{data.cost}} {{'TITLE_CREDITS'|translate}}</md-button></md-dialog-actions>
   </form>
 </md-dialog>

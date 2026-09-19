@@ -60,17 +60,17 @@
 
 	  <md-list-item class="md-1-line nav-credits" ng-click="gotoBuyCredits()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">toll</i>
-		<p>{{data.ownUser.credits()}} {{'TITLE_CREDITS'|translate}}</p>
+		<p>{{'CREDITS_DISCOVER'|translate}}<small>{{data.ownUser.credits()}} {{'TITLE_CREDITS'|translate}} · {{'CREDITS_TOP_UP'|translate}}</small></p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-shout" ng-click="openShout()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">campaign</i>
-		<p>Shout · {{ConfigSrvc.shoutCreditsKM()}} Credits/km</p>
+		<p>{{'PLACE_SHOUT'|translate}}<small>{{'SHOUT_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.shoutCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-buy-distance" ng-click="openBuyDistance()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">social_distance</i>
-		<p>{{'TITLE_BUY_DISTANCE'|translate}} · {{ConfigSrvc.toleranceCreditsKM()}} Credits/km</p>
+		<p>{{'TITLE_BUY_DISTANCE'|translate}}<small>{{'DISTANCE_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.toleranceCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-add-room" ng-click="gotoAddRoom()" ng-if="data.ownUser.isAuthed()" ng-class="{'lup-vip-locked': !data.ownUser.isVIP()}">
