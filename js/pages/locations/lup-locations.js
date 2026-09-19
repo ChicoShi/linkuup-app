@@ -47,6 +47,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (restoringRail || !railElement || !railElement.clientWidth || !rooms.length) {
 			return;
 		}
+		paintRailDepth();
 		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
@@ -58,6 +59,26 @@ angular.module('LUP').config(function($routeProvider) {
 		if (index === rooms.length - 1) {
 			$scope.loadNextPage();
 		}
+	};
+
+	/* The rail owns selection; this small compositor-only layer only describes
+	 * where each already-rendered card sits. It deliberately does not select,
+	 * fetch, or filter rooms, so visual motion cannot race the discovery state. */
+	var paintRailDepth = function() {
+		if (!railElement || !railElement.clientWidth) {
+			return;
+		}
+		var centre = railElement.scrollLeft + railElement.clientWidth / 2;
+		Array.prototype.forEach.call(railElement.children, function(card) {
+			var cardCentre = card.offsetLeft + card.offsetWidth / 2;
+			var progress = Math.max(-1, Math.min(1, (cardCentre - centre) / railElement.clientWidth));
+			var distance = Math.abs(progress);
+			card.style.setProperty('--nav-turn', (progress * -8).toFixed(2) + 'deg');
+			card.style.setProperty('--nav-scale', (1 - distance * .045).toFixed(3));
+			card.style.setProperty('--nav-opacity', (1 - distance * .18).toFixed(3));
+			card.style.setProperty('--nav-drift', (progress * -10).toFixed(1) + 'px');
+			card.style.setProperty('--nav-glass-shift', ((progress + 1) * 50).toFixed(1) + '%');
+		});
 	};
 
 	var onRailScroll = function() {
@@ -205,6 +226,7 @@ angular.module('LUP').config(function($routeProvider) {
 		railElement = rail;
 		railElement.addEventListener('scroll', onRailScroll, {passive: true});
 		railElement.addEventListener('pointerdown', onRailPointerDown, {capture: true, passive: true});
+		window.requestAnimationFrame(paintRailDepth);
 	};
 
 	$scope.init = function(event) {

@@ -20,7 +20,7 @@
   box-sizing:border-box;
 }
 .navigator-view > md-content.greybg { color:var(--nav-ink); background:linear-gradient(150deg,#16182c,#111125 65%,#171d32); overflow-x:hidden; padding-bottom:max(20px,env(safe-area-inset-bottom)); }
-.navigator-view > md-content::before,.navigator-view > md-content::after,.navigator-view .location-rail::before,.navigator-view .location-rail::after { display:none; }
+.navigator-view > md-content::before,.navigator-view > md-content::after { display:none; }
 .navigator-view md-toolbar.lup-top-bar.md-hue-2:not(.sidenav-brand),.navigator-view .lup-top-bar .md-toolbar-tools { background:transparent; box-shadow:none; border:0; }
 .navigator-view .nav-topbar {display:grid;grid-template-columns:40px minmax(0,1fr) 36px 40px;align-items:center;gap:6px;box-sizing:border-box;width:min(100%,var(--lup-topbar-width));margin:0 auto 10px;padding:max(8px,env(safe-area-inset-top)) var(--lup-topbar-inset) 0;}
 .navigator-view .nav-topbar-control {display:grid;place-items:center;flex:0 0 40px;width:40px;height:44px;padding:0;border:0;border-radius:50%;background:none;color:var(--lup-topbar-ink);cursor:pointer;}
@@ -65,9 +65,8 @@
 .navigator-view .nav-category-glint i {font-size:25px;text-shadow:0 0 8px color-mix(in srgb,var(--category-color) 36%,transparent);}
 .navigator-view .location-rail { position:relative; display:flex; gap:0; width:100%; max-width:480px; box-sizing:border-box; padding:8px 0; margin:0 auto; background:transparent; overflow-x:auto; overflow-y:hidden; min-height:0; scroll-snap-type:x mandatory; scroll-padding:0; scrollbar-width:none; touch-action:none; }
 .navigator-view .location-rail::-webkit-scrollbar { display:none; }.navigator-view .location-rail.location-rail-dragging { scroll-snap-type:none; }
-.navigator-view .lup-room-slide-outer { flex:0 0 100%; width:100%; overflow:hidden; min-width:0; height:auto; padding:0; margin:0; transform:none; transition:none; scroll-snap-align:center; }
-.navigator-view .nav-place { display:flex; flex-direction:column; width:calc(100% - 48px); max-width:320px; height:auto; min-height:0; padding:0; margin:0 auto; background:transparent; box-shadow:none; border:0; border-radius:0; overflow:hidden; opacity:1; transform:none; }
-.navigator-view .nav-place::before,.navigator-view .nav-place::after { display:none; }
+.navigator-view .lup-room-slide-outer { flex:0 0 100%; width:100%; overflow:hidden; min-width:0; height:auto; padding:0; margin:0; scroll-snap-align:center; transform:translateZ(0); transition:opacity 180ms ease; }
+.navigator-view .nav-place { display:flex; flex-direction:column; width:calc(100% - 48px); max-width:320px; height:auto; min-height:0; padding:0; margin:0 auto; overflow:hidden; }
 .nav-landscape { position:relative; height:164px; overflow:hidden; isolation:isolate; background:none; }
 .nav-landmark { position:absolute; top:28px; left:calc(50% - 41px); width:82px; height:82px; border-radius:28px 28px 28px 8px; display:grid; place-items:center; transform:rotate(-45deg); background:linear-gradient(145deg,#dfd7ff,#a292e7 55%,#7279be); border:1px solid #ebe7ffb0; box-shadow:-7px 9px 0 #554e8644,0 24px 26px #08091766,inset 0 2px 3px #ffffff66; }
 .nav-landmark>i { transform:rotate(45deg); color:#262844; font-size:37px; }
@@ -97,7 +96,7 @@
 .navigator-view .nav-facts { gap:8px 16px; }.navigator-view .nav-facts>span,.navigator-view .nav-facts>button { flex:none; white-space:nowrap; }
 .navigator-view .nav-actions>* { min-width:0; white-space:normal; line-height:1.3; }
 .navigator-view .nav-actions i { flex:none; }
-.navigator-view .nav-landscape { background:none; }
+.navigator-view .nav-landscape { background:linear-gradient(135deg,rgba(148,211,244,.15),rgba(72,101,169,.025) 48%,rgba(198,170,255,.11)); }
 .navigator-view .nav-landmark { box-shadow:-4px 5px 0 #554e8633,0 12px 15px #08091744,inset 0 2px 3px #ffffff66; }
 @keyframes nav-settle { from { transform:translateY(-8px) rotate(-45deg); opacity:.7; } to { transform:translateY(0) rotate(-45deg); opacity:1; } }
 .lup-room-slide-current .nav-landmark { animation-duration:380ms; }
@@ -131,9 +130,8 @@
 
 @media(prefers-reduced-motion:reduce) {.navigator-view .nav-landscape {transform:none;}}
 
-/* Settle once after swiping; no overlapping landmark entrance animation. */
-.navigator-view .lup-room-slide-current .nav-landmark {animation:none;}
-.navigator-view .nav-landscape::before,.navigator-view .nav-landscape::after {display:none;}
+/* Settle once after swiping; the card stays quiet after its short arrival. */
+.navigator-view .nav-landscape::before,.navigator-view .nav-landscape::after {display:block;}
 
 /* Selected filter and category of the currently centred room are separate states. */
 .navigator-view .nav-categories button {position:relative;}
