@@ -457,7 +457,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.gotoDebug = function() { $scope.goto('/debug'); };
 	$scope.gotoBackend = function() { window.location.href = window.LUP_CONFIG.server; };
 	$scope.gotoBuyCredits = function() {
-		window.location.href = window.LUP_CONFIG.server + 'index.php?_mo=PaymentCredits&_me=OrderCredits';
+		window.location.href = window.LUP_CONFIG.server + 'paymentcredits.ordercredits.html';
 	};
 	$scope.openShout = function() {
 		return ShoutSrvc.open().then(function(result) {
