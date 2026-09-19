@@ -30,3 +30,7 @@ Echtes Mobilgerät, WebSocket-/Kartenverfügbarkeit, tatsächlicher Raum- und Za
 Die Fokus-/Keyboard-Regeln ändern jetzt keine Abstände der Location/Chat/Online-Leiste mehr. Nur Gesprächsüberschrift, Ereigniszusammenfassung und Leerhinweis geben beim Schreiben Platz frei. Neue vom bestehenden Chatservice gemeldete Joins/Shouts erzeugen einen einmaligen Lichtimpuls im Online-Tab des betroffenen Raums. Abruf alter Zusammenfassungen erzeugt kein Ereignis. Die letzte Impulsmarkierung bleibt nach der Animation unsichtbar; sie verändert weder Zähler noch Versand/ACL. Reduzierte Bewegung verwendet nur eine kurze Helligkeitsänderung ohne Skalierung. Angulars auslaufender ng-leave-Effekt ist ausgeblendet, damit schnelle Ereignisse keine überlagerten Impulse erzeugen.
 
 Prüfung: 11 Social-/Viewport-Tests grün; Angular-Darstellungsprüfung mit drei schnellen Impulsen, Ausblenden danach und reduced-motion erfolgreich. Mobil-/Desktop-Viewportprüfung erneut bestanden; keine Nachricht an echte Nutzer gesendet. Physischer Safari-Test und Miras Code-Abnahme weiterhin offen.
+
+## Kürzere Wischbewegung
+
+Die vorhandene Pointer-Erkennung wechselt ab 24 statt 48 CSS-Pixeln; horizontale Bewegung muss mindestens 1,25-mal so groß wie die vertikale sein. Keine neue Gestenbibliothek und kein Eingriff in Daten-/Kategorieauswahl. Chromium mit synthetischen Touch-Pointer-Ereignissen bei 320/390/1440 px: 28px vor/zurück wechselt genau eine Karte, 8px-Tippen sowie vertikale/diagonale Bewegungen lassen die Auswahl stehen. Echte iPhone-Touchprüfung bleibt offen.

@@ -174,7 +174,7 @@ angular.module('LUP').config(function($routeProvider) {
 		stopRailGesture();
 		if (shouldRefresh) {
 			$scope.refreshRooms();
-		} else if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy)) {
+		} else if (Math.abs(dx) >= 24 && Math.abs(dx) > Math.abs(dy) * 1.25) {
 			stepRail(dx < 0 ? 1 : -1);
 		}
 	};
