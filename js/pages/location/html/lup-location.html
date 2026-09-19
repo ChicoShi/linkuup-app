@@ -13,7 +13,7 @@
         <md-tab-body><ng-include src="'js/pages/location/html/lup-location-chat.html?v='+V"></ng-include></md-tab-body>
       </md-tab>
       <md-tab ng-click="openVisitorsTab()" md-on-select="visitorsVisible()">
-        <md-tab-label><span class="place-tab-label"><i class="material-icons" aria-hidden="true">people_outline</i><span>{{'TAB_ONLINE'|translate}}</span><b class="place-tab-count" ng-if="visitorCount()">{{visitorCount()}}</b></span></md-tab-label>
+        <md-tab-label><span class="place-tab-label place-online-label"><span class="place-online-pulse" ng-repeat="pulse in data.roomActivityPulse track by pulse" aria-hidden="true"></span><i class="material-icons" aria-hidden="true">people_outline</i><span>{{'TAB_ONLINE'|translate}}</span><b class="place-tab-count" ng-if="visitorCount()">{{visitorCount()}}</b></span></md-tab-label>
         <md-tab-body><ng-include src="'js/pages/location/html/lup-location-visitors.html?v='+V"></ng-include></md-tab-body>
       </md-tab>
     </md-tabs>

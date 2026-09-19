@@ -24,3 +24,9 @@ Echtes Mobilgerät, WebSocket-/Kartenverfügbarkeit, tatsächlicher Raum- und Za
 - Gegenbefund von Mira im IRC vom 20.09.: unabhängig dieselbe inset:0-Ursache bestätigt; keine parallelen Änderungen durch Mira.
 - Chromium-Darstellungstest mit Angular-Komponenten und simulierten VisualViewport-resize/scroll-Ereignissen: Breiten 320/390/1440; mobil Höhe420 mit Offset0/60/130/0. Vorher Composer-Unterkante stets420, erwartet420/480/550/420. Nachher alle vier Werte korrekt. Raumchat- und Privatnachrichten-Composer geprüft, Topbar sichtbar. Isolierte Testdaten, keine Nachricht verschickt. Kein echter iPhone-/Safari-Test; dieser bleibt Abnahmepunkt.
 - Vorhandene drei mobile-viewport-Tests bestehen, PHP-Lint/index_debug und git diff --check sauber. Der frühere Gesamt-Testbefund mit neun Baseline-Fehlern bleibt unverändert; nicht erneut als vollständig grün bezeichnet.
+
+## Raumchat: feste Navigation und kompakte Ereignisanzeige
+
+Die Fokus-/Keyboard-Regeln ändern jetzt keine Abstände der Location/Chat/Online-Leiste mehr. Nur Gesprächsüberschrift, Ereigniszusammenfassung und Leerhinweis geben beim Schreiben Platz frei. Neue vom bestehenden Chatservice gemeldete Joins/Shouts erzeugen einen einmaligen Lichtimpuls im Online-Tab des betroffenen Raums. Abruf alter Zusammenfassungen erzeugt kein Ereignis. Die letzte Impulsmarkierung bleibt nach der Animation unsichtbar; sie verändert weder Zähler noch Versand/ACL. Reduzierte Bewegung verwendet nur eine kurze Helligkeitsänderung ohne Skalierung. Angulars auslaufender ng-leave-Effekt ist ausgeblendet, damit schnelle Ereignisse keine überlagerten Impulse erzeugen.
+
+Prüfung: 11 Social-/Viewport-Tests grün; Angular-Darstellungsprüfung mit drei schnellen Impulsen, Ausblenden danach und reduced-motion erfolgreich. Mobil-/Desktop-Viewportprüfung erneut bestanden; keine Nachricht an echte Nutzer gesendet. Physischer Safari-Test und Miras Code-Abnahme weiterhin offen.
