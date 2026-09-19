@@ -388,6 +388,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.$on('gws-ws-close', function(event) {
 		console.log('LUPCtrl.$on-gws-ws-close', event);
 		$scope.data.inited = false;
+		if (WebsocketSrvc.isPageUnloading()) {
+			return;
+		}
 		ErrorSrvc.showError('Connection Failed', 'Websocket').then(function() {
 //			$scope.gotoLogin();
 			setTimeout($scope.initConnection, 500);
@@ -547,10 +550,6 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.clearCache()');
 		UserSrvc.CACHE = {};
 		RoomSrvc.CACHE = {};
-		// The discovery catalogue contains room models from the previous session.
-		// Do not retain it across logout or a newly authenticated account.
-		RoomSrvc.ALL_ROOMS = null;
-		RoomSrvc.ALL_ROOMS_LOADING = null;
 		$scope.data.fullCatalogue = null;
 		SettingsSrvc.CACHE = null;
 		$rootScope.$broadcast('lup-clear-cache');
@@ -590,36 +589,36 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 		console.log('LUPCtrl.$on-$viewContentLoaded()', event);
 //		$scope.doAuthCheck();
 	});
-	// Refresh browser GPS periodically. A position change triggers a fresh,
-	// database-distance-sorted room query; do not reorder cached results here.
-	var roomResortInterval = $interval(function() {
-		if (!$scope.data.inited || !Array.isArray($scope.data.rooms)) {
-			return;
-		}
-		PositionSrvc.refresh();
-	}, 5 * 60 * 1000);
-	$scope.$on('$destroy', function() {
-		$interval.cancel(roomResortInterval);
-	});
-
-	var roomRefreshTimer = null;
-	$scope.refreshRoomsForPosition = function() {
-		if (!$scope.data.inited) {
-			return;
-		}
-		if (roomRefreshTimer) {
-			$timeout.cancel(roomRefreshTimer);
-		}
-		roomRefreshTimer = $timeout(function() {
-			roomRefreshTimer = null;
-			RoomSrvc.withRooms().then(function(rooms) {
-				$scope.data.rooms = rooms;
-				$rootScope.$broadcast('lup-rooms-ready', rooms);
-			}, function(error) {
-				console.warn('LinkUUp: nearby location refresh failed.', error);
-			})['catch']($scope.catchUnknown);
-		}, 250);
-	};
+	// // Refresh browser GPS periodically. A position change triggers a fresh,
+	// // database-distance-sorted room query; do not reorder cached results here.
+	// var roomResortInterval = $interval(function() {
+	// 	if (!$scope.data.inited || !Array.isArray($scope.data.rooms)) {
+	// 		return;
+	// 	}
+	// 	PositionSrvc.refresh();
+	// }, 5 * 60 * 1000);
+	// $scope.$on('$destroy', function() {
+	// 	$interval.cancel(roomResortInterval);
+	// });
+	//
+	// var roomRefreshTimer = null;
+	// $scope.refreshRoomsForPosition = function() {
+	// 	if (!$scope.data.inited) {
+	// 		return;
+	// 	}
+	// 	if (roomRefreshTimer) {
+	// 		$timeout.cancel(roomRefreshTimer);
+	// 	}
+	// 	roomRefreshTimer = $timeout(function() {
+	// 		roomRefreshTimer = null;
+	// 		RoomSrvc.withRooms().then(function(rooms) {
+	// 			$scope.data.rooms = rooms;
+	// 			$rootScope.$broadcast('lup-rooms-ready', rooms);
+	// 		}, function(error) {
+	// 			console.warn('LinkUUp: nearby location refresh failed.', error);
+	// 		})['catch']($scope.catchUnknown);
+	// 	}, 250);
+	// };
 	
 	$scope.$on('gwf-position-changed', function(event, pos) {
 		console.log('LUPCtrl.$on-gwf-position-changed()', pos);
@@ -629,7 +628,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 				console.warn('LinkUUp: background position update failed.', error);
 			});
 		}
-		$scope.refreshRoomsForPosition();
+		// $scope.refreshRoomsForPosition();
 	});
 	
 	////////////////////////
@@ -837,10 +836,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 				rooms.sort(RoomSrvc.sortDistance);
 			}
 		};
-		// Update both live lists. This reaches every connected client without a
-		// reload, while a later category/search change still uses its full cache.
+		// Update the currently loaded nearby list. The rail itself owns following
+		// pages, categories and selection.
 		addRoom($scope.data.rooms);
-		addRoom(RoomSrvc.ALL_ROOMS);
 		$rootScope.$broadcast('lup-rooms-ready', $scope.data.rooms);
 	};
 	

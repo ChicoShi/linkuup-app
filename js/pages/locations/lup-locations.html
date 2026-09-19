@@ -12,27 +12,31 @@
       <span class="profile-ambient-signal"></span>
     </div>
   <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
-  <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}">
-   <button class="nav-reset" type="button" ng-click="resetNavigator($event)" aria-label="{{'NAV_RESET_START'|translate}}" title="{{'NAV_RESET_START'|translate}}">
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g class="nav-reset-pins"><g transform="rotate(-35 16 16)"><path class="nav-reset-pin-one" d="M11 3a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6Z"/><circle cx="11" cy="9" r="2.15"/><path class="nav-reset-pin-two" d="M21 29a6 6 0 0 0 6-6c0-4.5-6-11-6-11s-6 6.5-6 11a6 6 0 0 0 6 6Z"/><circle cx="21" cy="23" r="2.15"/></g></g></svg>
-    <span class="nav-reset-burst" aria-hidden="true"></span>
-   </button>
-   <button ng-repeat="category in navigatorCategories" type="button" ng-class="{active:isCategoryFilterActive(category.ids),'is-current-category':isCurrentRoomCategory(category.ids)}" ng-attr-aria-pressed="{{isCategoryFilterActive(category.ids)}}" ng-click="selectCategory(category.ids)" ng-attr-aria-label="{{category.label}}" ng-attr-title="{{category.label}}" ng-attr-data-category="{{category.label}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i><span class="nav-category-glint" aria-hidden="true"><i class="material-icons">{{category.icon}}</i></span></button>
+
+  <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}" ng-if="data.navigatorCategories.length">
+   <button class="nav-refresh" type="button" ng-click="refreshRooms()" aria-label="Aktualisieren" title="Aktualisieren"><i class="material-icons" aria-hidden="true">refresh</i></button>
+   <button class="nav-reset" type="button" ng-click="resetCategories()" aria-label="{{'NAV_RESET_START'|translate}}" title="{{'NAV_RESET_START'|translate}}"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g class="nav-reset-pins"><g transform="rotate(-35 16 16)"><path class="nav-reset-pin-one" d="M11 3a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6Z"/><circle cx="11" cy="9" r="2.15"/><path class="nav-reset-pin-two" d="M21 29a6 6 0 0 0 6-6c0-4.5-6-11-6-11s-6 6.5-6 11a6 6 0 0 0 6 6Z"/><circle cx="21" cy="23" r="2.15"/></g></g></svg><span class="nav-reset-burst" aria-hidden="true"></span></button>
+   <button type="button" ng-repeat="category in data.navigatorCategories track by $index" ng-click="selectCategory(category.ids)" ng-class="{active: isCategoryActive(category.ids)}" ng-attr-aria-label="{{category.label}}" ng-attr-title="{{category.label}}" ng-attr-data-category="{{category.label}}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
+   <button class="nav-search" type="button" aria-label="Locations suchen" title="Locations suchen"><i class="material-icons" aria-hidden="true">search</i></button>
   </nav>
 
-  <div class="location-rail" role="region" tabindex="0" aria-roledescription="{{'NAV_BROWSE'|translate}}" aria-label="{{'LOCATIONS'|translate}}">
-   <div ng-repeat="room in data.visibleRooms track by room.id()" class="lup-room-slide-outer" ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
-    <article ng-if="$index >= data.currentRoomIndex-2 && $index <= data.currentRoomIndex+2" id="room{{room.id()}}" class="lup-room-slide nav-place" ng-class="categoryVisual(room).class">
+  <div class="nav-pull-refresh" ng-class="{'is-visible': data.pullDistance || data.refreshing}"><span ng-style="{transform:'translateY(' + data.pullDistance + 'px)'}"><i class="material-icons" aria-hidden="true">{{data.refreshing ? 'progress_activity' : 'south'}}</i>{{data.refreshing ? 'Aktualisiere …' : 'Zum Aktualisieren loslassen'}}</span></div>
+
+  <div class="location-rail location-rail-ready" role="region" tabindex="0" aria-roledescription="{{'NAV_BROWSE'|translate}}" aria-label="{{'LOCATIONS'|translate}}">
+   <div ng-repeat="room in data.filteredRooms track by room.id()" class="lup-room-slide-outer" ng-attr-data-room-id="{{room.id()}}" ng-attr-data-room-category="{{room.category()}}">
+    <article id="room{{room.id()}}" class="lup-room-slide nav-place" ng-class="categoryVisual(room).class">
      <div class="nav-landscape" aria-hidden="true"><div class="nav-landmark"><i class="material-icons">{{categoryVisual(room).icon}}</i></div></div>
-     <div class="nav-place-content"><p class="nav-place-category"><i class="material-icons" aria-hidden="true">{{categoryVisual(room).icon}}</i>{{room.categoryName()}}</p><h2 ng-class="roomNameClass(room)">{{room.name()}}</h2><p class="nav-address">{{room.city()}}<span ng-if="room.street()"> · {{room.street()}}</span></p><div class="nav-facts"><span><i class="material-icons" aria-hidden="true">near_me</i>{{room.showDistance() ? room.displayDistance() : ('NAV_DISTANCE_UNKNOWN'|translate)}}</span></div>
-     <div class="nav-availability" ng-class="{'is-available':room.inChatRange()}"><span class="nav-status-dot" aria-hidden="true"></span>{{(room.inChatRange()?'NAV_CHAT_READY':(navigatorHasGPS()?'NAV_CHAT_LOCAL':'NAV_CHAT_GPS'))|translate}}</div><div class="nav-actions"><button type="button" class="nav-open" ng-click="maybeGotoRoom(room,$event)">{{'NAV_OPEN'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button><a class="nav-route-chat" ng-class="{'is-here':room.inChatRange(),'is-opening':data.doorOpeningRoomId===room.id()}" ng-href="{{room.inChatRange() ? '#!/location/'+room.id()+'/chat' : mapsHref(room)}}" ng-attr-target="{{room.inChatRange() ? '_self' : '_blank'}}" rel="noopener" ng-click="routeOrChat(room,$event)"><i class="material-icons" aria-hidden="true">{{room.inChatRange() ? 'forum' : 'near_me'}}</i><span>{{(room.inChatRange() ? 'NAV_CHAT' : (navigatorHasGPS() ? 'NAV_ROUTE' : 'NAV_ENABLE_GPS'))|translate}}</span></a><button type="button" class="nav-qr" ng-click="showRoomQRCode(room,$event)" aria-label="{{'NAV_QR'|translate}}"><i class="material-icons" aria-hidden="true">qr_code_2</i></button></div>
+     <div class="nav-place-content"><p class="nav-place-category"><i class="material-icons" aria-hidden="true">{{categoryVisual(room).icon}}</i>{{room.categoryName()}}</p><h2>{{room.name()}}</h2><p class="nav-address">{{room.city()}}<span ng-if="room.street()"> · {{room.street()}}</span></p><div class="nav-facts"><span><i class="material-icons" aria-hidden="true">near_me</i>{{room.showDistance() ? room.displayDistance() : ('NAV_DISTANCE_UNKNOWN'|translate)}}</span><button type="button" ng-click="openRoomVote(room,$event)" aria-label="Location bewerten"><i class="material-icons" aria-hidden="true">star</i>{{room.rating() ? (room.rating() | number:1) : '—'}}</button></div>
+     <div class="nav-actions"><button type="button" class="nav-open" ng-click="openRoom(room)">{{'NAV_OPEN'|translate}}<i class="material-icons" aria-hidden="true">arrow_forward</i></button><button type="button" class="nav-route-chat is-here" ng-if="room.inChatRange()" ng-click="gotoChat(room)"><i class="material-icons" aria-hidden="true">forum</i><span>{{'NAV_CHAT'|translate}}</span></button><a class="nav-route-chat" ng-if="!room.inChatRange()" ng-href="{{mapsHref(room)}}" target="_blank" rel="noopener"><i class="material-icons" aria-hidden="true">near_me</i><span>{{'NAV_ROUTE'|translate}}</span></a><button type="button" class="nav-qr" ng-click="showRoomQRCode(room,$event)" aria-label="{{'NAV_QR'|translate}}"><i class="material-icons" aria-hidden="true">qr_code_2</i></button></div>
      <button class="nav-presence" type="button" ng-click="gotoVisitors(room)" aria-label="{{'TAB_ONLINE'|translate}}"><lup-presence ng-room="room"></lup-presence></button>
      </div>
     </article>
    </div>
   </div>
-  <span class="nav-position" aria-live="polite" ng-if="data.visibleRooms.length">{{locationCounterCurrent()}} <span>/ {{locationCounterLoaded()}} / {{locationCounterAvailable()}}</span></span>
-  <div class="nav-empty" ng-if="!data.visibleRooms.length"><h2>{{'NAV_EMPTY'|translate}}</h2><p>{{'NAV_EMPTY_HINT'|translate}}</p><button type="button" ng-click="resetNavigator()">{{'NAV_RESET'|translate}}</button></div>
+  <span class="nav-position" aria-live="polite" ng-if="data.filteredRooms.length">{{data.currentRoomIndex + 1}} <span>/ {{data.filteredRooms.length}} / {{data.rooms.length}} / {{data.roomsTotal}}</span></span>
+  <div class="nav-page-loading" ng-if="data.loadingNextPage" aria-live="polite"><i class="material-icons" aria-hidden="true">progress_activity</i>Weitere Orte werden geladen …</div>
+  <div class="nav-empty" ng-if="data.rooms.length && !data.filteredRooms.length"><h2>{{'NAV_EMPTY'|translate}}</h2></div>
+  <div class="nav-empty" ng-if="!data.rooms.length && !data.roomsTotal"><h2>{{'NAV_EMPTY'|translate}}</h2><p>{{'NAV_EMPTY_HINT'|translate}}</p></div>
 
 
  </md-content>

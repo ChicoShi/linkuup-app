@@ -15,6 +15,14 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.SOCKET = null;
 	WebsocketSrvc.CONNECTED = false;
 	WebsocketSrvc.CONNECTING = null;
+	WebsocketSrvc.PAGE_UNLOADING = false;
+	WebsocketSrvc.expectPageUnload = function() {
+		WebsocketSrvc.PAGE_UNLOADING = true;
+	};
+	WebsocketSrvc.isPageUnloading = function() {
+		return WebsocketSrvc.PAGE_UNLOADING;
+	};
+	window.addEventListener('pagehide', WebsocketSrvc.expectPageUnload, {once: true});
 	
 	WebsocketSrvc.MSGS_SENT = 0;
 	WebsocketSrvc.MSGS_RECV = 0;

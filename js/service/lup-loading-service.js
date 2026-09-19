@@ -6,7 +6,7 @@ service('LoadingSrvc', function($q, $rootScope, $timeout) {
 	
 	LoadingSrvc.TASKS = {};
 	LoadingSrvc.WATCHDOGS = {};
-	LoadingSrvc.MAX_VISIBLE_MS = 8000;
+	LoadingSrvc.MAX_VISIBLE_MS = 228000;
 
 	// Geolocation and a few WebSocket callbacks originate outside Angular. Queue
 	// a digest whenever task state changes so a later addTask() re-shows the
@@ -45,7 +45,11 @@ service('LoadingSrvc', function($q, $rootScope, $timeout) {
 		LoadingSrvc.watchTask(task, maxVisibleMs);
 		LoadingSrvc.refreshView();
 	};
-	
+
+	LoadingSrvc.hasTask = function(task) {
+		return !!LoadingSrvc.TASKS[task];
+	};
+
 	LoadingSrvc.removeTask = function(task) {
 		console.log('LoadingSrvc.removeTask()', task);
 		LoadingSrvc.TASKS[task] = LoadingSrvc.TASKS[task] || 0;
@@ -58,7 +62,7 @@ service('LoadingSrvc', function($q, $rootScope, $timeout) {
 		}
 		LoadingSrvc.refreshView();
 	};
-	
+
 	LoadingSrvc.stopTask = function(task) {
 		console.log('LoadingSrvc.stopTask()', task);
 		LoadingSrvc.TASKS[task] = 0;

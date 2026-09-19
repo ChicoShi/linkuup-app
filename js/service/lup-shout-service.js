@@ -112,7 +112,7 @@ angular.module('LUP').service('ShoutSrvc', function($mdDialog, $q, $timeout, $tr
 				$scope.data.cost = $scope.cost();
 				$scope.$applyAsync();
 			});
-			RoomSrvc.withRooms(true).then(addPointers);
+			RoomSrvc.withRooms().then(addPointers);
 			$scope.data.mapReady = true;
 			$scope.data.mapStatus = $translate.instant('SHOUT_MAP_HINT');
 			$scope.$applyAsync();

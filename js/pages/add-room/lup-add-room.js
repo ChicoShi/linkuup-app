@@ -221,11 +221,7 @@ angular.module('LUP').config(function($routeProvider) {
 			.writeFloat(Number(room.viewRadius));
 		return WebsocketSrvc.sendBinary(request).then(function(reply) {
 			var roomId = reply.read32();
-			RoomSrvc.ALL_ROOMS = null;
-			return RoomSrvc.withRooms().then(function(rooms) {
-				$scope.data.rooms = rooms;
-				return RoomSrvc.withRoom(roomId, true);
-			}).then(function() { return $location.path('/location/' + roomId); });
+			return $location.path('/location/' + roomId);
 		}, function(error) { return ErrorSrvc.websocketError(error); });
 	};
 
