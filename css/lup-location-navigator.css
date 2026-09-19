@@ -141,3 +141,8 @@
 
 /* Keep offscreen catalogue cards out of painting and glass compositing. */
 .navigator-view .lup-room-slide-outer {content-visibility:auto;contain-intrinsic-block-size:auto 510px;}
+
+/* One reset plus compact category groups; all controls remain tappable at 320px. */
+.navigator-view .nav-categories {gap:3px;padding-inline:7px;}
+.navigator-view .nav-categories button {flex:0 0 40px;width:40px;min-height:44px;}
+.navigator-view .nav-categories button[data-category="NAV_EVERYDAY"] {--category-color:#8adbd6;}

@@ -14,10 +14,8 @@
   <ng-include src="'js/pages/locations/header-bar-locations.html?v='+V"></ng-include>
 
   <nav class="nav-categories" aria-label="{{'NAV_CATEGORIES'|translate}}" ng-if="data.navigatorCategories.length">
-   <button class="nav-refresh" type="button" ng-click="refreshRooms()" aria-label="Aktualisieren" title="Aktualisieren"><i class="material-icons" aria-hidden="true">refresh</i></button>
-   <button class="nav-reset" type="button" ng-click="resetCategories()" aria-label="{{'NAV_RESET_START'|translate}}" title="{{'NAV_RESET_START'|translate}}"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g class="nav-reset-pins"><g transform="rotate(-35 16 16)"><path class="nav-reset-pin-one" d="M11 3a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6Z"/><circle cx="11" cy="9" r="2.15"/><path class="nav-reset-pin-two" d="M21 29a6 6 0 0 0 6-6c0-4.5-6-11-6-11s-6 6.5-6 11a6 6 0 0 0 6 6Z"/><circle cx="21" cy="23" r="2.15"/></g></g></svg><span class="nav-reset-burst" aria-hidden="true"></span></button>
-   <button type="button" ng-repeat="category in data.navigatorCategories track by $index" ng-click="selectCategory(category.ids)" ng-class="{active: isCategoryActive(category.ids)}" ng-attr-aria-label="{{category.label}}" ng-attr-title="{{category.label}}" ng-attr-data-category="{{category.label}}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i></button>
-   <button class="nav-search" type="button" aria-label="Locations suchen" title="Locations suchen"><i class="material-icons" aria-hidden="true">search</i></button>
+   <button class="nav-reset" type="button" ng-click="resetCategories($event)" aria-label="{{'NAV_RESET_START'|translate}}" title="{{'NAV_RESET_START'|translate}}"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g class="nav-reset-pins"><g transform="rotate(-35 16 16)"><path class="nav-reset-pin-one" d="M11 3a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6Z"/><circle cx="11" cy="9" r="2.15"/><path class="nav-reset-pin-two" d="M21 29a6 6 0 0 0 6-6c0-4.5-6-11-6-11s-6 6.5-6 11a6 6 0 0 0 6 6Z"/><circle cx="21" cy="23" r="2.15"/></g></g></svg><span class="nav-reset-burst" aria-hidden="true"></span></button>
+   <button type="button" ng-repeat="category in data.navigatorCategories track by $index" ng-click="selectCategory(category.ids)" ng-class="{active: isCategoryActive(category.ids)}" ng-attr-aria-label="{{category.label|translate}}" ng-attr-title="{{category.label|translate}}" ng-attr-data-category="{{category.label}}" ng-attr-aria-pressed="{{isCategoryActive(category.ids)}}"><i class="material-icons" aria-hidden="true">{{category.icon}}</i><span class="nav-category-glint" aria-hidden="true"><i class="material-icons">{{category.icon}}</i></span></button>
   </nav>
 
   <div class="nav-pull-refresh" ng-class="{'is-visible': data.pullDistance || data.refreshing}"><span ng-style="{transform:'translateY(' + data.pullDistance + 'px)'}"><i class="material-icons" aria-hidden="true">{{data.refreshing ? 'progress_activity' : 'south'}}</i>{{data.refreshing ? 'Aktualisiere …' : 'Zum Aktualisieren loslassen'}}</span></div>
@@ -33,7 +31,7 @@
     </article>
    </div>
   </div>
-  <span class="nav-position" aria-live="polite" ng-if="data.filteredRooms.length">{{data.currentRoomIndex + 1}} <span>/ {{data.filteredRooms.length}} / {{data.rooms.length}} / {{data.roomsTotal}}</span></span>
+  <span class="nav-position" aria-live="polite" ng-if="data.filteredRooms.length">{{'NAV_POSITION'|translate:{current:data.currentRoomIndex + 1,total:data.filteredRooms.length} }}</span>
   <div class="nav-page-loading" ng-if="data.loadingNextPage" aria-live="polite"><i class="material-icons" aria-hidden="true">progress_activity</i>Weitere Orte werden geladen …</div>
   <div class="nav-empty" ng-if="data.rooms.length && !data.filteredRooms.length"><h2>{{'NAV_EMPTY'|translate}}</h2></div>
   <div class="nav-empty" ng-if="!data.rooms.length && !data.roomsTotal"><h2>{{'NAV_EMPTY'|translate}}</h2><p>{{'NAV_EMPTY_HINT'|translate}}</p></div>

@@ -1,5 +1,5 @@
 /* One scrollable, translucent blue drawer on every route. */
-md-sidenav.md-sidenav-left.navigator-sidebar {box-sizing:border-box;display:flex;flex-direction:column;width:320px;min-width:0;max-width:calc(100vw - 36px);height:100%;max-height:100dvh;overflow:hidden;color:var(--lup-app-ink);background:var(--lup-app-field);border-right:1px solid rgba(218,240,255,.12);box-shadow:inset -1px 0 1px rgba(200,234,252,.12),16px 0 48px #03102450;border-radius:0 28px 28px 0;}
+md-sidenav.md-sidenav-left.navigator-sidebar {box-sizing:border-box;display:flex;flex-direction:column;width:320px;min-width:0;max-width:calc(100vw - 36px);height:100%;max-height:100dvh;overflow:hidden;color:var(--lup-app-ink);background:radial-gradient(ellipse at 0 65%,#307e9d29,transparent 65%),linear-gradient(150deg,#15243bf5,#101a2bf5);border-right:1px solid rgba(218,240,255,.12);box-shadow:inset -1px 0 1px rgba(200,234,252,.12),16px 0 48px #03102450;border-radius:0 28px 28px 0;}
 md-sidenav.navigator-sidebar .sidenav-brand {display:block;flex:none;min-height:82px;background:transparent;border:0;box-shadow:none;}
 md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools {display:flex;height:82px;min-height:82px;padding:0 22px;gap:12px;background:transparent;box-shadow:none;}
 md-sidenav.navigator-sidebar .sidenav-brand::before,md-sidenav.navigator-sidebar .sidenav-brand::after,md-sidenav.navigator-sidebar .md-toolbar-tools::before,md-sidenav.navigator-sidebar .md-toolbar-tools::after,md-sidenav.navigator-sidebar md-list-item::before {display:none;}
@@ -28,3 +28,9 @@ md-sidenav.navigator-sidebar .sidebar-legal-title {margin-top:24px;padding-top:1
 md-sidenav.navigator-sidebar md-list-item:has(.impressum) p,md-sidenav.navigator-sidebar md-list-item:has(.tos) p,md-sidenav.navigator-sidebar md-list-item:has(.privacy) p {font-size:12px;color:#9db6ca;}
 md-sidenav.navigator-sidebar .nav-logout p,md-sidenav.navigator-sidebar .nav-logout .nav-icon {color:#d4a5b5;}
 md-sidenav.navigator-sidebar button:focus-visible,md-sidenav.navigator-sidebar [role=button]:focus-visible {outline:2px solid #a9dfff;outline-offset:-3px;}
+
+/* Same quiet map lines and clear edge as the discovery card. */
+md-sidenav.navigator-sidebar::before {content:'';position:absolute;inset:12% -40% 25%;border:1px solid #93c7e42e;border-radius:50%;transform:rotate(-24deg);pointer-events:none;}
+md-sidenav.navigator-sidebar::after {content:'';position:absolute;inset:40% -55% -5%;border:1px solid #93c7e422;border-radius:50%;transform:rotate(18deg);pointer-events:none;}
+md-sidenav.navigator-sidebar > .sidenav-brand,md-sidenav.navigator-sidebar > .sidebar-scroll {position:relative;z-index:1;}
+md-sidenav.md-sidenav-left.navigator-sidebar {box-shadow:inset -1px 0 1px #f5fdff42,16px 0 48px #03102450;}

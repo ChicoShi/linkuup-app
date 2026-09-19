@@ -770,5 +770,7 @@
 	"GUEST_BRAND_CLAIM": "Discover places near you – without creating a profile.",
 	"GUEST_KICKER": "SHORT VISIT",
 	"GUEST_WELCOME": "Join as a guest",
-	"GUEST_INTRO": "Choose a name. You can decide later whether to create a profile."
+	"GUEST_INTRO": "Choose a name. You can decide later whether to create a profile.",
+"NAV_POSITION": "{{current}} of {{total}}",
+"NAV_EVERYDAY": "Everyday & services"
 }
