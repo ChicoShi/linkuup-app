@@ -6,7 +6,7 @@ die doofen Ideen stellen sich manchmal als gut heraus,
 und die guten Ideen als dämlich.
 
 Also immer Out- mit eurem In-put :)
-- giz
+giz
 
 
 - UPs ermöglichen wenn bereits weniger als lup_up_dist_tolerance=64m Entfernung besteht, statt selben raum erzwingen.
@@ -14,6 +14,9 @@ Also immer Out- mit eurem In-put :)
 - Audionachrichten (kommt später iwann mit audio plugin)
 - Room Slogan zum setzen vom owner. (so ne art kurze info als spruch)
 - PM in textconnector ermöglichen.
+- unclegame with 100 uniques, 50 hi, mid, lo. all chances are real in mob, you start with lo mid card. 
+- Set languagae to channel language for hooks'n'reply'n'stuff.
+- 
 
 
 ## Bugs
