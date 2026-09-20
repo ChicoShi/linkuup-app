@@ -325,21 +325,21 @@ angular.module('LUP').config(function($routeProvider) {
                 duration:duration, delay:delay || 0, easing:easing || 'ease-in-out'
             }));
         };
-        // One continuous inward turn, followed by a soft reappearance.
+        // A compact inward spin and a crisp, soft-edged pop.
         animate(button.querySelector('.nav-reset-pins'), [
-            {transform:'rotate(0deg) scale(1)',opacity:1,easing:'cubic-bezier(.4,0,.6,1)'},
-            {transform:'rotate(180deg) scale(.04)',opacity:0,offset:.48,easing:'linear'},
-            {transform:'rotate(190deg) scale(.04)',opacity:0,offset:.52,easing:'cubic-bezier(.16,1,.3,1)'},
+            {transform:'rotate(0deg) scale(1)',opacity:1,easing:'cubic-bezier(.55,0,.8,.5)'},
+            {transform:'rotate(180deg) scale(.04)',opacity:0,offset:.4,easing:'linear'},
+            {transform:'rotate(205deg) scale(.04)',opacity:0,offset:.46,easing:'cubic-bezier(.16,1,.3,1)'},
+            {transform:'rotate(365deg) scale(1.13)',opacity:1,offset:.8,easing:'ease-out'},
             {transform:'rotate(360deg) scale(1)',opacity:1}
-        ], 900, 0, 'linear');
+        ], 480, 0, 'linear');
         animate(button.querySelector('.nav-reset-burst'), [
-            {transform:'scale(.4)',opacity:0},
-            {transform:'scale(.8)',opacity:.3,offset:.45},
-            {transform:'scale(1)',opacity:0}
-        ], 520, 440);
-        // Overlapping fades form a quiet left-to-right sequence; icons stay still.
+            {transform:'scale(.25)',opacity:0},
+            {transform:'scale(.8)',opacity:.85,offset:.3},
+            {transform:'scale(1.2)',opacity:0}
+        ], 300, 200);
         button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(light, index) {
-            animate(light, [{opacity:0},{opacity:.65,offset:.45},{opacity:0}], 650, 700 + index * 210);
+            animate(light, [{opacity:0},{opacity:1,offset:.3},{opacity:0}], 360, 260 + index * 75);
         });
 	};
 
