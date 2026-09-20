@@ -16,6 +16,9 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 
 	ChatSrvc.noteEvent = function(type, room, user, text, time) {
 		ChatSrvc.EVENTS[type] = {room: room, user: user, text: text || '', time: time};
+		if (type === 'join' || type === 'shout') {
+			$rootScope.$broadcast('lup-room-activity', room);
+		}
 	};
 
 	ChatSrvc.eventForRoom = function(type, room) {

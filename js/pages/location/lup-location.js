@@ -497,6 +497,13 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.$on('gwf-position-changed', function(event, position){
 		console.log('LocationCtrl.$on-gwf-position-changed', position);
 	});
+	var roomActivitySequence = 0;
+	$scope.data.roomActivityPulse = [];
+	$scope.$on('lup-room-activity', function(event, room) {
+		if (room && room.id() === $scope.data.room.id()) {
+			$scope.data.roomActivityPulse = [++roomActivitySequence];
+		}
+	});
 	$scope.$on('lup-room-message', function(event, room, message) {
 		if (!room || room.id() !== $scope.data.room.id()) {
 			return;

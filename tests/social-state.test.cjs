@@ -89,3 +89,21 @@ test('Friendship frames and replayed notifications refresh server totals without
  total=2;const ids=[1,2];scope.cmd_0602({read32:()=>ids.shift()});await tick();
  assert.equal(scope.data.friendsCount,2);assert.deepEqual(requests.slice(1),[{id:1,refresh:true},{id:2,refresh:true}]);
 });
+
+test('Room activity signals new joins and shouts without replaying summaries or sending messages',()=>{
+ const events=[];
+ const {ctor}=load('lup-chat-service.js');
+ const chat=new ctor({$broadcast:(...args)=>events.push(args)},q,{}, {}, {}, {}, {});
+ const room={id:()=>7},other={id:()=>8},user={};
+ chat.noteEvent('join',room,user,'',1);
+ assert.equal(events.length,1);
+ assert.equal(events[0][0],'lup-room-activity');
+ assert.equal(events[0][1],room);
+ assert.equal(chat.eventForRoom('join',room).time,1);
+ assert.equal(chat.eventForRoom('join',other),null);
+ assert.equal(events.length,1);
+ chat.noteEvent('shout',room,user,'Hello',2);
+ chat.noteEvent('shout',room,user,'Hello again',3);
+ assert.equal(events.length,3);
+ assert.equal(chat.eventForRoom('shout',room).text,'Hello again');
+});

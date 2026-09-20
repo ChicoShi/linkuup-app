@@ -503,9 +503,6 @@ md-dialog.md-default-theme:not(.place-dialog) .md-button {border:0;border-radius
  html.lup-soft-keyboard-open .location-page.lup-place .place-chat > .place-chat-events {
   display:none;
  }
- html.lup-soft-keyboard-open .location-page.lup-place md-tabs.place-tabs > md-tabs-wrapper {
-  margin-top:6px;
- }
  html.lup-soft-keyboard-open .location-page.lup-place .place-chat .place-messages {
   padding-top:12px;
  }

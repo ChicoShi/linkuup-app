@@ -116,7 +116,7 @@
 .navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
 .navigator-view .nav-address {min-height:30px;line-height:15px;}
 .navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
-.navigator-view .nav-position {display:block;margin-top:9px;text-align:center;font:11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#b0c7d7;}
+.navigator-view .nav-position {position:absolute;top:12px;right:14px;z-index:2;display:block;margin:0;padding:2px 3px;border:0;background:none;text-align:center;font:400 10px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#a5bacb;pointer-events:none;}
 .navigator-view .nav-position > span {color:#7f9aaf;}
 @media(max-height:740px) and (max-width:600px) {
  .navigator-view .nav-landscape {height:90px;}
@@ -233,9 +233,6 @@ md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) smal
 .location-page.lup-place .place-chat .place-composer .place-send:active:not(:disabled) svg {transform:translateX(2px) scale(.94);}
 .location-page.lup-place .place-chat .place-composer .place-send:disabled {background:#bce8fa0a;border-color:#bce8fa20;color:#7595ac;box-shadow:inset 0 1px 0 #f5fdff10;}
 .location-page.lup-place .place-chat .place-composer button.place-icon-button {background:#d1f0ff06;border-color:#c9edff25;border-radius:16px;}
-@media(max-width:600px) {
- .location-page.lup-place:has(.place-chat .place-composer input:focus) md-tabs.place-tabs > md-tabs-wrapper {margin-top:6px;margin-bottom:4px;}
-}
 @media(prefers-reduced-motion:reduce) {.location-page.lup-place .place-chat .place-composer .place-send svg {transition:none;}}
 .location-page.lup-place:has(.place-chat .place-composer input:focus) .place-chat .place-empty {display:none;}
 
@@ -301,3 +298,11 @@ md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon {color:#bce8fa;text-sha
 }
 
 .lup-shout-dialog .lup-shout-dialog-content md-input-container > label {color:#afcbdc;}
+
+/* Live room activity stays in the existing Online tab without taking chat space. */
+.lup-place .place-online-label {position:relative;}
+.lup-place .place-online-pulse {position:absolute;inset:-6px -10px;border:1px solid #a6e4ff;border-radius:12px;box-shadow:0 0 12px #9bdcff55;pointer-events:none;opacity:0;animation:lup-online-activity 850ms ease-out;}
+.lup-place .place-online-pulse.ng-leave {animation:none;display:none;}
+@keyframes lup-online-activity {0% {opacity:0;transform:scale(.96);} 25% {opacity:.85;} 100% {opacity:0;transform:scale(1.08);}}
+@media(prefers-reduced-motion:reduce) {.lup-place .place-online-pulse {animation-name:lup-online-activity-still;}}
+@keyframes lup-online-activity-still {0%,100% {opacity:0;} 25% {opacity:.85;}}
