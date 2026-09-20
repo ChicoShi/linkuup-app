@@ -1,4 +1,9 @@
 {
+"PROFILE_UP_INFO_TITLE": "Ups kommen von anderen",
+"PROFILE_UP_INFO_BODY": "Du kannst dir selbst kein Up geben. Mit einem Up zeigen andere Mitglieder ihre Anerkennung für dein Profil.",
+"PROFILE_UP_INFO_HELP": "Ziehe den Up-Marker in einem anderen Profil nach unten, um ein Up zu geben. Tippe auf den Marker, um die erhaltenen Ups anzusehen.",
+"PROFILE_UP_INFO_OK": "Verstanden",
+
 "UPS_MESSAGE": "Nachricht an {{name}}",
 "UPS_LOAD_ERROR": "Die Ups konnten nicht geladen werden. Versuche es noch einmal.",
 "UPS_LOADING": "Verbindungen werden geladen …",
