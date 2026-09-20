@@ -48,6 +48,10 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		'34': 'location_city',
 	};
 
+	// Stable group IDs, independent of translated labels (same contract as icons).
+	var categoryKeys = {'30':'NAV_CAFE', '31':'NAV_NIGHT', '32':'NAV_CULTURE',
+		'33':'NAV_OUTDOORS', '34':'NAV_CITIES'};
+
 	/** Return top-level category groups with all descendant category ids. */
 	CategorySrvc.locationGroups = function() {
 		if (!CategorySrvc.CACHE) {
@@ -63,7 +67,7 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
                 ['NAV_CITIES', 'location_city', [1,2,10]],
                 ['NAV_EVERYDAY', 'storefront', [6,7,9,18,19,20,21]]
             ].map(function(group) {
-                return {label:group[0], icon:group[1], ids:group[2].map(String).filter(function(id) { return !!CategorySrvc.CACHE[id]; })};
+                return {category_key:group[0], label:group[0], icon:group[1], ids:group[2].map(String).filter(function(id) { return !!CategorySrvc.CACHE[id]; })};
             }).filter(function(group) { return group.ids.length; });
         }
 		var children = {}, roots = [];
@@ -87,6 +91,7 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		return roots.map(function(group) {
 			var id = String(group.cat_id);
 			return {
+				category_key: categoryKeys[id] || 'category-' + id,
 				ids: [id].concat(descendants(id)),
 				icon: categoryIcons[id] || 'place',
 				label: group.cat_label || group.cat_name,
