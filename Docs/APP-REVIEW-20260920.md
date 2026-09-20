@@ -34,3 +34,7 @@ Prüfung: 11 Social-/Viewport-Tests grün; Angular-Darstellungsprüfung mit drei
 ## Kürzere Wischbewegung
 
 Die vorhandene Pointer-Erkennung wechselt ab 24 statt 48 CSS-Pixeln; horizontale Bewegung muss mindestens 1,25-mal so groß wie die vertikale sein. Keine neue Gestenbibliothek und kein Eingriff in Daten-/Kategorieauswahl. Chromium mit synthetischen Touch-Pointer-Ereignissen bei 320/390/1440 px: 28px vor/zurück wechselt genau eine Karte, 8px-Tippen sowie vertikale/diagonale Bewegungen lassen die Auswahl stehen. Echte iPhone-Touchprüfung bleibt offen.
+
+## Letzter visueller Stand
+
+Locationzähler oben rechts innerhalb der Karte als dezente 10px-Schrift ohne Fläche/Rahmen. Bei 320/390/1440 px lag die Anzeige innerhalb von Karte und sichtbarem Bereich; finale Schrift-/Hintergrundregeln bei 390/1440 px geprüft. Die Anzeige zählt die aktuell geladenen/gefilterten Karten, nicht einen ungeprüften Gesamtkatalog. Sämtliche Änderungen bis 1029aa0 sind auf dem Reviewbranch enthalten, einschließlich kurzer Wischschwelle, Online-Ereignisimpuls, HH:mm, Tastaturversatz und Glas-Sendebutton.
