@@ -22,6 +22,10 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.isPageUnloading = function() {
 		return WebsocketSrvc.PAGE_UNLOADING;
 	};
+	// beforeunload fires before the browser tears down the socket. pagehide alone
+	// is too late on some browsers, so a same-tab navigation can briefly render
+	// a spurious "connection lost" dialog in the old page.
+	window.addEventListener('beforeunload', WebsocketSrvc.expectPageUnload, {once: true});
 	window.addEventListener('pagehide', WebsocketSrvc.expectPageUnload, {once: true});
 	
 	WebsocketSrvc.MSGS_SENT = 0;
