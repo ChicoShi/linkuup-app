@@ -64,7 +64,7 @@
 .profile-journal.profile-page .profile-section-nav {box-sizing:border-box;flex:none;width:min(100%,760px);margin:0 auto 24px;padding-inline:20px;}
 
 /* One-time explanation for the existing self-Up guard. */
-md-dialog.profile-up-info {width:calc(100vw - 32px);max-width:400px;max-height:calc(100dvh - 32px);border:1px solid #bce8fa33;border-radius:24px;background:radial-gradient(ellipse at 15% 0%,#39789526,transparent 65%),linear-gradient(145deg,#16283d,#101b2d);color:#e5f1fa;box-shadow:0 20px 60px #030b1966;}
+md-dialog.place-dialog.profile-up-info {width:calc(100vw - 32px);max-width:400px;max-height:calc(100dvh - 32px);border:1px solid #bce8fa33;border-radius:24px;background:radial-gradient(ellipse at 15% 0%,#39789526,transparent 65%),linear-gradient(145deg,#16283d,#101b2d);color:#e5f1fa;box-shadow:0 20px 60px #030b1966;}
 .profile-up-info md-dialog-content {padding:28px 24px 8px;}
 .profile-up-info-heart {display:grid;place-items:center;width:54px;height:54px;margin-bottom:20px;border:1px solid #efb7db40;border-radius:17px;background:linear-gradient(145deg,#d69bc522,#99c9ed0a);color:#f2bad5;}
 .profile-up-info-heart i {font-size:29px;}
