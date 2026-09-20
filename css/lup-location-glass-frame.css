@@ -116,7 +116,7 @@
 .navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
 .navigator-view .nav-address {min-height:30px;line-height:15px;}
 .navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
-.navigator-view .nav-position {position:absolute;top:12px;right:14px;z-index:2;display:block;margin:0;padding:2px 3px;border:0;background:none;text-align:center;font:400 10px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#a5bacb;pointer-events:none;}
+.navigator-view .nav-position {position:absolute;top:12px;right:14px;z-index:2;display:block;margin:0;padding:2px 3px;border:0;background:none;text-align:center;font:500 11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#c5d8e6;pointer-events:none;}
 .navigator-view .nav-position > span {color:#7f9aaf;}
 @media(max-height:740px) and (max-width:600px) {
  .navigator-view .nav-landscape {height:90px;}
@@ -170,7 +170,20 @@ md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px)
 
 /* The category controls share the exact discovery-card edges. */
 .navigator-view .nav-categories {width:calc(100% - 44px);max-width:360px;padding-inline:0;gap:3px;}
-.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;}
+.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;height:44px;border-radius:8px;overflow:hidden;border-color:#c7e8ff14;background:#0b1b2b12;box-shadow:none;color:#c0d6e6;transition:transform 200ms cubic-bezier(.2,.8,.2,1);}
+.navigator-view .nav-categories button.active {border-color:color-mix(in srgb,var(--category-color) 24%,transparent);background:color-mix(in srgb,var(--category-color) 5%,transparent);color:var(--category-color);}
+.navigator-view .nav-categories button:focus-visible {outline:2px solid #bce8fa;outline-offset:-3px;}
+.navigator-view .nav-categories .nav-reset {background:#a9dff406;border-color:#a9dff422;}
+.navigator-view .nav-reset svg {width:28px;height:28px;}
+.navigator-view .nav-reset-pin-one {fill:#8fe5ff;}
+.navigator-view .nav-reset-pin-two {fill:#b8a7ff;}
+.navigator-view .nav-reset-burst {inset:6px;border:0;border-radius:50%;background:radial-gradient(ellipse,#8be9ff80,transparent 70%);box-shadow:none;}
+.navigator-view .nav-category-glint {inset:0;height:auto;border-radius:inherit;background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--category-color) 58%,transparent),transparent 90%);box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--category-color) 95%,transparent);transform:none;}
+.navigator-view .nav-categories button.active::before {content:'';position:absolute;inset:auto 11px 4px;height:1px;background:var(--category-color);opacity:.4;pointer-events:none;}
+.navigator-view .nav-categories button>i {transition:transform 200ms cubic-bezier(.2,.8,.2,1);}
+.navigator-view .nav-categories button:active {transform:translateY(1px) scale(.95);}
+@media(hover:hover) {.navigator-view .nav-categories button:hover>i {transform:translateY(-2px);}}
+@media(prefers-reduced-motion:reduce) {.navigator-view .nav-categories button,.navigator-view .nav-categories button>i {transition:none;transform:none;}}
 @media(max-width:360px) {.navigator-view .nav-categories {width:calc(100% - 32px);}}
 
 /* Paid actions share the location material and show their configured price. */

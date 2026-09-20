@@ -106,10 +106,12 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		if (user.isSelf()) {
-			var selfUpHintKey = 'lup-profile-self-up-hint';
-			if (!window.localStorage.getItem(selfUpHintKey)) {
-				window.localStorage.setItem(selfUpHintKey, '1');
-				DialogSrvc.openHTMLDialog('<p>Du kannst dir selbst keinen Up geben.</p>', 'Up');
+			var selfUpHintKey = 'lup-profile-self-up-hint-v2';
+			var seen = false;
+			try { seen = window.localStorage.getItem(selfUpHintKey) === '1'; } catch (e) {}
+			if (!seen) {
+				try { window.localStorage.setItem(selfUpHintKey, '1'); } catch (e) {}
+				return DialogSrvc.confirm('js/pages/profile/lup-profile-up-info.html', {})['catch'](angular.noop);
 			}
 			return;
 		}
