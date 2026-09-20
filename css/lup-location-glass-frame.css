@@ -170,7 +170,14 @@ md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px)
 
 /* The category controls share the exact discovery-card edges. */
 .navigator-view .nav-categories {width:calc(100% - 44px);max-width:360px;padding-inline:0;gap:3px;}
-.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;}
+.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;height:44px;border-radius:4px;overflow:hidden;border-color:#c7e8ff26;background:linear-gradient(165deg,#c7e8ff0c,#11223740);box-shadow:inset 0 1px 0 #e4f5ff14;color:#afc4d5;}
+.navigator-view .nav-categories button.active {border-color:color-mix(in srgb,var(--category-color) 55%,transparent);color:var(--category-color);}
+.navigator-view .nav-categories button:focus-visible {outline:2px solid #bce8fa;outline-offset:-3px;}
+.navigator-view .nav-categories .nav-reset {background:linear-gradient(150deg,#84cfe51a,#11223760);border-color:#a9dff440;}
+.navigator-view .nav-reset svg {width:26px;height:26px;}
+.navigator-view .nav-reset-burst {inset:7px;border-radius:3px;box-shadow:none;}
+.navigator-view .nav-category-glint {inset:auto 5px 3px;height:2px;border-radius:1px;background:var(--category-color);box-shadow:0 0 7px color-mix(in srgb,var(--category-color) 45%,transparent);transform-origin:left center;}
+.navigator-view .nav-categories button.active::before {content:'';position:absolute;inset:auto 5px 3px;height:2px;background:var(--category-color);opacity:.55;pointer-events:none;}
 @media(max-width:360px) {.navigator-view .nav-categories {width:calc(100% - 32px);}}
 
 /* Paid actions share the location material and show their configured price. */

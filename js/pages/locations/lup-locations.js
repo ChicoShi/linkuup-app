@@ -327,16 +327,17 @@ angular.module('LUP').config(function($routeProvider) {
         };
         animate(button.querySelector('.nav-reset-pins'), [
             {transform:'rotate(0deg) scale(1)',opacity:1},
-            {transform:'rotate(180deg) scale(.12)',opacity:0,offset:.5},
-            {transform:'rotate(360deg) scale(1.14)',opacity:1,offset:.82},
+            {transform:'rotate(160deg) scale(.2)',opacity:0,offset:.42},
+            {transform:'rotate(200deg) scale(.2)',opacity:0,offset:.48},
+            {transform:'rotate(360deg) scale(1)',opacity:1,offset:.9},
             {transform:'rotate(360deg) scale(1)',opacity:1}
-        ], 620);
+        ], 560);
         animate(button.querySelector('.nav-reset-burst'), [
-            {transform:'scale(.2)',opacity:0}, {transform:'scale(.7)',opacity:.7,offset:.25},
-            {transform:'scale(1.6)',opacity:0}
-        ], 360, 240);
+            {transform:'scale(.65)',opacity:0}, {transform:'scale(.85)',opacity:.45,offset:.3},
+            {transform:'scale(1)',opacity:0}
+        ], 260, 280);
         button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(icon, index) {
-            animate(icon, [{opacity:0,transform:'scale(.9)'},{opacity:1,transform:'scale(1.08)',offset:.4},{opacity:0,transform:'scale(1)'}], 300, 160 + index * 85);
+            animate(icon, [{opacity:0,transform:'scaleX(.25)'},{opacity:.85,transform:'scaleX(1)',offset:.35},{opacity:0,transform:'scaleX(1)'}], 180, 400 + index * 130);
         });
 	};
 
