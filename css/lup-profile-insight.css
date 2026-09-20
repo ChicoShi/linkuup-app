@@ -62,3 +62,15 @@
 .profile-journal .profile-gallery .gallery-grid {padding:0 0 18px;}
 .profile-journal .profile-gallery .gallery-empty {margin:10px 0 28px;background:transparent;}
 .profile-journal.profile-page .profile-section-nav {box-sizing:border-box;flex:none;width:min(100%,760px);margin:0 auto 24px;padding-inline:20px;}
+
+/* One-time explanation for the existing self-Up guard. */
+md-dialog.profile-up-info {width:calc(100vw - 32px);max-width:400px;max-height:calc(100dvh - 32px);border:1px solid #bce8fa33;border-radius:24px;background:radial-gradient(ellipse at 15% 0%,#39789526,transparent 65%),linear-gradient(145deg,#16283d,#101b2d);color:#e5f1fa;box-shadow:0 20px 60px #030b1966;}
+.profile-up-info md-dialog-content {padding:28px 24px 8px;}
+.profile-up-info-heart {display:grid;place-items:center;width:54px;height:54px;margin-bottom:20px;border:1px solid #efb7db40;border-radius:17px;background:linear-gradient(145deg,#d69bc522,#99c9ed0a);color:#f2bad5;}
+.profile-up-info-heart i {font-size:29px;}
+.profile-up-info h2 {margin:0 0 14px;font:500 24px/1.25 Ubuntu,Roboto,sans-serif;color:#edf7ff;}
+.profile-up-info p {margin:0 0 14px;font:400 14px/1.65 Roboto,sans-serif;color:#c2d7e7;}
+.profile-up-info p.profile-up-info-hint {font-size:13px;color:#a8c0d3;}
+.profile-up-info md-dialog-actions {padding:8px 24px 24px;}
+.profile-up-info md-dialog-actions .md-button {width:100%;min-height:44px;margin:0;border:1px solid #bce8fa40;border-radius:12px;background:#bce8fa14;color:#e5f5ff;text-transform:none;}
+.profile-up-info .md-button:focus-visible {outline:2px solid #bce8fa;outline-offset:2px;}
