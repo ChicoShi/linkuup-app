@@ -320,23 +320,26 @@ angular.module('LUP').config(function($routeProvider) {
         resetAnimations = [];
         if (!event || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var button = event.currentTarget;
-        var animate = function(element, frames, duration, delay) {
+        var animate = function(element, frames, duration, delay, easing) {
             if (element && element.animate) resetAnimations.push(element.animate(frames, {
-                duration:duration, delay:delay || 0, easing:'cubic-bezier(.22,.7,.25,1)'
+                duration:duration, delay:delay || 0, easing:easing || 'ease-in-out'
             }));
         };
+        // A compact inward spin and a crisp, soft-edged pop.
         animate(button.querySelector('.nav-reset-pins'), [
-            {transform:'rotate(0deg) scale(1)',opacity:1},
-            {transform:'rotate(180deg) scale(.12)',opacity:0,offset:.5},
-            {transform:'rotate(360deg) scale(1.14)',opacity:1,offset:.82},
+            {transform:'rotate(0deg) scale(1)',opacity:1,easing:'cubic-bezier(.55,0,.8,.5)'},
+            {transform:'rotate(180deg) scale(.04)',opacity:0,offset:.4,easing:'linear'},
+            {transform:'rotate(205deg) scale(.04)',opacity:0,offset:.46,easing:'cubic-bezier(.16,1,.3,1)'},
+            {transform:'rotate(365deg) scale(1.13)',opacity:1,offset:.8,easing:'ease-out'},
             {transform:'rotate(360deg) scale(1)',opacity:1}
-        ], 620);
+        ], 480, 0, 'linear');
         animate(button.querySelector('.nav-reset-burst'), [
-            {transform:'scale(.2)',opacity:0}, {transform:'scale(.7)',opacity:.7,offset:.25},
-            {transform:'scale(1.6)',opacity:0}
-        ], 360, 240);
-        button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(icon, index) {
-            animate(icon, [{opacity:0,transform:'scale(.9)'},{opacity:1,transform:'scale(1.08)',offset:.4},{opacity:0,transform:'scale(1)'}], 300, 160 + index * 85);
+            {transform:'scale(.25)',opacity:0},
+            {transform:'scale(.8)',opacity:.85,offset:.3},
+            {transform:'scale(1.2)',opacity:0}
+        ], 300, 200);
+        button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(light, index) {
+            animate(light, [{opacity:0},{opacity:1,offset:.3},{opacity:0}], 360, 260 + index * 75);
         });
 	};
 
