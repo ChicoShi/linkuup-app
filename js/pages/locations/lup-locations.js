@@ -320,31 +320,26 @@ angular.module('LUP').config(function($routeProvider) {
         resetAnimations = [];
         if (!event || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var button = event.currentTarget;
-        var animate = function(element, frames, duration, delay) {
+        var animate = function(element, frames, duration, delay, easing) {
             if (element && element.animate) resetAnimations.push(element.animate(frames, {
-                duration:duration, delay:delay || 0, easing:'cubic-bezier(.22,.7,.25,1)'
+                duration:duration, delay:delay || 0, easing:easing || 'ease-in-out'
             }));
         };
+        // One continuous inward turn, followed by a soft reappearance.
         animate(button.querySelector('.nav-reset-pins'), [
-            {transform:'rotate(0deg) scale(1)',opacity:1},
-            {transform:'rotate(-18deg) scale(1.08)',opacity:1,offset:.14},
-            {transform:'rotate(175deg) scale(.06)',opacity:0,offset:.44},
-            {transform:'rotate(225deg) scale(.06)',opacity:0,offset:.52},
-            {transform:'rotate(372deg) scale(1.16)',opacity:1,offset:.8},
-            {transform:'rotate(357deg) scale(.97)',opacity:1,offset:.92},
+            {transform:'rotate(0deg) scale(1)',opacity:1,easing:'cubic-bezier(.4,0,.6,1)'},
+            {transform:'rotate(180deg) scale(.04)',opacity:0,offset:.48,easing:'linear'},
+            {transform:'rotate(190deg) scale(.04)',opacity:0,offset:.52,easing:'cubic-bezier(.16,1,.3,1)'},
             {transform:'rotate(360deg) scale(1)',opacity:1}
-        ], 720);
+        ], 900, 0, 'linear');
         animate(button.querySelector('.nav-reset-burst'), [
-            {transform:'scale(.3)',opacity:0}, {transform:'scale(.7)',opacity:.55,offset:.25},
-            {transform:'scale(1.12)',opacity:0}
-        ], 320, 410);
-        button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(icon, index) {
-            animate(icon, [{opacity:0,transform:'translateX(-100%)'},{opacity:.8,transform:'translateX(0)',offset:.45},{opacity:0,transform:'translateX(100%)'}], 320, 550 + index * 95);
-            animate(icon.parentElement.querySelector(':scope > i'), [
-                {transform:'translateY(0) scale(1)'},
-                {transform:'translateY(-2px) scale(1.06)',offset:.42},
-                {transform:'translateY(0) scale(1)'}
-            ], 320, 550 + index * 95);
+            {transform:'scale(.4)',opacity:0},
+            {transform:'scale(.8)',opacity:.3,offset:.45},
+            {transform:'scale(1)',opacity:0}
+        ], 520, 440);
+        // Overlapping fades form a quiet left-to-right sequence; icons stay still.
+        button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(light, index) {
+            animate(light, [{opacity:0},{opacity:.65,offset:.45},{opacity:0}], 650, 700 + index * 210);
         });
 	};
 
