@@ -57,12 +57,16 @@ md-list .lup-avatar span {
 	top: 2px;
 }
 
-/** Gender colors **/
-.lup-avatar.lup-male {
-	background: #3030af;
-}
-.lup-avatar.lup-female {
-	background: #FF69B4;
+/* One identity ring in every avatar size; account type overrides gender. */
+.lup-avatar {--lup-avatar-ring-color:#c4cbd3;}
+.lup-avatar.lup-male {--lup-avatar-ring-color:#65b5ff;}
+.lup-avatar.lup-female {--lup-avatar-ring-color:#ff727a;}
+.lup-avatar.lup-guest {--lup-avatar-ring-color:#c4cbd3;}
+.lup-avatar.bot {--lup-avatar-ring-color:#bc91ff;}
+.lup-avatar > .lup-avatar-ring {
+    display:block;position:absolute;inset:0;width:auto;height:auto;margin:0;padding:0;
+    box-sizing:border-box;border:2px solid var(--lup-avatar-ring-color);border-radius:inherit;
+    background:none;box-shadow:none;pointer-events:none;z-index:3;
 }
 
 /* A bot remains a person in the interface; the small violet laptop only
