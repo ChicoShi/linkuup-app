@@ -1,16 +1,16 @@
-<md-dialog class="lup-distance-dialog" aria-label="{{'TITLE_BUY_DISTANCE'|translate}}">
+<md-dialog class="place-dialog lup-purchase-dialog lup-distance-dialog" aria-label="{{'TITLE_BUY_DISTANCE'|translate}}">
   <form ng-submit="buy()">
-    <md-toolbar><div class="md-toolbar-tools"><i class="material-icons">social_distance</i><h2>{{'TITLE_BUY_DISTANCE'|translate}}</h2><span flex></span><md-button class="md-icon-button" ng-click="cancel()" aria-label="{{'BTN_CANCEL'|translate}}"><i class="material-icons">close</i></md-button></div></md-toolbar>
+    <header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">social_distance</i></span><div><span>LinkUUp</span><h2>{{'TITLE_BUY_DISTANCE'|translate}}</h2></div><button class="place-dialog-close" type="button" ng-click="cancel()" aria-label="{{'PLACE_CLOSE'|translate}}"><i class="material-icons" aria-hidden="true">close</i></button></header>
     <md-dialog-content><div class="lup-distance-dialog-content">
-      <p>{{'DISTANCE_HELP'|translate}}</p>
+      <h3>{{'DISTANCE_BENEFIT_TITLE'|translate}}</h3><p class="purchase-copy">{{'DISTANCE_HELP'|translate}}</p>
       <p class="lup-distance-cost">{{cost()}} {{'TITLE_CREDITS'|translate}} <small>· {{data.creditsPerKM}}/{{'SHOUT_KM'|translate}}</small></p>
       <div layout="row" layout-align="start center" class="lup-distance-slider">
-        <span>{{'DISTANCE_ADDITIONAL'|translate}}</span>
+        <span class="purchase-range-label">{{'DISTANCE_ADDITIONAL'|translate}}</span>
         <md-slider flex min="1" max="1000" step="1" ng-model="data.meters" ng-change="update()" aria-label="{{'DISTANCE_ADDITIONAL'|translate}}"></md-slider>
         <md-input-container><input type="number" min="1" max="1000" step="1" ng-model="data.meters" ng-change="update()" aria-label="{{'DISTANCE_ADDITIONAL'|translate}}"></md-input-container><span>m</span>
       </div>
       <p class="lup-distance-note">{{'DISTANCE_NOTE'|translate}}</p>
     </div></md-dialog-content>
-    <md-dialog-actions layout="row"><md-button ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-warn" type="submit" ng-disabled="data.buying">{{'BTN_BUY'|translate}} · {{cost()}} {{'TITLE_CREDITS'|translate}}</md-button></md-dialog-actions>
+    <md-dialog-actions layout="row"><md-button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</md-button><md-button class="md-raised md-primary purchase-confirm" type="submit" ng-disabled="data.buying"><i class="material-icons purchase-action-icon" aria-hidden="true">near_me</i><span class="purchase-action-label">{{'BTN_BUY'|translate}}</span><span class="purchase-action-price">{{cost()}} <small>{{'TITLE_CREDITS'|translate}}</small></span></md-button></md-dialog-actions>
   </form>
 </md-dialog>

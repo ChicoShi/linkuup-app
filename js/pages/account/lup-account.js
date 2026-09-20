@@ -15,7 +15,7 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.data.title = "TITLE_ACCOUNT";
 	
 	$scope.ConfigSrvc = ConfigSrvc;
-	$scope.data.backendUrl = window.LUP_CONFIG.server;
+	$scope.data.backendUrl = window.LUP_CONFIG.server + 'account.allsettings.html';
 	
 	$scope.data.countries = CountrySrvc.CACHE||[];
 	$scope.data.timezones = TimezoneSrvc.CACHE||[];

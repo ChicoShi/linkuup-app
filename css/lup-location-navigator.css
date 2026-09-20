@@ -28,7 +28,9 @@
 .navigator-view .nav-topbar .search-input-wrap:focus-within {border-color:#a9ddff80;}
 .navigator-view .nav-topbar .search-input-wrap input.search-input {height:42px;min-height:0;}
 .navigator-view .nav-topbar .search-input::placeholder {font-size:13px;}
-.navigator-view .nav-topbar-notifications {display:flex;grid-column:3;}
+.navigator-view .nav-topbar-notifications {display:flex;grid-column:3;grid-row:1;}
+.navigator-view .nav-topbar-profile {grid-column:4;grid-row:1;}
+.navigator-view .nav-topbar > .nav-topbar-control:first-child {grid-column:1;grid-row:1;}
 .navigator-view .nav-topbar .lup-top-notification {width:36px;height:44px;min-height:44px;margin:0;padding:6px;}
 .navigator-view .nav-topbar .lup-avatar {box-sizing:border-box;position:relative;width:32px;height:32px;padding:0;margin:0;}
 .navigator-view .nav-topbar .lup-avatar .img,.navigator-view .nav-topbar .lup-avatar span {inset:0;width:100%;height:100%;}
@@ -43,7 +45,7 @@
 .navigator-view .location-search-clear .material-icons { font-size:18px; }
 .navigator-view input::placeholder { font-size:13px; color:#aaaac5; }
 /* Six quiet category symbols, with accessible names on the buttons. */
-.navigator-view .nav-categories { display:flex; justify-content:center; align-items:center; gap:8px; padding:0 12px 4px; margin:auto; box-sizing:border-box; }
+.navigator-view .nav-categories { display:flex; justify-content:center; align-items:center; gap:8px; padding:0 12px 4px; margin:auto; overflow-x:auto; justify-content:safe center; max-width:100%; scrollbar-width:none; box-sizing:border-box; }
 .navigator-view .nav-categories button { --category-color:#b8a5ff; display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; padding:0; border:0; border-radius:10px; background:none; color:#9696ad; cursor:pointer; }
 .navigator-view .nav-categories button>i { font-size:25px; color:inherit; }
 .navigator-view .nav-categories button[data-category="NAV_CAFE"] { --category-color:#ffc58e; }
@@ -141,3 +143,8 @@
 
 /* Keep offscreen catalogue cards out of painting and glass compositing. */
 .navigator-view .lup-room-slide-outer {content-visibility:auto;contain-intrinsic-block-size:auto 510px;}
+
+/* One reset plus compact category groups; all controls remain tappable at 320px. */
+.navigator-view .nav-categories {gap:3px;padding-inline:7px;}
+.navigator-view .nav-categories button {flex:0 0 40px;width:40px;min-height:44px;}
+.navigator-view .nav-categories button[data-category="NAV_EVERYDAY"] {--category-color:#8adbd6;}

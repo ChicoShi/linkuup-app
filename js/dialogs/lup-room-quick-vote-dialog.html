@@ -1,19 +1,14 @@
-<md-dialog aria-label="Location bewerten" class="lup-quick-vote-dialog">
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2>{{room.name()}} bewerten</h2>
-      <span flex></span>
-      <md-button class="md-icon-button" aria-label="Schließen" ng-click="cancel()"><i class="material-icons">close</i></md-button>
-    </div>
-  </md-toolbar>
-  <md-dialog-content>
-    <div class="md-dialog-content quick-vote-content">
-      <p>Wie gefällt dir diese Location?</p>
-      <jk-rating-stars max-rating="10" rating="data.rating" reset-allowed="false"></jk-rating-stars>
-    </div>
-  </md-dialog-content>
-  <md-dialog-actions layout="row">
-    <md-button ng-click="cancel()">Abbrechen</md-button>
-    <md-button class="md-raised md-primary" ng-disabled="working" ng-click="save()">Bewertung speichern</md-button>
-  </md-dialog-actions>
+<md-dialog aria-label="{{'LUP_VOTE_TITLE'|translate}}" class="place-dialog lup-quick-vote-dialog">
+  <header class="place-dialog-header"><span class="place-dialog-symbol" aria-hidden="true"><i class="material-icons">star</i></span><div><span>LinkUUp</span><h2>{{'LUP_VOTE_TITLE'|translate}}</h2></div><button class="place-dialog-close" type="button" aria-label="{{'PLACE_CLOSE'|translate}}" ng-click="cancel()"><i class="material-icons" aria-hidden="true">close</i></button></header>
+  <md-dialog-content><div class="place-dialog-body quick-vote-content">
+    <h3>{{room.name()}}</h3><p>{{'LUP_QUICK_VOTE_COPY'|translate}}</p>
+    <fieldset class="quick-vote-stars"><legend>{{'LUP_VOTE_RATING'|translate}}</legend>
+      <label ng-repeat="value in [1,2,3,4,5,6,7,8,9,10]" ng-class="{'is-lit':value <= data.rating, 'is-selected':value === data.rating}">
+        <input type="radio" name="quick-vote-rating" ng-model="data.rating" ng-value="value" ng-disabled="working" aria-label="{{value}} {{'LUP_REVIEWS_OUT_OF_TEN'|translate}}">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 3 4 8.2 9 1.3-6.5 6.4 1.5 9L16 23.6 8 28l1.5-9.1L3 12.5l9-1.3Z"/></svg><span aria-hidden="true">{{value}}</span>
+      </label>
+    </fieldset>
+    <output class="quick-vote-score" aria-live="polite">{{data.rating}}<small> / 10</small></output>
+  </div></md-dialog-content>
+  <footer class="place-dialog-actions"><button type="button" ng-click="cancel()">{{'BTN_CANCEL'|translate}}</button><button type="button" class="place-dialog-primary" ng-disabled="working" ng-click="save()">{{'LUP_VOTE_SUBMIT'|translate}}</button></footer>
 </md-dialog>

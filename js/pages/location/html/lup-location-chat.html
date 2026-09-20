@@ -17,7 +17,7 @@
   <form class="chatbottom place-composer" ng-if="!isPresencePreview() && data.room.isSelfInRoom() && inChatRange()" ng-submit="sendMessage()">
     <input type="text" ng-model="data.message" placeholder="{{'PLACE_MESSAGE'|translate}}" aria-label="{{'PLACE_MESSAGE'|translate}}" autocomplete="off" enterkeyhint="send" />
     <button type="button" class="place-icon-button" ng-click="sendShout()" ng-disabled="!data.message.trim()" aria-label="{{'PLACE_SEND_SHOUT'|translate}}"><i class="material-icons" aria-hidden="true">campaign</i></button>
-    <button type="submit" class="place-send" ng-disabled="!data.message.trim()" aria-label="{{'PLACE_SEND'|translate}}"><i class="material-icons" aria-hidden="true">arrow_upward</i></button>
+    <button type="submit" class="place-send" ng-disabled="!data.message.trim()" aria-label="{{'PLACE_SEND'|translate}}"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M4 5.5 24 14 4 22.5l3-8.5-3-8.5Z"/><path d="M7 14h17"/></svg></button>
   </form>
   <div class="place-join-state" ng-if="(!data.room.isSelfInRoom() || !inChatRange())"><p>{{(data.chatJoining ? 'PLACE_JOINING' : 'PLACE_CHAT_RANGE')|translate}}</p><button class="place-tool" ng-if="!data.chatJoining" type="button" ng-click="joinChat($event)"><i class="material-icons" aria-hidden="true">login</i>{{'PLACE_JOIN'|translate}}</button></div>
 </div>

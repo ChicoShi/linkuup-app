@@ -166,12 +166,7 @@
   html.lup-soft-keyboard-open .location-page > md-content {
     overscroll-behavior:none;
   }
-  html.lup-soft-keyboard-open .location-page.lup-place {
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:var(--lup-viewport-height,100dvh);
-  }
+  /* lup-place-room owns height and VisualViewport offset together. */
 }
 
 /* Profile relationship menu: visibility and relationship actions are separate

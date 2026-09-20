@@ -1,0 +1,31 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const source = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
+test('Overlapping location pages preserve one card per ID and stop on repeated pages', async () => {
+ let controller; const chain = {config(){return this;},controller(name, fn){controller=fn;}};
+ vm.runInNewContext(source('js/pages/locations/lup-locations.js'), {angular:{module:()=>chain},window:{},console});
+ const room = id => ({id:()=>id});
+ const pages = [[room(1),room(1),room(2)],[room(2),room(3)],[room(3)]];
+ const scope = {data:{},$on(){}};
+ const deps = {$scope:scope,$timeout(){},RoomSrvc:{NUM_ROOMS:9,loadRoomsPage:async()=>pages.shift()},LoadingSrvc:{hasTask:()=>false,addTask(){},removeTask(){}},PositionSrvc:{CURRENT:{lat:52,lng:10}}};
+ const names=controller.toString().match(/function\(([^)]*)\)/)[1].split(',').map(x=>x.trim());
+ controller(...names.map(n=>deps[n]||{}));
+ const settle=()=>new Promise(resolve=>setImmediate(resolve));
+ scope.loadFirstPage();await settle();
+ assert.deepEqual(Array.from(scope.data.rooms,r=>r.id()),[1,2]);
+ scope.loadNextPage();await settle();
+ assert.deepEqual(Array.from(scope.data.rooms,r=>r.id()),[1,2,3]);
+ scope.loadNextPage();await settle();
+ assert.equal(scope.data.hasMoreLocations,false);
+});
+test('Flat legacy categories and hierarchical categories both remain selectable', () => {
+ let Service;vm.runInNewContext(source('js/service/lup-category-service.js'),{angular:{module:()=>({service:(name,fn)=>{Service=fn;}}),forEach:(obj,fn)=>Object.values(obj).forEach(fn)},console});
+ const service=new Service({},{});
+ service.CACHE={'5':{cat_id:5,cat_name:'Cafe'}};
+ assert.deepEqual(Array.from(service.locationGroups()[0].ids),['5']);
+ service.CACHE={'30':{cat_id:30,cat_parent:null},'5':{cat_id:5,cat_parent:30}};
+ assert.deepEqual(Array.from(service.locationGroups()[0].ids),['30','5']);
+});

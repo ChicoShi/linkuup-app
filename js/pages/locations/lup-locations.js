@@ -31,6 +31,8 @@ angular.module('LUP').config(function($routeProvider) {
 	var roomsPosition = $scope.data.roomsPosition || null;
 	var railElement = null;
 	var railScrollFrame = null;
+	var discoveryGlass = null;
+	var resetAnimations = [];
 	var restoringRail = false;
 	var swipeStart = null;
 	var pullStart = null;
@@ -47,6 +49,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (restoringRail || !railElement || !railElement.clientWidth || !rooms.length) {
 			return;
 		}
+		if (discoveryGlass) discoveryGlass.paint();
 		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
@@ -205,6 +208,8 @@ angular.module('LUP').config(function($routeProvider) {
 		railElement = rail;
 		railElement.addEventListener('scroll', onRailScroll, {passive: true});
 		railElement.addEventListener('pointerdown', onRailPointerDown, {capture: true, passive: true});
+		if (discoveryGlass) discoveryGlass.destroy();
+		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
 
 	$scope.init = function(event) {
@@ -212,6 +217,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!$scope.data.authenticated) {
 			return;
 		}
+		$scope.loadCategories();
 		if ($scope.data.locationsInitialized) {
 			restoringRail = true;
 			$timeout(function() {
@@ -223,7 +229,6 @@ angular.module('LUP').config(function($routeProvider) {
 		if (!PositionSrvc.hasPosition(true)) {
 			return;
 		}
-		$scope.loadCategories();
 		$scope.loadFirstPage();
 	};
 	$scope.$on('lup-inited', $scope.init);
@@ -237,6 +242,8 @@ angular.module('LUP').config(function($routeProvider) {
 		// explicitly refreshes the nearby page when they want this position used.
 	});
 	$scope.$on('$destroy', function() {
+		resetAnimations.forEach(function(animation) { animation.cancel(); });
+		if (discoveryGlass) discoveryGlass.destroy();
 		if (railScrollFrame !== null) {
 			window.cancelAnimationFrame(railScrollFrame);
 		}
@@ -306,9 +313,31 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 
-	$scope.resetCategories = function() {
+	$scope.resetCategories = function(event) {
 		$scope.data.categoryIds = [];
 		applyCategoryFilter(true);
+        resetAnimations.forEach(function(animation) { animation.cancel(); });
+        resetAnimations = [];
+        if (!event || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var button = event.currentTarget;
+        var animate = function(element, frames, duration, delay) {
+            if (element && element.animate) resetAnimations.push(element.animate(frames, {
+                duration:duration, delay:delay || 0, easing:'cubic-bezier(.22,.7,.25,1)'
+            }));
+        };
+        animate(button.querySelector('.nav-reset-pins'), [
+            {transform:'rotate(0deg) scale(1)',opacity:1},
+            {transform:'rotate(180deg) scale(.12)',opacity:0,offset:.5},
+            {transform:'rotate(360deg) scale(1.14)',opacity:1,offset:.82},
+            {transform:'rotate(360deg) scale(1)',opacity:1}
+        ], 620);
+        animate(button.querySelector('.nav-reset-burst'), [
+            {transform:'scale(.2)',opacity:0}, {transform:'scale(.7)',opacity:.7,offset:.25},
+            {transform:'scale(1.6)',opacity:0}
+        ], 360, 240);
+        button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(icon, index) {
+            animate(icon, [{opacity:0,transform:'scale(.9)'},{opacity:1,transform:'scale(1.08)',offset:.4},{opacity:0,transform:'scale(1)'}], 300, 160 + index * 85);
+        });
 	};
 
 	$scope.openRoom = function(room) {
@@ -334,15 +363,16 @@ angular.module('LUP').config(function($routeProvider) {
 		var loadFurtherForFilter = false;
 		RoomSrvc.loadRoomsPage(roomsPosition, page, $scope.data.per_page).then(function(rooms) {
 			rooms = Array.isArray(rooms) ? rooms : [];
-			if (replace) {
-				$scope.data.rooms = rooms;
-				$scope.data.currentRoomIndex = 0;
-			} else {
-				Array.prototype.push.apply($scope.data.rooms, rooms);
-			}
+			var previousCount = replace ? 0 : $scope.data.rooms.length;
+			var uniqueRooms = new Map();
+			(replace ? rooms : $scope.data.rooms.concat(rooms)).forEach(function(room) {
+				uniqueRooms.set(String(room.id()), room);
+			});
+			$scope.data.rooms = Array.from(uniqueRooms.values());
+			if (replace) $scope.data.currentRoomIndex = 0;
 			$scope.data.page = page;
 			$scope.data.roomsTotal = RoomSrvc.NUM_ROOMS;
-			$scope.data.hasMoreLocations = rooms.length > 0 && $scope.data.rooms.length < $scope.data.roomsTotal;
+			$scope.data.hasMoreLocations = $scope.data.rooms.length > previousCount && $scope.data.rooms.length < $scope.data.roomsTotal;
 			$scope.data.roomsPosition = roomsPosition;
 			$scope.data.locationsInitialized = true;
 			applyCategoryFilter(replace);

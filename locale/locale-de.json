@@ -770,5 +770,20 @@
 	"GUEST_BRAND_CLAIM": "Entdecke Orte in deiner Nähe – ohne ein eigenes Profil anzulegen.",
 	"GUEST_KICKER": "KURZER BESUCH",
 	"GUEST_WELCOME": "Als Gast dabei",
-	"GUEST_INTRO": "Wähle einen Namen. Du entscheidest später, ob du ein Profil erstellen möchtest."
+	"GUEST_INTRO": "Wähle einen Namen. Du entscheidest später, ob du ein Profil erstellen möchtest.",
+"NAV_POSITION": "{{current}} von {{total}}",
+"NAV_EVERYDAY": "Alltag & Service",
+"LUP_QUICK_VOTE_COPY": "Wie gefällt dir dieser Ort? Wähle deine Sterne.",
+"DISTANCE_BENEFIT_TITLE": "Etwas mehr Spielraum.",
+"SHOUT_BENEFIT_TITLE": "Mach deine Umgebung aufmerksam.",
+"SHOUT_BENEFIT_COPY": "Wähle den Umkreis und schreibe deine Nachricht. Der Preis wird vor dem Senden angezeigt.",
+"CREDITS_DISCOVER": "Deine Credits",
+"CREDITS_TOP_UP": "Aufladen",
+"SHOUT_SIDEBAR_COPY": "Nachricht im Umkreis",
+"DISTANCE_SIDEBAR_COPY": "Mehr GPS-Spielraum",
+"ADD_ROOM_EYEBROW": "Ein neuer Treffpunkt",
+"ADD_ROOM_STEP_DETAILS": "1 · Deinen Ort beschreiben",
+"ADD_ROOM_STEP_AREA": "2 · Bereich festlegen",
+"ACCOUNT_MANAGE_TITLE": "Dein Konto verwalten",
+"ACCOUNT_MANAGE_ACTION": "Kontoeinstellungen öffnen"
 }

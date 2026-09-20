@@ -16,9 +16,9 @@ function setup(file, name, deps, extras = {}) {
 }
 function scope() { const handlers={}; return {data:{authenticated:true},$on(n,f){handlers[n]=f},handlers}; }
 const user = (id) => ({id:()=>id, isSelf:()=>id===1, JSON:{}});
-function profile(own=false) {
+function profile(own=false, savedInterest='owner default') {
  const s=scope();
- setup('js/pages/profile/lup-profile.js','ProfileCtrl',{$scope:s,SettingsSrvc:{CACHE:{About:{lup_interest:{options:{var:'owner default'}},lup_drinks:{},lup_has_pet:{}}},setting:()=>null},RenderSrvc:{renderClass:(_,value)=>value}});
+ setup('js/pages/profile/lup-profile.js','ProfileCtrl',{$scope:s,SettingsSrvc:{CACHE:{About:{lup_interest:{options:{var:savedInterest}},lup_drinks:{},lup_has_pet:{}}},setting:()=>null},RenderSrvc:{renderClass:(_,value)=>value}});
  s.data.user=user(own?1:2); return s;
 }
 test('Profile light states honour server denials for guests/members and permitted friends without fallback leaks',()=>{
@@ -32,11 +32,63 @@ test('Profile light states honour server denials for guests/members and permitte
   const empty=fields.find(f=>f.key==='lup_has_pet');assert.equal(empty.visible,false);assert.equal(empty.value,undefined);
  }
 });
-test('Owner hidden facts, explicit emptiness and missing ACL metadata stay safe',()=>{
- const s=profile(true),p={JSON:{lup_interest:'secret',lup_drinks:'stale'},ACL:{lup_interest:'acl_noone'},EMPTY:{lup_drinks:true}};
- const fields=s.buildProfileGroups(p).flatMap(g=>g.fields);
- for(const key of ['lup_interest','lup_drinks']){const field=fields.find(f=>f.key===key);assert.equal(field.visible,false);assert.equal(field.value,undefined);}
+test('Stored privacy restricts visitors while owners see their own populated facts',()=>{
+ for(const acl of ['acl_noone','acl_hidden','acl_friends','acl_members']){
+  for(const own of [true,false]){
+   const s=profile(own),p={JSON:{lup_interest:'saved fact'},ACL:{lup_interest:acl},ERRORS:{}};
+   if(!own)p.ERRORS.lup_interest='not allowed';
+   const field=s.buildProfileGroups(p).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+   assert.equal(field.visible,own,`${acl}, owner=${own}`);
+   assert.equal(field.value,own?'saved fact':undefined);
+   assert.equal(s.renderProfileSetting(field),own?'saved fact':'');
+   assert.equal(field.acl,acl);
+  }
+ }
+});
+test('Owner denials, explicit emptiness and unset enum values remain unlit',()=>{
+ const s=profile(true, '');
+ for(const p of [
+  {JSON:{lup_interest:'stale'},ERRORS:{lup_interest:'not allowed'}},
+  {JSON:{lup_interest:'stale'},EMPTY:{lup_interest:true}},
+  {JSON:{lup_interest:0}},
+  {JSON:{lup_interest:'0'}}
+ ]){
+  const field=s.buildProfileGroups(p).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+  assert.equal(field.visible,false);assert.equal(field.value,undefined);
+  assert.equal(s.renderProfileSetting(field),'');
+ }
  assert.doesNotThrow(()=>s.buildProfileGroups({JSON:{lup_interest:'readable'}}));
+});
+test('Missing legacy enum placeholders use saved facts only in the owner view',()=>{
+ for(const value of [undefined,0,'0']){
+  for(const own of [true,false]){
+   const s=profile(own),p={JSON:{lup_interest:value}};
+   const field=s.buildProfileGroups(p).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+   assert.equal(field.visible,own);
+   assert.equal(field.value,own?'owner default':undefined);
+  }
+ }
+});
+test('Explicit server denials and empty markers override saved owner fallbacks',()=>{
+ const s=profile(true);
+ for(const p of [
+  {JSON:{lup_interest:'0'},ERRORS:{lup_interest:'not allowed'}},
+  {JSON:{lup_interest:'0'},EMPTY:{lup_interest:true}}
+ ]){
+  const field=s.buildProfileGroups(p).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+  assert.equal(field.visible,false);assert.equal(field.value,undefined);
+ }
+});
+test('Visitors never recover private facts from cached owner settings',()=>{
+ const s=profile();
+ for(const acl of ['acl_noone','acl_hidden']){
+  const p={JSON:{lup_interest:'must stay private'},ACL:{lup_interest:acl}};
+  const field=s.buildProfileGroups(p).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+  assert.equal(field.visible,false);assert.equal(field.value,undefined);
+  assert.equal(s.renderProfileSetting(field),'');
+ }
+ const field=s.buildProfileGroups({JSON:{}}).flatMap(g=>g.fields).find(f=>f.key==='lup_interest');
+ assert.equal(field.visible,false);assert.equal(field.value,undefined);
 });
 const packet=(values)=>({read32:()=>values.shift(),hasMore:()=>values.length>0});
 test('Unset account basics do not light up as completed profile facts',()=>{

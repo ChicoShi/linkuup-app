@@ -135,3 +135,169 @@
 md-dialog.place-dialog,md-dialog.md-default-theme:not(.place-dialog) {background:linear-gradient(145deg,#16334bed,#13273af7);border:1px solid #d1edfa2b;box-shadow:inset 0 1px 0 #f4fcff1f,0 22px 64px #020b1e70;color:#edf7ff;}
 md-dialog.place-dialog md-dialog-content,md-dialog.place-dialog .md-dialog-content,md-dialog.place-dialog .place-dialog-body {background:transparent;color:inherit;}
 md-dialog.place-dialog .place-dialog-header,md-dialog.place-dialog .place-dialog-actions {background:transparent;}
+
+/* QR shares the discovery surface; the code keeps its white quiet zone. */
+md-dialog.place-dialog.place-qr-dialog {width:min(420px,calc(100vw - 24px));max-height:calc(100dvh - 24px);border-radius:30px;border:1px solid #d8f3ff2e;background:radial-gradient(ellipse at 0 70%,#307e9d2e,transparent 65%),linear-gradient(150deg,#15243bf5,#101a2bf5);box-shadow:inset 1px 1px 1px #f5fdff42,inset -1px -1px 1px #c8eafc1f,0 24px 70px #030c1b66;}
+.place-qr-dialog .place-dialog-header {padding:20px;gap:12px;}
+.place-qr-dialog .place-dialog-body {padding:12px 24px 20px;text-align:center;}
+.place-qr-dialog .place-dialog-room {font-size:24px;line-height:1.2;letter-spacing:-.5px;color:#edf7ff;margin:4px 0 12px;overflow-wrap:anywhere;}
+.place-qr-dialog .place-qr-code {display:block;width:min(220px,100%);box-sizing:border-box;margin:22px auto 16px;padding:16px;border-radius:20px;background:#fff;box-shadow:0 0 0 1px #d8f3ff38,0 8px 28px #020b1e40;}
+.place-qr-dialog .place-qr-code img {display:block;width:100%;height:auto;margin:0;}
+.place-qr-dialog .place-dialog-actions {padding:8px 24px 20px;}
+.place-qr-dialog .place-dialog-primary {width:100%;border:1px solid #d8f3ff2e;background:#eaf9ff0c;color:#dcf2ff;border-radius:16px;min-height:44px;}
+
+/* Rating: ten native choices, one shared glass surface. */
+md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px));border-radius:28px;border-color:#d8f3ff38;background:radial-gradient(ellipse at 50% 45%,#32698426,transparent 70%),linear-gradient(150deg,#15243bf5,#101a2bf5);box-shadow:inset 1px 1px 1px #f5fdff42,inset -1px -1px 1px #c8eafc1f,0 24px 70px #030c1b66;}
+.lup-quick-vote-dialog .quick-vote-content {padding:20px;text-align:center;}
+.lup-quick-vote-dialog .quick-vote-content h3 {margin:0 0 10px;color:#edf7ff;font:500 24px/1.25 Ubuntu,Roboto,sans-serif;overflow-wrap:anywhere;}
+.lup-quick-vote-dialog .quick-vote-content p {color:#afc4d7;font-size:13px;line-height:1.6;}
+.lup-quick-vote-dialog .place-dialog-symbol {color:#f3d69b;}
+.lup-quick-vote-dialog .quick-vote-stars {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px 4px;min-width:0;margin:22px 0 12px;padding:14px 8px;border:1px solid #d8f3ff28;border-radius:22px;background:#eaf9ff04;box-shadow:inset 0 1px 0 #f5fdff16;}
+.lup-quick-vote-dialog .quick-vote-stars legend {padding:0 10px;color:#b6cede;font-size:12px;}
+.lup-quick-vote-dialog .quick-vote-stars label {position:relative;display:grid;justify-items:center;gap:5px;min-height:52px;padding:6px 0;border-radius:12px;cursor:pointer;color:#809ab2;}
+.lup-quick-vote-dialog .quick-vote-stars input {position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;}
+.lup-quick-vote-dialog .quick-vote-stars svg {width:29px;height:29px;fill:#9bcfff09;stroke:#9bbbd080;stroke-width:1.25;pointer-events:none;transition:transform 180ms ease;}
+.lup-quick-vote-dialog .quick-vote-stars span {font:500 10px Roboto,sans-serif;pointer-events:none;}
+.lup-quick-vote-dialog .quick-vote-stars .is-lit svg {fill:#f0cf91;stroke:#ffe9bd;filter:drop-shadow(0 0 5px #f1c97c38);}
+.lup-quick-vote-dialog .quick-vote-stars .is-selected {background:#f0cf910d;color:#ffe9bd;box-shadow:inset 0 0 0 1px #f0cf9140;}
+.lup-quick-vote-dialog .quick-vote-stars label:hover svg {transform:translateY(-2px) scale(1.07);}
+.lup-quick-vote-dialog .quick-vote-stars label:focus-within {outline:2px solid #bce8fa;outline-offset:1px;}
+.lup-quick-vote-dialog .quick-vote-score {display:block;color:#f3d69b;font:500 28px Ubuntu,Roboto,sans-serif;}
+.lup-quick-vote-dialog .quick-vote-score small {color:#9fb9cc;font:400 13px Roboto,sans-serif;}
+.lup-quick-vote-dialog .place-dialog-actions {flex-wrap:wrap;gap:8px;}
+.lup-quick-vote-dialog .place-dialog-actions .place-dialog-primary {border:1px solid #d8f3ff40;border-radius:14px;background:#bce8fa18;color:#e8f7ff;}
+@media(prefers-reduced-motion:reduce) {.lup-quick-vote-dialog .quick-vote-stars svg {transition:none;}.lup-quick-vote-dialog .quick-vote-stars label:hover svg {transform:none;}}
+
+/* The category controls share the exact discovery-card edges. */
+.navigator-view .nav-categories {width:calc(100% - 44px);max-width:360px;padding-inline:0;gap:3px;}
+.navigator-view .nav-categories button {flex:1 0 32px;min-width:32px;width:auto;}
+@media(max-width:360px) {.navigator-view .nav-categories {width:calc(100% - 32px);}}
+
+/* Paid actions share the location material and show their configured price. */
+md-dialog.place-dialog.lup-purchase-dialog {width:min(540px,calc(100vw - 24px));max-width:540px;border-radius:28px;background:radial-gradient(ellipse at 10% 35%,#307e9d26,transparent 70%),linear-gradient(150deg,#15243bf5,#101a2bf5);border-color:#d8f3ff38;box-shadow:inset 1px 1px 1px #f5fdff42,0 24px 70px #030c1b66;}
+.lup-purchase-dialog .lup-distance-dialog-content,.lup-purchase-dialog .lup-shout-dialog-content {padding:22px;color:#dbeaf5;}
+.lup-purchase-dialog h3 {margin:0 0 10px;color:#edf7ff;font:500 25px/1.2 Ubuntu,Roboto,sans-serif;letter-spacing:-.5px;}
+.lup-purchase-dialog .purchase-copy {margin:0 0 20px;color:#b4c8d9;font-size:13px;line-height:1.65;}
+.lup-purchase-dialog .lup-distance-cost,.lup-purchase-dialog .lup-shout-cost {display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin:18px 0;padding:16px;border:1px solid #d8f3ff2e;border-radius:18px;background:#bce8fa07;box-shadow:inset 0 1px 0 #f5fdff16;color:#edf7ff;font:500 22px Ubuntu,Roboto,sans-serif;}
+.lup-purchase-dialog .lup-distance-cost small,.lup-purchase-dialog .lup-shout-cost small {color:#a6c4d8;font:400 11px Roboto,sans-serif;}
+.lup-purchase-dialog .lup-distance-slider,.lup-purchase-dialog .lup-shout-radius {display:grid;grid-template-columns:minmax(0,1fr) 72px 22px;gap:8px;color:#c8ddea;}
+.lup-purchase-dialog .purchase-range-label {grid-column:1/-1;font-size:12px;}
+.lup-purchase-dialog md-input-container {max-width:100%;}
+.lup-purchase-dialog .lup-distance-slider md-input-container,.lup-purchase-dialog .lup-shout-radius md-input-container {width:72px;}
+.lup-purchase-dialog .lup-shout-map {height:220px;border:1px solid #d8f3ff30;border-radius:18px;background:#101c30;}
+.lup-purchase-dialog .lup-shout-map-status,.lup-purchase-dialog .lup-distance-note {color:#a6c4d8;font-size:12px;line-height:1.6;}
+.lup-purchase-dialog md-input-container label {color:#b4c8d9;}
+.lup-purchase-dialog md-input-container .md-input {color:#edf7ff;border-color:#bce8fa40;}
+.lup-purchase-dialog md-dialog-actions {flex-wrap:wrap;gap:6px;padding:12px 16px 16px;border-top:1px solid #bce8fa16;}
+.lup-purchase-dialog md-dialog-actions .md-button {margin:0;border-radius:14px;text-transform:none;white-space:normal;line-height:1.4;min-height:46px;padding:10px 14px;color:#c4d7e6;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm {flex:1 1 190px;background:#c3eaff;color:#132b40;box-shadow:inset 0 1px 0 #fff9,0 4px 16px #08142350;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm:disabled {background:#bce8fa16;color:#8ea6b8;box-shadow:none;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) {border-color:#d8f3ff18;background:#bce8fa04;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) p {padding:9px 0;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) small {display:block;margin-top:5px;color:#95b5cd;font:400 10px/1.5 Roboto,sans-serif;}
+
+/* Room creation follows the same blue glass, retaining its map workflow. */
+.lup-add-room-page .settings-content {background:radial-gradient(ellipse at 10% 50%,#24668524,transparent 65%),linear-gradient(150deg,#14243a,#101b2d);color:#e5f2fc;overflow-y:auto;}
+.lup-add-room-page .add-room-form {box-sizing:border-box;width:calc(100% - 32px);max-width:720px;margin:20px auto 40px;padding:0;}
+.lup-add-room-page .add-room-hero {display:flex;align-items:flex-start;gap:16px;padding:12px 4px 24px;background:none;border:0;box-shadow:none;}
+.lup-add-room-page .add-room-hero__mark {display:grid;place-items:center;flex:0 0 48px;width:48px;height:54px;border:1px solid #d8f3ff30;border-radius:16px;background:#bce8fa08;color:#bce8fa;box-shadow:inset 0 1px 0 #f5fdff35;}
+.lup-add-room-page .add-room-hero small {color:#a5cada;font-size:11px;letter-spacing:.06em;}
+.lup-add-room-page .add-room-hero h1 {margin:7px 0 12px;color:#edf7ff;font:500 28px/1.15 Ubuntu,Roboto,sans-serif;}
+.lup-add-room-page .add-room-hero p,.lup-add-room-page .lup-add-room-map-section p {color:#b4c8d9;font-size:13px;line-height:1.65;}
+.lup-add-room-page .add-room-section,.lup-add-room-page .lup-add-room-map-section {box-sizing:border-box;margin:0 0 18px;padding:20px;border:1px solid #d8f3ff24;border-radius:24px;background:#bce8fa04;box-shadow:inset 1px 1px 1px #f5fdff26,inset -1px -1px 1px #c8eafc0d;}
+.lup-add-room-page .add-room-section__label {display:block;margin-bottom:20px;color:#a5cada;font-size:11px;letter-spacing:.04em;}
+.lup-add-room-page md-input-container label,.lup-add-room-page md-select .md-select-value.md-select-placeholder {color:#aac5d9;}
+.lup-add-room-page md-input-container .md-input,.lup-add-room-page md-select .md-select-value {color:#edf7ff;border-color:#bce8fa40;}
+.lup-add-room-page .lup-add-room-map {border:1px solid #d8f3ff30;border-radius:18px;background:#101c30;}
+.lup-add-room-page .lup-add-room-map-section .lup-add-room-cost {margin:14px 0;padding:12px 16px;border:1px solid #d8f3ff28;border-radius:14px;background:#bce8fa08;color:#edf7ff;font-size:17px;}
+.lup-add-room-page .add-room-form > .md-button {width:100%;margin:0;min-height:48px;border-radius:16px;background:#c3eaff;color:#132b40;text-transform:none;}
+.lup-add-room-page .add-room-form > .md-button:disabled {background:#bce8fa16;color:#8ea6b8;}
+@media(max-width:360px) {.lup-add-room-page .add-room-section,.lup-add-room-page .lup-add-room-map-section {padding:16px;}.lup-add-room-page .add-room-hero {gap:10px;}.lup-add-room-page .add-room-hero h1 {font-size:24px;}}
+
+.lup-purchase-dialog md-slider .md-thumb:after {border-color:#a9ddf7;background:#a9ddf7;}
+.lup-purchase-dialog md-slider .md-track.md-track-fill {background:#a9ddf7;}
+.lup-purchase-dialog md-slider .md-sign {background:#a9ddf7;color:#132b40;}
+
+.lup-add-room-page .add-room-description textarea {min-height:90px;height:90px;max-height:180px;}
+.lup-purchase-dialog .lup-shout-dialog-content md-input-container.md-block label {position:static;display:block;transform:none;max-width:100%;width:auto;margin-bottom:10px;}
+.lup-purchase-dialog .lup-shout-dialog-content md-input-container.md-block textarea {min-height:90px;padding:10px;box-sizing:border-box;}
+
+/* Focused room conversation: keep the tab rail, release decorative header space. */
+.location-page.lup-place:has(.place-chat .place-composer input:focus) .place-chat > .place-panel-heading,
+.location-page.lup-place:has(.place-chat .place-composer input:focus) .place-chat > .place-chat-events {display:none;}
+.location-page.lup-place .place-chat .chatbottom.place-composer {gap:8px;min-height:64px;padding:8px 12px calc(8px + var(--composer-safe-bottom,env(safe-area-inset-bottom,0px)));background:linear-gradient(180deg,#13273aed,#101e32f5);border-top:1px solid #bce8fa26;box-shadow:inset 0 1px 0 #f5fdff08;}
+.location-page.lup-place .place-chat .place-composer input {height:46px;border:1px solid #c9edff35;border-radius:18px;background:#d1f0ff07;box-shadow:inset 0 1px 0 #f5fdff18;color:#edf7ff;}
+.location-page.lup-place .place-chat .place-composer input:focus {outline:none;border-color:#bce8fa99;box-shadow:inset 0 1px 0 #fff3,0 0 0 2px #9ddcff12;}
+.location-page.lup-place .place-chat .place-composer .place-send {border:1px solid #d8f3ff70;border-radius:16px;background:linear-gradient(145deg,#bceaff30,#62bbec18);color:#d7f3ff;box-shadow:inset 0 1px 0 #e5f8ff70,inset 0 -1px 0 #6ebce52e;}
+.location-page.lup-place .place-chat .place-composer .place-send svg {width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform 160ms ease;}
+.location-page.lup-place .place-chat .place-composer .place-send:active:not(:disabled) svg {transform:translateX(2px) scale(.94);}
+.location-page.lup-place .place-chat .place-composer .place-send:disabled {background:#bce8fa0a;border-color:#bce8fa20;color:#7595ac;box-shadow:inset 0 1px 0 #f5fdff10;}
+.location-page.lup-place .place-chat .place-composer button.place-icon-button {background:#d1f0ff06;border-color:#c9edff25;border-radius:16px;}
+@media(max-width:600px) {
+ .location-page.lup-place:has(.place-chat .place-composer input:focus) md-tabs.place-tabs > md-tabs-wrapper {margin-top:6px;margin-bottom:4px;}
+}
+@media(prefers-reduced-motion:reduce) {.location-page.lup-place .place-chat .place-composer .place-send svg {transition:none;}}
+.location-page.lup-place:has(.place-chat .place-composer input:focus) .place-chat .place-empty {display:none;}
+
+/* Account overview: readable identity details, one explicit management action. */
+.account-page > md-content {background:radial-gradient(ellipse at 0 65%,#307e9d20,transparent 65%),linear-gradient(150deg,#14243a,#101b2d);color:#edf7ff;overflow-y:auto;}
+.account-page .lup-account-panel {box-sizing:border-box;width:calc(100% - 32px);max-width:640px;margin:24px auto 48px;}
+.account-page .lup-account-hero {display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;}
+.account-page .lup-account-mark {display:grid;place-items:center;flex:0 0 50px;height:54px;border:1px solid #d8f3ff30;border-radius:17px;background:#bce8fa06;box-shadow:inset 1px 1px 0 #f5fdff30;color:#bce8fa;}
+.account-page .lup-account-hero small {color:#9fc4db;font-size:11px;}
+.account-page .lup-account-hero h1 {margin:6px 0 12px;font:500 28px/1.15 Ubuntu,Roboto,sans-serif;color:#edf7ff;}
+.account-page .lup-account-hero p,.account-page .lup-account-manage p {color:#adc5d8;font:400 13px/1.65 Roboto,sans-serif;margin:0;}
+.account-page .lup-account-panel .lup-account-overview {margin:0 0 20px;border:1px solid #d8f3ff26;border-radius:24px;background:#bce8fa04;box-shadow:inset 1px 1px 1px #f5fdff26;}
+.account-page .lup-account-panel .lup-account-overview > div {display:flex;align-items:center;gap:14px;padding:22px 20px;}
+.account-page .lup-account-panel .lup-account-overview > div::before {display:none;}
+.account-page .lup-account-overview > div > i {flex:none;color:#a5d6ed;font-size:23px;}
+.account-page .lup-account-overview > div > div {min-width:0;}
+.account-page .lup-account-panel .lup-account-overview strong {display:block;color:#9dbbd0;font:400 11px/1.4 Roboto,sans-serif;letter-spacing:0;text-transform:none;}
+.account-page .lup-account-panel .lup-account-overview span {display:block;margin-top:7px;white-space:normal;overflow-wrap:anywhere;color:#edf7ff;font:500 16px/1.4 Roboto,sans-serif;}
+.account-page .lup-account-manage {padding:22px 20px;border:1px solid #d8f3ff20;border-radius:24px;background:#bce8fa03;}
+.account-page .lup-account-manage h2 {margin:0 0 10px;color:#e6f5ff;font:500 19px Ubuntu,Roboto,sans-serif;}
+.account-page .lup-account-action {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;padding:15px;border:1px solid #d8f3ff42;border-radius:16px;background:#bce8fa10;box-shadow:inset 0 1px 0 #f5fdff25;color:#e5f6ff;font:500 13px/1.4 Roboto,sans-serif;text-decoration:none;}
+.account-page .lup-account-action i {font-size:19px;}
+.account-page .lup-account-action:focus-visible {outline:2px solid #bce8fa;outline-offset:3px;}
+
+/* Add-room controls have their own quiet glass surfaces, including the detached menu. */
+.lup-add-room-page .add-room-section md-input-container.md-block {display:block;margin:0 0 22px;padding:0;}
+.lup-add-room-page .add-room-section md-input-container.md-block > label {position:static;display:block;transform:none;width:auto;max-width:100%;padding:0;margin:0 0 9px;color:#afcbdc;font:400 12px/1.5 Roboto,sans-serif;}
+.lup-add-room-page .add-room-section md-input-container.md-block :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select .md-select-value {box-sizing:border-box;width:100%;min-height:50px;padding:13px 14px;border:1px solid #d8f3ff30;border-radius:16px;background:linear-gradient(135deg,#d7f3ff0b,#c4e8ff03);box-shadow:inset 1px 1px 0 #f5fdff1c,inset -1px -1px 0 #c8eafc0d;color:#edf7ff;font:400 16px/1.4 Roboto,sans-serif;}
+.lup-add-room-page .add-room-section md-select {margin:0;}
+.lup-add-room-page .add-room-section md-input-container.md-block textarea.md-input {height:100px;min-height:100px;max-height:200px;resize:vertical;}
+.lup-add-room-page .add-room-section md-input-container.md-input-focused :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select:focus .md-select-value {border-color:#bce8fa90;box-shadow:inset 0 1px 0 #fff2,0 0 0 3px #9ddcff10;}
+.lup-add-room-page .add-room-section md-input-container.md-input-invalid :is(input.md-input,textarea.md-input),
+.lup-add-room-page .add-room-section md-select.ng-invalid.ng-touched .md-select-value {border-color:#e3a4ac;}
+.md-select-menu-container.add-room-category-menu {padding:6px;max-width:calc(100vw - 24px);}
+.add-room-category-menu md-select-menu {border:1px solid #d8f3ff40;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,#1b3046f7,#122137fc);box-shadow:inset 1px 1px 0 #f5fdff26,0 18px 48px #020b1d80;}
+.add-room-category-menu md-select-menu md-content {background:transparent;padding:6px;color:#e3f2fb;}
+.add-room-category-menu md-option {min-height:48px;margin:2px 0;padding:0 14px;border:1px solid transparent;border-radius:12px;color:#c6ddec;}
+.add-room-category-menu md-option:is(:focus,:hover) {background:#bce8fa0d;}
+.add-room-category-menu md-option[selected] {background:#bce8fa16;border-color:#bce8fa40;color:#effaff;box-shadow:inset 0 1px 0 #f5fdff12;}
+.lup-add-room-page .add-room-form > .md-button.md-raised.md-primary:not(:disabled) {background:linear-gradient(145deg,#e5f6ff,#a3d4ed);color:#153951;box-shadow:inset 0 1px 0 #fffc;}
+
+/* Keep the purchase action visible while the dialog body scrolls. */
+md-dialog.place-dialog.lup-purchase-dialog {max-height:calc(100dvh - 24px);}
+.lup-purchase-dialog > form {display:flex;flex-direction:column;min-height:0;max-height:inherit;overflow:hidden;}
+.lup-purchase-dialog .place-dialog-header,.lup-purchase-dialog md-dialog-actions {flex-shrink:0;}
+.lup-purchase-dialog md-dialog-content {min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+.lup-purchase-dialog md-dialog-actions {background:#122338;padding-bottom:max(12px,env(safe-area-inset-bottom));}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm {display:flex;align-items:center;gap:10px;min-width:0;border:1px solid #d2eeff66;border-radius:18px;background:linear-gradient(135deg,#daf2ff,#9bcce4);color:#15374c;text-align:left;line-height:1.3;}
+.lup-purchase-dialog .purchase-action-icon {font-size:22px;flex-shrink:0;}
+.lup-purchase-dialog .purchase-action-label {flex:1;}
+.lup-purchase-dialog .purchase-action-price {flex-shrink:0;padding-left:12px;border-left:1px solid #15374c30;font-size:15px;text-align:right;}
+.lup-purchase-dialog .purchase-action-price small {display:block;margin-top:2px;font-size:10px;font-weight:400;}
+.lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm:disabled {background:#bce8fa0a;border-color:#bce8fa20;color:#8da9bb;box-shadow:none;}
+md-sidenav.navigator-sidebar .nav-buy-distance {background:linear-gradient(120deg,#bce8fa12,#bce8fa03);border-color:#d8f3ff36;box-shadow:inset 0 1px 0 #f5fdff14;}
+md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon {color:#bce8fa;text-shadow:0 0 14px #8bd6ff35;}
+@media(max-width:420px) {
+ .lup-purchase-dialog md-dialog-actions {display:grid;grid-template-columns:1fr;gap:4px;}
+ .lup-purchase-dialog md-dialog-actions .purchase-confirm {grid-row:1;}
+ .lup-purchase-dialog md-dialog-actions > .md-button:not(.purchase-confirm) {min-height:36px;padding:6px;}
+ .lup-shout-dialog #lup-shout-map {height:150px;min-height:150px;}
+}
+
+.lup-shout-dialog .lup-shout-dialog-content md-input-container > label {color:#afcbdc;}

@@ -53,9 +53,22 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		if (!CategorySrvc.CACHE) {
 			return [];
 		}
+        // Older installations expose flat categories rather than parent groups.
+        if (Object.values(CategorySrvc.CACHE).every(function(c) { return c.cat_parent == null; })) {
+            return [
+                ['NAV_CAFE', 'local_cafe', [3,4,5,14]],
+                ['NAV_NIGHT', 'nightlife', [11]],
+                ['NAV_CULTURE', 'theater_comedy', [8,12,16,17]],
+                ['NAV_OUTDOORS', 'park', [13,15]],
+                ['NAV_CITIES', 'location_city', [1,2,10]],
+                ['NAV_EVERYDAY', 'storefront', [6,7,9,18,19,20,21]]
+            ].map(function(group) {
+                return {label:group[0], icon:group[1], ids:group[2].map(String).filter(function(id) { return !!CategorySrvc.CACHE[id]; })};
+            }).filter(function(group) { return group.ids.length; });
+        }
 		var children = {}, roots = [];
 		angular.forEach(CategorySrvc.CACHE, function(category) {
-			var parent = category.cat_parent === null || category.cat_parent === '' ? null : String(category.cat_parent);
+			var parent = category.cat_parent == null || category.cat_parent === '' ? null : String(category.cat_parent);
 			if (!parent) {
 				roots.push(category);
 			} else if (CategorySrvc.CACHE[parent]) {
@@ -74,7 +87,7 @@ angular.module('LUP').service('CategorySrvc', function(RequestSrvc, EnumSrvc) {
 		return roots.map(function(group) {
 			var id = String(group.cat_id);
 			return {
-				ids: descendants(id),
+				ids: [id].concat(descendants(id)),
 				icon: categoryIcons[id] || 'place',
 				label: group.cat_label || group.cat_name,
 			};
