@@ -327,17 +327,24 @@ angular.module('LUP').config(function($routeProvider) {
         };
         animate(button.querySelector('.nav-reset-pins'), [
             {transform:'rotate(0deg) scale(1)',opacity:1},
-            {transform:'rotate(160deg) scale(.2)',opacity:0,offset:.42},
-            {transform:'rotate(200deg) scale(.2)',opacity:0,offset:.48},
-            {transform:'rotate(360deg) scale(1)',opacity:1,offset:.9},
+            {transform:'rotate(-18deg) scale(1.08)',opacity:1,offset:.14},
+            {transform:'rotate(175deg) scale(.06)',opacity:0,offset:.44},
+            {transform:'rotate(225deg) scale(.06)',opacity:0,offset:.52},
+            {transform:'rotate(372deg) scale(1.16)',opacity:1,offset:.8},
+            {transform:'rotate(357deg) scale(.97)',opacity:1,offset:.92},
             {transform:'rotate(360deg) scale(1)',opacity:1}
-        ], 560);
+        ], 720);
         animate(button.querySelector('.nav-reset-burst'), [
-            {transform:'scale(.65)',opacity:0}, {transform:'scale(.85)',opacity:.45,offset:.3},
-            {transform:'scale(1)',opacity:0}
-        ], 260, 280);
+            {transform:'scale(.3)',opacity:0}, {transform:'scale(.7)',opacity:.55,offset:.25},
+            {transform:'scale(1.12)',opacity:0}
+        ], 320, 410);
         button.closest('.nav-categories').querySelectorAll('.nav-category-glint').forEach(function(icon, index) {
-            animate(icon, [{opacity:0,transform:'scaleX(.25)'},{opacity:.85,transform:'scaleX(1)',offset:.35},{opacity:0,transform:'scaleX(1)'}], 180, 400 + index * 130);
+            animate(icon, [{opacity:0,transform:'translateX(-100%)'},{opacity:.8,transform:'translateX(0)',offset:.45},{opacity:0,transform:'translateX(100%)'}], 320, 550 + index * 95);
+            animate(icon.parentElement.querySelector(':scope > i'), [
+                {transform:'translateY(0) scale(1)'},
+                {transform:'translateY(-2px) scale(1.06)',offset:.42},
+                {transform:'translateY(0) scale(1)'}
+            ], 320, 550 + index * 95);
         });
 	};
 
