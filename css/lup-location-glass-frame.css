@@ -177,8 +177,8 @@ md-dialog.place-dialog.lup-quick-vote-dialog {width:min(420px,calc(100vw - 24px)
 .navigator-view .nav-reset svg {width:28px;height:28px;}
 .navigator-view .nav-reset-pin-one {fill:#8fe5ff;}
 .navigator-view .nav-reset-pin-two {fill:#b8a7ff;}
-.navigator-view .nav-reset-burst {inset:6px;border:0;border-radius:50%;background:radial-gradient(ellipse,#8be9ff66,transparent 70%);box-shadow:none;}
-.navigator-view .nav-category-glint {inset:0;height:auto;border-radius:inherit;background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--category-color) 48%,transparent),transparent 90%);box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--category-color) 85%,transparent);transform:none;}
+.navigator-view .nav-reset-burst {inset:6px;border:0;border-radius:50%;background:radial-gradient(ellipse,#8be9ff80,transparent 70%);box-shadow:none;}
+.navigator-view .nav-category-glint {inset:0;height:auto;border-radius:inherit;background:radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--category-color) 58%,transparent),transparent 90%);box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--category-color) 95%,transparent);transform:none;}
 .navigator-view .nav-categories button.active::before {content:'';position:absolute;inset:auto 11px 4px;height:1px;background:var(--category-color);opacity:.4;pointer-events:none;}
 .navigator-view .nav-categories button>i {transition:transform 200ms cubic-bezier(.2,.8,.2,1);}
 .navigator-view .nav-categories button:active {transform:translateY(1px) scale(.95);}
