@@ -22,3 +22,9 @@ giz
 ## Bugs
 
 - Farbe in Locations
+
+## 2026-09-21 – Mobiler Chat-Wiederbeitritt nach Browserwechsel
+- Shippi: Nach Rückkehr aus dem Hintergrund ist der Raum verlassen; der untere Beitreten-Button hilft erst nach Neuladen.
+- Auf Basis `8ef7780` isoliert reproduziert: `CHATROOM` bleibt nach Disconnect gesetzt und derselbe Join wird ohne Netzwerkframe als Erfolg behandelt. Zusätzlich kann Join vor abgeschlossener WS-Authentifizierung senden.
+- Folgepatch: Raum-Merker bei Disconnect löschen, Join auf Connect/Auth warten lassen, alte Socket-Ereignisse ignorieren und wartende Antworten bei Disconnect ablehnen. GPS-/Radiusregeln unverändert.
+- Offen: echter iPhone-Test (Beitritt, Hintergrund, Rückkehr, unterer Button) mit gültigem GPS und serverseitiger Anwesenheit. Kein Live-Deploy aus den Tests ableiten.

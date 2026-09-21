@@ -7,6 +7,9 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 	ChatSrvc.MESSAGES = {};
 	ChatSrvc.QUERIES = [];
 	ChatSrvc.CHATROOM = null;
+	$rootScope.$on('gws-ws-disconnect', function() {
+		ChatSrvc.CHATROOM = null;
+	});
 	// Small, live event summary shown above a room conversation. Keep only the
 	// newest relevant event of each type; full history remains in the chat.
 	ChatSrvc.EVENTS = {shout: null, join: null};
@@ -33,7 +36,8 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 		if (!room.id()) {
 			return $q.reject("Cannot join blank dummy Room");
 		}
-		console.log('ChatSrvc.join()', room, password);
+		return WebsocketSrvc.withConnection().then(function() {
+		console.log('ChatSrvc.join()', room.id());
 		// Routes and websocket refreshes can recreate the Room object. Presence is
 		// keyed by room id, not by that transient JavaScript object identity.
 		if (ChatSrvc.CHATROOM && room.id() === ChatSrvc.CHATROOM.id()) {
@@ -65,6 +69,7 @@ angular.module('LUP').service('ChatSrvc', function($rootScope, $q,
 			}
 			return sendJoin();
 		}
+		});
 	};
 	
 	ChatSrvc.part = function(room) {

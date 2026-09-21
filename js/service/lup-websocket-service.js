@@ -68,6 +68,9 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.withConnection = function(url) {
 		console.log('WebsocketSrvc.withConnection()', url);
 		WebsocketSrvc.CONFIG.url = url || WebsocketSrvc.CONFIG.url;
+		if (WebsocketSrvc.CONNECTING) {
+			return WebsocketSrvc.CONNECTING;
+		}
 		if (WebsocketSrvc.connected()) {
 			var defer = $q.defer();
 			defer.resolve();
@@ -87,11 +90,11 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.connect = function(url) {
 		url = url || WebsocketSrvc.CONFIG.url;
 		console.log('WebsocketSrvc.connect()', url);
-		if (WebsocketSrvc.connected()) {
-			return $q.resolve();
-		}
 		if (WebsocketSrvc.CONNECTING) {
 			return WebsocketSrvc.CONNECTING;
+		}
+		if (WebsocketSrvc.connected()) {
+			return $q.resolve();
 		}
 		var defer = $q.defer();
 		WebsocketSrvc.CONNECTING = defer.promise;
@@ -102,27 +105,34 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 				ws.binaryType = 'arraybuffer';
 			}
 			ws.onopen = function() {
-				WebsocketSrvc.CONNECTING = null;
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				LoadingSrvc.stopTask('wsconnect');
 				WebsocketSrvc.startQueue();
 		    	WebsocketSrvc.CONNECTED = true;
 		    	WebsocketSrvc.MSGS_SENT = 0;
 		    	WebsocketSrvc.MSGS_RECV = 0;
-		    	defer.resolve();
 		    	WebsocketSrvc.authenticate().then(function(result){
+					if (WebsocketSrvc.SOCKET !== ws) return;
+					WebsocketSrvc.CONNECTING = null;
+					defer.resolve();
 					WebsocketSrvc.broadcast('gws-ws-open');
-				})['catch'](WebsocketSrvc.catchUnknown);
+				}, function(error) {
+					if (WebsocketSrvc.SOCKET !== ws) return;
+					WebsocketSrvc.CONNECTING = null;
+					WebsocketSrvc.CONNECTED = false;
+					defer.reject(error);
+					WebsocketSrvc.disconnect(true);
+				});
 			};
 		    ws.onclose = function() {
+				defer.reject('err_websocket_connection');
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				WebsocketSrvc.CONNECTING = null;
 				LoadingSrvc.stopTask('wsconnect');
 		    	WebsocketSrvc.disconnect(true);
-		    	if (WebsocketSrvc.CONNECTED) {
-			    	WebsocketSrvc.CONNECTED = false;
-					WebsocketSrvc.broadcast('gws-ws-close');
-		    	}
 		    };
 		    ws.onerror = function(error) {
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				WebsocketSrvc.CONNECTING = null;
 		    	WebsocketSrvc.disconnect(true);
 				// Browser Event objects stringify as "[object Event]". Keep a
@@ -130,6 +140,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 				defer.reject('err_websocket_connection');
 		    };
 		    ws.onmessage = function(message) {
+				if (WebsocketSrvc.SOCKET !== ws) return;
 		    	WebsocketSrvc.MSGS_RECV += 1;
 		    	if (message.data instanceof ArrayBuffer) {
 		    		WebsocketSrvc.onBinaryMessage(message);
@@ -229,11 +240,20 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.disconnect = function(event) {
 //		console.log('WebsocketSrvc.disconnect()');
 		if (WebsocketSrvc.SOCKET != null) {
-			WebsocketSrvc.SOCKET.close();
+			var socket = WebsocketSrvc.SOCKET;
+			var wasConnected = WebsocketSrvc.CONNECTED;
 			WebsocketSrvc.SOCKET = null;
+			WebsocketSrvc.CONNECTED = false;
+			WebsocketSrvc.CONNECTING = null;
+			var pending = WebsocketSrvc.SYNC_MSGS;
 			WebsocketSrvc.SYNC_MSGS = {};
+			Object.keys(pending).forEach(function(id) {
+				pending[id].reject('err_websocket_connection');
+			});
+			socket.close();
 			if (event) {
 				WebsocketSrvc.broadcast('gws-ws-disconnect');
+				if (wasConnected) WebsocketSrvc.broadcast('gws-ws-close');
 			}
 		}
 	};
@@ -246,7 +266,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	};
 	
 	WebsocketSrvc.authenticate = function() {
-		console.log('WebsocketSrvc.authenticate', LUP_CONFIG.ws_secret);
+		// Never log the session secret.
 		var w = WebsocketSrvc;
 		return w.sendBinary(GWS_Message().cmd(0x0001).sync().writeString(LUP_CONFIG.ws_secret)).then(w.authenticated, w.authFailure);
 	};
@@ -259,6 +279,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.authFailure = function(error) {
 		console.log('WebsocketSrvc.authFailure()', error);
 		ErrorSrvc.showError(error, 'Websocket Authentication');
+		return $q.reject(error);
 	};
 
 	////////////////////////
@@ -341,6 +362,12 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	// --- Binary --- //
 	////////////////////
 	WebsocketSrvc.sendBinary = function(gwsMessage) {
+		// Only the authentication frame may pass before the server confirms it.
+		if (gwsMessage.CMD !== 0x0001 && WebsocketSrvc.CONNECTING) {
+			return WebsocketSrvc.CONNECTING.then(function() {
+				return WebsocketSrvc.sendBinary(gwsMessage);
+			});
+		}
 		var d = $q.defer();
 		if (WebsocketSrvc.connected()) {
 
