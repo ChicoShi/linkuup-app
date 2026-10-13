@@ -17,12 +17,15 @@ giz
 - unclegame with 100 uniques, 50 hi, mid, lo. all chances are real in mob, you start with lo mid card. 
 - Set languagae to channel language for hooks'n'reply'n'stuff.
 - botfight.cc - people buy pygdo instances and have to install a root agent that takes prompts (copy protection!) then they get dyndns added to the network.
-
+- diary.mira-gpt.org
+- ./gdo_adm.sh backup => files and db and protected/*config*
+- IRC AUTOMOD wenn ein user iwo OP is dann halt als STAFF eintragen auf dem server? (abstimmnen mit tehron und jaysiren)
 
 
 ## Bugs
 
 - Farbe in Locations
+
 
 ## 2026-09-21 – Mobiler Chat-Wiederbeitritt nach Browserwechsel
 - Shippi: Nach Rückkehr aus dem Hintergrund ist der Raum verlassen; der untere Beitreten-Button hilft erst nach Neuladen.
