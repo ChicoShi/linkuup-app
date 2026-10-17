@@ -4,3 +4,6 @@ Locations: dezente Katalogsuche über vorhandenen Service mit 250ms Eingabeverz�
 
 [2026-10-17T07:51:10+02:00] lokal nachgebessert / visuell geprüft
 Auf Nutzerkorrektur Suche vor Kategorien verschoben, doppelte Input-Fokusumrandung entfernt (dezenter äußerer Fokus bleibt), Suchfeld weniger gerundet, Zähler12px näher an Karte. HTML/CSS/index_debug aktualisiert, Diff/PHP geprüft. Browser mit fokussierter leerer Suche kontrolliert und Screenshot erneuert. Keine Funktionsänderung. Nächster Schritt: Shippi – Gestaltung sichten.
+
+[2026-10-17T07:52:09+02:00] lokal feinjustiert / geprüft
+Locations-Zähler auf Nutzerwunsch weitere5px höher: margin-top -11px statt -6px. CSS und Cachemarker aktualisiert. Diff und Browseransicht geprüft, kein Überlappen mit Karte. Nächster Schritt: abgeschlossen.
