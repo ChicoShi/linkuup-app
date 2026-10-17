@@ -19,3 +19,6 @@ Seitenleiste auf opaken App-Blauton abgestimmt. Ups-Ansicht: SVG-Verbindungslini
 
 [2026-10-17] Nutzerkorrektur umgesetzt
 Neue Herz-Konstellation samt Lichtpunkten und Echo-Kontur entfernt; auch Trennlinie im Leerzustand entfernt. Ups und Sidebar verwenden exakt denselben Blauverlauf (#15243b bis #101a2b), entsprechend den Locations-Grundfarben. Leerzustand über Schrift/Abstände neu ausgerichtet. Browser bestätigt gleiche berechnete Hintergrundfarben und keine dekorativen Konstellations-/Echoelemente. Screenshot geprüft; Diff/PHP sauber. Lokal, nicht veröffentlicht.
+
+[2026-10-17] Bewertungsdialog lokal überarbeitet
+Quick-Vote CSS: ruhiger App-Blauverlauf, reduzierte Rahmen, zwei Sternreihen mit größeren Treffflächen, ausgewogene Aktionszeile und klar hervorgehobener Speicherbutton. Cachemarker aktualisiert. Diff/PHP geprüft. Ausgangsdialog visuell gesichtet; abschließende Sichtprüfung offen, da Browsersteuerung den Dialog nach Reload nicht öffnen konnte. Nutzer um Öffnen gebeten. Keine Bewertung gesendet, kein Push/Merge.

@@ -341,3 +341,21 @@ md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon {color:#bce8fa;text-sha
 /* The field uses one quiet border for focus, never an inner selection ring. */
 .navigator-view .nav-location-search input:focus,
 .navigator-view .nav-location-search input:focus-visible {outline:none;box-shadow:none;border:0;border-radius:0;background:transparent;}
+
+/* Rating: centered selection and a balanced, unambiguous action row. */
+md-dialog.place-dialog.lup-quick-vote-dialog {border-radius:24px;background:linear-gradient(163deg,#15243b,#101a2b);border-color:#bddff526;box-shadow:0 24px 70px #030c1b66;}
+.lup-quick-vote-dialog .place-dialog-header {padding:18px 20px;border-bottom:1px solid #bddff514;}
+.lup-quick-vote-dialog .quick-vote-content {padding:22px 20px 20px;}
+.lup-quick-vote-dialog .quick-vote-content h3 {font-size:23px;margin-bottom:8px;}
+.lup-quick-vote-dialog .quick-vote-content p {margin:0 auto;max-width:280px;}
+.lup-quick-vote-dialog .quick-vote-stars {gap:8px;margin:24px 0 16px;padding:12px 0 0;border:0;border-radius:0;background:none;box-shadow:none;}
+.lup-quick-vote-dialog .quick-vote-stars legend {padding:0;color:#9cb7cb;font-size:11px;}
+.lup-quick-vote-dialog .quick-vote-stars label {min-height:56px;padding:8px 0;box-sizing:border-box;background:#c9e8ff04;}
+.lup-quick-vote-dialog .quick-vote-stars .is-selected {background:#f0cf9114;box-shadow:inset 0 0 0 1px #f0cf9155;}
+.lup-quick-vote-dialog .quick-vote-score {font-size:30px;}
+.lup-quick-vote-dialog .place-dialog-actions {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:10px;padding:16px 20px 20px;border-top:1px solid #bddff514;}
+.lup-quick-vote-dialog .place-dialog-actions > button {width:100%;min-width:0;min-height:48px;margin:0;padding:10px 8px;border-radius:12px;font:500 12px/1.35 Roboto,Arial,sans-serif;white-space:normal;}
+.lup-quick-vote-dialog .place-dialog-actions > button:first-child {background:transparent;border:1px solid #bddff526;color:#b7cbda;}
+.lup-quick-vote-dialog .place-dialog-actions .place-dialog-primary {background:#c4e7f5;border:1px solid #d9f2fc;color:#142b3f;box-shadow:none;}
+.lup-quick-vote-dialog .place-dialog-actions .place-dialog-primary:disabled {opacity:.45;cursor:wait;}
+.lup-quick-vote-dialog .place-dialog-actions > button:focus-visible {outline:2px solid #e3f5ff;outline-offset:3px;}
