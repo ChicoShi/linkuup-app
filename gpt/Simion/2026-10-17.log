@@ -25,3 +25,6 @@ Quick-Vote CSS: ruhiger App-Blauverlauf, reduzierte Rahmen, zwei Sternreihen mit
 
 [2026-10-17] Sidebar vereinfacht
 Dekorative Ellipsen, Abschnittstrenner und Rahmen/Glanzkanten entfernt. Gruppenabstände, dezente Icons und flächige Profil-/Hover-Hervorhebung erhalten. Nur Sidebar-CSS/Cachemarker geändert. Diff/PHP geprüft; Sidebar im breiten Desktop-Layout visuell kontrolliert. Kein Push/Merge.
+
+[2026-10-17T08:58:49+02:00] lokal geändert / geprüft
+Neue Locations mit expliziter Toleranz prüfen echte Polygone im Raummodell. Legacy NULL/NaN bleibt unverändert. Fünf gezielte Tests sowie Syntax/Diff bestanden; 240 PHP/JS-Vergleichsfälle laut Agent identisch. Cachekennung location-geofence408. Neuer Spectrum Club lokal im Browser sichtbar, entfernter Chat gesperrt. Keine Veröffentlichung. Nächster Schritt: Smartphone-Praxistest und Review.
