@@ -6,7 +6,7 @@ function setup() {
  let ctor, serial=0;
  const timers=[], digests=[], frames=new Map(), handlers={}, listeners={};
  const rooms=[1,2,3].map(id=>({id:()=>id,category:()=>1}));
- const rail={clientWidth:390,scrollLeft:0,closest:()=>null,classList:{add(){},remove(){}},
+ const rail={clientWidth:390,scrollWidth:1170,scrollLeft:0,closest:()=>null,classList:{add(){},remove(){}},
   children:rooms.map((room,i)=>({offsetWidth:390,offsetLeft:i*390})),
   addEventListener:(n,f)=>listeners[n]=f,removeEventListener(){}};
  const scope={data:{authenticated:true,locationsInitialized:true,rooms,filteredRooms:rooms,currentRoomIndex:2,selectedRoomId:'3'},

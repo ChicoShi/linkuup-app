@@ -44,3 +44,11 @@ Location-Zähler: Kartenunterkanten durch Flex-Stretch vereinheitlicht; Zähler 
 [2026-10-17T11:33:50+02:00] lokal integriert / geprüft
 Schritt: Aktuelles upstream/main in freigegebenen Feature-Branch integriert; Konflikte zusammengeführt. App: 70/79 Tests erfolgreich; neun identische Fehler auf unverändertem upstream/main nachgewiesen (navigator-controls, room-loading). 24 gezielte Integrationsprüfungen erfolgreich. Geänderte JS/PHP-Syntax und JSON-Dateien geprüft. Kein Main-Push/Deployment.
 Nächster Schritt: Simion – Branch veröffentlichen und Review-PR erstellen.
+
+[2026-10-17T11:35:47+02:00] gepusht / PR erstellt
+Feature-Branch veröffentlicht, Draft-PR: https://github.com/gizmore/linkuup-app/pull/21. Mira im CEO-Chat namentlich mit beiden PR-Links informiert; Telegram-Nachricht3620 inhaltlich bestätigt. Kein Merge/Deployment.
+Nächster Schritt: Mira/Gizmore – gemeinsamer Review.
+
+[2026-10-17T11:42:57+02:00] lokal korrigiert / geprüft
+Mira-Review: Snap/Index aus tatsächlichen Kartenpositionen statt pauschaler Ansichtsbreite. Schmale Karten mit Abständen getestet; 9 gezielte Tests grün, Gesamtsuite71/80 mit denselben9 Basisfehlern. Physischer Smartphone-Test offen.
+Nächster Schritt: Simion – Review-Korrektur in bestehenden Draft-PR pushen, Mira gegenprüfen lassen.

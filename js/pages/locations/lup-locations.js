@@ -52,6 +52,21 @@ angular.module('LUP').config(function($routeProvider) {
 		window.removeEventListener('pointercancel', onRailPointerCancel, true);
 	};
 
+	var cardScrollLeft = function(index) {
+		var card = railElement.children[index];
+		var left = card.offsetLeft - (railElement.clientWidth - card.offsetWidth) / 2;
+		return Math.max(0, Math.min(railElement.scrollWidth - railElement.clientWidth, left));
+	};
+
+	var nearestCardIndex = function() {
+		var best = 0, distance = Infinity;
+		for (var i = 0; i < railElement.children.length; i++) {
+			var delta = Math.abs(railElement.scrollLeft - cardScrollLeft(i));
+			if (delta < distance) { best = i; distance = delta; }
+		}
+		return best;
+	};
+
 	var syncRailSelection = function() {
 		railScrollFrame = null;
 		var rooms = $scope.data.filteredRooms || [];
@@ -59,7 +74,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		if (discoveryGlass) discoveryGlass.paint();
-		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
+		var index = nearestCardIndex();
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
 			var revision = railSelectionRevision;
@@ -85,7 +100,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
 		index = Math.max(0, Math.min(railElement.children.length - 1, index));
 		var start = railElement.scrollLeft;
-		var target = index * railElement.clientWidth;
+		var target = cardScrollLeft(index);
 		var started = null;
 		railElement.classList.add('location-rail-dragging');
 		var duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 320;
@@ -121,8 +136,6 @@ angular.module('LUP').config(function($routeProvider) {
 			railElement.children.length - 1,
 			$scope.data.currentRoomIndex + direction,
 		));
-		var card = railElement.children[index];
-		var left = card.offsetLeft - (railElement.clientWidth - card.offsetWidth) / 2;
 		settleRail(index);
 	};
 
@@ -194,7 +207,7 @@ angular.module('LUP').config(function($routeProvider) {
 		if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
 		settleFrame = null;
 		swipeStart = {x: event.clientX, y: event.clientY, left: railElement.scrollLeft,
-			index: Math.round(railElement.scrollLeft / railElement.clientWidth), axis: null};
+			index: nearestCardIndex(), axis: null};
 		pullStart = {x: event.clientX, y: event.clientY};
 		// The finger may be released outside the horizontally scrolling rail.
 		// Observe that one gesture globally, then remove these listeners again.
@@ -246,7 +259,7 @@ angular.module('LUP').config(function($routeProvider) {
 			var target = gesture.index + (Math.abs(dx) >= 24 ? (dx < 0 ? 1 : -1) : 0);
 			settleRail(target);
 		} else {
-			settleRail(Math.round(railElement.scrollLeft / railElement.clientWidth));
+			settleRail(nearestCardIndex());
 		}
 	};
 

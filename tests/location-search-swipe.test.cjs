@@ -1,7 +1,7 @@
 const test=require('node:test'), assert=require('node:assert/strict'), fs=require('node:fs'),vm=require('node:vm');
 function setup(){
  let ctor;const events={},win={},listeners={},frames=[];
- const rail={clientWidth:390,scrollLeft:0,children:[0,1,2].map(i=>({offsetLeft:i*390,offsetWidth:390})),closest:()=>null,classList:{add(){},remove(){}},addEventListener:(k,v)=>listeners[k]=v,removeEventListener(){}};
+ const rail={clientWidth:390,scrollWidth:1170,scrollLeft:0,children:[0,1,2].map(i=>({offsetLeft:i*390,offsetWidth:390})),closest:()=>null,classList:{add(){},remove(){}},addEventListener:(k,v)=>listeners[k]=v,removeEventListener(){}};
  const scope={data:{authenticated:true,locationsInitialized:true},$on:(k,v)=>events[k]=v,$evalAsync:f=>f()};
  const chain={config(){return this},controller(n,f){ctor=f;return this}};
  const pending=[];const room=id=>({id:()=>id,category:()=>3});scope.data.rooms=[room(1),room(2),room(3)];scope.data.filteredRooms=scope.data.rooms;
@@ -39,4 +39,14 @@ test('Editable controls never start carousel gestures',()=>{
  const x=setup();x.events['$viewContentLoaded']();while(x.frames.length)x.frames.shift()(0);
  x.listeners.pointerdown({isPrimary:true,pointerType:'touch',target:{closest:()=>({})}});
  assert.equal(x.win.pointermove,undefined);
+});
+
+test('Narrow cards with gaps settle at their actual centered offset',()=>{
+ const x=setup();x.scope.loadNextPage=()=>{};x.rail.children=[0,1,2].map(i=>({offsetLeft:35+i*340,offsetWidth:320}));x.rail.scrollWidth=1070;
+ x.events['$viewContentLoaded']();while(x.frames.length)x.frames.shift()(0);
+ const ev=cx=>({isPrimary:true,pointerType:'touch',clientX:cx,clientY:100,target:{closest:()=>null},preventDefault(){}});
+ x.listeners.pointerdown(ev(250));x.win.pointermove(ev(180));x.win.pointerup(ev(180));while(x.frames.length)x.frames.shift()(1000);
+ assert.equal(x.rail.scrollLeft,340);assert.equal(x.scope.data.currentRoomIndex,1);
+ x.listeners.pointerdown(ev(250));x.win.pointermove(ev(180));x.win.pointerup(ev(180));while(x.frames.length)x.frames.shift()(1000);
+ assert.equal(x.rail.scrollLeft,680);assert.equal(x.scope.data.currentRoomIndex,2);
 });
