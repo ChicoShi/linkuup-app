@@ -17,7 +17,7 @@
 /* Keep legacy orbit/card rules outside the current navigator. */
 .nearby.navigator-view .location-rail .lup-room-slide-outer {
  opacity:1;transform:none;transition:none;will-change:auto;perspective:none;
- background:transparent;padding:0;
+ display:flex;align-items:stretch;background:transparent;padding:0;
  content-visibility:visible;contain-intrinsic-block-size:none;contain:layout style;
 }
 .nearby.navigator-view .location-rail .nav-place {
@@ -125,7 +125,7 @@
 .navigator-view .nav-place h2.room-hero-name--longword {font-size:20px;}
 .navigator-view .nav-address {min-height:30px;line-height:15px;}
 .navigator-view .nav-presence .lup-presence {min-height:54px;justify-content:center;}
-.navigator-view .nav-position {position:relative;display:block;margin:-15px auto 0;padding:2px 3px;border:0;background:none;text-align:center;font:500 11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#c5d8e6;pointer-events:none;}
+.navigator-view .nav-position {position:relative;display:block;margin:-18px auto 0;padding:2px 3px;border:0;background:none;text-align:center;font:500 11px/1.4 Ubuntu,Arial,sans-serif;font-variant-numeric:tabular-nums;color:#c5d8e6;pointer-events:none;}
 .navigator-view .nav-position > span {color:#7f9aaf;}
 @media(max-height:740px) and (max-width:600px) {
  .navigator-view .nav-landscape {height:90px;}
@@ -366,7 +366,7 @@ md-dialog.place-dialog.lup-quick-vote-dialog {border-radius:24px;background:line
 
 /* Short phones trade decorative space, not text or touch targets. Long content
    remains scrollable instead of being cropped to a fixed viewport height. */
-@media(max-width:600px) and (max-height:660px) {
+@media(max-width:600px) and (max-height:800px) {
  .navigator-view .nav-topbar {margin-bottom:6px;}
  .navigator-view .nav-landscape {height:68px;}
  .navigator-view .nav-landmark {top:10px;width:44px;height:44px;left:calc(50% - 22px);border-radius:17px 17px 17px 6px;}

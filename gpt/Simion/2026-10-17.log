@@ -37,3 +37,6 @@ Location-Front: Zählung 6px höher, Suchfeld zur Kartenbreite ausgerichtet (44p
 
 [2026-10-17T10:26:00+02:00] lokal geändert / geprüft
 Location-Wischen: Buttons/Links inklusive Online-Bereich erlauben Pointer-Gesten. Capture-Click-Handler unterdrückt den Klick nach erkannter Bewegung; neuer Pointerdown und Tastaturaktivierung bleiben frei. Editing-Felder ausgenommen. Dateien: lup-locations.js, location-search-swipe.test.cjs, index_debug.php (412). Vier Controller-Tests erfolgreich, JS/PHP-Syntax und Diff sauber. Mobile lokale Ansicht neu geladen, Cachekennung bestätigt; physischer Touchtest offen. Kein Push/Merge. Nächster Schritt: Shippi – Wischen über Online auf Smartphone testen.
+
+[2026-10-17T10:29:54+02:00] lokal geändert / geprüft
+Location-Zähler: Kartenunterkanten durch Flex-Stretch vereinheitlicht; Zähler weitere 3px höher. Kompakte Höhenregeln gelten mobil bis800px. CSS/Cache413, PHP/Diff sauber. 17 reale Suchergebnisse bei320x568: gleiche Kartenhöhe377.86px, Zählerende556.25px sichtbar;390x720 und1280x900 visuell geprüft. Browser war auf320x768 beschränkt, Ctrl0/Minus ohne messbare Änderung. Auf Nutzerwunsch breite1280x900-Ansicht eingestellt und belassen. Kein Push/Merge. Nächster Schritt: Shippi – sichtbare Größe prüfen.
