@@ -23,3 +23,20 @@ test('Card follows horizontal drag before release and settles exactly one card',
  x.listeners.pointerdown(ev(250));x.win.pointermove(ev(180));assert.equal(x.rail.scrollLeft,70);
  x.win.pointerup(ev(180));while(x.frames.length)x.frames.shift()(1000);assert.equal(x.rail.scrollLeft,390);assert.equal(x.scope.data.currentRoomIndex,1);
 });
+
+test('Online/action button swipe navigates without clicking; tap and keyboard still activate',()=>{
+ const x=setup();x.events['$viewContentLoaded']();while(x.frames.length)x.frames.shift()(0);
+ const ev=(cx)=>({isPrimary:true,pointerType:'touch',clientX:cx,clientY:100,target:{closest:s=>s.includes('button')?{}:null},preventDefault(){}});
+ x.listeners.pointerdown(ev(250));assert.ok(x.win.pointermove);
+ x.win.pointermove(ev(180));x.win.pointerup(ev(180));while(x.frames.length)x.frames.shift()(1000);
+ assert.equal(x.scope.data.currentRoomIndex,1);
+ let blocked=0;const click={detail:1,preventDefault(){blocked++},stopImmediatePropagation(){blocked++}};
+ x.listeners.click({...click,detail:0});assert.equal(blocked,0);
+ x.listeners.click(click);assert.equal(blocked,2);
+ blocked=0;x.listeners.pointerdown(ev(200));x.win.pointerup(ev(200));x.listeners.click(click);assert.equal(blocked,0);
+});
+test('Editable controls never start carousel gestures',()=>{
+ const x=setup();x.events['$viewContentLoaded']();while(x.frames.length)x.frames.shift()(0);
+ x.listeners.pointerdown({isPrimary:true,pointerType:'touch',target:{closest:()=>({})}});
+ assert.equal(x.win.pointermove,undefined);
+});

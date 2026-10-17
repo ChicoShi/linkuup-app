@@ -35,6 +35,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var resetAnimations = [];
 	var restoringRail = false;
 	var swipeStart = null;
+	var suppressRailClickUntil = 0;
 	var settleFrame = null;
 	var searchGeneration = 0;
 	var searchRooms = $scope.data.locationSearchRooms || [];
@@ -162,13 +163,24 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 	};
 
+	var onRailClick = function(event) {
+		// Preserve keyboard/assistive activation (detail=0), block only the
+		// synthetic click following a dragged pointer, before Angular handles it.
+		if (event.detail !== 0 && Date.now() < suppressRailClickUntil) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			suppressRailClickUntil = 0;
+		}
+	};
+
 	var onRailPointerDown = function(event) {
 		if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) {
 			return;
 		}
-		// Controls always win over navigation: beginning a tap on a button or
-		// link must never turn into a rail gesture.
-		if (event.target.closest('button, a, input, select, textarea, label')) {
+		// Buttons and links support both taps and swipes. Only editing controls
+		// keep exclusive pointer handling. A fresh touch always permits a new tap.
+		suppressRailClickUntil = 0;
+		if (event.target.closest('input, select, textarea, label, [contenteditable="true"]')) {
 			swipeStart = null;
 			pullStart = null;
 			return;
@@ -216,6 +228,7 @@ angular.module('LUP').config(function($routeProvider) {
 		var dx = event.clientX - swipeStart.x;
 		var dy = event.clientY - swipeStart.y;
 		var gesture = swipeStart;
+		if (gesture.axis) suppressRailClickUntil = Date.now() + 700;
 		swipeStart = null;
 		var shouldRefresh = pullStart && dy >= pullThreshold && dy > Math.abs(dx);
 		pullStart = null;
@@ -259,11 +272,13 @@ angular.module('LUP').config(function($routeProvider) {
 			railElement.removeEventListener('keydown', onRailKeyDown);
 			railElement.removeEventListener('scroll', onRailScroll);
 			railElement.removeEventListener('pointerdown', onRailPointerDown, true);
+			railElement.removeEventListener('click', onRailClick, true);
 		}
 		railElement = rail;
 		railElement.addEventListener('keydown', onRailKeyDown);
 		railElement.addEventListener('scroll', onRailScroll, {passive: true});
 		railElement.addEventListener('pointerdown', onRailPointerDown, {capture: true, passive: true});
+		railElement.addEventListener('click', onRailClick, true);
 		if (discoveryGlass) discoveryGlass.destroy();
 		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
@@ -309,6 +324,7 @@ angular.module('LUP').config(function($routeProvider) {
 			railElement.removeEventListener('keydown', onRailKeyDown);
 			railElement.removeEventListener('scroll', onRailScroll);
 			railElement.removeEventListener('pointerdown', onRailPointerDown, true);
+			railElement.removeEventListener('click', onRailClick, true);
 		}
 		stopRailGesture();
 	});
