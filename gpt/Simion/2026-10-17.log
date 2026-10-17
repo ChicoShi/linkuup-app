@@ -28,3 +28,6 @@ Dekorative Ellipsen, Abschnittstrenner und Rahmen/Glanzkanten entfernt. Gruppena
 
 [2026-10-17T08:58:49+02:00] lokal geändert / geprüft
 Neue Locations mit expliziter Toleranz prüfen echte Polygone im Raummodell. Legacy NULL/NaN bleibt unverändert. Fünf gezielte Tests sowie Syntax/Diff bestanden; 240 PHP/JS-Vergleichsfälle laut Agent identisch. Cachekennung location-geofence408. Neuer Spectrum Club lokal im Browser sichtbar, entfernter Chat gesperrt. Keine Veröffentlichung. Nächster Schritt: Smartphone-Praxistest und Review.
+
+[2026-10-17T09:27:38+02:00] lokal geändert / geprüft
+Profilbild: Kamera-Badge aus lup-profile.html und ungenutzte .profile-avatar-edit-Regel aus lup-profile-insight.css entfernt. Upload-Button/Label erhalten. index_debug.php Cachemarker profile-avatar-clean409. PHP-Syntax und Diff sauber; Profil mobil und1280px visuell ohne Kamera geprüft. Browserklicksteuerung stockte; direkte Profilroute erfolgreich. Kein Upload ausgeführt. Kein Push/Merge. Nächster Schritt: Shippi – lokale Ansicht ansehen.

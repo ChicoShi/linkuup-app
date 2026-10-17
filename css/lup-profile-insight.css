@@ -5,7 +5,6 @@
 .profile-journal .profile-portrait-image {position:relative;display:grid;place-items:center;width:132px;height:132px;flex:none;}
 .profile-journal .profile-avatar-upload {position:relative;display:block;width:132px;height:132px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .profile-journal .profile-avatar-upload:focus-visible {outline:2px solid #a9dfff;outline-offset:5px;}
-.profile-journal .profile-avatar-edit {position:absolute;right:0;bottom:0;display:grid;place-items:center;width:32px;height:32px;border:1px solid #b6e4ff50;border-radius:50%;background:#19354b;color:#e8f7ff;font-size:18px;pointer-events:none;}
 .profile-journal .profile-portrait-image::before {content:'';position:absolute;inset:-9px;border:1px solid #9edbff2b;border-radius:50%;box-shadow:0 0 30px #65c9ea12;pointer-events:none;}
 .profile-journal .profile-portrait-image::after {content:'';position:absolute;inset:-9px;border:1px solid transparent;border-top-color:#b7eaff9c;border-radius:50%;animation:lup-profile-orbit 22s linear infinite;pointer-events:none;}
 .profile-journal .profile-portrait .large-avatar {box-sizing:border-box;position:relative;display:block;width:132px;height:132px;margin:0;padding:0;border:2px solid #c9eaff50;border-radius:50%;background:#1d3247;box-shadow:0 12px 32px #020b1b40;animation:none;}
