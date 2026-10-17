@@ -7,3 +7,6 @@ Auf Nutzerkorrektur Suche vor Kategorien verschoben, doppelte Input-Fokusumrandu
 
 [2026-10-17T07:52:09+02:00] lokal feinjustiert / geprüft
 Locations-Zähler auf Nutzerwunsch weitere5px höher: margin-top -11px statt -6px. CSS und Cachemarker aktualisiert. Diff und Browseransicht geprüft, kein Überlappen mit Karte. Nächster Schritt: abgeschlossen.
+
+[2026-10-17T07:52:34+02:00] lokal feinjustiert
+Zähler auf Nutzerwunsch2px tiefer, margin-top -9px. CSS/Cachemarker geändert; Diff geprüft, Browser neu geladen. Nächster Schritt: abgeschlossen.
