@@ -34,6 +34,7 @@ angular.module('LUP').config(function($routeProvider) {
 	var discoveryGlass = null;
 	var resetAnimations = [];
 	var restoringRail = false;
+	var railSelectionRevision = 0;
 	var swipeStart = null;
 	var suppressRailClickUntil = 0;
 	var settleFrame = null;
@@ -61,7 +62,9 @@ angular.module('LUP').config(function($routeProvider) {
 		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
+			var revision = railSelectionRevision;
 			$scope.$evalAsync(function() {
+				if (revision !== railSelectionRevision) return;
 				$scope.data.currentRoomIndex = index;
 				$scope.data.selectedRoomId = String(rooms[index].id());
 			});
@@ -124,6 +127,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	var restoreRailSelection = function(attempt) {
+		var revision = railSelectionRevision;
 		bindRail();
 		if (!railElement || railElement.closest('.ng-leave') || !railElement.children.length) {
 			if ((attempt || 0) < 4) {
@@ -156,6 +160,7 @@ angular.module('LUP').config(function($routeProvider) {
 		var left = card.offsetLeft - (railElement.clientWidth - card.offsetWidth) / 2;
 		railElement.scrollLeft = Math.max(0, left);
 		window.requestAnimationFrame(function() {
+			if (revision !== railSelectionRevision) return;
 			if (railElement === getActiveRail()) {
 				railElement.scrollLeft = Math.max(0, left);
 			}
@@ -366,14 +371,24 @@ angular.module('LUP').config(function($routeProvider) {
 			if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
 			settleFrame = null;
 			if (railElement) railElement.classList.remove("location-rail-dragging");
+            // A filter/reset supersedes queued scroll selection and route restoration.
+            railSelectionRevision++;
+            restoringRail = true;
+            if (railScrollFrame !== null) {
+                window.cancelAnimationFrame(railScrollFrame);
+                railScrollFrame = null;
+            }
 			$scope.data.currentRoomIndex = 0;
 			$scope.data.selectedRoomId = $scope.data.filteredRooms.length ? String($scope.data.filteredRooms[0].id()) : null;
 		}
+		var revision = railSelectionRevision;
 		$timeout(function() {
+			if (revision !== railSelectionRevision) return;
 			bindRail();
 			if (resetRail && railElement) {
 				railElement.scrollLeft = 0;
 			}
+			if (resetRail) restoringRail = false;
 		}, 0);
 	};
 

@@ -750,7 +750,7 @@
   "PLACE_PEOPLE_TOGETHER": "You are here together. Say hello.",
   "PLACE_PEOPLE_PREVIEW": "A look at the people here.",
   "PLACE_PEOPLE_CONNECTED": "At the same place · connect with each other",
-  "PLACE_PEOPLE_READONLY": "To connect, visit this place and join its chat.",
+  "PLACE_PEOPLE_READONLY": "You can open other visitors’ profiles, send messages and use friend requests only after visiting this place and joining the room. Until then, the visitor list is a preview.",
   "PLACE_GUEST_COUNT": "{{count}} guests in the list",
   "PLACE_GUEST_PROFILE": "Open {{name}}’s profile",
   "PLACE_GUEST_MESSAGE": "Send {{name}} a message",

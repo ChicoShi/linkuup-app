@@ -51,3 +51,21 @@ test('Close during authentication rejects the connection and pending commands',a
   assert.ok((await results).every(r=>r.status==='rejected'));
   assert.deepEqual(sent,[1]);
 });
+
+test('A delayed close from the old socket cannot close the reconnected transport',async()=>{
+  const {service:s,sockets}=setup();
+  const first=s.connect();sockets[0].onopen();s.SYNC_MSGS[1].resolve('{}');await first;
+  sockets[0].onclose();assert.equal(s.connected(),false);
+  const next=s.withConnection();sockets[1].onopen();
+  sockets[0].onclose();
+  assert.equal(s.SOCKET,sockets[1]);
+  s.SYNC_MSGS[1].resolve('{}');await next;assert.equal(s.connected(),true);
+});
+
+test('Disconnect rejects an outstanding server response instead of keeping the UI pending',async()=>{
+  const {service:s,sockets}=setup();
+  const ready=s.connect();sockets[0].onopen();s.SYNC_MSGS[1].resolve('{}');await ready;
+  const request=s.sendBinary({CMD:0x1103,SYNC:2,binaryBuffer:()=>0x1103});
+  const rejected=assert.rejects(request,e=>e==='err_websocket_connection');
+  sockets[0].onclose();await rejected;assert.equal(s.connected(),false);
+});

@@ -750,7 +750,7 @@
   "PLACE_PEOPLE_TOGETHER": "Ihr seid hier. Sag einfach Hallo.",
   "PLACE_PEOPLE_PREVIEW": "Ein Blick auf die Gäste vor Ort.",
   "PLACE_PEOPLE_CONNECTED": "Am selben Ort · miteinander verbinden",
-  "PLACE_PEOPLE_READONLY": "Zum Kennenlernen komm vor Ort und tritt dem Chat bei.",
+  "PLACE_PEOPLE_READONLY": "Profile anderer Gäste öffnen, Nachrichten senden und Freundschaftsanfragen nutzen kannst du erst vor Ort, nachdem du dem Raum beigetreten bist. Bis dahin ist die Besucherliste eine Vorschau.",
   "PLACE_GUEST_COUNT": "{{count}} Gäste in der Liste",
   "PLACE_GUEST_PROFILE": "Profil von {{name}} öffnen",
   "PLACE_GUEST_MESSAGE": "{{name}} eine Nachricht schreiben",

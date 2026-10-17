@@ -93,7 +93,7 @@ test('Friendship frames and replayed notifications refresh server totals without
 test('Room activity signals new joins and shouts without replaying summaries or sending messages',()=>{
  const events=[];
  const {ctor}=load('lup-chat-service.js');
- const chat=new ctor({$broadcast:(...args)=>events.push(args)},q,{}, {}, {}, {}, {});
+ const chat=new ctor({$on(){},$broadcast:(...args)=>events.push(args)},q,{}, {}, {}, {}, {});
  const room={id:()=>7},other={id:()=>8},user={};
  chat.noteEvent('join',room,user,'',1);
  assert.equal(events.length,1);

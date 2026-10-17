@@ -22,6 +22,10 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.isPageUnloading = function() {
 		return WebsocketSrvc.PAGE_UNLOADING;
 	};
+	// beforeunload fires before the browser tears down the socket. pagehide alone
+	// is too late on some browsers, so a same-tab navigation can briefly render
+	// a spurious "connection lost" dialog in the old page.
+	window.addEventListener('beforeunload', WebsocketSrvc.expectPageUnload, {once: true});
 	window.addEventListener('pagehide', WebsocketSrvc.expectPageUnload, {once: true});
 	
 	WebsocketSrvc.MSGS_SENT = 0;
@@ -101,16 +105,19 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 				ws.binaryType = 'arraybuffer';
 			}
 			ws.onopen = function() {
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				LoadingSrvc.stopTask('wsconnect');
 				WebsocketSrvc.startQueue();
 		    	WebsocketSrvc.CONNECTED = true;
 		    	WebsocketSrvc.MSGS_SENT = 0;
 		    	WebsocketSrvc.MSGS_RECV = 0;
 		    	WebsocketSrvc.authenticate().then(function(result){
+					if (WebsocketSrvc.SOCKET !== ws) return;
 					WebsocketSrvc.CONNECTING = null;
 					defer.resolve();
 					WebsocketSrvc.broadcast('gws-ws-open');
 				}, function(error) {
+					if (WebsocketSrvc.SOCKET !== ws) return;
 					WebsocketSrvc.CONNECTING = null;
 					WebsocketSrvc.CONNECTED = false;
 					defer.reject(error);
@@ -119,15 +126,13 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 			};
 		    ws.onclose = function() {
 				defer.reject('err_websocket_connection');
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				WebsocketSrvc.CONNECTING = null;
 				LoadingSrvc.stopTask('wsconnect');
 		    	WebsocketSrvc.disconnect(true);
-		    	if (WebsocketSrvc.CONNECTED) {
-			    	WebsocketSrvc.CONNECTED = false;
-					WebsocketSrvc.broadcast('gws-ws-close');
-		    	}
 		    };
 		    ws.onerror = function(error) {
+				if (WebsocketSrvc.SOCKET !== ws) return;
 				WebsocketSrvc.CONNECTING = null;
 		    	WebsocketSrvc.disconnect(true);
 				// Browser Event objects stringify as "[object Event]". Keep a
@@ -135,6 +140,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 				defer.reject('err_websocket_connection');
 		    };
 		    ws.onmessage = function(message) {
+				if (WebsocketSrvc.SOCKET !== ws) return;
 		    	WebsocketSrvc.MSGS_RECV += 1;
 		    	if (message.data instanceof ArrayBuffer) {
 		    		WebsocketSrvc.onBinaryMessage(message);
@@ -234,11 +240,20 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 	WebsocketSrvc.disconnect = function(event) {
 //		console.log('WebsocketSrvc.disconnect()');
 		if (WebsocketSrvc.SOCKET != null) {
-			WebsocketSrvc.SOCKET.close();
+			var socket = WebsocketSrvc.SOCKET;
+			var wasConnected = WebsocketSrvc.CONNECTED;
 			WebsocketSrvc.SOCKET = null;
+			WebsocketSrvc.CONNECTED = false;
+			WebsocketSrvc.CONNECTING = null;
+			var pending = WebsocketSrvc.SYNC_MSGS;
 			WebsocketSrvc.SYNC_MSGS = {};
+			Object.keys(pending).forEach(function(id) {
+				pending[id].reject('err_websocket_connection');
+			});
+			socket.close();
 			if (event) {
 				WebsocketSrvc.broadcast('gws-ws-disconnect');
+				if (wasConnected) WebsocketSrvc.broadcast('gws-ws-close');
 			}
 		}
 	};
