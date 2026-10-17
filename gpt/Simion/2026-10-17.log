@@ -13,3 +13,6 @@ Zähler auf Nutzerwunsch2px tiefer, margin-top -9px. CSS/Cachemarker geändert; 
 
 [2026-10-17] lokal geändert / geprüft
 Locations-Hintergrund: störenden oberen Ellipsenbogen entfernt, Wellen bleiben hinter der Kartenfläche. Drei Lichtpunkte mit unterschiedlichen 29/37/43-Sekunden-Zyklen, sanfter Bewegung und Schimmern statt statischer Punkte. Reduced Motion erhalten. Gesture-JS, Glass-CSS und beide Cachemarker geändert. Vier Funktionstests, JS-/PHP-Syntax und Diff sauber; schmale Browseransicht geprüft, Animationen per berechnetem DOM-Stil bestätigt. Lokal auf Feature-Branch, kein Push/Merge. Nächster Schritt: Nutzer sichtet Wirkung.
+
+[2026-10-17] lokal gestaltet / geprüft
+Seitenleiste auf opaken App-Blauton abgestimmt. Ups-Ansicht: SVG-Verbindungslinien, fünf sanft bewegte Lichtpunkte, dezenter Lichtschein und klarere Leerzustand-Typografie; Reduced Motion berücksichtigt. Änderungen in Sidebar-/Online-Core-CSS, Likes-Template und Cachemarker. Diff/PHP sauber. Herzansicht mobil und Desktop visuell geprüft. Menüöffnung über Browsersteuerung schlug fehl, Seitenleistenwirkung daher noch vom Nutzer zu sichten. Kein Push/Merge.

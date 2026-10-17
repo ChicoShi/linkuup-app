@@ -16,6 +16,15 @@
               <linearGradient id="ups-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9f5ff" stop-opacity=".32"/><stop offset=".45" stop-color="#86cfff" stop-opacity=".08"/><stop offset="1" stop-color="#e1b2ce" stop-opacity=".16"/></linearGradient>
               <linearGradient id="ups-edge" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e5f8ff" stop-opacity=".8"/><stop offset=".5" stop-color="#8ac7e7" stop-opacity=".15"/><stop offset="1" stop-color="#e4c0d1" stop-opacity=".5"/></linearGradient>
             </defs>
+            <g class="ups-constellation" fill="none" stroke="#8ecce9" stroke-width=".8">
+              <path d="M8 128Q42 151 80 112M28 38Q65 20 103 46M182 45Q223 18 265 67M201 111Q244 105 274 142M90 157Q140 189 193 153"/>
+              <path d="M0 170Q68 209 140 178T280 158" stroke-opacity=".35"/>
+            </g>
+            <g class="ups-sparks" fill="#bfeaff">
+              <circle class="ups-spark" cx="28" cy="38" r="2.5"/><circle class="ups-spark" cx="254" cy="65" r="2"/>
+              <circle class="ups-spark" cx="35" cy="140" r="1.8"/><circle class="ups-spark" cx="234" cy="139" r="2.5"/>
+              <circle class="ups-spark" cx="140" cy="178" r="1.5"/>
+            </g>
             <path ng-if="data.upConnections.length" d="M21 45Q58 45 84 85M140 147v15M258 53Q218 53 196 85" fill="none" stroke="#bddfff" stroke-opacity=".16" stroke-width="1"/>
             <path class="ups-heart-echo" d="M140 148C119 135 75 104 75 73C75 35 119 30 140 57C161 30 205 35 205 73C205 104 161 135 140 148Z"/>
             <path class="ups-heart" d="M140 148C119 135 75 104 75 73C75 35 119 30 140 57C161 30 205 35 205 73C205 104 161 135 140 148Z" fill="url(#ups-glass)" stroke="url(#ups-edge)" stroke-width="1.3"/>
