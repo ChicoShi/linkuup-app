@@ -1,3 +1,6 @@
 
 [2026-10-17T07:44:59+02:00] lokal geändert / geprüft
 Locations: dezente Katalogsuche über vorhandenen Service mit 250ms Eingabeverzögerung, Schutz vor verspäteten Antworten und Wiederherstellung der Umgebungsliste. Zähler unter Karten. Horizontaler Pointer-Drag folgt direkt, Einrasten per 320ms Animation mit Reduced-Motion-Alternative; Tastaturpfeile. Dateien: Locations HTML/JS, Glass-Frame CSS, de/en-Locales, index_debug Cachemarker, fokussierte Tests. Vier Tests bestanden, JS/PHP/JSON und Diff geprüft. Browser: Peine fünf Treffer, Löschen, Wechsel2von10, Detail/Zurück, mobile und Desktop-Ansicht geprüft. Echter physischer Touch-Feel-Test noch durch Nutzer; keine Backend-/GPS-Rechte verändert. Separater Feature-Branch, kein Push/Merge/Deployment. Nächster Schritt: Shippi – Wischgefühl lokal sichten; danach PR-Übergabe.
+
+[2026-10-17T07:51:10+02:00] lokal nachgebessert / visuell geprüft
+Auf Nutzerkorrektur Suche vor Kategorien verschoben, doppelte Input-Fokusumrandung entfernt (dezenter äußerer Fokus bleibt), Suchfeld weniger gerundet, Zähler12px näher an Karte. HTML/CSS/index_debug aktualisiert, Diff/PHP geprüft. Browser mit fokussierter leerer Suche kontrolliert und Screenshot erneuert. Keine Funktionsänderung. Nächster Schritt: Shippi – Gestaltung sichten.
