@@ -22,3 +22,6 @@ Neue Herz-Konstellation samt Lichtpunkten und Echo-Kontur entfernt; auch Trennli
 
 [2026-10-17] Bewertungsdialog lokal überarbeitet
 Quick-Vote CSS: ruhiger App-Blauverlauf, reduzierte Rahmen, zwei Sternreihen mit größeren Treffflächen, ausgewogene Aktionszeile und klar hervorgehobener Speicherbutton. Cachemarker aktualisiert. Diff/PHP geprüft. Ausgangsdialog visuell gesichtet; abschließende Sichtprüfung offen, da Browsersteuerung den Dialog nach Reload nicht öffnen konnte. Nutzer um Öffnen gebeten. Keine Bewertung gesendet, kein Push/Merge.
+
+[2026-10-17] Sidebar vereinfacht
+Dekorative Ellipsen, Abschnittstrenner und Rahmen/Glanzkanten entfernt. Gruppenabstände, dezente Icons und flächige Profil-/Hover-Hervorhebung erhalten. Nur Sidebar-CSS/Cachemarker geändert. Diff/PHP geprüft; Sidebar im breiten Desktop-Layout visuell kontrolliert. Kein Push/Merge.
