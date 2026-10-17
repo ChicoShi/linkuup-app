@@ -790,5 +790,9 @@
 "ADD_ROOM_STEP_DETAILS": "1 · Describe your place",
 "ADD_ROOM_STEP_AREA": "2 · Set the area",
 "ACCOUNT_MANAGE_TITLE": "Manage your account",
-"ACCOUNT_MANAGE_ACTION": "Open account settings"
+"ACCOUNT_MANAGE_ACTION": "Open account settings",
+"NAV_LOCATION_SEARCH": "Search locations",
+"NAV_SEARCH_CLEAR": "Clear search",
+"NAV_SEARCH_LOADING": "Searching locations …",
+"NAV_SEARCH_ERROR": "Search unavailable. Please try again."
 }
