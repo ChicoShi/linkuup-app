@@ -102,14 +102,19 @@
 .navigator-view .has-discovery-lens > .profile-ambient-map::before,
 .navigator-view .has-discovery-lens > .profile-ambient-map::after,
 .navigator-view .has-discovery-lens > .profile-ambient-map > :not(.nav-glass-field) {display:none;}
+/* Separate long cycles keep the shared field quiet and naturally varied. */
 .navigator-view .nav-lens-signal {
- position:absolute;left:7%;top:56%;width:6px;height:6px;border-radius:50%;
- background:#b8e5f1;box-shadow:0 0 15px 3px #69c9e54a;opacity:.52;
- animation:nav-lens-drift 18s ease-in-out infinite;
+ position:absolute;left:12%;top:45%;width:3px;height:3px;border-radius:50%;
+ background:#c6edff;box-shadow:0 0 6px 1px #8cd9f580,0 0 15px 3px #69c9e526;opacity:.45;
+ animation:nav-lens-drift 29s ease-in-out infinite;
 }
+.navigator-view .nav-lens-signal-1 {left:84%;top:65%;width:4px;height:4px;--drift-x:-24px;--drift-y:27px;}
+.navigator-view .nav-lens-signal-2 {left:25%;top:81%;width:2px;height:2px;--drift-x:21px;--drift-y:-31px;}
 @keyframes nav-lens-drift {
- 0%,100% {transform:translate3d(0,0,0);}
- 50% {transform:translate3d(95px,46px,0);}
+ 0%,100% {transform:translate3d(0,0,0) scale(.85);opacity:.3;}
+ 27% {transform:translate3d(var(--drift-x,32px),var(--drift-y,18px),0) scale(1.15);opacity:.68;}
+ 61% {transform:translate3d(9px,26px,0) scale(.95);opacity:.4;}
+ 82% {transform:translate3d(-8px,11px,0) scale(1.05);opacity:.58;}
 }
 .navigator-view .nav-place h2 {min-height:62px;display:flex;align-items:center;justify-content:center;line-height:1.18;overflow-wrap:anywhere;}
 .navigator-view .nav-place h2.room-hero-name--long {font-size:21px;}
