@@ -16,3 +16,6 @@ Locations-Hintergrund: störenden oberen Ellipsenbogen entfernt, Wellen bleiben 
 
 [2026-10-17] lokal gestaltet / geprüft
 Seitenleiste auf opaken App-Blauton abgestimmt. Ups-Ansicht: SVG-Verbindungslinien, fünf sanft bewegte Lichtpunkte, dezenter Lichtschein und klarere Leerzustand-Typografie; Reduced Motion berücksichtigt. Änderungen in Sidebar-/Online-Core-CSS, Likes-Template und Cachemarker. Diff/PHP sauber. Herzansicht mobil und Desktop visuell geprüft. Menüöffnung über Browsersteuerung schlug fehl, Seitenleistenwirkung daher noch vom Nutzer zu sichten. Kein Push/Merge.
+
+[2026-10-17] Nutzerkorrektur umgesetzt
+Neue Herz-Konstellation samt Lichtpunkten und Echo-Kontur entfernt; auch Trennlinie im Leerzustand entfernt. Ups und Sidebar verwenden exakt denselben Blauverlauf (#15243b bis #101a2b), entsprechend den Locations-Grundfarben. Leerzustand über Schrift/Abstände neu ausgerichtet. Browser bestätigt gleiche berechnete Hintergrundfarben und keine dekorativen Konstellations-/Echoelemente. Screenshot geprüft; Diff/PHP sauber. Lokal, nicht veröffentlicht.

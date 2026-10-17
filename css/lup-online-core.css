@@ -819,15 +819,9 @@
   .settings-page .lup-setting-value .lup-setting-input { width:100%; }
 }
 
-/* Ups: a quiet constellation around the first connection. */
-.ups-view > md-content {background:radial-gradient(ellipse 65% 38% at 50% 40%,#31587935,transparent 85%),linear-gradient(160deg,#15243b,#101a2b);}
-.ups-view .ups-signal {margin:20px auto 4px;}
-.ups-view .ups-signal::before {content:"";position:absolute;inset:12% 8% 18%;border-radius:50%;background:radial-gradient(ellipse,#87cde91c,transparent 70%);pointer-events:none;}
-.ups-view .ups-constellation {opacity:.36;}
-.ups-view .ups-spark {animation:ups-spark-drift 17s ease-in-out infinite;}
-.ups-view .ups-spark:nth-child(2n) {animation-duration:23s;animation-delay:-7s;}
-.ups-view .ups-spark:nth-child(3n) {animation-duration:29s;animation-delay:-13s;}
-.ups-view .ups-state {max-width:360px;margin:0 auto;padding:24px 12px 30px;border-top:1px solid #b7dff51c;}
-.ups-view .ups-state h2 {font-size:20px;line-height:1.4;}
-@keyframes ups-spark-drift {0%,100%{transform:translate(0,0);opacity:.3;}45%{transform:translate(5px,-6px);opacity:.85;}75%{transform:translate(-3px,4px);opacity:.5;}}
-@media(prefers-reduced-motion:reduce){.ups-view .ups-spark{animation:none;opacity:.6;}}
+/* Same blue base as the Locations vector scene, without decorative paths. */
+.likes-page.ups-view > md-content {background:linear-gradient(163deg,#15243b,#101a2b);}
+.ups-view .ups-signal {margin:20px auto 0;}
+.ups-view .ups-state {max-width:340px;margin:0 auto;padding:16px 12px 30px;border:0;}
+.ups-view .ups-state h2 {max-width:270px;margin:0 auto 14px;font-size:23px;line-height:1.3;letter-spacing:-.025em;color:#e4f2fc;}
+.ups-view .ups-state p {max-width:270px;line-height:1.75;color:#abc2d4;}
