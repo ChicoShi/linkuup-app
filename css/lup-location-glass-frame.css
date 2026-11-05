@@ -382,3 +382,17 @@ md-dialog.place-dialog.lup-quick-vote-dialog {border-radius:24px;background:line
 @media(max-width:360px) {
  .navigator-view .nav-location-search {width:calc(100% - 32px);}
 }
+
+/* Let phone cards use the available viewport, while short screens can scroll. */
+@media (max-width:600px) {
+ .navigator-view > md-content.greybg {
+  display:flex;flex-direction:column;
+  min-height:var(--lup-viewport-height,100dvh);
+ }
+ .navigator-view > md-content.greybg > :not(.profile-ambient-map) {flex-shrink:0;}
+ .navigator-view .nav-categories {margin:0 auto;}
+ .navigator-view > md-content.greybg > .location-rail {flex:1 0 auto;}
+ .navigator-view .nav-landscape {flex-shrink:0;}
+ .navigator-view .nav-place-content {display:flex;flex:1 0 auto;flex-direction:column;justify-content:space-evenly;}
+ .navigator-view .nav-position {margin:0 auto;}
+}
