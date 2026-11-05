@@ -790,5 +790,9 @@
 "ADD_ROOM_STEP_DETAILS": "1 · Deinen Ort beschreiben",
 "ADD_ROOM_STEP_AREA": "2 · Bereich festlegen",
 "ACCOUNT_MANAGE_TITLE": "Dein Konto verwalten",
-"ACCOUNT_MANAGE_ACTION": "Kontoeinstellungen öffnen"
+"ACCOUNT_MANAGE_ACTION": "Kontoeinstellungen öffnen",
+"NAV_LOCATION_SEARCH": "Locations suchen",
+"NAV_SEARCH_CLEAR": "Suche löschen",
+"NAV_SEARCH_LOADING": "Locations werden gesucht …",
+"NAV_SEARCH_ERROR": "Suche nicht möglich. Bitte erneut versuchen."
 }

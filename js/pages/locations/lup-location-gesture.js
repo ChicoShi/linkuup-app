@@ -32,13 +32,18 @@
    '<ellipse cx="400" cy="720" rx="220" ry="210" fill="url(#light)"/>'+
    '<g fill="none" stroke="#93c7e4" stroke-width=".8" stroke-opacity=".19">'+
    '<path d="M-60 420C75 287 150 536 460 260M-70 454C160 343 173 644 470 486M-60 726C160 547 287 829 455 644"/>'+
-   '<ellipse cx="135" cy="102" rx="235" ry="105" transform="rotate(-22 135 102)"/></g>'+
-   '<g fill="#bceafb"><circle cx="48" cy="385" r="2" opacity=".55"/><circle cx="335" cy="553" r="2.6" opacity=".55"/><circle cx="92" cy="675" r="1.5" opacity=".4"/></g></svg>';
+   '</g>'+
+   '</svg>';
+  var sceneEpoch=performance.now();
   var image='url("data:image/svg+xml,'+encodeURIComponent(svg)+'")';
   var world=function() {
    var el=document.createElement('span');el.className='nav-lens-world';el.style.backgroundImage=image;
-   var signal=document.createElement('span');signal.className='nav-lens-signal';
-   signal.style.animationDelay=-(performance.now()%18000)+'ms';el.appendChild(signal);return el;
+   [29000,37000,43000].forEach(function(duration,i){
+    var signal=document.createElement('span');signal.className='nav-lens-signal nav-lens-signal-'+i;
+    signal.style.animationDuration=duration+'ms';
+    signal.style.animationDelay=-(sceneEpoch%duration+i*4700)+'ms';
+    el.appendChild(signal);
+   });return el;
   };
   var scenery=world();scenery.classList.add('nav-glass-field');field.appendChild(scenery);
   surface.classList.add('has-discovery-lens');

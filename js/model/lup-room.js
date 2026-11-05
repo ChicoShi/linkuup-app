@@ -1,4 +1,52 @@
 "use strict";
+// Mirrors GDT_Polygon::containsOrNear for the importer's single closed ring.
+// Unsupported/malformed shapes must never fall back to the display radius.
+LUPRoom.containsReviewedPosition = function(polygon, lat, lng, tolerance) {
+	const finiteNumber = value => (typeof value === 'number' ||
+		(typeof value === 'string' && value.trim() !== '')) && Number.isFinite(Number(value));
+	if (![lat, lng, tolerance].every(finiteNumber)) return false;
+	lat = Number(lat); lng = Number(lng); tolerance = Number(tolerance);
+	if (Math.abs(lat) > 90 || Math.abs(lng) > 180 || tolerance < 0) return false;
+	if (typeof polygon === 'string') {
+		try { polygon = JSON.parse(polygon); } catch (_) { return false; }
+	}
+	if (!polygon || polygon.type !== 'Polygon' || !Array.isArray(polygon.coordinates) ||
+		polygon.coordinates.length !== 1) return false;
+	const ring = polygon.coordinates[0];
+	if (!Array.isArray(ring) || ring.length < 4 || !ring.every(point =>
+		Array.isArray(point) && point.length === 2 && point.every(finiteNumber) &&
+		Math.abs(Number(point[0])) <= 180 && Math.abs(Number(point[1])) <= 90)) return false;
+	const points = ring.map(point => point.map(Number));
+	const last = points.length - 1;
+	if (points[0][0] !== points[last][0] || points[0][1] !== points[last][1]) return false;
+	// Translate before the area sum to avoid cancellation for small venues.
+	let area = 0;
+	for (let i = 1; i < last; i++) {
+		area += (points[i][0] - points[0][0]) * (points[i + 1][1] - points[0][1]) -
+			(points[i + 1][0] - points[0][0]) * (points[i][1] - points[0][1]);
+	}
+	if (area === 0) return false;
+	let inside = false;
+	for (let i = 0, j = last; i <= last; j = i++) {
+		const [xi, yi] = points[i], [xj, yj] = points[j];
+		const crossProduct = (lng - xi) * (yj - yi) - (lat - yi) * (xj - xi);
+		if (Math.abs(crossProduct) < 1e-10 && lng >= Math.min(xi, xj) &&
+			lng <= Math.max(xi, xj) && lat >= Math.min(yi, yj) && lat <= Math.max(yi, yj)) return true;
+		if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+	}
+	if (inside) return true;
+	const longitudeKm = 111.32 * Math.max(.01, Math.cos(lat * Math.PI / 180));
+	let minDistance = Infinity;
+	for (let i = 1; i <= last; i++) {
+		const ax = (points[i - 1][0] - lng) * longitudeKm, ay = (points[i - 1][1] - lat) * 111.32;
+		const bx = (points[i][0] - lng) * longitudeKm, by = (points[i][1] - lat) * 111.32;
+		const dx = bx - ax, dy = by - ay, lengthSquared = dx * dx + dy * dy;
+		const factor = lengthSquared ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / lengthSquared)) : 0;
+		minDistance = Math.min(minDistance, Math.hypot(ax + factor * dx, ay + factor * dy));
+	}
+	return minDistance <= tolerance;
+};
+
 function LUPRoom(json) {
 	this.USERS = [];
 	this.MESSAGES = [];
@@ -99,8 +147,17 @@ function LUPRoom(json) {
 		return LUPRoom.PositionSrvc.hasPosition(true) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
 	};
 	this.inChatRange = function() {
-		// The Germany test chat is intentionally a non-physical, nationwide room.
-		// Every actual location remains controlled by its GPS radius.
+		// Nullable binary FLOAT arrives as NaN; NULL/missing is also legacy.
+		// Explicit zero opts into the
+		// reviewed polygon just like a positive per-room tolerance (kilometres).
+		const tolerance = this.JSON.room_join_tolerance;
+		if (tolerance !== undefined && tolerance !== null && !Number.isNaN(tolerance)) {
+			const position = LUPRoom.PositionSrvc;
+			if (!position.hasPosition(true)) return false;
+			const current = position.CURRENT;
+			return !!current && LUPRoom.containsReviewedPosition(
+				this.JSON.room_polygon, current.lat, current.lng, tolerance);
+		}
 		const distance = this.distance();
 		return distance !== null && distance <= this.radius();
 	};

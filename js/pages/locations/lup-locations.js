@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 angular.module('LUP').config(function($routeProvider) {
 	$routeProvider.when('/locations', {
 		templateUrl: 'js/pages/locations/lup-locations.html?v='+window.LUP_BUILD,
@@ -36,12 +36,35 @@ angular.module('LUP').config(function($routeProvider) {
 	var restoringRail = false;
 	var railSelectionRevision = 0;
 	var swipeStart = null;
+	var suppressRailClickUntil = 0;
+	var settleFrame = null;
+	var searchGeneration = 0;
+	var searchRooms = $scope.data.locationSearchRooms || [];
+	$scope.data.locationQuery = $scope.data.locationQuery || "";
+	$scope.data.searchActive = !!$scope.data.locationQuery.trim();
+	$scope.data.searching = false;
+	$scope.data.searchError = false;
 	var pullStart = null;
 	var pullThreshold = 72;
 	var stopRailGesture = function() {
 		window.removeEventListener('pointermove', onRailPointerMove, true);
 		window.removeEventListener('pointerup', onRailPointerUp, true);
 		window.removeEventListener('pointercancel', onRailPointerCancel, true);
+	};
+
+	var cardScrollLeft = function(index) {
+		var card = railElement.children[index];
+		var left = card.offsetLeft - (railElement.clientWidth - card.offsetWidth) / 2;
+		return Math.max(0, Math.min(railElement.scrollWidth - railElement.clientWidth, left));
+	};
+
+	var nearestCardIndex = function() {
+		var best = 0, distance = Infinity;
+		for (var i = 0; i < railElement.children.length; i++) {
+			var delta = Math.abs(railElement.scrollLeft - cardScrollLeft(i));
+			if (delta < distance) { best = i; distance = delta; }
+		}
+		return best;
 	};
 
 	var syncRailSelection = function() {
@@ -51,7 +74,7 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		if (discoveryGlass) discoveryGlass.paint();
-		var index = Math.round(railElement.scrollLeft / railElement.clientWidth);
+		var index = nearestCardIndex();
 		index = Math.max(0, Math.min(rooms.length - 1, index));
 		if ($scope.data.currentRoomIndex !== index) {
 			var revision = railSelectionRevision;
@@ -72,6 +95,35 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 
+	var settleRail = function(index) {
+		if (!railElement || !railElement.children.length) return;
+		if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
+		index = Math.max(0, Math.min(railElement.children.length - 1, index));
+		var start = railElement.scrollLeft;
+		var target = cardScrollLeft(index);
+		var started = null;
+		railElement.classList.add('location-rail-dragging');
+		var duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 320;
+		var tick = function(time) {
+			if (started === null) started = time;
+			var progress = duration ? Math.min(1, (time - started) / duration) : 1;
+			railElement.scrollLeft = start + (target - start) * (1 - Math.pow(1 - progress, 3));
+			if (progress < 1) settleFrame = window.requestAnimationFrame(tick);
+			else {
+				settleFrame = null;
+				railElement.classList.remove('location-rail-dragging');
+				syncRailSelection();
+			}
+		};
+		settleFrame = window.requestAnimationFrame(tick);
+	};
+
+	var onRailKeyDown = function(event) {
+		if (event.target !== railElement || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+		event.preventDefault();
+		stepRail(event.key === 'ArrowRight' ? 1 : -1);
+	};
+
 	var stepRail = function(direction) {
 		if (!railElement || !railElement.children.length) {
 			return;
@@ -84,9 +136,7 @@ angular.module('LUP').config(function($routeProvider) {
 			railElement.children.length - 1,
 			$scope.data.currentRoomIndex + direction,
 		));
-		var card = railElement.children[index];
-		var left = card.offsetLeft - (railElement.clientWidth - card.offsetWidth) / 2;
-		railElement.scrollTo({left: Math.max(0, left), top: 0, behavior: 'smooth'});
+		settleRail(index);
 	};
 
 	var restoreRailSelection = function(attempt) {
@@ -131,19 +181,33 @@ angular.module('LUP').config(function($routeProvider) {
 		});
 	};
 
+	var onRailClick = function(event) {
+		// Preserve keyboard/assistive activation (detail=0), block only the
+		// synthetic click following a dragged pointer, before Angular handles it.
+		if (event.detail !== 0 && Date.now() < suppressRailClickUntil) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			suppressRailClickUntil = 0;
+		}
+	};
+
 	var onRailPointerDown = function(event) {
-		if (!event.isPrimary) {
+		if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) {
 			return;
 		}
-		// Controls always win over navigation: beginning a tap on a button or
-		// link must never turn into a rail gesture.
-		if (event.target.closest('button, a, input, select, textarea, label')) {
+		// Buttons and links support both taps and swipes. Only editing controls
+		// keep exclusive pointer handling. A fresh touch always permits a new tap.
+		suppressRailClickUntil = 0;
+		if (event.target.closest('input, select, textarea, label, [contenteditable="true"]')) {
 			swipeStart = null;
 			pullStart = null;
 			return;
 		}
 		stopRailGesture();
-		swipeStart = {x: event.clientX, y: event.clientY};
+		if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
+		settleFrame = null;
+		swipeStart = {x: event.clientX, y: event.clientY, left: railElement.scrollLeft,
+			index: nearestCardIndex(), axis: null};
 		pullStart = {x: event.clientX, y: event.clientY};
 		// The finger may be released outside the horizontally scrolling rail.
 		// Observe that one gesture globally, then remove these listeners again.
@@ -158,7 +222,16 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		var dx = event.clientX - pullStart.x;
 		var dy = event.clientY - pullStart.y;
-		if (dy > 8 && dy > Math.abs(dx)) {
+		if (!swipeStart.axis && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+			swipeStart.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+		}
+		if (swipeStart.axis === 'x') {
+			event.preventDefault();
+			railElement.classList.add('location-rail-dragging');
+			railElement.scrollLeft = swipeStart.left - dx;
+			return;
+		}
+		if (swipeStart.axis === 'y' && dy > 8) {
 			event.preventDefault();
 			$scope.$evalAsync(function() {
 				$scope.data.pullDistance = Math.min(96, dy);
@@ -172,19 +245,26 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 		var dx = event.clientX - swipeStart.x;
 		var dy = event.clientY - swipeStart.y;
+		var gesture = swipeStart;
+		if (gesture.axis) suppressRailClickUntil = Date.now() + 700;
 		swipeStart = null;
 		var shouldRefresh = pullStart && dy >= pullThreshold && dy > Math.abs(dx);
 		pullStart = null;
 		$scope.data.pullDistance = 0;
 		stopRailGesture();
 		if (shouldRefresh) {
+			railElement.classList.remove("location-rail-dragging");
 			$scope.refreshRooms();
-		} else if (Math.abs(dx) >= 24 && Math.abs(dx) > Math.abs(dy) * 1.25) {
-			stepRail(dx < 0 ? 1 : -1);
+		} else if (gesture.axis === 'x') {
+			var target = gesture.index + (Math.abs(dx) >= 24 ? (dx < 0 ? 1 : -1) : 0);
+			settleRail(target);
+		} else {
+			settleRail(nearestCardIndex());
 		}
 	};
 
 	var onRailPointerCancel = function() {
+		if (swipeStart && swipeStart.axis === "x") settleRail(swipeStart.index);
 		swipeStart = null;
 		pullStart = null;
 		$scope.data.pullDistance = 0;
@@ -207,12 +287,16 @@ angular.module('LUP').config(function($routeProvider) {
 			return;
 		}
 		if (railElement) {
+			railElement.removeEventListener('keydown', onRailKeyDown);
 			railElement.removeEventListener('scroll', onRailScroll);
 			railElement.removeEventListener('pointerdown', onRailPointerDown, true);
+			railElement.removeEventListener('click', onRailClick, true);
 		}
 		railElement = rail;
+		railElement.addEventListener('keydown', onRailKeyDown);
 		railElement.addEventListener('scroll', onRailScroll, {passive: true});
 		railElement.addEventListener('pointerdown', onRailPointerDown, {capture: true, passive: true});
+		railElement.addEventListener('click', onRailClick, true);
 		if (discoveryGlass) discoveryGlass.destroy();
 		if (window.LupDiscoveryGlass) discoveryGlass = new window.LupDiscoveryGlass(rail);
 	};
@@ -247,14 +331,18 @@ angular.module('LUP').config(function($routeProvider) {
 		// explicitly refreshes the nearby page when they want this position used.
 	});
 	$scope.$on('$destroy', function() {
+		searchGeneration++;
+		if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
 		resetAnimations.forEach(function(animation) { animation.cancel(); });
 		if (discoveryGlass) discoveryGlass.destroy();
 		if (railScrollFrame !== null) {
 			window.cancelAnimationFrame(railScrollFrame);
 		}
 		if (railElement) {
+			railElement.removeEventListener('keydown', onRailKeyDown);
 			railElement.removeEventListener('scroll', onRailScroll);
 			railElement.removeEventListener('pointerdown', onRailPointerDown, true);
+			railElement.removeEventListener('click', onRailClick, true);
 		}
 		stopRailGesture();
 	});
@@ -288,10 +376,14 @@ angular.module('LUP').config(function($routeProvider) {
 
 	var applyCategoryFilter = function(resetRail) {
 		var ids = $scope.data.categoryIds;
-		$scope.data.filteredRooms = !ids.length ? $scope.data.rooms.slice() : $scope.data.rooms.filter(function(room) {
+		var source = $scope.data.searchActive ? searchRooms : $scope.data.rooms;
+		$scope.data.filteredRooms = !ids.length ? source.slice() : source.filter(function(room) {
 			return ids.indexOf(String(room.category())) !== -1;
 		});
 		if (resetRail) {
+			if (settleFrame !== null) window.cancelAnimationFrame(settleFrame);
+			settleFrame = null;
+			if (railElement) railElement.classList.remove("location-rail-dragging");
             // A filter/reset supersedes queued scroll selection and route restoration.
             railSelectionRevision++;
             restoringRail = true;
@@ -311,6 +403,32 @@ angular.module('LUP').config(function($routeProvider) {
 			}
 			if (resetRail) restoringRail = false;
 		}, 0);
+	};
+
+	$scope.searchLocations = function() {
+		var query = String($scope.data.locationQuery || '').trim();
+		var generation = ++searchGeneration;
+		$scope.data.searchActive = !!query;
+		$scope.data.searchError = false;
+		$scope.data.searching = !!query;
+		searchRooms = [];
+		$scope.data.locationSearchRooms = searchRooms;
+		applyCategoryFilter(true);
+		if (!query) return;
+		RoomSrvc.searchRooms(query).then(function(rooms) {
+			if (generation !== searchGeneration) return;
+			searchRooms = Array.isArray(rooms) ? rooms : [];
+			$scope.data.locationSearchRooms = searchRooms;
+			applyCategoryFilter(true);
+		}, function() {
+			if (generation === searchGeneration) $scope.data.searchError = true;
+		})['finally'](function() {
+			if (generation === searchGeneration) $scope.data.searching = false;
+		});
+	};
+	$scope.clearLocationSearch = function() {
+		$scope.data.locationQuery = '';
+		$scope.searchLocations();
 	};
 
 	$scope.isCategoryActive = function(ids) {
@@ -368,7 +486,7 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	var loadPage = function(page, replace, minimumMatches) {
-		if (LoadingSrvc.hasTask('ws_rooms_page') || (!replace && !$scope.data.hasMoreLocations)) {
+		if ($scope.data.searchActive || LoadingSrvc.hasTask('ws_rooms_page') || (!replace && !$scope.data.hasMoreLocations)) {
 			return;
 		}
 		if (replace) {
