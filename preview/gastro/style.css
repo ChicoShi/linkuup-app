@@ -54,3 +54,46 @@ dialog,.embedded dialog{background:#172232;border-color:#c5d6ec2b;border-radius:
 
 .order-history{margin:22px 0}.order-history summary{padding:14px 0;font-size:12px;color:var(--muted);cursor:pointer}.order-history summary span{float:right}.order-history .receipt{margin-top:14px}
 #dialog-body .cart-row{padding:10px 0}#dialog-body .qty{margin-top:6px}#dialog-body .total{margin-top:16px}#dialog-body .balance-strip{padding:10px 0;margin:8px 0 14px}#dialog-body .balance-strip b{font-size:18px}#dialog-body .payment-summary{padding:12px 0;gap:8px}#dialog-body .preview-note{margin:7px 0!important}#submit-order,#checkout-topup{position:sticky;bottom:0;z-index:2;box-shadow:0 -8px 16px #172232}
+
+/* Operator polish: the same LinkUUp surfaces, with a quieter work hierarchy. */
+.operator-workspace{--operator-accent:#c7deef;max-width:1184px}
+.operator-workspace .board-header{margin:4px 0 22px}
+.operator-workspace .board-header h1{font-size:30px;line-height:1.2;letter-spacing:-.8px}
+.operator-workspace .eyebrow{letter-spacing:1px;font-size:10px;margin-bottom:8px}
+.operator-workspace .operator-tabs{gap:24px;border-bottom:1px solid var(--line);margin:0 0 24px}
+.operator-workspace .operator-tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--muted);padding:12px 0;min-height:48px}
+.operator-workspace .operator-tabs button.active{color:var(--operator-accent);border-bottom-color:var(--operator-accent)}
+.operator-workspace .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:22px 0 28px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.operator-workspace .stats>div{padding:0 22px;border-left:1px solid var(--line)}
+.operator-workspace .stats>div:first-child{padding-left:0;border-left:0}
+.operator-workspace .stats b{font-size:26px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.6px}
+.operator-workspace .stats small{display:block;margin-top:5px;line-height:1.5}
+.operator-workspace .lane{padding:14px;min-height:240px;background:#142030}
+.operator-workspace .lane-title{font-weight:500;min-height:40px;padding-bottom:14px}
+.operator-workspace .ticket{padding:18px;box-shadow:none;background:#1b293b;border-color:#ffffff12}
+.operator-workspace .ticket-head strong{font-size:21px;letter-spacing:-.4px}
+.operator-workspace .ticket .price,.operator-workspace .edit-row>b{font-variant-numeric:tabular-nums}
+.operator-workspace .ticket-actions button{min-height:44px}
+.operator-workspace .table-card,.operator-workspace .setup-panel{padding:28px;border-radius:18px}
+.operator-workspace .section-title{align-items:flex-start;margin:0 0 22px}
+.operator-workspace .section-title h2,.operator-workspace .setup-panel h2{font-size:23px;font-weight:500;letter-spacing:-.5px;color:var(--ink)}
+.operator-workspace .section-title p{font-size:13px;margin-top:7px}
+.operator-workspace .toolbar{gap:8px;margin:0 0 22px}
+.operator-workspace .toolbar button{font-size:13px}
+.operator-workspace .edit-row{grid-template-columns:minmax(0,1fr) 90px 104px 90px;gap:20px;padding:19px 0}
+.operator-workspace .edit-row h3{font-size:15px;font-weight:500;overflow-wrap:anywhere}
+.operator-workspace .edit-row>b{text-align:right;white-space:nowrap;font-size:14px}
+.operator-workspace .edit-row>button{background:transparent;font-size:12px}
+.operator-workspace .edit-row .badge{justify-content:center}
+.operator-workspace .setup-step{padding-top:22px;padding-bottom:22px}
+.operator-workspace .backlink{margin-bottom:16px;min-height:44px}
+@media(max-width:700px){
+ .operator-workspace .board-header h1{font-size:26px}
+ .operator-workspace .table-card,.operator-workspace .setup-panel{padding:20px 16px}
+ .operator-workspace .stats>div{padding:0 10px}.operator-workspace .stats b{font-size:21px}.operator-workspace .stats small{font-size:10px}
+ .operator-workspace .edit-row{grid-template-columns:minmax(0,1fr) auto;gap:12px}
+ .operator-workspace .edit-row>.badge{display:inline-flex;justify-self:start}.operator-workspace .edit-row>button{justify-self:end;min-width:88px}
+ .operator-workspace .section-title h2,.operator-workspace .setup-panel h2{font-size:21px}
+ .operator-workspace .toolbar{display:grid;grid-template-columns:1fr 1fr}.operator-workspace .toolbar .primary{grid-column:1/-1}
+ .operator-workspace .ticket-head{gap:8px}.operator-workspace .ticket-head strong{font-size:20px}
+}
