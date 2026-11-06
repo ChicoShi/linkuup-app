@@ -101,10 +101,30 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 	
+    $scope.data.gastroAvailable = false;
+    $scope.openGastro = function() {
+        if (!$scope.data.gastroAvailable || location.hostname !== 'app.localhost') return;
+        var id = String($scope.data.room.id());
+        var d = document.getElementById('lup-gastro-sheet');
+        if (!d) {
+            d = document.createElement('dialog');d.id='lup-gastro-sheet';
+            var close=document.createElement('button');close.textContent='×';close.className='lup-gastro-close';close.setAttribute('aria-label',$translate.instant('GASTRO_CLOSE'));close.onclick=function(){d.close()};
+            var frame=document.createElement('iframe');frame.title=$translate.instant('GASTRO_CARD');d.appendChild(close);d.appendChild(frame);document.body.appendChild(d);
+        }
+        if(d.dataset.room!==id){d.dataset.room=id;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id);}
+        d.showModal();
+        d.querySelector('iframe').contentWindow.postMessage({type:'gastro-refresh'},location.origin);
+    };
+    $scope.$on('$destroy',function(){var d=document.getElementById('lup-gastro-sheet');if(d)d.remove();});
 	$scope.loadedRoom = function(room) {
 		console.log('LocationCtrl.loadedRoom()', room);
 		$scope.data.room = room;
 		$scope.data.roomReady = true;
+        $scope.data.gastroAvailable=false;
+        if(location.hostname==='app.localhost'){
+            var rid=String(room.id());
+            fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(raw){var g=raw.data||raw;$scope.$evalAsync(function(){if(String($scope.data.room.id())===rid)$scope.data.gastroAvailable=!!(g.canManage||g.orderingEnabled||(Array.isArray(g.orders)&&g.orders.length));});}).catch(angular.noop);
+        }
 		$scope.afterLoadedRoom();
 	};
 	

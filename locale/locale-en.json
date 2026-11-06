@@ -794,5 +794,7 @@
 "NAV_LOCATION_SEARCH": "Search locations",
 "NAV_SEARCH_CLEAR": "Clear search",
 "NAV_SEARCH_LOADING": "Searching locations …",
-"NAV_SEARCH_ERROR": "Search unavailable. Please try again."
+"NAV_SEARCH_ERROR": "Search unavailable. Please try again.",
+  "GASTRO_CARD": "Menu",
+  "GASTRO_CLOSE": "Close menu"
 }

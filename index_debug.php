@@ -9,7 +9,7 @@ header('Expires: 0');
 /* Keep a deployable cache marker in tracked code.  The local PHP config is
  * intentionally ignored by git, so a view repair must not depend on a local
  * version bump to reach browsers after a pull request is deployed. */
-$v = sprintf("?v=%s-location-counter-fit413", LUPConfig::$VERSION);
+$v = sprintf("?v=%s-gastro-local414", LUPConfig::$VERSION);
 $min = LUPConfig::$MIN;
 $publicBase = 'https://app.www.linkuup.de';
 $shareImage = "{$publicBase}/images/lup-wapp-icon.png";
@@ -88,6 +88,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   <link rel="stylesheet" href="js/pages/add-room/lup-add-room.css<?=$v?>">
   <link rel="stylesheet" href="js/pages/sidenav/lup-sidenav.css<?=$v?>">
   <link rel="stylesheet" href="css/linkuup-design-system.css<?=$v?>">
+  <link rel="stylesheet" href="css/lup-gastro-local.css<?=$v?>">
   <link rel="stylesheet" href="css/linkuup-discovery-v2.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-venue-final.css<?=$v?>">
   <link rel="stylesheet" href="css/lup-online-core.css<?=$v?>">
@@ -122,7 +123,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   </div>
 
 <script type="text/javascript">
-window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-location-counter-fit413')?>;
+window.LUP_BUILD = <?=json_encode(LUPConfig::$VERSION . '-gastro-local414')?>;
 window.LUP_GOOGLE_MAPS_API_KEY = <?=json_encode($googleMapsApiKey)?>;
 </script>
 
