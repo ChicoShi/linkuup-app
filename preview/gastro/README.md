@@ -5,3 +5,13 @@ Auf app.localhost lädt der Karte-Button das eingebettete Menü mit tatsächlich
 Die separate CLI-Testansicht index.html hat ausdrücklich simulierte Rollen und Beispieldaten; sie ist kein Anmeldetest. Der neue Loopback-Prüfserver befindet sich im Backend unter tools/gastro-wallet-preview/router.php. embed.html ohne room-Parameter dient nur der Vorschau.
 
 Bestehende Location-Gestaltung bleibt unverändert. Nur der Karte-Zugang und ein schließbares Overlay kommen hinzu. Frontend und Backend liegen auf simion/gastro-local-20261106, nicht veröffentlicht. Echte angemeldete Betreiberprüfung offen. Die eingebetteten Texte sind derzeit deutsch; vollständige de/en-Übernahme vor PR/Live noch ausstehend. Technische und rechtliche Grenzen siehe Backend Commerce/README.md.
+
+## Automatische Bestellaktualisierung
+Bestelltafel und Gast-Bestellstatus lesen bei sichtbarer Seite alle fünf Sekunden
+den aktuellen Stand. Keine parallelen Polls; Netzwerk-Zeitlimit zehn Sekunden.
+Editor, andere Ansichten, offene Dialoge und laufende Bedienaktionen pausieren
+die Abfrage. Nach neueren Bedienaktionen werden alte Antworten verworfen.
+Fehler und letzter erfolgreicher Abruf sind sichtbar; identische Daten lösen
+keinen Neuaufbau aus. Kein Echtzeit-Push und keine Hintergrundbenachrichtigung.
+Fünf isolierte Tests und ein lokaler Browserlauf mit simulierten API-Antworten
+prüfen neue Bestellungen, Gaststatus, Ausfall und Erholung. Kein Backend-E2E.
