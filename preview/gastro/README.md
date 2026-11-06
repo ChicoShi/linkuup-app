@@ -7,3 +7,13 @@ Die separate CLI-Testansicht index.html hat ausdrücklich simulierte Rollen und 
 Bestehende Location-Gestaltung bleibt unverändert. Nur der Karte-Zugang und ein schließbares Overlay kommen hinzu. Frontend und Backend liegen auf simion/gastro-local-20261106, als Draft zur Gegenprüfung. Vier echte lokale HTTP-Formanmeldungen wurden separat geprüft; vollständiger App-WebSocket-Login bleibt offen. Die eingebetteten Texte sind derzeit deutsch; vollständige de/en-Übernahme vor Produktivfreigabe noch ausstehend. Technische und rechtliche Grenzen siehe Backend Commerce/README.md.
 
 Designprüfung5881: Betreiber-Navigation, Kennzahlen und Preisraster verfeinert; OriginalLocation bleibt unverändert. Der localhost-Prüfserver zeigt explizit simulierte Rollen/Beispieldaten. place.html ist eine historische visuelle Fixture, kein funktionierender Login- oder Integrationsnachweis.
+
+## Automatische Bestellaktualisierung
+Bestelltafel und Gast-Bestellstatus lesen bei sichtbarer Seite alle fünf Sekunden
+den aktuellen Stand. Keine parallelen Polls; Netzwerk-Zeitlimit zehn Sekunden.
+Editor, andere Ansichten, offene Dialoge und laufende Bedienaktionen pausieren
+die Abfrage. Nach neueren Bedienaktionen werden alte Antworten verworfen.
+Fehler und letzter erfolgreicher Abruf sind sichtbar; identische Daten lösen
+keinen Neuaufbau aus. Kein Echtzeit-Push und keine Hintergrundbenachrichtigung.
+Fünf isolierte Tests und ein lokaler Browserlauf mit simulierten API-Antworten
+prüfen neue Bestellungen, Gaststatus, Ausfall und Erholung. Kein Backend-E2E.
