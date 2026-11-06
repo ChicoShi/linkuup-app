@@ -382,3 +382,21 @@ md-dialog.place-dialog.lup-quick-vote-dialog {border-radius:24px;background:line
 @media(max-width:360px) {
  .navigator-view .nav-location-search {width:calc(100% - 32px);}
 }
+
+/* Keep phone cards roomy, but retain natural content height and safe areas. */
+.navigator-view > md-content.greybg {padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);}
+@media (max-width:600px) {
+ .navigator-view > md-content.greybg {
+  display:flex;flex-direction:column;
+  min-height:var(--lup-viewport-height,100dvh);
+ }
+ .navigator-view > md-content.greybg > :not(.profile-ambient-map) {flex-shrink:0;}
+ .navigator-view .nav-categories {margin:0 auto;}
+ .navigator-view > md-content.greybg > .location-rail {flex:0 0 auto;}
+ .navigator-view .location-rail:has(.lup-room-slide-outer) {margin-top:auto;}
+ .navigator-view .location-rail:not(:has(.lup-room-slide-outer)) {display:none;}
+ .nearby.navigator-view .location-rail .nav-place {box-sizing:border-box;min-height:min(64dvh,560px);}
+ .navigator-view .nav-landscape {flex-shrink:0;}
+ .navigator-view .nav-place-content {display:flex;flex:1 0 auto;flex-direction:column;justify-content:center;}
+ .navigator-view .nav-position {margin:0 auto auto;}
+}
