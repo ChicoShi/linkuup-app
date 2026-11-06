@@ -16,3 +16,29 @@ body{background:radial-gradient(ellipse at 0 0,#20324e 0,transparent 50%),#10162
 body{background:radial-gradient(ellipse at 5% 0%,#28415c65,transparent 58%),radial-gradient(ellipse at 95% 85%,#57527822,transparent 50%),#101626}.local-integrated .board-header .eyebrow{font-size:10px}.local-integrated .board-header .badge{display:none}.local-integrated .wrap{padding-top:25px}.setup-panel,.table-card{background:linear-gradient(125deg,#22354bba,#172337e8);box-shadow:inset 0 1px 0 #c7e4ff17,0 18px 45px #050c1620}.publication{border:1px solid #a3caeb15}.setup-step button,.primary{transition:background .18s ease,transform .18s ease}.setup-step button:hover,.primary:hover{transform:translateY(-1px)}@media(prefers-reduced-motion:reduce){.setup-step button,.primary{transition:none;transform:none}}
 
 .balance-strip{display:flex;flex-wrap:wrap;gap:10px 20px;padding:16px 0;border-top:1px solid #ffffff18;border-bottom:1px solid #ffffff18;margin:16px 0;font-size:13px}.balance-strip span{display:flex;flex-direction:column;gap:5px;color:#aab9cf}.balance-strip b{font-size:21px;color:#eaf2ff}.balance-strip small{flex-basis:100%;color:#96a8c1}
+
+/* Quiet service layer: match the existing app without a second visual hero. */
+:root{--bg:#111a28;--panel:#172232;--raised:#1c293a;--ink:#edf2f8;--muted:#aab8ca;--line:#c5d6ec20}
+body{background:var(--bg);min-height:100dvh}
+.testbar,.embedded .testbar{display:block;background:transparent;color:#aab8ca;font:11px/1.4 Ubuntu,Arial,sans-serif;letter-spacing:0;text-align:center;padding:8px 12px;border-bottom:1px solid var(--line)}
+.top{height:60px;border:0}.brand{font-size:23px}.brand small{display:none}
+.wrap,.embedded .wrap{padding-top:22px}
+.menu-heading{padding:0 0 8px}.menu-heading small{font-size:12px}.menu-heading h1{font-size:24px;font-weight:500;letter-spacing:-.5px;margin-top:6px;line-height:1.3}
+h2,.embedded-title h2{font-size:21px;font-weight:500;letter-spacing:-.35px}
+.primary,.embedded .primary,.mobile-cart,.embedded .mobile-cart{background:#b7d1e8;color:#172637;border:1px solid #b7d1e8;box-shadow:none;border-radius:12px}
+button{border-radius:10px}.tabs{gap:24px;margin:12px 0 20px}.tabs button.active{border-color:#b7d1e8}
+.category{gap:16px;overflow:auto;border:0;padding-bottom:8px;margin-bottom:8px}
+.category button{flex:0 0 auto;flex-direction:row;gap:0;font-size:12px;min-height:36px;border-radius:8px;padding:7px 12px;color:var(--muted)!important}
+.category button .ico{display:none}.category .active{background:#b7d1e818;color:var(--ink)!important}.category .active:after{display:none}
+.section-title small{display:none}.section-title h2{font-size:16px;color:var(--muted);font-weight:400}
+.dish,.embedded .dish{grid-template-columns:minmax(0,1fr) 40px;gap:14px;padding:18px 0}.dish-art{display:none}.dish h3,.embedded .dish h3{font-size:15px;font-weight:500}.dish p,.embedded .dish p{font-size:12px;line-height:1.5}.add{width:36px;height:36px;background:transparent;border-radius:10px;color:#c5daee}
+.cart,.receipt,.table-card,.ticket,.setup-panel,.wallet article{background:var(--panel);box-shadow:none;border-color:var(--line);border-radius:14px}
+.lane{background:transparent;border-radius:14px}.ticket{background:var(--panel)}
+.receipt h2{font-size:20px}.receipt .badge{background:transparent;border:0}.receipt .total small{font-size:12px;font-weight:400}
+dialog,.embedded dialog{background:#172232;border-color:#c5d6ec2b;border-radius:18px;padding:24px;box-shadow:0 18px 60px #0005}dialog::backdrop{background:#060d18c7;backdrop-filter:blur(3px)}
+.balance-strip{border-top:0;border-bottom:1px solid var(--line);gap:24px;padding:14px 0;margin:12px 0 20px}.balance-strip b{font-size:22px;font-weight:500}.balance-strip span{font-size:12px;color:var(--muted)}
+.preview-note{font-size:11px!important;line-height:1.5;color:#aab8ca!important;margin:10px 0!important}.checkout-note{font-size:12px!important;line-height:1.5}
+.wallet-summary{max-width:480px}.board-header h1{font-size:26px;font-weight:500}.eyebrow{text-transform:none;letter-spacing:0;font-size:12px;color:var(--muted)}
+#notice{background:#26384d;color:#edf2f8;border:1px solid var(--line)}
+@media(max-width:600px){.tabs{gap:20px}.tabs button{font-size:12px}.wrap,.embedded .wrap{padding-left:20px;padding-right:20px}.menu-heading h1{font-size:23px}.top{height:56px}.mobile-cart,.embedded .mobile-cart{left:20px;right:20px;padding:12px 15px}.mobile-cart small{display:none}.status-note{padding-left:12px}.receipt{padding:18px}}
+.dish,.embedded .dish{grid-template-columns:minmax(0,1fr) 44px}.add{width:44px;height:44px;min-height:44px}

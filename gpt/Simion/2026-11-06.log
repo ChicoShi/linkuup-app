@@ -4,3 +4,9 @@ Lokale Gastro-Anbindung auf Feature-Branch: GDO-Sitzung/Owner/CSRF, Karte-Overla
 Belege:45 Ordering-Assertions,40 Wallet-Assertions,17 bestehende Frontendtests; Browser20EUR→7.50EUR Reservierung→Lieferung; HTTP Unterdeckung ohne Teilauftrag, Retry, Fremdstatus, Storno und doppelte Erstattung geprüft.8 Viewportchecks320–1440 ohne Overflow,3 PNGs gesichtet. Anonymer echter GDO-Zugriff403.
 Offen: echte angemeldete Owner/Gast-End-to-End-Prüfung, vollständige de/en-Texte, produktive DB/Provider/Betreiberpaket/Kasse und rechtlicher Geldfluss. Kein Push/PR/Live.
 Nächster Schritt: Simion-Terminal – vorhandene lokale Betreiberanmeldung mit Nutzer klären und echten GDO-Durchlauf prüfen.
+
+[2026-11-06T22:32:04.694575+01:00] Auftrag5801 – ruhigeres Gastro-Design lokal geprüft
+Dateien: preview/gastro/app.js,style.css,index.html,embed.html. Normale Guthaben-/Bestellbezeichnungen, kompakter expliziter Vorschauhinweis. Große Hero-Dekoration und Werbetexte entfernt, flache Flächen/eine Akzentfarbe,44px Hinzufügen-Taste. Backend und Geldlogik unverändert.
+Prüfung: vier Breiten320/390/768/1440 ohne Overflow; tatsächlicher Browserablauf Warenkorb→Tisch8→Bestellung→Guthaben12.50/7.50 reserviert; Aufladedialog öffnet mit Vorschauhinweis, drei neue PNGs visuell geprüft. JS-Syntax/Diff bestanden. Keine Behauptung erneuter Domain-/Authentifizierungstests.
+Offen: echte Owner-/Gastsession, produktive Datenhaltung/Provider, vollständige de/en. Kein Push/PR/Live.
+Nächster Schritt: Simion-Terminal – echte lokale Betreiberanmeldung klären und Rechteablauf prüfen.
