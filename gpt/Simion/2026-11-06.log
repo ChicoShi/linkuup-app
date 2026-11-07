@@ -1,0 +1,18 @@
+
+[2026-11-06T22:17:15.582849+01:00] Aufträge5789/5793 – lokal geändert und teilweise geprüft
+Lokale Gastro-Anbindung auf Feature-Branch: GDO-Sitzung/Owner/CSRF, Karte-Overlay, Euro-Testguthaben mit Reservierung/Abbuchung/Freigabe/Erstattung. Bestehende Coins und ursprüngliche Location-CSS unverändert. Globaler Pilot-JSON-Lock, kein Echtgeld. Unabhängige Agentprüfung korrigierte Pausezugang, Statusrefresh, deaktivierte Orte, unveröffentlichte Menüs und Bodylimit; Legacy-Retry wird nicht nachträglich belastet.
+Belege:45 Ordering-Assertions,40 Wallet-Assertions,17 bestehende Frontendtests; Browser20EUR→7.50EUR Reservierung→Lieferung; HTTP Unterdeckung ohne Teilauftrag, Retry, Fremdstatus, Storno und doppelte Erstattung geprüft.8 Viewportchecks320–1440 ohne Overflow,3 PNGs gesichtet. Anonymer echter GDO-Zugriff403.
+Offen: echte angemeldete Owner/Gast-End-to-End-Prüfung, vollständige de/en-Texte, produktive DB/Provider/Betreiberpaket/Kasse und rechtlicher Geldfluss. Kein Push/PR/Live.
+Nächster Schritt: Simion-Terminal – vorhandene lokale Betreiberanmeldung mit Nutzer klären und echten GDO-Durchlauf prüfen.
+
+[2026-11-06T22:32:04.694575+01:00] Auftrag5801 – ruhigeres Gastro-Design lokal geprüft
+Dateien: preview/gastro/app.js,style.css,index.html,embed.html. Normale Guthaben-/Bestellbezeichnungen, kompakter expliziter Vorschauhinweis. Große Hero-Dekoration und Werbetexte entfernt, flache Flächen/eine Akzentfarbe,44px Hinzufügen-Taste. Backend und Geldlogik unverändert.
+Prüfung: vier Breiten320/390/768/1440 ohne Overflow; tatsächlicher Browserablauf Warenkorb→Tisch8→Bestellung→Guthaben12.50/7.50 reserviert; Aufladedialog öffnet mit Vorschauhinweis, drei neue PNGs visuell geprüft. JS-Syntax/Diff bestanden. Keine Behauptung erneuter Domain-/Authentifizierungstests.
+Offen: echte Owner-/Gastsession, produktive Datenhaltung/Provider, vollständige de/en. Kein Push/PR/Live.
+Nächster Schritt: Simion-Terminal – echte lokale Betreiberanmeldung klären und Rechteablauf prüfen.
+
+[2026-11-06T22:41:14.453502+01:00] Auftrag5805 – recherchierte Gastro-UI-Iteration lokal geprüft
+Zehn offizielle Produkt-/Hilfeseiten verglichen (sunday,me&u,Toast,Square,Qerko,Flipdish,orderbird,gastronovi,DISH,Lightspeed); keine Fremdbuchungen/Vor-Ort-Prüfung und keine Überlegenheitsbehauptung. Quellen/Ableitungen in Simion research/gastro-20261106-v7/comparison.json.
+Dateien preview/gastro/app.js/style.css/index.html/embed.html: früheTischwahl, Kartensuche/Leermeldung, ausgewählteMenge, transparenteRestbeträge, echteStatusschritte und aufklappbareHistorie. Cachemarker aktualisiert. Backend/Geldlogik unverändert. QA-Karte umBeispielartikel ergänzt, frühereQA-Aufträge regulär storniert, Historie erhalten.
+Prüfung: SuchePommes/keineTreffer/alle, Tisch8 bleibt beimCheckout,2Artikel14EUR,20EURverfügbar→6EURverfügbar/14EURreserviert, Betreiberstatuspreparing beimGast nachRefresh korrekt.8Viewportchecks320–1440 ohneOverflow; Bestellbutton390px vollständig innerhalbDialog;3aktuellePNGs gesichtet, Syntax/Diff bestanden.
+Offen: echterGDO-Rollen-/Sessiontest, produktiveDB/Provider, vollständigeLocales. KeinPush/PR/Live. NächsterSchritt: Shippi sichtet3Ansichten; Terminal setzt danach echtenIntegrationstest fort.

@@ -5,135 +5,80 @@ const vm = require('node:vm');
 const path = require('node:path');
 
 function setup(overrides = {}, browser = {}) {
- let ctor;
- const chain = {config() {return chain;}, controller(name, fn) {ctor = fn; return chain;}};
- const element = {off() {return element;}, on() {return element;}};
- const context = vm.createContext({console: {log() {}}, window: {matchMedia: () => ({matches: true}), ...browser},
-  angular: {module: () => chain, element: () => element}});
- vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/pages/locations/lup-locations.js'), 'utf8'), context);
- const scope = {data: {}, $on() {}};
- const deps = {$scope: scope, $timeout() {}, PositionSrvc: {hasPosition: () => false}, LoadingSrvc: {addTask() {}}};
- const args = ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(x => x.trim());
- Object.assign(deps, overrides);
- ctor(...args.map(x => deps[x] || {}));
- return deps.$scope;
+ let ctor,serial=0;
+ const events={},listeners={},timers=[],frames=new Map();
+ const rail={clientWidth:390,scrollWidth:1170,scrollLeft:0,closest:()=>null,
+  children:[0,1,2].map(i=>({offsetWidth:390,offsetLeft:i*390})),
+  classList:{add(){},remove(){}},addEventListener:(n,f)=>listeners[n]=f,removeEventListener(){}};
+ const chain={config(){return chain;},controller(name,fn){ctor=fn;return chain;}};
+ const scope={data:{authenticated:true,locationsInitialized:true},$on:(n,f)=>events[n]=f,$evalAsync:f=>f()};
+ const room=(id,cat=1)=>({id:()=>id,category:()=>cat});
+ scope.data.rooms=scope.data.filteredRooms=[room(1),room(2),room(3)];
+ const context=vm.createContext({console:{log(){},warn(){}},document:{querySelectorAll:()=>[rail]},
+  window:{matchMedia:()=>({matches:true}),requestAnimationFrame:f=>{frames.set(++serial,f);return serial;},cancelAnimationFrame:id=>frames.delete(id),removeEventListener(){},...browser},
+  angular:{module:()=>chain}});
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/pages/locations/lup-locations.js'),'utf8'),context);
+ const deps={$scope:scope,$timeout:f=>timers.push(f),PositionSrvc:{hasPosition:()=>false},
+  CategorySrvc:{withCategories:()=>Promise.resolve(),locationGroups:()=>[]},LoadingSrvc:{hasTask:()=>true},...overrides};
+ ctor(...ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(x=>deps[x.trim()]||{}));
+ const flush=()=>{timers.splice(0).forEach(f=>f());for(let rounds=0;frames.size&&rounds<10;rounds++){const pending=[...frames.values()];frames.clear();pending.forEach(f=>f(1000));}};
+ return {s:deps.$scope,room,events,listeners,rail,flush};
 }
+const settle=()=>new Promise(r=>setImmediate(r));
 
-test('Short drags glide one card before snap returns; GPS cannot interrupt, moves share one paint', () => {
- const frames=new Map(), timers=new Map(), events={}, classes=new Set(), listeners={};let serial=0,digests=0,writes=0,left=0;
- const request=fn=>{frames.set(++serial,fn);return serial;};
- const later=fn=>{timers.set(++serial,fn);return serial;};later.cancel=id=>timers.delete(id);
- const flush=q=>{const entries=[...q.values()];q.clear();entries.forEach(fn=>fn());};
- const rail={dataset:{},clientWidth:390,scrollWidth:780,style:{},
-  closest:()=>true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},
-  addEventListener:(type,fn)=>{listeners[type]=fn;},getBoundingClientRect:()=>({left:0}),
-  querySelector:selector=>rail.children.find(c=>selector.includes('"'+c.id+'"')),
-  querySelectorAll:()=>rail.children,
-  scrollTo({left:next,behavior}){if(behavior==='smooth'){rail.destination=next;}else{left=next;}}
- };
- Object.defineProperty(rail,'scrollLeft',{get:()=>left,set:v=>{left=v;writes++;if(listeners.scroll)listeners.scroll();}});
- rail.children=[1,2].map((id,index)=>({id,offsetWidth:390,style:{setProperty(){}},getAttribute:()=>String(id),getBoundingClientRect:()=>({left:index*390-left})}));
- const jq={length:1,filter(){return jq;},last(){return jq;},get(){return rail;}};
- const gestureContext=vm.createContext({window:{}});
- vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/pages/locations/lup-location-gesture.js'),'utf8'),gestureContext);
- const s={data:{},$on:(name,fn)=>{events[name]=fn;},$evalAsync:fn=>{digests++;fn();}};
- setup({$scope:s,$timeout:later,LoadingSrvc:{removeTask(){}}},
-  {jQuery:()=>jq,LupLocationGesture:gestureContext.window.LupLocationGesture,
-   requestAnimationFrame:request,cancelAnimationFrame:id=>frames.delete(id),setTimeout:later,clearTimeout:id=>timers.delete(id),matchMedia:()=>({matches:false})});
- s.data.visibleRooms=s.data.rooms=[{id:()=>1},{id:()=>2}];s.data.currentRoom=s.data.rooms[0];s.data.currentRoomIndex=0;
- s.initialiseRail();flush(timers);flush(frames);
- const touch=(x,y=300)=>({touches:[{clientX:x,clientY:y}],cancelable:true,preventDefault(){}});
- listeners.touchstart(touch(220));listeners.touchmove(touch(208));listeners.touchmove(touch(202));listeners.touchmove(touch(196));
- assert.equal(writes,0);flush(frames);assert.equal(writes,1);assert.equal(left,24);assert.equal(digests,0);
- events['gwf-position-changed']();assert.equal(left,24);
- listeners.touchend();assert.equal(rail.destination,390);assert.ok(classes.has('location-rail-dragging'));assert.equal(left,24);
- rail.scrollLeft=390;listeners.scrollend();assert.equal(s.data.currentRoomIndex,1);assert.equal(classes.has('location-rail-dragging'),false);
- // Reverse short gesture, cancelled by a second touch, returns to this card.
- listeners.touchstart(touch(220));listeners.touchmove(touch(244));flush(frames);listeners.touchcancel();
- assert.equal(rail.destination,390);rail.scrollLeft=390;listeners.scrollend();assert.equal(s.data.currentRoomIndex,1);
- // Native vertical scrolling never requests the next location.
- listeners.touchstart(touch(220));listeners.touchmove(touch(224,350));listeners.touchend();assert.equal(s.data.currentRoomIndex,1);
- // A scroll callback from the old filtered list cannot undo a reset.
- s.selectCategory=()=>{};s.searchLocation=()=>{};
- s.resetNavigator();listeners.scroll();flush(frames);
- assert.equal(s.data.currentRoomIndex,0);
- flush(timers);flush(frames);flush(frames);
- assert.equal(left,0);assert.equal(s.data.currentRoomIndex,0);
- assert.equal(classes.has('location-rail-dragging'),false);
+test('Keyboard browsing stays within the rail and requests another page only at its end',()=>{
+ const {s,listeners,rail,flush}=setup();let next=0,prevented=0;s.loadNextPage=()=>next++;
+ s.init();flush();
+ const key=(key,target=rail)=>listeners.keydown({key,target,preventDefault(){prevented++;}});
+ key('ArrowRight',{});flush();assert.equal(s.data.currentRoomIndex,0);assert.equal(prevented,0);
+ key('ArrowLeft');flush();assert.equal(rail.scrollLeft,0);
+ key('ArrowRight');flush();assert.equal(s.data.currentRoomIndex,1);assert.equal(rail.scrollLeft,390);
+ key('ArrowRight');flush();assert.equal(s.data.currentRoomIndex,2);assert.equal(rail.scrollLeft,780);
+ const before=next;key('ArrowRight');flush();assert.equal(s.data.currentRoomIndex,2);assert.equal(next,before+1);
 });
 
-test('The discovery template has working category, arrow, reset and GPS controls', () => {
- const s = setup();
- assert.equal(s.navigatorCategories.length, 5);
- assert.equal(s.navigatorHasGPS(), false);
- const a = {id: () => 1}, b = {id: () => 2};
- s.data.visibleRooms = [a, b]; s.data.currentRoomIndex = 0;
- s.stepNavigator(1); assert.equal(s.data.currentRoom, b);
- s.stepNavigator(1); assert.equal(s.data.currentRoomIndex, 1);
- s.stepNavigator(-1); assert.equal(s.data.currentRoom, a);
- s.stepNavigator(-1); assert.equal(s.data.currentRoomIndex, 0);
- const calls = [];
- s.selectCategory = ids => calls.push(Array.from(ids));
- s.searchLocation = value => calls.push(value);
- s.data.currentRoom = b; s.data.currentRoomIndex = 1;
- s.data.searchvalue = 'missing'; s.resetNavigator();
- assert.equal(s.data.searchvalue, ''); assert.deepEqual(calls, [[], '']);
- assert.equal(s.data.currentRoom, a); assert.equal(s.data.currentRoomIndex, 0);
+test('Navigator categories come from available backend groups and retry after load failure',async()=>{
+ let calls=0;const groups=[{ids:[],label:'empty'},{ids:[5],label:'Cafe'}];
+ const {s}=setup({CategorySrvc:{withCategories:()=>++calls===1?Promise.reject(Error('offline')):Promise.resolve(),locationGroups:()=>groups}});
+ s.loadCategories();await settle();assert.equal(s.data.navigatorCategories.length,0);
+ s.loadCategories();await settle();assert.equal(s.data.navigatorCategories.length,1);assert.equal(s.data.navigatorCategories[0],groups[1]);
+ s.loadCategories();assert.equal(calls,2);
 });
 
-test('Repeated reset taps replace feedback; reduced motion and leaving the page stop it', () => {
- let reduced=false;const callbacks={},animations=[];
- const scope={data:{},$on:(name,fn)=>{(callbacks[name] ||= []).push(fn);}};
- const s=setup({$scope:scope},{matchMedia:()=>({matches:reduced})});
- s.selectCategory=()=>{};s.searchLocation=()=>{};
+test('Reset clears category selection, cancels old feedback, and respects reduced motion and teardown',()=>{
+ let reduced=false;const animations=[];const {s,events}=setup({}, {matchMedia:()=>({matches:reduced})});
  const landmark={animate(){const a={cancelled:false,cancel(){this.cancelled=true;}};animations.push(a);return a;}};
- const button={querySelector:()=>landmark,parentElement:{querySelectorAll:()=>Array(5).fill(landmark)}};
- s.resetNavigator({currentTarget:button});assert.equal(animations.length,7);
- s.resetNavigator({currentTarget:button});assert.equal(animations.length,14);
- assert.ok(animations.slice(0,7).every(a=>a.cancelled));
- assert.equal(animations.filter(a=>!a.cancelled).length,7);
- reduced=true;s.resetNavigator({currentTarget:button});assert.ok(animations.every(a=>a.cancelled));
- assert.equal(animations.length,14);assert.equal(s.data.currentRoom,null);
- reduced=false;s.resetNavigator({currentTarget:button});callbacks['$destroy'].forEach(fn=>fn());
- assert.ok(animations.every(a=>a.cancelled));
+ const button={querySelector:()=>landmark,closest:()=>({querySelectorAll:()=>Array(5).fill(landmark)})};
+ s.data.categoryIds=['5'];s.resetCategories({currentTarget:button});assert.equal(s.data.categoryIds.length,0);assert.equal(animations.length,7);
+ s.resetCategories({currentTarget:button});assert.equal(animations.length,14);assert.ok(animations.slice(0,7).every(a=>a.cancelled));
+ reduced=true;s.resetCategories({currentTarget:button});assert.ok(animations.every(a=>a.cancelled));assert.equal(animations.length,14);
+ reduced=false;s.resetCategories({currentTarget:button});events['$destroy']();assert.ok(animations.every(a=>a.cancelled));
 });
 
-test('Category filtering and address/name terms combine without accent or word-order failures', () => {
- const s = setup();
- const room = {category: () => 5, name: () => 'Café Élan', city: () => 'Braunschweig',
-  street: () => 'Hauptstraße 4', zip: () => '38100', categoryName: () => 'Cafés'};
- s.data.rooms = [room]; s.data.searchvalue = 'BRAUNSCHWEIG elan hauptstrasse';
- s.data.category = ['5']; s.updateVisibleRooms(); assert.equal(s.data.visibleRooms[0], room);
- s.data.category = ['11']; s.updateVisibleRooms(); assert.equal(s.data.visibleRooms.length, 0);
- s.data.category = []; s.data.searchvalue = 'not present'; s.updateVisibleRooms();
- assert.equal(s.data.visibleRooms.length, 0);
+test('Category selection filters current search results without changing nearby data or fetching pages',async()=>{
+ const {s}=setup({LoadingSrvc:{hasTask:()=>false},RoomSrvc:{searchRooms:()=>Promise.resolve([roomResult(9,5),roomResult(10,11)]),loadRoomsPage:()=>assert.fail('search must not request nearby pages')}});
+ function roomResult(id,category){return {id:()=>id,category:()=>category};}
+ s.data.locationQuery='Café';s.searchLocations();await settle();
+ s.selectCategory([5]);assert.deepEqual(Array.from(s.data.filteredRooms,r=>r.id()),[9]);assert.equal(s.data.rooms.length,3);assert.equal(s.data.selectedRoomId,'9');
+ s.selectCategory([5]);assert.equal(s.data.filteredRooms.length,2);assert.equal(s.isCategoryActive([]),true);
+ s.clearLocationSearch();assert.equal(s.data.filteredRooms.length,3);assert.equal(s.data.searchActive,false);
 });
 
-test('Loading a different category selects its first visible card before any scroll event', () => {
- const s = setup();
- s.data.currentRoom = {id: () => 1}; s.data.currentRoomIndex = 0;
- s.data.category = ['11'];
- const club = {id: () => 2, category: () => 11, name: () => 'Club', city: () => '',
-  street: () => '', zip: () => '', categoryName: () => 'Nachtleben'};
- s.gotRooms([club]);
- assert.equal(s.data.currentRoom, club); assert.equal(s.data.currentRoomIndex, 0);
+test('Selecting another category resets to its first matching card and can request more matches',()=>{
+ const {s,room}=setup();s.data.rooms=[room(1,5),room(2,11),room(3,11)];let minimum;
+ s.loadNextPage=n=>minimum=n;s.data.currentRoomIndex=2;s.data.selectedRoomId='3';s.selectCategory([11]);
+ assert.equal(s.data.currentRoomIndex,0);assert.equal(s.data.selectedRoomId,'2');assert.equal(minimum,10);assert.equal(s.isCategoryActive(['11']),true);
+ s.resetCategories();assert.equal(s.data.selectedRoomId,'1');assert.equal(s.data.filteredRooms.length,3);
 });
 
-test('One route/chat action chooses navigation outside and chat on site, including a range recheck', () => {
- let timer, atPlace = false, routes = 0, joins = 0, prevented = 0;
- const s = setup({$timeout: fn => {timer = fn; return 1;}});
- s.requestLocation = () => { routes++; };
- s.gotoChat = () => { joins++; };
- const room = {id: () => 5, inChatRange: () => atPlace};
- const event = {preventDefault() {prevented++;}, stopPropagation() {}};
- s.routeOrChat(room, event);
- assert.equal(routes, 1); assert.equal(joins, 0); assert.equal(prevented, 0);
- atPlace = true; s.routeOrChat(room, event);
- assert.equal(prevented, 1); assert.equal(routes, 1);
- atPlace = false; timer(); // GPS can change during the short visual response.
- assert.equal(joins, 0);
- atPlace = true; s.routeOrChat(room, event); timer();
- assert.equal(joins, 1); assert.equal(s.data.doorOpeningRoomId, null);
+test('Opening a room preserves return selection; map route and chat remain separate range-aware controls',()=>{
+ const {s}=setup();let opened;const room=s.data.filteredRooms[1];s.gotoRoom=r=>opened=r;s.openRoom(room);
+ assert.equal(opened,room);assert.equal(s.data.currentRoomIndex,1);assert.equal(s.data.selectedRoomId,'2');
+ const mapRoom={lat:()=>52.27,lng:()=>10.53,street:()=>'',zip:()=>'',city:()=>''};
+ assert.ok(s.mapsHref(mapRoom).endsWith('destination=52.27%2C10.53'));
+ const html=fs.readFileSync(path.join(__dirname,'../js/pages/locations/lup-locations.html'),'utf8');
+ assert.match(html,/ng-if="room.inChatRange\(\)" ng-click="gotoChat\(room\)"/);
+ assert.match(html,/ng-if="!room.inChatRange\(\)" ng-href="\{\{mapsHref\(room\)\}\}"/);
 });
 
 test('Presence shows up to 20 faces but keeps the real total, animates changes and cleans up', () => {

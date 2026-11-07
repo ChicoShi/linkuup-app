@@ -1,0 +1,1 @@
+window.openGastro=function(){const d=document.getElementById('gastro-sheet'),f=document.getElementById('gastro-frame');if(!f.getAttribute('src'))f.src='/embed';d.showModal()};document.getElementById('gastro-close').onclick=function(){document.getElementById('gastro-sheet').close()};
