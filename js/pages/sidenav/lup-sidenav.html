@@ -75,9 +75,9 @@
 		<p>{{'TITLE_BUY_DISTANCE'|translate}}<small>{{'DISTANCE_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.toleranceCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
 
-      <md-list-item class="md-1-line nav-gastro" ng-click="gastroVenues.length ? openLocationGastro() : gotoOperatorApplication()" ng-if="data.ownUser.isAuthed()" ng-class="{'is-operator-locked': !gastroVenues.length}">
+      <md-list-item class="md-1-line nav-gastro" ng-click="openGastroEntry()" ng-disabled="gastroVenuesState === 'loading' || gastroVenuesState === 'unavailable'" ng-if="data.ownUser.isAuthed()" ng-class="{'is-operator-locked': gastroVenuesState === 'ready' && !gastroVenues.length}">
         <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 3h7v18H4Z M14 3h6v18h-6 M6 7h3 M6 11h3 M16 7h2 M16 11h2"/></svg>
-        <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{!gastroVenues.length ? ('GASTRO_ACCESS_LOCKED'|translate) : (gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate))}}</small></p>
+        <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{gastroVenuesState !== 'ready' ? (('GASTRO_ACCESS_' + gastroVenuesState)|translate) : (!gastroVenues.length ? ('GASTRO_ACCESS_LOCKED'|translate) : (gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate)))}}</small></p>
       </md-list-item>
 
 
