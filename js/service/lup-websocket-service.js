@@ -248,7 +248,7 @@ service('WebsocketSrvc', function($q, $rootScope, ErrorSrvc, LoadingSrvc) {
 			var pending = WebsocketSrvc.SYNC_MSGS;
 			WebsocketSrvc.SYNC_MSGS = {};
 			Object.keys(pending).forEach(function(id) {
-				pending[id].reject('err_websocket_connection');
+				if (pending[id]) pending[id].reject('err_websocket_connection');
 			});
 			socket.close();
 			if (event) {

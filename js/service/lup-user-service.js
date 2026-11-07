@@ -1,6 +1,6 @@
 "use strict";
 angular.module('LUP').
-service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrvc) {
+service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrvc, AuthSrvc) {
 	var UserSrvc = this;
 
 	UserSrvc.CACHE = {};
@@ -15,8 +15,7 @@ service('UserSrvc', function($q, $rootScope, WebsocketSrvc, EnumSrvc, RequestSrv
 
 	UserSrvc.logout = function() {
 		console.log('UserSrvc.logout()');
-		var gwsMessage = new GWS_Message().cmd(0x0104).sync();
-		return WebsocketSrvc.sendBinary(gwsMessage).then(UserSrvc.loggedOut);
+		return AuthSrvc.logout().then(UserSrvc.loggedOut);
 	};
 
 	UserSrvc.loggedOut = function(gwsMessage) {

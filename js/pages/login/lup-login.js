@@ -95,15 +95,7 @@ angular.module('LUP').config(function($routeProvider) {
 			// an e-mail login reaches the server as an actual e-mail address.
 			var login = String(data.email || '').trim().replace(/[æÆ]/g, '@');
 			data.email = login;
-			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(login).writeString(data.password).write16(1).writeString("");
-			var sendLogin = function() {
-				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
-			};
-			if (WebsocketSrvc.connected()) {
-				sendLogin();
-			} else {
-				WebsocketSrvc.withConnection().then(sendLogin, $scope.loginFailure)['catch']($scope.catchUnknown);
-			}
+			AuthSrvc.login(login, data.password).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
 		};
 		// A location is helpful for nearby places, but must never delay login.
 		// It is requested again after authentication for nearby rooms.

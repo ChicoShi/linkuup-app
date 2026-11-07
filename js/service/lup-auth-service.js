@@ -1,8 +1,37 @@
 "use strict";
 angular.module('LUP').
-service('AuthSrvc', function($q, $location, $translate, WebsocketSrvc, LoadingSrvc) {
+service('AuthSrvc', function($q, $location, $translate, WebsocketSrvc, LoadingSrvc, RequestSrvc) {
 	
 	var AuthSrvc = this;
+
+	// Cookie rotation belongs to HTTP. Reconnect WS only after verifying that
+	// the browser has accepted the new server-issued authentication cookie.
+	AuthSrvc.httpAuthentication = function(method, data, expectedType) {
+		var previous = window.LUP_CONFIG.ws_secret;
+		return RequestSrvc.sendGWF('Login', method, data, 'POST').then(function(formResponse) {
+			return RequestSrvc.sendGWF('Websocket', 'GetSecret').then(function(response) {
+				var session = response && response.data && response.data.data;
+				if (!session || !session.user || session.user.user_type !== expectedType ||
+					!/^\d+-[a-zA-Z0-9]{32}$/.test(session.secret || '') || session.secret === previous) {
+					return $q.reject(formResponse.data || 'err_authentication_required');
+				}
+				WebsocketSrvc.disconnect();
+				window.LUP_CONFIG.ws_secret = session.secret;
+				window.LUP_CONFIG.cookie = session.secret;
+				// Logout must remain usable even when the realtime service is down.
+				if (expectedType === 'ghost') return JSON.stringify(session.user);
+				return WebsocketSrvc.withConnection().then(function() {
+					return JSON.stringify(session.user);
+				});
+			});
+		});
+	};
+	AuthSrvc.login = function(login, password) {
+		return AuthSrvc.httpAuthentication('Form', {login:login,password:password,bind_ip:'0',submit:'Login'}, 'member');
+	};
+	AuthSrvc.logout = function() {
+		return AuthSrvc.httpAuthentication('Logout', {}, 'ghost');
+	};
 	
 //	AuthSrvc.authenticated = function(callback) {
 //		console.log('AuthSrvc.authenticated()');
