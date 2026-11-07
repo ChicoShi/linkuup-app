@@ -799,5 +799,8 @@
   "GASTRO_CLOSE": "Close menu",
   "GASTRO_MANAGE_LOCATION": "My venue",
   "GASTRO_ORDER_MENU": "Menu & ordering",
-  "GASTRO_CHOOSE_LOCATION": "Choose venue"
+  "GASTRO_CHOOSE_LOCATION": "Choose venue",
+  "GASTRO_APPLY": "Register a venue",
+  "GASTRO_APPLY_COPY": "Apply for operator access",
+  "GASTRO_NO_MENU": "No published menu is currently available for this venue."
 }

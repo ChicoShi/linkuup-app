@@ -468,6 +468,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
             gastroPending=null; $scope.$broadcast('lup-open-gastro',context.id);
         }
     });
+    $scope.gotoOperatorApplication = function() {
+        return $scope.closeLeft().then(function() { $scope.gotoExternal(window.LUP_CONFIG.server + 'linkuup.operatorapply.html'); });
+    };
     $scope.openLocationGastro = function() {
         var routeAtOpen=$location.path();
         return $scope.refreshGastroVenues().then(function(venues) {

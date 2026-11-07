@@ -80,6 +80,11 @@
         <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate)}}</small></p>
       </md-list-item>
 
+      <md-list-item class="md-1-line nav-gastro-apply" ng-click="gotoOperatorApplication()" ng-if="data.ownUser.isAuthed() && !data.ownUser.isGuest() && !gastroVenues.length">
+        <i class="material-icons nav-icon">storefront</i>
+        <p>{{'GASTRO_APPLY'|translate}}<small>{{'GASTRO_APPLY_COPY'|translate}}</small></p>
+      </md-list-item>
+
 	  <md-list-item class="md-1-line nav-add-room" ng-click="gotoAddRoom()" ng-if="data.ownUser.isAuthed()" ng-class="{'lup-vip-locked': !data.ownUser.isVIP()}">
 	    <i class="material-icons nav-icon">add_circle_outline</i>
 		<p>{{'TITLE_ADD_ROOM'|translate}}</p>
