@@ -507,3 +507,7 @@ md-dialog.md-default-theme:not(.place-dialog) .md-button {border:0;border-radius
   padding-top:12px;
  }
 }
+
+/* Keep the menu in its usual location before publication, with a quiet state. */
+.place-tool.place-menu-entry.is-unpublished {color:#9aadc0;background:#142337;border:1px dashed #3b5065;box-shadow:none;}
+.place-tool.place-menu-entry.is-unpublished:hover,.place-tool.place-menu-entry.is-unpublished:focus-visible {color:#d9e6f2;border-color:#8ca5bc;}

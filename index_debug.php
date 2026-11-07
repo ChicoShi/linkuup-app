@@ -42,6 +42,7 @@ $googleMapsApiKey = is_file($mapsKeyFile) ? trim((string)include($mapsKeyFile)) 
   <meta itemprop="image" content="<?=$shareImage?>" />
 
   <link rel="canonical" href="<?=$publicBase?>/" />
+  <style>html,body{background:#101b2d}body[ng-cloak]{visibility:hidden}body[ng-cloak] *{animation:none!important}</style>
   <link rel="manifest" href="manifest.webmanifest<?=$v?>" />
   <link rel="shortcut icon" href="favicon.ico<?=$v?>" />
   <link rel="icon" href="favicon.ico<?=$v?>" sizes="any" />
