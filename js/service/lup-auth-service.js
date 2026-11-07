@@ -32,6 +32,45 @@ service('AuthSrvc', function($q, $location, $translate, WebsocketSrvc, LoadingSr
 	AuthSrvc.logout = function() {
 		return AuthSrvc.httpAuthentication('Logout', {}, 'ghost');
 	};
+	// Register and guest creation also rotate the browser cookie. Bootstrap the
+	// real form first so installations with rotating CSRF protection work too.
+	AuthSrvc.registerHTTP = function(method, data, expectedType, allowPending) {
+		var previous = window.LUP_CONFIG.ws_secret;
+		return RequestSrvc.sendGWF('Websocket', 'GetSecret').then(function() {
+			return RequestSrvc.gwfPage('Register', method);
+		}).then(function(response) {
+			var doc = new DOMParser().parseFromString(String(response.data || ''), 'text/html');
+			var token = doc.querySelector('input[name="xsrf"]');
+			if (!token) return $q.reject('Registrierungsformular ist nicht verfügbar.');
+			return RequestSrvc.sendGWF('Register', method, Object.assign({}, data, {xsrf:token.value,submit:'Register'}), 'POST');
+		}).then(function(response) {
+			var result = response && response.data;
+			if (!result || result.error || (result.form && (result.form.form_error || Object.values(result.form.errors || {}).some(Boolean)))) {
+				return $q.reject(JSON.stringify(result || {global:'Registrierung fehlgeschlagen.'}));
+			}
+			return RequestSrvc.sendGWF('Websocket', 'GetSecret').then(function(fresh) {
+				var session = fresh && fresh.data && fresh.data.data;
+				if (!session || !session.user || !/^\d+-[a-zA-Z0-9]{32}$/.test(session.secret || '')) return $q.reject('Sitzung konnte nicht bestätigt werden.');
+				if (session.user.user_type !== expectedType) {
+					if (allowPending && ['ghost','guest'].includes(session.user.user_type)) return {pendingActivation:true};
+					return $q.reject('Registrierung konnte nicht bestätigt werden.');
+				}
+				if (session.secret === previous) return $q.reject('Sitzung wurde nicht erneuert.');
+				WebsocketSrvc.disconnect();
+				window.LUP_CONFIG.ws_secret = session.secret;
+				window.LUP_CONFIG.cookie = session.secret;
+				return WebsocketSrvc.withConnection().then(function() { return JSON.stringify(session.user); });
+			});
+		}, function(error) { return $q.reject(error && error.data ? JSON.stringify(error.data) : error); });
+	};
+	AuthSrvc.register = function(data) { return AuthSrvc.registerHTTP('Form', data, 'member', true); };
+	AuthSrvc.guest = function(data) { return AuthSrvc.registerHTTP('Guest', data, 'guest', false); };
+	AuthSrvc.google = function(config) {
+		var enabled = config && config.GoogleAuth && config.GoogleAuth.google_auth;
+		if (![true,1,'1'].includes(enabled)) return $q.reject('Google-Anmeldung ist hier noch nicht eingerichtet. Bitte nutze E-Mail und Passwort.');
+		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
+	};
+
 	
 //	AuthSrvc.authenticated = function(callback) {
 //		console.log('AuthSrvc.authenticated()');

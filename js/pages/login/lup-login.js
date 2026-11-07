@@ -143,25 +143,19 @@ angular.module('LUP').config(function($routeProvider) {
 		$location.path('/guest-login');
 	};
 	$scope.loginAsGuest = function() {
-		console.log('LoginCtrl.loginAsGuest()', $scope.data.nickname);
-		return $scope.withPosition().then(function(pos) {
-			$scope.data.error = null;
-			$scope.data.errors = {};
-			var gwsMessage = new GWS_Message().cmd(0x0101).sync().writeString($scope.data.nickname);
-			if (ConfigSrvc.tosForced()) {
-				gwsMessage.write16($scope.data.tos?1:0);
-			}
-			return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
-		})['catch']($scope.catchUnknown);
+		if ($scope.data.loginPending) return;
+		$scope.data.loginPending = true;
+		$scope.data.error = null; $scope.data.errors = {};
+		return AuthSrvc.guest({user_guest_name:$scope.data.nickname,tos:$scope.data.tos?'1':'0',captcha:$scope.data.captcha || ''})
+			.then($scope.loginSuccess, $scope.loginFailure)['finally'](function() { $scope.data.loginPending = false; });
 	};
 
 	//////////////////////////
 	// --- Google sign-in --- //
 	//////////////////////////
 	$scope.initGoogleAuth = function() {
-		// Google OAuth needs the backend's session cookie for its PKCE state.
-		// Leave the SPA for the complete browser redirect flow.
-		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
+		var result = AuthSrvc.google(ConfigSrvc.CACHE);
+		if (result) result.catch(function(message) { ErrorSrvc.showMessage(message, 'Google-Anmeldung'); });
 	};
 
 	//////////////////

@@ -97,3 +97,75 @@ dialog,.embedded dialog{background:#172232;border-color:#c5d6ec2b;border-radius:
  .operator-workspace .toolbar{display:grid;grid-template-columns:1fr 1fr}.operator-workspace .toolbar .primary{grid-column:1/-1}
  .operator-workspace .ticket-head{gap:8px}.operator-workspace .ticket-head strong{font-size:20px}
 }
+
+/* Blue LinkUUp hospitality surfaces, scoped to Gastro. */
+:root{--bg:#111c2b;--panel:#1a2b3e;--raised:#233b52;--ink:#f3f8ff;--muted:#b5c9dd;--line:#b9dafa24;--blue:#ffc69d}
+body{background:radial-gradient(ellipse at 0 0,#327db835,transparent 55%),radial-gradient(ellipse at 100% 70%,#498fb92b,transparent 60%),var(--bg)}
+.testbar,.embedded .testbar{color:var(--muted);background:#14233480}
+button{background:var(--raised);border-color:#b6d6ed29;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+button:not(:disabled):hover{background:#2c4c68;border-color:#80c7ff80}
+.primary,.embedded .primary,.mobile-cart,.embedded .mobile-cart{background:#ffc69d;border-color:#ffc69d;color:#39251e;box-shadow:0 5px 18px #db805b16}
+.primary:not(:disabled):hover,.embedded .primary:not(:disabled):hover,.mobile-cart:hover,.embedded .mobile-cart:hover{background:#ffdabd;border-color:#ffdabd;color:#39251e}
+.operator-workspace{--operator-accent:#8aceff}
+.eyebrow,.operator-workspace .eyebrow,.menu-heading>small,.embedded-title small{color:#8aceff}
+.tabs button.active,.operator-workspace .operator-tabs button.active{color:#ceeaff;border-color:#80c7ff}
+.cart,.receipt,.table-card,.ticket,.setup-panel,.wallet article{background:linear-gradient(125deg,#20384f,#1a2b3e 70%);border-color:#b9dafa26;box-shadow:inset 0 1px 0 #e3f4ff09,0 12px 32px #0713211f}
+.setup-panel{border-top:2px solid #80c7ff80}.setup-step h3{color:var(--ink)}
+.step-mark{background:#80c7ff24;color:#c7e9ff;box-shadow:inset 0 0 0 1px #80c7ff35}
+.publication{background:#bce3cc09;border-color:#bce3cc24}.publication p{color:var(--muted)}
+.badge.green{background:#bce3cc17;color:#c2ecd2;border-color:#bce3cc40}
+.operator-workspace .lane{background:#241e2a;border:1px solid var(--line)}.operator-workspace .ticket{background:#213950;border-color:#badcf22c}
+.operator-workspace .stats b{color:#ffd1af}.operator-workspace .stats>div:nth-child(2) b{color:#8aceff}.operator-workspace .stats>div:nth-child(3) b{color:#bce3cc}
+input,textarea,select{background:#132334;color:var(--ink);border-color:#b9dafa30}
+.menu-search{background:#e3f4ff06;border-color:#b9dafa30}.menu-search:focus-within{border-color:#80c7ff}
+.service-context button{background:#80c7ff13;color:#ceeaff}
+.category{gap:8px}.category button{gap:7px;border:1px solid transparent}.category button .ico{display:block;width:16px;height:16px}.category .active{background:#80c7ff21;border-color:#80c7ff40;color:#d8efff!important}
+.dish,.embedded .dish{grid-template-columns:48px minmax(0,1fr) 44px;gap:12px}
+.dish-art,.embedded .dish-art{display:grid;place-items:center;width:48px;height:56px;border-radius:17px 17px 17px 5px;background:#ffc69d18;color:#ffc69d;border:1px solid #ffc69d25}
+.dish-art .ico,.embedded .dish-art .ico{width:25px;height:25px}
+.dish:nth-child(3n+2) .dish-art{background:#80c7ff18;color:#8aceff;border-color:#80c7ff25}.dish:nth-child(3n) .dish-art{background:#bce3cc15;color:#bce3cc;border-color:#bce3cc25}
+.dish .price{color:#ffd1af}.add{background:#80c7ff20;color:#d8efff;border-color:#80c7ff40}.add:not(:disabled):hover{background:#80c7ff35;transform:translateY(-2px)}
+.table-grid>span{background:#80c7ff0e;border-color:#80c7ff30;color:#ceeaff}.table-grid>span:nth-child(3n+2){background:#ffc69d0c;border-color:#ffc69d26;color:#ffd1af}
+.balance-strip b{color:#ffd1af}.preview-note{color:var(--muted)!important}
+dialog,.embedded dialog{background:#1a2b3e;border-color:#b9dafa30}dialog::backdrop{background:#091522c7}
+.order-progress .reached{color:#8aceff}.order-progress .reached>span{background:#80c7ff;color:#102d45;border-color:#80c7ff}.order-progress .reached:after{background:#80c7ff}
+#notice{background:#29455f;color:var(--ink)}#submit-order,#checkout-topup{box-shadow:0 -8px 16px #1a2b3e}
+@media(max-width:400px){.dish,.embedded .dish{grid-template-columns:40px minmax(0,1fr) 44px;gap:9px}.dish-art,.embedded .dish-art{width:40px;height:49px}}
+@media(prefers-reduced-motion:reduce){button,.setup-step button,.primary{transition:none}.add:not(:disabled):hover,.setup-step button:hover,.primary:hover{transform:none}}
+
+/* Profile-inspired quiet route: decoration never intercepts input. */
+body{isolation:isolate}.gastro-ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}.gastro-route{position:absolute;top:9%;right:-35%;width:95%;height:48%;border:1px solid #8aceff16;border-radius:50%;transform:rotate(-24deg)}.gastro-signal{position:absolute;top:18%;right:12%;width:5px;height:5px;border-radius:50%;background:#ffd1af;box-shadow:0 0 14px #ffc69d70;animation:gastro-route-signal 24s ease-in-out infinite;opacity:.4}
+@keyframes gastro-route-signal{0%,100%{transform:translate3d(0,0,0);opacity:.25}50%{transform:translate3d(-70px,85px,0);opacity:.55}}
+#sidebar{background:linear-gradient(155deg,#244661,#132537 75%);border-color:#8aceff30;padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom))}.side-caption,.side-label,.side-note,.side-profile small,.side-venue small{color:var(--muted)}.side-profile,.side-venue{background:#8aceff08;border-color:var(--line)}.side-profile .avatar{background:#80c7ff24;color:#ceeaff}#sidebar>button>.ico:last-child{color:#8aceff}#sidebar>button.selected{background:#80c7ff21;border-color:#80c7ff40;color:#d8efff}#sidebar>button:hover{background:#80c7ff14}#nav-shade{background:#081725aa}.side-venue>div,.side-profile>div{min-width:0;overflow-wrap:anywhere}.nav-is-open{overflow:hidden}
+@media(prefers-reduced-motion:reduce){.gastro-signal{animation:none}}
+/* Shared blue details also cover the standalone navigation and order lanes. */
+.brand span{color:#8aceff}.top nav{background:#14283b}.top nav .active{background:#294b68}.avatar{background:#294b68;color:#d8efff}.operator-workspace .lane{background:#14283b}button:hover{border-color:#80c7ff80}
+.ticket li b{color:#b8dfff}
+
+/* Native LinkUUp profile palette: quiet navy actions, readable focus and touch targets. */
+:root,.embedded{--blue:#9ed8f2;--violet:#233b52}
+.primary,.embedded .primary,.mobile-cart,.embedded .mobile-cart{background:#233b52;color:#e5f5ff;border:1px solid #bce8fa40;min-height:44px}
+.primary:hover,.embedded .primary:hover,.mobile-cart:hover,.embedded .mobile-cart:hover{background:#2c4c68;color:#fff;border-color:#bce8fa80}
+.mobile-cart small,.embedded .mobile-cart small{color:#c1d9e7}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #9ed8f2;outline-offset:3px}
+#publish{white-space:normal;text-align:center}
+
+/* Shared profile navy: one surface family for guest, operator and forms. */
+:root,.embedded{--bg:#101b2d;--panel:#16283d;--raised:#1d3247;--ink:#e5f1fa;--muted:#a8c0d3;--line:#36516b;--blue:#a8c0d3;--violet:#1d3247}
+body,.embedded{background:var(--bg)}
+.cart,.receipt,.table-card,.ticket,.setup-panel,.wallet article,.operator-workspace .ticket,.operator-workspace .lane,dialog,.embedded dialog,.hero{background:var(--panel);border-color:var(--line);box-shadow:none}
+.top,.top nav,.testbar,#sidebar{background:var(--bg);border-color:var(--line)}
+button,.primary,.embedded .primary,.mobile-cart,.embedded .mobile-cart,.setup-step button,.category .active,.operator-tabs .active,.top nav .active,.add,.service-context button,.step-mark,.publication,.avatar,#notice{background:var(--raised);color:var(--ink);border-color:var(--line);box-shadow:none}
+.primary:not(:disabled):hover,.embedded .primary:not(:disabled):hover,.mobile-cart:hover,.embedded .mobile-cart:hover,.setup-step button:hover,.add:not(:disabled):hover,button:hover{background:#263f58;color:var(--ink);border-color:#a8c0d3}
+.linkbtn,.tabs button,.backlink{background:transparent}
+.dish-art,.embedded .dish-art,.dish:nth-child(3n+2) .dish-art,.dish:nth-child(3n) .dish-art,.table-grid>span,.table-grid>span:nth-child(3n+2),.side-profile,.side-venue,#sidebar>button.selected{background:var(--raised);color:var(--ink);border-color:var(--line)}
+.dish .price,.balance-strip b,.operator-workspace .stats b,.operator-workspace .stats>div:nth-child(2) b,.operator-workspace .stats>div:nth-child(3) b,.brand span,.ticket li b{color:var(--ink)}
+input,textarea,select{background:var(--bg);color:var(--ink);border-color:var(--line)}
+.order-progress .reached>span{background:var(--raised);color:var(--ink);border-color:var(--muted)}
+.order-progress .reached,.eyebrow,.side-label,.side-caption{color:var(--muted)}
+.order-progress .reached:after{background:var(--line)}
+.gastro-signal{background:var(--muted);box-shadow:0 0 12px #a8c0d330}
+.gastro-route{border-color:#36516b55}.setup-panel{border-top-color:var(--line)}
+#submit-order,#checkout-topup{box-shadow:none}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline-color:#c9eaff}
+button:not(:disabled):hover{background:#263f58;color:var(--ink);border-color:#a8c0d3}

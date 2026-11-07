@@ -796,5 +796,8 @@
 "NAV_SEARCH_LOADING": "Searching locations …",
 "NAV_SEARCH_ERROR": "Search unavailable. Please try again.",
   "GASTRO_CARD": "Menu",
-  "GASTRO_CLOSE": "Close menu"
+  "GASTRO_CLOSE": "Close menu",
+  "GASTRO_MANAGE_LOCATION": "My venue",
+  "GASTRO_ORDER_MENU": "Menu & ordering",
+  "GASTRO_CHOOSE_LOCATION": "Choose venue"
 }

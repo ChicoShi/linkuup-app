@@ -437,6 +437,46 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	//////////////////////
 	$scope.openLeft = function() { $mdSidenav('left').open(); };
 	$scope.closeLeft = function() { return $mdSidenav('left').close(); };
+    $scope.gastroNav = null;
+    $scope.gastroVenues = [];
+    var gastroRequest = 0, gastroPending = null;
+    $scope.refreshGastroVenues = function() {
+        var request = ++gastroRequest;
+        if (!$scope.data.authenticated || !['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) {
+            $scope.gastroVenues = []; return $q.when([]);
+        }
+        return $q.when(fetch('/backend/index.php?_mo=LinkUUp&_me=GastroVenues&_fmt=json&_ajax=1', {credentials:'same-origin'}).then(function(r) {
+            if(!r.ok) throw new Error('Betriebe konnten nicht geladen werden'); return r.json();
+        })).then(function(raw) {
+            var data=raw.data||raw;
+            if(!Array.isArray(data.venues)) throw new Error('Betriebe konnten nicht geladen werden');
+            if(request!==gastroRequest)return [];
+            $scope.gastroVenues=data.venues; return data.venues;
+        })['catch'](function(error){if(request===gastroRequest)$scope.gastroVenues=[];throw error;});
+    };
+    $scope.$on('lup-gastro-context', function(event, context) {
+        $scope.gastroNav = context;
+        if(!context || !context.canManage)gastroPending=null;
+        if(context && context.canManage && gastroPending && gastroPending.id===context.id && gastroPending.path===$location.path()){
+            gastroPending=null; $scope.$broadcast('lup-open-gastro',context.id);
+        }
+    });
+    $scope.openLocationGastro = function() {
+        var routeAtOpen=$location.path();
+        return $scope.refreshGastroVenues().then(function(venues) {
+            var requestAtOpen=gastroRequest;
+            if(!venues.length)return;
+            var choice=venues.length===1?$q.when(venues[0].id):$mdDialog.show({
+                template:'<md-dialog aria-label="{{title}}"><md-dialog-content class="md-dialog-content"><h2>{{title}}</h2><md-list><md-list-item ng-repeat="venue in venues" ng-click="choose(venue.id)"><p>{{venue.name}}</p></md-list-item></md-list></md-dialog-content><md-dialog-actions><md-button ng-click="cancel()">{{closeLabel}}</md-button></md-dialog-actions></md-dialog>',
+                locals:{venues:venues},controller:function($scope,$mdDialog,venues){$scope.venues=venues;$scope.title=$translate.instant('GASTRO_CHOOSE_LOCATION');$scope.closeLabel=$translate.instant('GASTRO_CLOSE');$scope.choose=function(id){$mdDialog.hide(id)};$scope.cancel=function(){$mdDialog.cancel()};}
+            });
+            return choice.then(function(id){return $scope.closeLeft().then(function(){
+                if(!$scope.data.authenticated || gastroRequest!==requestAtOpen || $location.path()!==routeAtOpen || !$scope.gastroVenues.some(function(v){return v.id===id}))return;
+                if($scope.gastroNav && $scope.gastroNav.id===id && $scope.gastroNav.canManage){$scope.$broadcast('lup-open-gastro',id);}
+                else {gastroPending={id:id,path:'/location/'+id};$location.path(gastroPending.path);}
+            });});
+        })['catch'](function(error){if(error)$scope.catchUnknown(error)});
+    };
 
 	/////////////////////
 	// --- Routing --- //
@@ -571,6 +611,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	// --- Events --- //
 	////////////////////
 	$scope.$on('$routeChangeStart', function(event, route) {
+        $scope.gastroNav = null;
+        if(gastroPending && gastroPending.path!==$location.path())gastroPending=null;
+        $scope.refreshGastroVenues()['catch'](angular.noop);
 		if (route.$$route) {
 			console.log('LUPCtrl.$on-$routeChangeStart()', route.$$route.originalPath, event, route);
 			$scope.data.authCheck = route.$$route.params.authCheck;
@@ -642,7 +685,8 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 				// $scope.authCheck();
 				setTimeout($scope.authCheck, 1);
 			}
-			else if (window.GWF_USER.authenticated(true)) {
+			else if (window.GWF_USER.authenticated(true) &&
+				!($location.path() === '/signup' && !window.GWF_USER.authenticated(false))) {
 				$scope.passedAuthCheck();
 				// onAuthenticated() is restoring a deep link after login. Do not let
 				// the public login route race it back to the locations overview.

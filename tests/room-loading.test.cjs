@@ -15,10 +15,10 @@ function setup() {
    'js/service/lup-type-service.js', 'js/service/lup-room-service.js']) {
   vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context);
  }
- const q = {when: Promise.resolve.bind(Promise), reject: Promise.reject.bind(Promise)};
+ const q = {resolve: Promise.resolve.bind(Promise), when: Promise.resolve.bind(Promise), reject: Promise.reject.bind(Promise)};
  const type = new services.TypeSrvc(q, {}, {});
  type.TYPES = {'GDO\\Maps\\GDT_Polygon': ['GDO\\Core\\GDT_JSON', 'GDO\\Core\\GDT_String']};
- type.FIELDS = {};
+ type.FIELDS = {'GDO\\LinkUUp\\LUP_Room':{},'GDO\\Address\\GDO_Address':{}};
  const socket = {sendBinary: () => Promise.resolve(null)};
  const position = {hasPosition: () => true, CURRENT: {lat: 52.27, lng: 10.53}};
  const rooms = new services.RoomSrvc(q, {getOrCreate: id => ({id: () => id})}, {}, {},
@@ -78,29 +78,20 @@ test('Malformed nonempty JSON still rejects instead of silently replacing data',
   {name: 'SyntaxError'});
 });
 
-for (const includeAll of [false, true]) {
- test(`Parser failure releases the ${includeAll ? 'catalogue' : 'nearby'} request for retry`, async () => {
-  const {rooms, socket} = setup();
-  let calls = 0;
-  socket.sendBinary = () => { calls++; return Promise.resolve(null); };
-  rooms.parseRoomsMessage = () => { throw new SyntaxError('invalid room JSON'); };
-  const first = rooms.withRooms(includeAll);
-  assert.equal(rooms.withRooms(includeAll), first);
-  let timer;
-  try {
-   await assert.rejects(Promise.race([first, new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error('request remained pending')), 250);
-   })]), /invalid room JSON/);
-  } finally { clearTimeout(timer); }
-  const key = includeAll ? 'ALL_ROOMS_LOADING' : 'ROOMS_LOADING';
-  assert.equal(rooms[key], null);
-  const expected = [{id: () => 17}];
-  rooms.parseRoomsMessage = () => expected;
-  assert.equal(await rooms.withRooms(includeAll), expected);
-  assert.equal(calls, 2);
-  assert.equal(rooms[key], null);
- });
-}
+test('Parser failure after the count header releases the nearby request for retry', async () => {
+ const {context,rooms,socket}=setup();let calls=0;
+ socket.sendBinary=()=>{calls++;const m=new context.GWS_Message().write32(1);return Promise.resolve(new context.GWS_Message(m.binaryBuffer()));};
+ rooms.parseRoomsMessage=()=>{throw new SyntaxError('invalid room JSON');};
+ const first=rooms.withRooms();assert.equal(rooms.withRooms(),first);
+ await assert.rejects(first,/invalid room JSON/);assert.equal(rooms.ROOMS_LOADING,null);
+ const expected=[{id:()=>17}];rooms.parseRoomsMessage=()=>expected;
+ assert.equal(await rooms.withRooms(),expected);assert.equal(calls,2);assert.equal(rooms.NUM_ROOMS,1);assert.equal(rooms.ROOMS_LOADING,null);
+});
+
+test('Nearby transport failure releases its request before retry',async()=>{
+ const {rooms,socket}=setup();socket.sendBinary=()=>Promise.reject(new Error('offline'));
+ await assert.rejects(rooms.withRooms(),/offline/);assert.equal(rooms.ROOMS_LOADING,null);
+});
 
 if (process.env.LUP_BINARY_ROOMS_JSON && process.env.LUP_TYPES_JSON) {
  test('Actual backend room/address binary records parse completely in the frontend', () => {
@@ -126,23 +117,17 @@ if (process.env.LUP_BINARY_ROOMS_JSON && process.env.LUP_TYPES_JSON) {
  });
 }
 
-test('Complete catalogue uses the backend discovery sentinel and stays separate from nearby GPS', async () => {
- const {context, rooms, socket, position} = setup();
- let request;
- socket.sendBinary = message => {
-  request = message;
-  return Promise.resolve(new context.GWS_Message(new ArrayBuffer(0)));
- };
- rooms.parseRoomsMessage = () => [];
- position.hasPosition = () => false;
-
- assert.deepEqual(await rooms.withRooms(true), []);
- const wire = new context.GWS_Message(request.binaryBuffer());
- assert.equal(wire.readCmd(), 0x1101);
- wire.readMid();
- assert.equal(wire.readFloat(), 0);
- assert.equal(wire.readFloat(), 0);
- await assert.rejects(rooms.withRooms(false), /GPS position required/);
+test('Nearby page requires GPS and sends its position and bounded page request, never a public sentinel',async()=>{
+ const {context,rooms,socket,position}=setup();let request,calls=0;
+ socket.sendBinary=message=>{calls++;request=message;const reply=new context.GWS_Message().write32(0);return Promise.resolve(new context.GWS_Message(reply.binaryBuffer()));};
+ rooms.parseRoomsMessage=()=>[];position.hasPosition=()=>false;
+ await assert.rejects(rooms.withRooms(),/GPS position required/);assert.equal(calls,0);
+ position.hasPosition=()=>true;assert.deepEqual(await rooms.withRooms(),[]);
+ const wire=new context.GWS_Message(request.binaryBuffer());assert.equal(wire.readCmd(),0x1101);wire.readMid();
+ // Outgoing floats use network byte order; the PHP reader reverses these bytes.
+ assert.ok(Math.abs(wire.BUFFER.getFloat32(wire.index(),false)-52.27)<0.001);wire.moveIndex(4);
+ assert.ok(Math.abs(wire.BUFFER.getFloat32(wire.index(),false)-10.53)<0.001);wire.moveIndex(4);
+ assert.equal(wire.read32(),1);assert.equal(wire.read32(),10);assert.equal(wire.hasMore(),false);
 });
 
 test('A single room failure rejects, releases its request and retries its blank placeholder', async () => {
@@ -157,4 +142,32 @@ test('A single room failure rejects, releases its request and retries its blank 
  socket.sendBinary=()=>Promise.reject(new Error('offline'));
  await assert.rejects(rooms.withRoom(9,true),/offline/);
  assert.equal(rooms.ROOM_LOADING[9],undefined);
+});
+
+for(const method of ['single','page','search']) {
+ test(`${method} response waits for delayed type metadata before consuming binary data`,async()=>{
+  const {rooms,type,socket,context}=setup();let resolveTypes,parsed=0;
+  const fields=type.FIELDS;type.FIELDS=null;type.withTypes=()=>new Promise(resolve=>resolveTypes=()=>{type.FIELDS=fields;resolve(fields);});
+  const message=new context.GWS_Message(new context.GWS_Message().write32(1).binaryBuffer());socket.sendBinary=()=>Promise.resolve(message);
+  const expected={id:()=>42,name:()=> 'Loaded'};
+  rooms.parseRoomMessage=()=>{parsed++;return expected;};rooms.parseRoomsMessage=()=>{parsed++;return [expected];};
+  const request=method==='single'?rooms.withRoom(42):method==='page'?rooms.withRooms():rooms.searchRooms('Bar');
+  await new Promise(r=>setImmediate(r));assert.equal(parsed,0);assert.equal(message.index(),0);
+  resolveTypes();const result=await request;assert.equal(parsed,1);assert.equal(method==='single'?result:result[0],expected);
+  if(method==='page')assert.equal(rooms.NUM_ROOMS,1);
+ });
+ test(`${method} metadata failure rejects without parsing and the next request can retry`,async()=>{
+  const {rooms,type,socket,context}=setup();let parsed=0,calls=0;
+  socket.sendBinary=()=>{calls++;return Promise.resolve(new context.GWS_Message(new context.GWS_Message().write32(0).binaryBuffer()));};
+  rooms.parseRoomMessage=()=>{parsed++;return {id:()=>42,name:()=> 'Loaded'};};rooms.parseRoomsMessage=()=>{parsed++;return [];};
+  const load=()=>method==='single'?rooms.withRoom(42):method==='page'?rooms.withRooms():rooms.searchRooms('Bar');
+  type.withTypes=()=>Promise.reject(Error('metadata offline'));await assert.rejects(load(),/metadata offline/);assert.equal(parsed,0);
+  if(method==='single')assert.equal(rooms.ROOM_LOADING[42],undefined);if(method==='page')assert.equal(rooms.ROOMS_LOADING,null);
+  type.withTypes=()=>Promise.resolve(type.FIELDS);await load();assert.equal(parsed,1);assert.equal(calls,2);
+ });
+}
+test('Resolved but incomplete room metadata is rejected rather than producing a cached blank',async()=>{
+ const {rooms,type,socket}=setup();type.FIELDS={};type.withTypes=()=>Promise.resolve({});socket.sendBinary=()=>Promise.resolve(null);
+ rooms.parseRoomMessage=()=>assert.fail('incomplete metadata must not reach parser');
+ await assert.rejects(rooms.withRoom(42),/Room metadata unavailable/);assert.equal(rooms.ROOM_LOADING[42],undefined);assert.equal(rooms.CACHE[42].name(),'');
 });
