@@ -1,8 +1,19 @@
-<section class="lup-account-panel">
-  <header class="lup-account-hero"><span class="lup-account-mark" aria-hidden="true"><i class="material-icons">manage_accounts</i></span><div><small>LinkUUp</small><h1>{{'TITLE_ACCOUNT'|translate}}</h1><p>{{'INFO_ACCOUNT'|translate}}</p></div></header>
-  <section class="lup-account-overview" aria-label="{{'TITLE_ACCOUNT'|translate}}">
-    <div><i class="material-icons" aria-hidden="true">person_outline</i><div><strong>{{'USERNAME'|translate}}</strong><span ng-if="data.user.isGuest()">{{data.account.user_guest_name}}</span><span ng-if="data.user.isMember()">{{data.account.user_name}}</span></div></div>
-    <div><i class="material-icons" aria-hidden="true">alternate_email</i><div><strong>{{'EMAIL'|translate}}</strong><span>{{data.account.user_email || ('UNKNOWN'|translate)}}</span></div></div>
+<section class="lup-account-panel account-home">
+  <header class="account-identity">
+    <span class="account-kicker">{{'ACCOUNT_HOME_KICKER'|translate}}</span>
+    <div class="account-identity-main">
+      <lup-avatar ng-user="data.user"></lup-avatar>
+      <div><h1>{{data.user.isGuest() ? data.account.user_guest_name : data.account.user_name}}</h1><p>{{'ACCOUNT_HOME_INTRO'|translate}}</p></div>
+    </div>
+    <button type="button" class="account-profile-preview" ng-click="gotoOwnProfile()">{{'ACCOUNT_PROFILE_PREVIEW'|translate}} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </header>
+  <section class="account-details" aria-label="{{'TITLE_ACCOUNT'|translate}}">
+    <h2>{{'ACCOUNT_HOME_DETAILS'|translate}}</h2>
+    <dl><div><dt>{{'USERNAME'|translate}}</dt><dd>{{data.user.isGuest() ? data.account.user_guest_name : data.account.user_name}}</dd></div><div><dt>{{'EMAIL'|translate}}</dt><dd>{{data.account.user_email || ('UNKNOWN'|translate)}}</dd></div></dl>
   </section>
-  <section class="lup-account-manage"><h2>{{'ACCOUNT_MANAGE_TITLE'|translate}}</h2><p class="lup-account-backend-hint">{{'INFO_ACCOUNT_BACKEND'|translate}}</p><a class="lup-account-action" ng-href="{{data.backendUrl}}" target="_blank" rel="noopener"><span>{{'ACCOUNT_MANAGE_ACTION'|translate}}</span><i class="material-icons" aria-hidden="true">open_in_new</i></a></section>
+  <nav class="account-destinations" aria-label="{{'ACCOUNT_MANAGE_TITLE'|translate}}">
+    <h2>{{'ACCOUNT_MANAGE_TITLE'|translate}}</h2>
+    <a ng-href="{{data.backendUrl}}#acc_LinkUUp"><span class="account-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21v-2a8 8 0 0 1 16 0v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8"/></svg></span><span><strong>{{'ACCOUNT_EDIT_PROFILE'|translate}}</strong><small>{{'ACCOUNT_EDIT_PROFILE_HINT'|translate}}</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a>
+    <a ng-href="{{data.backendUrl}}#acc_User"><span class="account-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z M9 12l2 2 4-4"/></svg></span><span><strong>{{'ACCOUNT_VISIBILITY'|translate}}</strong><small>{{'ACCOUNT_VISIBILITY_HINT'|translate}}</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a>
+  </nav>
 </section>

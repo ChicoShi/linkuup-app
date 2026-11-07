@@ -789,7 +789,7 @@
 "ADD_ROOM_EYEBROW": "A new meeting place",
 "ADD_ROOM_STEP_DETAILS": "1 · Describe your place",
 "ADD_ROOM_STEP_AREA": "2 · Set the area",
-"ACCOUNT_MANAGE_TITLE": "Manage your account",
+"ACCOUNT_MANAGE_TITLE": "Make it yours",
 "ACCOUNT_MANAGE_ACTION": "Open account settings",
 "NAV_LOCATION_SEARCH": "Search locations",
 "NAV_SEARCH_CLEAR": "Clear search",
@@ -803,5 +803,13 @@
   "GASTRO_APPLY": "Register a venue",
   "GASTRO_APPLY_COPY": "Apply for operator access",
   "GASTRO_NO_MENU": "No published menu is currently available for this venue.",
-  "GASTRO_ACCESS_LOCKED": "Register a venue · View application"
+  "GASTRO_ACCESS_LOCKED": "Register a venue · View application",
+  "ACCOUNT_HOME_KICKER": "YOUR LINKUUP",
+  "ACCOUNT_HOME_INTRO": "Your profile. Just like you.",
+  "ACCOUNT_PROFILE_PREVIEW": "View my profile",
+  "ACCOUNT_HOME_DETAILS": "Your account details",
+  "ACCOUNT_EDIT_PROFILE": "Edit profile",
+  "ACCOUNT_EDIT_PROFILE_HINT": "About you, home and personal details",
+  "ACCOUNT_VISIBILITY": "Account & visibility",
+  "ACCOUNT_VISIBILITY_HINT": "Account details and who can see what"
 }

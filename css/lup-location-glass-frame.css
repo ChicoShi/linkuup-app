@@ -407,3 +407,33 @@ md-sidenav.navigator-sidebar .sidebar-user-card,md-sidenav.navigator-sidebar :is
 md-sidenav.navigator-sidebar .nav-icon,md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon{background:#1d3247;color:#e5f1fa;text-shadow:none}
 md-sidenav.navigator-sidebar small,md-sidenav.navigator-sidebar .sidebar-user-card span{color:#a8c0d3}
 md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro):hover{background:#1d3247}
+
+/* Account home: identity first, direct routes to the existing settings forms. */
+.account-page .account-home {width:calc(100% - 40px);max-width:760px;margin:28px auto 64px;color:#e5f1fa;}
+.account-home svg {width:22px;height:22px;flex:none;}
+.account-identity {position:relative;isolation:isolate;overflow:hidden;padding:28px;border:1px solid #36516b;border-radius:24px;background:#16283d;}
+.account-identity::before {content:'';position:absolute;z-index:-1;width:320px;height:320px;right:-170px;top:-170px;border:1px solid #36516b;border-radius:50%;box-shadow:0 0 0 35px #36516b15,0 0 0 70px #36516b10;pointer-events:none;}
+.account-kicker {display:block;font-size:10px;letter-spacing:.16em;color:#91a9bf;margin-bottom:24px;}
+.account-identity-main {display:flex;align-items:center;gap:18px;}
+.account-identity-main > div {min-width:0;}
+.account-identity-main lup-avatar {display:block;width:64px;height:64px;flex:0 0 64px;}
+.account-identity-main lup-avatar :is(img,.avatar) {width:64px;height:64px;max-width:64px;max-height:64px;border-radius:20px;object-fit:cover;}
+.account-identity-main h1 {margin:0 0 6px;font:500 clamp(24px,4vw,32px)/1.2 Ubuntu,sans-serif;overflow-wrap:anywhere;}
+.account-identity-main p {margin:0;color:#a8bed3;font-size:14px;line-height:1.6;}
+.account-home .account-profile-preview {display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;margin-top:24px;padding:12px 0 0;border:0;border-top:1px solid #36516b;background:none;color:#e5f1fa;font:500 14px Ubuntu,sans-serif;text-align:left;cursor:pointer;}
+.account-details,.account-destinations {margin-top:28px;}
+.account-home h2 {margin:0 0 16px;color:#e5f1fa;font:500 18px/1.4 Ubuntu,sans-serif;}
+.account-details dl {margin:0;border:1px solid #263e55;border-radius:18px;background:#101b2d;}
+.account-details dl > div {padding:18px 20px;}
+.account-details dl > div + div {border-top:1px solid #263e55;}
+.account-details dt {color:#91a9bf;font-size:12px;}
+.account-details dd {margin:6px 0 0;font-size:15px;overflow-wrap:anywhere;}
+.account-destinations > a {display:flex;align-items:center;gap:16px;min-height:78px;padding:18px 20px;margin-top:10px;border:1px solid #263e55;border-radius:18px;background:#16283d;color:#e5f1fa;text-decoration:none;box-sizing:border-box;}
+.account-destinations > a > span:nth-child(2) {flex:1;min-width:0;}
+.account-destinations strong {display:block;font-size:15px;font-weight:500;}
+.account-destinations small {display:block;margin-top:5px;color:#91a9bf;font-size:12px;line-height:1.5;}
+.account-row-icon {color:#afc4d8;}
+.account-home :is(a,button):focus-visible {outline:2px solid #afc4d8;outline-offset:3px;}
+.account-destinations > a:hover {background:#1b3045;border-color:#36516b;}
+@media(min-width:800px) {.account-home {display:grid;grid-template-columns:1fr 1fr;gap:24px;}.account-identity {grid-column:1/-1;}.account-details,.account-destinations {margin-top:0;}}
+@media(max-width:380px) {.account-page .account-home {width:calc(100% - 28px);margin-top:20px;}.account-identity {padding:22px 18px;}.account-identity-main {gap:12px;}.account-destinations > a {padding:16px 14px;gap:12px;}}

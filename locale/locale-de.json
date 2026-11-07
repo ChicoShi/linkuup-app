@@ -789,7 +789,7 @@
 "ADD_ROOM_EYEBROW": "Ein neuer Treffpunkt",
 "ADD_ROOM_STEP_DETAILS": "1 · Deinen Ort beschreiben",
 "ADD_ROOM_STEP_AREA": "2 · Bereich festlegen",
-"ACCOUNT_MANAGE_TITLE": "Dein Konto verwalten",
+"ACCOUNT_MANAGE_TITLE": "Persönlich einstellen",
 "ACCOUNT_MANAGE_ACTION": "Kontoeinstellungen öffnen",
 "NAV_LOCATION_SEARCH": "Locations suchen",
 "NAV_SEARCH_CLEAR": "Suche löschen",
@@ -803,5 +803,13 @@
   "GASTRO_APPLY": "Betrieb anmelden",
   "GASTRO_APPLY_COPY": "Betreiberzugang beantragen",
   "GASTRO_NO_MENU": "Für diese Location ist aktuell keine veröffentlichte Karte verfügbar.",
-  "GASTRO_ACCESS_LOCKED": "Location anmelden · Antrag ansehen"
+  "GASTRO_ACCESS_LOCKED": "Location anmelden · Antrag ansehen",
+  "ACCOUNT_HOME_KICKER": "DEIN LINKUUP",
+  "ACCOUNT_HOME_INTRO": "Dein Profil. So, wie du bist.",
+  "ACCOUNT_PROFILE_PREVIEW": "Mein Profil ansehen",
+  "ACCOUNT_HOME_DETAILS": "Deine Kontodaten",
+  "ACCOUNT_EDIT_PROFILE": "Profil bearbeiten",
+  "ACCOUNT_EDIT_PROFILE_HINT": "Über dich, Wohnort und persönliche Angaben",
+  "ACCOUNT_VISIBILITY": "Konto & Sichtbarkeit",
+  "ACCOUNT_VISIBILITY_HINT": "Kontodaten und wer was sehen darf"
 }
