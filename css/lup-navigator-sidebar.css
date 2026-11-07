@@ -66,3 +66,7 @@ md-sidenav.navigator-sidebar .sidebar-user-card::after {display:none;}
 md-sidenav.navigator-sidebar .sidebar-user-card:hover,md-sidenav.navigator-sidebar md-list-item:hover,md-sidenav.navigator-sidebar md-list-item:hover .nav-icon {transform:none;box-shadow:none;}
 md-sidenav.navigator-sidebar md-list-item .nav-icon {transition:color 160ms ease;}
 @media(prefers-reduced-motion:reduce){md-sidenav.navigator-sidebar *,md-sidenav.navigator-sidebar *::before,md-sidenav.navigator-sidebar *::after{animation:none!important;transition:none!important;}}
+
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked {cursor:default;background:transparent;}
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked :is(p,small,.nav-icon) {color:#778899;}
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked:hover {background:transparent;transform:none;}

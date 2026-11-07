@@ -802,5 +802,6 @@
   "GASTRO_CHOOSE_LOCATION": "Betrieb auswählen",
   "GASTRO_APPLY": "Betrieb anmelden",
   "GASTRO_APPLY_COPY": "Betreiberzugang beantragen",
-  "GASTRO_NO_MENU": "Für diese Location ist aktuell keine veröffentlichte Karte verfügbar."
+  "GASTRO_NO_MENU": "Für diese Location ist aktuell keine veröffentlichte Karte verfügbar.",
+  "GASTRO_ACCESS_LOCKED": "Nur für freigeschaltete Betreiber"
 }
