@@ -111,7 +111,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.loginSuccess = function(response) {
-		console.log('LoginCtrl.loginSuccess()', response);
 		$scope.data.loginPending = false;
 		window.GWF_USER.update(JSON.parse(response));
 		LoadingSrvc.stopTask('oauth');
@@ -134,7 +133,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.setCookie = function(name, value, days) {
-		console.log('LoginCtrl.setCookie()', name, value, days);
 		var expires = "";
 		if (days) {
 			var date = new Date();

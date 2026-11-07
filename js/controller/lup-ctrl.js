@@ -214,7 +214,6 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	 * 2. Check for GeoPosition + Websocket.
 	 */
 	$scope.gotCookie = function(response) {
-		console.log('LUPCtrl.gotCookie()', response);
 		// Set user values
 		LUP_CONFIG.cookie = response.data.data.secret;
 		LUP_CONFIG.ws_secret = response.data.data.secret;
@@ -277,9 +276,7 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	};
 
 	$scope.setCookie = function(cookie, name) {
-		console.log('LUPCtrl.setCookie()', cookie);
 		cookie = name + "=" + cookie + "; path=/; domain=" + LUP_CONFIG.server_domain;
-		console.log('LUPCtrl.setCookie()', cookie);
 		document.cookie = cookie;
 	};
 	

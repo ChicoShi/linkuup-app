@@ -35,7 +35,6 @@ service('AuthSrvc', function($q, $location, $translate, WebsocketSrvc, LoadingSr
 	//////////////////////
 	
 	AuthSrvc.getCookie = function(name) {
-		console.log('AuthSrvc.getCookie()', name, document.cookie);
 		var value = "; " + document.cookie;
 		var parts = value.split("; " + name + "=");
 		if (parts.length == 2) return parts.pop().split(";").shift();

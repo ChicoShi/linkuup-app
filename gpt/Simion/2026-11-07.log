@@ -1,0 +1,6 @@
+
+[2026-11-07T01:40:32.928583+01:00] Auftrag6007 – HTTP-Rotation lokal geprüft, Gesamtintegration offen
+Dateien: js/controller/lup-ctrl.js, js/service/lup-auth-service.js, js/pages/login/lup-login.js
+Echter Chromium-Test mit isolierter GDO-Gastsession: Rotation gespeichert, neuer HttpOnly/Lax-Cookie, alter Cookie403; Testserver/Browser danach beendet. GDO-CSRF-Test nach korrekter CLI-Initialisierung erneut bestanden; WS-Dispatchregression bestanden. JS/PHP-Syntax und Diffcheck bestanden. Cookie-/Authantwort-Debugausgaben in App entfernt.
+Offen: App nutzt WS-Login; sichere HTTP-Cookie-Übergabe nicht implementiert. Keine vollständige Login-/Bestellablaufprüfung, kein Push/Live. Schema benötigt sess_token CHAR(32).
+Nächster Schritt Simion-Terminal – HTTP-/WS-Authentifizierung gemeinsam integrieren und vollständigen App-Ablauf prüfen.
