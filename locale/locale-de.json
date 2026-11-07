@@ -802,7 +802,7 @@
   "GASTRO_CHOOSE_LOCATION": "Betrieb auswählen",
   "GASTRO_APPLY": "Betrieb anmelden",
   "GASTRO_APPLY_COPY": "Betreiberzugang beantragen",
-  "GASTRO_NO_MENU": "Für diese Location ist aktuell keine veröffentlichte Karte verfügbar.",
+  "GASTRO_NO_MENU": "Diese Location hat noch keine Karte veröffentlicht. Frag das Team vor Ort nach Speisen und Getränken.",
   "GASTRO_ACCESS_LOCKED": "Location anmelden · Antrag ansehen",
   "ACCOUNT_HOME_KICKER": "DEIN LINKUUP",
   "ACCOUNT_HOME_INTRO": "Dein Profil. So, wie du bist.",
@@ -811,5 +811,8 @@
   "ACCOUNT_EDIT_PROFILE": "Profil bearbeiten",
   "ACCOUNT_EDIT_PROFILE_HINT": "Über dich, Wohnort und persönliche Angaben",
   "ACCOUNT_VISIBILITY": "Konto & Sichtbarkeit",
-  "ACCOUNT_VISIBILITY_HINT": "Kontodaten und wer was sehen darf"
+  "ACCOUNT_VISIBILITY_HINT": "Kontodaten und wer was sehen darf",
+  "GASTRO_NO_MENU_TITLE": "Hier fehlt noch die Karte.",
+  "GASTRO_NO_MENU_HINT": "Sobald eine Karte veröffentlicht ist, findest du sie hier.",
+  "GASTRO_NO_MENU_BACK": "Zurück zur Location"
 }
