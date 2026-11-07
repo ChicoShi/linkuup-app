@@ -107,7 +107,15 @@ angular.module('LUP').config(function($routeProvider) {
         if (!gastroDestroyed && frame && frame.contentWindow) frame.contentWindow.postMessage(message, location.origin);
     }
     $scope.openGastro = function() {
-        if (gastroDestroyed || !$scope.data.gastroAvailable || !['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) return;
+        if (gastroDestroyed) return;
+        if (!$scope.data.gastroAvailable) return $mdDialog.show({
+            controller: ['$scope', '$mdDialog', function(dialogScope, dialog) { dialogScope.close = function() { dialog.hide(); }; }],
+            templateUrl: 'js/dialogs/lup-no-menu-dialog.html?v='+window.LUP_BUILD,
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            escapeToClose: true
+        });
+        if (!['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) return;
         var id = String($scope.data.room.id());
         var d = document.getElementById('lup-gastro-sheet');
         if (!d) {

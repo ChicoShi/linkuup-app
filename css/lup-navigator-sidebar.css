@@ -49,3 +49,24 @@ md-sidenav.navigator-sidebar .sidebar-user-card:hover {border-color:#d8f3ff40;ba
 md-sidenav.navigator-sidebar .nav-logout {margin-top:18px;border:0;}
 md-sidenav.md-sidenav-left.navigator-sidebar .nav-buy-distance {box-shadow:none;border:0;background:transparent;}
 md-sidenav.navigator-sidebar > .sidebar-scroll::before,md-sidenav.navigator-sidebar > .sidebar-scroll::after {display:none;}
+
+/* Quiet, consistent navigation; SVGs avoid icon-font swaps while opening. */
+md-sidenav.md-sidenav-left.navigator-sidebar {background:#101b2d;border-right:1px solid #263e55;}
+md-sidenav.navigator-sidebar .sidenav-brand .md-toolbar-tools {padding:0 22px;}
+md-sidenav.navigator-sidebar .sidebar-user-card {background:#16283d;border:1px solid #263e55;border-radius:16px;}
+md-sidenav.navigator-sidebar .md-subheader {color:#91a9bf;letter-spacing:.08em;margin-top:22px;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item .nav-icon {width:22px;height:22px;flex:0 0 22px;margin-right:16px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:#afc4d8;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:is(:hover,:focus-within) .nav-icon {background:none;color:#e5f1fa;}
+md-sidenav.navigator-sidebar md-list-item p {min-width:0;font-size:14px;line-height:1.45;}
+md-sidenav.navigator-sidebar md-list-item p small {display:block;margin-top:4px;line-height:1.5;color:#91a9bf;font-size:11px;white-space:normal;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item {margin:2px 0;border-radius:12px;}
+md-sidenav.md-sidenav-left.navigator-sidebar md-list-item:is(:hover,:focus-within) {background:#1b3045;}
+
+md-sidenav.navigator-sidebar .sidebar-user-card::after {display:none;}
+md-sidenav.navigator-sidebar .sidebar-user-card:hover,md-sidenav.navigator-sidebar md-list-item:hover,md-sidenav.navigator-sidebar md-list-item:hover .nav-icon {transform:none;box-shadow:none;}
+md-sidenav.navigator-sidebar md-list-item .nav-icon {transition:color 160ms ease;}
+@media(prefers-reduced-motion:reduce){md-sidenav.navigator-sidebar *,md-sidenav.navigator-sidebar *::before,md-sidenav.navigator-sidebar *::after{animation:none!important;transition:none!important;}}
+
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked {cursor:pointer;background:transparent;}
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked :is(p,small,.nav-icon) {color:#778899;}
+md-sidenav.navigator-sidebar .nav-gastro.is-operator-locked:hover {background:transparent;transform:none;}

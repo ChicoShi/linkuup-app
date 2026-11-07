@@ -23,70 +23,72 @@
 	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">{{'NAV_DISCOVER'|translate}}</md-subheader>
 
 	  <md-list-item class="md-1-line nav-discover" ng-click="gotoNearbyRooms()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">explore</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z M16 8l-3 5-5 3 3-5Z"/></svg>
 			<p>{{'TITLE_LOCATIONS'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-friends" ng-click="gotoFriends(data.ownUser)" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">groups</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M17 4a4 4 0 0 1 0 8 M22 21v-2a4 4 0 0 0-3-4"/></svg>
 			<p>{{data.friendsCount}} {{'TITLE_FRIENDS'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-private-messages" ng-click="gotoMessages()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">forum</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4h16v12H9l-5 4Z"/></svg>
 			<p>{{data.pmCount}} {{'TITLE_PRIVATE_MESSAGES'|translate}}</p>
 	  </md-list-item>
 	  
       <md-list-item class="md-1-line nav-events" ng-click="gotoNotification()" ng-if="data.ownUser.isAuthed()">
-        <i class="material-icons nav-icon">notifications_none</i><p>{{'TAB_NOTIFICATIONS'|translate}}</p>
+        <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5Z M10 21h4"/></svg><p>{{'TAB_NOTIFICATIONS'|translate}}</p>
       </md-list-item>
 
 	  <md-list-item class="md-1-line" ng-click="gotoRegister()" ng-if="!data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">person_add</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21v-2a5 5 0 0 1 10 0v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M19 8v6 M16 11h6"/></svg>
 		<p>{{'BTN_REGISTER'|translate}}</p>
 	  </md-list-item>
 
 	  <md-subheader class="md-no-sticky sidebar-section-title" ng-if="data.ownUser.isAuthed()">{{'SIDEBAR_MANAGE'|translate}}</md-subheader>
 
 	  <md-list-item class="md-1-line nav-settings" ng-click="gotoSettings()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">settings</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2"/></svg>
 		<p>{{'TITLE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
 
 
 	  <md-list-item class="md-1-line nav-account" ng-click="gotoAccount()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">manage_accounts</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21v-2a8 8 0 0 1 16 0v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8"/></svg>
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-credits" ng-click="gotoBuyCredits()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">toll</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h17v14H3Z M3 6V4h14 M15 11h6v5h-6Z"/></svg>
 		<p>{{'CREDITS_DISCOVER'|translate}}<small>{{data.ownUser.credits()}} {{'TITLE_CREDITS'|translate}} · {{'CREDITS_TOP_UP'|translate}}</small></p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-shout" ng-click="openShout()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">campaign</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 10h5l12-6v16L8 14H3Z M8 14l2 7H6l-2-7"/></svg>
 		<p>{{'PLACE_SHOUT'|translate}}<small>{{'SHOUT_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.shoutCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-buy-distance" ng-click="openBuyDistance()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">social_distance</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12h18 M7 8l-4 4 4 4 M17 8l4 4-4 4"/></svg>
 		<p>{{'TITLE_BUY_DISTANCE'|translate}}<small>{{'DISTANCE_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.toleranceCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
 
-      <md-list-item class="md-1-line nav-gastro" ng-click="openLocationGastro()" ng-if="data.ownUser.isAuthed() && gastroVenues.length">
-        <i class="material-icons nav-icon">restaurant_menu</i>
-        <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate)}}</small></p>
+      <md-list-item class="md-1-line nav-gastro" ng-click="openGastroEntry()" ng-disabled="gastroVenuesState === 'loading' || gastroVenuesState === 'unavailable'" ng-if="data.ownUser.isAuthed()" ng-class="{'is-operator-locked': gastroVenuesState === 'ready' && !gastroVenues.length}">
+        <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 3h7v18H4Z M14 3h6v18h-6 M6 7h3 M6 11h3 M16 7h2 M16 11h2"/></svg>
+        <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{gastroVenuesState !== 'ready' ? (('GASTRO_ACCESS_' + gastroVenuesState)|translate) : (!gastroVenues.length ? ('GASTRO_ACCESS_LOCKED'|translate) : (gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate)))}}</small></p>
       </md-list-item>
 
+
+
 	  <md-list-item class="md-1-line nav-add-room" ng-click="gotoAddRoom()" ng-if="data.ownUser.isAuthed()" ng-class="{'lup-vip-locked': !data.ownUser.isVIP()}">
-	    <i class="material-icons nav-icon">add_circle_outline</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 8v8 M8 12h8"/></svg>
 		<p>{{'TITLE_ADD_ROOM'|translate}}</p>
 	  </md-list-item>
 
 	  <md-list-item class="md-1-line nav-logout" ng-click="logout()" ng-if="data.ownUser.isAuthed()">
-	    <i class="material-icons nav-icon">logout</i>
+	    <svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 3H4v18h5 M10 12h11 M17 8l4 4-4 4"/></svg>
 		<p>{{'BTN_LOGOUT'|translate}}</p>
 	  </md-list-item>
 
@@ -94,7 +96,7 @@
       <div ng-if="LUP_CONFIG.debug">
 		  <md-subheader class="md-no-sticky sidebar-section-title">{{'DEBUG'|translate}}</md-subheader>
 		  <md-list-item class="md-1-line" ng-click="gotoDebug()">
-			<i class="material-icons nav-icon">bug_report</i>
+			<svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 8h8v9a4 4 0 0 1-8 0Z M9 4h6 M3 10h5 M16 10h5 M3 16h5 M16 16h5"/></svg>
 			<p>{{'TITLE_DEBUG'|translate}}</p>
 		  </md-list-item>
 	  </div>
@@ -102,7 +104,7 @@
       <!-- Admin -->
       <div ng-if="hasPermission('staff', 'owner')">
 		  <md-list-item class="md-1-line" ng-click="gotoBackend()">
-			<i class="material-icons nav-icon">dashboard</i>
+			<svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3h7v7H3Z M14 3h7v7h-7Z M3 14h7v7H3Z M14 14h7v7h-7Z"/></svg>
 			<p>{{'BTN_BACKEND'|translate}}</p>
 		  </md-list-item>
 	  </div>
@@ -110,15 +112,15 @@
       <!-- Fineprint -->
 	  <md-subheader class="md-no-sticky sidebar-section-title sidebar-legal-title">{{'Legal'|translate}}</md-subheader>
 	  <md-list-item class="md-1-line" ng-click="DialogSrvc.openImpressum()">
-		<i class="material-icons nav-icon">gavel</i>
+		<svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21h16 M7 5l5-3 5 7-5 3Z M12 12l6 8"/></svg>
 		<p class="impressum">{{'IMPRESSUM'|translate}}</p>
 	  </md-list-item>
       <md-list-item class="md-1-line" ng-click="DialogSrvc.openTermsOfService()">
-		<i class="material-icons nav-icon">description</i>
+		<svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 3h10l4 4v14H5Z M14 3v5h5 M8 12h8 M8 16h6"/></svg>
 		<p class="tos">{{'TOS'|translate}}</p>
 	  </md-list-item>
 	  <md-list-item class="md-1-line" ng-click="DialogSrvc.openPrivacyInformation()">
-		<i class="material-icons nav-icon">privacy_tip</i>
+		<svg class="nav-icon nav-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2l8 4v6c0 5-8 10-8 10S4 17 4 12V6Z M9 12l2 2 4-4"/></svg>
 		<p class="privacy">{{'PRIVACY'|translate}}</p>
 	  </md-list-item>
 

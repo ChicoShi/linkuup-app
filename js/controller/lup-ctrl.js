@@ -276,6 +276,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	};
 
 	$scope.setCookie = function(cookie, name) {
+		// Same-origin HTTP owns the HttpOnly session cookie and its rotation.
+		// Remove only the legacy JS domain cookie: keeping both makes PHP read
+		// the stale value after login and creates a new anonymous session.
+		if (new URL(LUP_CONFIG.server, window.location.href).origin === window.location.origin) {
+			document.cookie = name + "=; Max-Age=0; path=/; domain=" + LUP_CONFIG.server_domain;
+			return;
+		}
 		cookie = name + "=" + cookie + "; path=/; domain=" + LUP_CONFIG.server_domain;
 		document.cookie = cookie;
 	};
@@ -439,20 +446,22 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	$scope.closeLeft = function() { return $mdSidenav('left').close(); };
     $scope.gastroNav = null;
     $scope.gastroVenues = [];
+    $scope.gastroVenuesState = 'idle';
     var gastroRequest = 0, gastroPending = null;
     $scope.refreshGastroVenues = function() {
         var request = ++gastroRequest;
         if (!$scope.data.authenticated || !['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) {
-            $scope.gastroVenues = []; return $q.when([]);
+            $scope.gastroVenues = []; $scope.gastroVenuesState = 'unavailable'; return $q.when([]);
         }
+        $scope.gastroVenuesState = 'loading';
         return $q.when(fetch('/backend/index.php?_mo=LinkUUp&_me=GastroVenues&_fmt=json&_ajax=1', {credentials:'same-origin'}).then(function(r) {
             if(!r.ok) throw new Error('Betriebe konnten nicht geladen werden'); return r.json();
         })).then(function(raw) {
             var data=raw.data||raw;
             if(!Array.isArray(data.venues)) throw new Error('Betriebe konnten nicht geladen werden');
             if(request!==gastroRequest)return [];
-            $scope.gastroVenues=data.venues; return data.venues;
-        })['catch'](function(error){if(request===gastroRequest)$scope.gastroVenues=[];throw error;});
+            $scope.gastroVenues=data.venues; $scope.gastroVenuesState='ready'; return data.venues;
+        })['catch'](function(error){if(request===gastroRequest){$scope.gastroVenues=[];$scope.gastroVenuesState='error';}throw error;});
     };
     $scope.$on('lup-gastro-context', function(event, context) {
         $scope.gastroNav = context;
@@ -461,6 +470,16 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
             gastroPending=null; $scope.$broadcast('lup-open-gastro',context.id);
         }
     });
+    $scope.gotoOperatorApplication = function() {
+        return $scope.closeLeft().then(function() { $scope.gotoExternal(window.LUP_CONFIG.server + 'linkuup.operatorapply.html'); });
+    };
+    $scope.openGastroEntry = function() {
+        if ($scope.gastroVenuesState === 'loading' || $scope.gastroVenuesState === 'unavailable') return;
+        if ($scope.gastroVenuesState !== 'ready') {
+            return $scope.refreshGastroVenues()['catch'](angular.noop);
+        }
+        return $scope.gastroVenues.length ? $scope.openLocationGastro() : $scope.gotoOperatorApplication();
+    };
     $scope.openLocationGastro = function() {
         var routeAtOpen=$location.path();
         return $scope.refreshGastroVenues().then(function(venues) {
