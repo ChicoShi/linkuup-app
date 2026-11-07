@@ -463,6 +463,9 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
             $scope.gastroVenues=data.venues; $scope.gastroVenuesState='ready'; return data.venues;
         })['catch'](function(error){if(request===gastroRequest){$scope.gastroVenues=[];$scope.gastroVenuesState='error';}throw error;});
     };
+    $scope.$watch('data.authenticated', function(current, previous) {
+        if (current !== previous || current) $scope.refreshGastroVenues()['catch'](angular.noop);
+    });
     $scope.$on('lup-gastro-context', function(event, context) {
         $scope.gastroNav = context;
         if(!context || !context.canManage)gastroPending=null;
