@@ -95,15 +95,7 @@ angular.module('LUP').config(function($routeProvider) {
 			// an e-mail login reaches the server as an actual e-mail address.
 			var login = String(data.email || '').trim().replace(/[æÆ]/g, '@');
 			data.email = login;
-			var gwsMessage = new GWS_Message().cmd(0x0103).sync().writeString(login).writeString(data.password).write16(1).writeString("");
-			var sendLogin = function() {
-				return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
-			};
-			if (WebsocketSrvc.connected()) {
-				sendLogin();
-			} else {
-				WebsocketSrvc.withConnection().then(sendLogin, $scope.loginFailure)['catch']($scope.catchUnknown);
-			}
+			AuthSrvc.login(login, data.password).then($scope.loginSuccess, $scope.loginFailure)['catch']($scope.catchUnknown);
 		};
 		// A location is helpful for nearby places, but must never delay login.
 		// It is requested again after authentication for nearby rooms.
@@ -111,7 +103,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.loginSuccess = function(response) {
-		console.log('LoginCtrl.loginSuccess()', response);
 		$scope.data.loginPending = false;
 		window.GWF_USER.update(JSON.parse(response));
 		LoadingSrvc.stopTask('oauth');
@@ -134,7 +125,6 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.setCookie = function(name, value, days) {
-		console.log('LoginCtrl.setCookie()', name, value, days);
 		var expires = "";
 		if (days) {
 			var date = new Date();
@@ -153,25 +143,19 @@ angular.module('LUP').config(function($routeProvider) {
 		$location.path('/guest-login');
 	};
 	$scope.loginAsGuest = function() {
-		console.log('LoginCtrl.loginAsGuest()', $scope.data.nickname);
-		return $scope.withPosition().then(function(pos) {
-			$scope.data.error = null;
-			$scope.data.errors = {};
-			var gwsMessage = new GWS_Message().cmd(0x0101).sync().writeString($scope.data.nickname);
-			if (ConfigSrvc.tosForced()) {
-				gwsMessage.write16($scope.data.tos?1:0);
-			}
-			return WebsocketSrvc.sendBinary(gwsMessage).then($scope.loginSuccess, $scope.loginFailure);
-		})['catch']($scope.catchUnknown);
+		if ($scope.data.loginPending) return;
+		$scope.data.loginPending = true;
+		$scope.data.error = null; $scope.data.errors = {};
+		return AuthSrvc.guest({user_guest_name:$scope.data.nickname,tos:$scope.data.tos?'1':'0',captcha:$scope.data.captcha || ''})
+			.then($scope.loginSuccess, $scope.loginFailure)['finally'](function() { $scope.data.loginPending = false; });
 	};
 
 	//////////////////////////
 	// --- Google sign-in --- //
 	//////////////////////////
 	$scope.initGoogleAuth = function() {
-		// Google OAuth needs the backend's session cookie for its PKCE state.
-		// Leave the SPA for the complete browser redirect flow.
-		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
+		var result = AuthSrvc.google(ConfigSrvc.CACHE);
+		if (result) result.catch(function(message) { ErrorSrvc.showMessage(message, 'Google-Anmeldung'); });
 	};
 
 	//////////////////

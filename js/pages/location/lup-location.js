@@ -101,29 +101,35 @@ angular.module('LUP').config(function($routeProvider) {
 		}
 	};
 	
+    var gastroDestroyed = false;
     $scope.data.gastroAvailable = false;
+    function notifyGastro(frame, message) {
+        if (!gastroDestroyed && frame && frame.contentWindow) frame.contentWindow.postMessage(message, location.origin);
+    }
     $scope.openGastro = function() {
-        if (!$scope.data.gastroAvailable || location.hostname !== 'app.localhost') return;
+        if (gastroDestroyed || !$scope.data.gastroAvailable || !['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) return;
         var id = String($scope.data.room.id());
         var d = document.getElementById('lup-gastro-sheet');
         if (!d) {
             d = document.createElement('dialog');d.id='lup-gastro-sheet';
             var close=document.createElement('button');close.textContent='×';close.className='lup-gastro-close';close.setAttribute('aria-label',$translate.instant('GASTRO_CLOSE'));close.onclick=function(){d.close()};
-            var frame=document.createElement('iframe');frame.title=$translate.instant('GASTRO_CARD');d.appendChild(close);d.appendChild(frame);document.body.appendChild(d);
+            var frame=document.createElement('iframe');frame.title=$translate.instant('GASTRO_CARD');frame.addEventListener('load',function(){notifyGastro(frame,{type:'gastro-visibility',visible:d.open});if(d.open)notifyGastro(frame,{type:'gastro-refresh'})});d.addEventListener('close',function(){notifyGastro(frame,{type:'gastro-visibility',visible:false})});d.appendChild(close);d.appendChild(frame);document.body.appendChild(d);
         }
         if(d.dataset.room!==id){d.dataset.room=id;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id);}
         d.showModal();
-        d.querySelector('iframe').contentWindow.postMessage({type:'gastro-refresh'},location.origin);
+        notifyGastro(d.querySelector('iframe'),{type:'gastro-refresh',visible:true});
     };
-    $scope.$on('$destroy',function(){var d=document.getElementById('lup-gastro-sheet');if(d)d.remove();});
+    $scope.$on('$routeChangeStart',function(){gastroDestroyed=true;});
+    $scope.$on('lup-open-gastro',function(event,id){if($scope.data.room && String($scope.data.room.id())===String(id))$scope.openGastro();});
+    $scope.$on('$destroy',function(){gastroDestroyed=true;var d=document.getElementById('lup-gastro-sheet');if(d)d.remove();});
 	$scope.loadedRoom = function(room) {
 		console.log('LocationCtrl.loadedRoom()', room);
 		$scope.data.room = room;
 		$scope.data.roomReady = true;
         $scope.data.gastroAvailable=false;
-        if(location.hostname==='app.localhost'){
+        if(['app.localhost','localhost','127.0.0.1'].includes(location.hostname)){
             var rid=String(room.id());
-            fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(raw){var g=raw.data||raw;$scope.$evalAsync(function(){if(String($scope.data.room.id())===rid)$scope.data.gastroAvailable=!!(g.canManage||g.orderingEnabled||(Array.isArray(g.orders)&&g.orders.length));});}).catch(angular.noop);
+            fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(raw){var g=raw.data||raw;$scope.$evalAsync(function(){if(!gastroDestroyed && String($scope.data.room.id())===rid){$scope.data.gastroAvailable=typeof g.canManage==='boolean' && !!(g.canManage||g.menuPublished||g.orderingEnabled||(Array.isArray(g.orders)&&g.orders.length));$scope.$emit('lup-gastro-context',$scope.data.gastroAvailable?{id:rid,name:room.name(),canManage:g.canManage}:null);}});}).catch(angular.noop);
         }
 		$scope.afterLoadedRoom();
 	};

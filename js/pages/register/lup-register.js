@@ -34,38 +34,22 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 
 	$scope.initGoogleAuth = function() {
-		// The backend owns the OAuth state and completes the account lookup or
-		// first-time registration after Google returns the verified profile.
-		window.location.assign(window.LUP_CONFIG.server + 'index.php?_mo=GoogleAuth&_me=Auth');
+		var result = AuthSrvc.google(ConfigSrvc.CACHE);
+		if (result) result.catch(function(message) { ErrorSrvc.showMessage(message, 'Google-Anmeldung'); });
 	};
-	
 	$scope.register = function() {
-		console.log('RegisterCtrl.register()');
-		$scope.withPosition().then(function(pos){
-			$scope.data.error = null;
-			$scope.data.errors = {};
-			var data = $scope.data;
-			var gwsMessage = new GWS_Message().cmd(0x0102).sync();
-			gwsMessage.writeString(data.username).writeString(data.password);
-			
-			if (ConfigSrvc.passwordRetype()) {
-				gwsMessage.writeString(data.password_retype);
-			}
-			gwsMessage.writeString(data.email);
-			if (ConfigSrvc.tosForced()) {
-				gwsMessage.write16(data.tos?1:0);
-			}
-			if (ConfigSrvc.signupCaptcha()) {
-				gwsMessage.writeString(data.captcha);
-			}
-			return WebsocketSrvc.sendBinary(gwsMessage).then($scope.registerSuccess, $scope.registerFailure);
-		}, $scope.failedPosition)['catch']($scope.catchUnknown);
+		if ($scope.data.registerPending) return;
+		$scope.data.registerPending = true;
+		$scope.data.error = null; $scope.data.errors = {};
+		var data = $scope.data;
+		return AuthSrvc.register({user_name:data.username,user_password:data.password,
+			password_retype:data.password_retype,user_email:data.email,tos:data.tos?'1':'0',captcha:data.captcha})
+			.then($scope.registerSuccess, $scope.registerFailure)['finally'](function() { $scope.data.registerPending = false; });
 	};
-	
+
 	$scope.registerSuccess = function(msg) {
-		console.log('RegisterCtrl.registerSuccess()', msg);
-		window.GWF_USER.update(JSON.parse(msg));
-		if (window.GWF_USER.authenticated(true)) {
+		if (!msg.pendingActivation) window.GWF_USER.update(JSON.parse(msg));
+		if (!msg.pendingActivation && window.GWF_USER.authenticated(true)) {
 			$rootScope.$broadcast('lup-authenticated', window.GWF_USER);
 		} else {
 			$scope.data.tos  = null;
@@ -75,13 +59,12 @@ angular.module('LUP').config(function($routeProvider) {
 			$scope.data.password_retype  = '';
 			$scope.data.email  = '';
 			ErrorSrvc.showMessage(
-					$translate.instant("MSG_ACTIVATE_MAIL"),
+					"Registrierung übermittelt. Falls eine Freigabe erforderlich ist, folge der Bestätigungsnachricht. Danach kannst du dich anmelden.",
 					$translate.instant("TITLE_SIGNUP"));
 		}
 	};
 
 	$scope.registerFailure = function(response) {
-		console.log('RegisterCtrl.registerFailure()', response);
 		ErrorSrvc.populateScope($scope, response);
 	};
 	

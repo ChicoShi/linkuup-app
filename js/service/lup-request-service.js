@@ -32,7 +32,7 @@ service('RequestSrvc', function($http, LoadingSrvc) {
 	};
 
 	RequestSrvc.send = function(url, data, method, noCredentials) {
-		console.log('RequestSrvc.send()', url, data, method);
+		// Request bodies may contain credentials; never log them.
 		method = method || (data ? 'POST' : 'GET');
 		let headers = {
 			'Accept': 'application/json',

@@ -1,0 +1,6 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync(__dirname+'/../js/controller/lup-ctrl.js','utf8');
+const start=source.indexOf('$scope.doAuthCheck = function()');const end=source.indexOf('\n\t$scope.passesAuthCheck',start);const fragment=source.slice(start,end);
+function check(type,path){let redirects=[],inits=0;const scope={data:{inited:true,authCheck:false},passedAuthCheck(){},$broadcast(){inits++}};const c={$scope:scope,$location:{path(next){if(next)redirects.push(next);return path}},window:{GWF_USER:{authenticated:allow=>type==='member'||(type==='guest'&&allow)}},console:{log(){}}};vm.runInNewContext(fragment,c);scope.doAuthCheck();return {redirects,inits};}
+test('Guest can upgrade on signup; members cannot start another registration',()=>{assert.deepEqual(check('guest','/signup'),{redirects:[],inits:1});assert.deepEqual(check('member','/signup'),{redirects:['/locations'],inits:0});});
+test('Other public auth pages still redirect an authenticated guest',()=>{assert.deepEqual(check('guest','/login'),{redirects:['/locations'],inits:0});assert.deepEqual(check('ghost','/signup'),{redirects:[],inits:1});});

@@ -214,9 +214,9 @@ md-dialog.place-dialog.lup-purchase-dialog {width:min(540px,calc(100vw - 24px));
 .lup-purchase-dialog md-dialog-actions .md-button {margin:0;border-radius:14px;text-transform:none;white-space:normal;line-height:1.4;min-height:46px;padding:10px 14px;color:#c4d7e6;}
 .lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm {flex:1 1 190px;background:#c3eaff;color:#132b40;box-shadow:inset 0 1px 0 #fff9,0 4px 16px #08142350;}
 .lup-purchase-dialog md-dialog-actions .md-button.purchase-confirm:disabled {background:#bce8fa16;color:#8ea6b8;box-shadow:none;}
-md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) {border-color:#d8f3ff18;background:#bce8fa04;}
-md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) p {padding:9px 0;}
-md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance) small {display:block;margin-top:5px;color:#95b5cd;font:400 10px/1.5 Roboto,sans-serif;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro) {border-color:#d8f3ff18;background:#bce8fa04;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro) p {padding:9px 0;}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro) small {display:block;margin-top:5px;color:#95b5cd;font:400 10px/1.5 Roboto,sans-serif;}
 
 /* Room creation follows the same blue glass, retaining its map workflow. */
 .lup-add-room-page .settings-content {background:radial-gradient(ellipse at 10% 50%,#24668524,transparent 65%),linear-gradient(150deg,#14243a,#101b2d);color:#e5f2fc;overflow-y:auto;}
@@ -382,3 +382,28 @@ md-dialog.place-dialog.lup-quick-vote-dialog {border-radius:24px;background:line
 @media(max-width:360px) {
  .navigator-view .nav-location-search {width:calc(100% - 32px);}
 }
+
+/* Keep phone cards roomy, but retain natural content height and safe areas. */
+.navigator-view > md-content.greybg {padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);}
+@media (max-width:600px) {
+ .navigator-view > md-content.greybg {
+  display:flex;flex-direction:column;
+  min-height:var(--lup-viewport-height,100dvh);
+ }
+ .navigator-view > md-content.greybg > :not(.profile-ambient-map) {flex-shrink:0;}
+ .navigator-view .nav-categories {margin:0 auto;}
+ .navigator-view > md-content.greybg > .location-rail {flex:0 0 auto;}
+ .navigator-view .location-rail:has(.lup-room-slide-outer) {margin-top:auto;}
+ .navigator-view .location-rail:not(:has(.lup-room-slide-outer)) {display:none;}
+ .nearby.navigator-view .location-rail .nav-place {box-sizing:border-box;min-height:min(64dvh,560px);}
+ .navigator-view .nav-landscape {flex-shrink:0;}
+ .navigator-view .nav-place-content {display:flex;flex:1 0 auto;flex-direction:column;justify-content:center;}
+ .navigator-view .nav-position {margin:0 auto auto;}
+}
+
+/* Sidebar shares the profile's navy surfaces; icons are not status colours. */
+md-sidenav.md-sidenav-left.navigator-sidebar{background:#101b2d;color:#e5f1fa;border-color:#36516b}
+md-sidenav.navigator-sidebar .sidebar-user-card,md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro){background:#16283d;border-color:#36516b;box-shadow:none}
+md-sidenav.navigator-sidebar .nav-icon,md-sidenav.navigator-sidebar .nav-buy-distance .nav-icon{background:#1d3247;color:#e5f1fa;text-shadow:none}
+md-sidenav.navigator-sidebar small,md-sidenav.navigator-sidebar .sidebar-user-card span{color:#a8c0d3}
+md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-gastro):hover{background:#1d3247}

@@ -796,5 +796,8 @@
 "NAV_SEARCH_LOADING": "Locations werden gesucht …",
 "NAV_SEARCH_ERROR": "Suche nicht möglich. Bitte erneut versuchen.",
   "GASTRO_CARD": "Karte",
-  "GASTRO_CLOSE": "Karte schließen"
+  "GASTRO_CLOSE": "Karte schließen",
+  "GASTRO_MANAGE_LOCATION": "Mein Betrieb",
+  "GASTRO_ORDER_MENU": "Karte & Bestellen",
+  "GASTRO_CHOOSE_LOCATION": "Betrieb auswählen"
 }

@@ -69,3 +69,9 @@ test('Disconnect rejects an outstanding server response instead of keeping the U
   const rejected=assert.rejects(request,e=>e==='err_websocket_connection');
   sockets[0].onclose();await rejected;assert.equal(s.connected(),false);
 });
+
+test('Disconnect tolerates entries cleared after a completed response',async()=>{
+ const {service:s,sockets}=setup();const ready=s.connect();sockets[0].onopen();
+ s.SYNC_MSGS[1].resolve('{}');await ready;s.SYNC_MSGS[1]=undefined;
+ assert.doesNotThrow(()=>s.disconnect());assert.equal(s.connected(),false);
+});

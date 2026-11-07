@@ -77,6 +77,18 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 	////////////////////////
 	// --- Room query --- //
 	////////////////////////
+	// Direct deep links can receive binary rooms before Core.GetTypes finishes.
+	// Keep the response intact until metadata is ready; missing metadata rejects
+	// the request so callers can retry rather than cache an incomplete room.
+	function withRoomTypes(parse) {
+		return TypeSrvc.withTypes().then(function() {
+			var fields = TypeSrvc.FIELDS;
+			if (!TypeSrvc.TYPES || !fields || !fields['GDO\\LinkUUp\\LUP_Room'] || !fields['GDO\\Address\\GDO_Address']) {
+				return $q.reject('Room metadata unavailable. Please retry.');
+			}
+			return parse();
+		});
+	}
 	RoomSrvc.ROOM_LOADING = {};
 	RoomSrvc.withRoom = function(roomId, refresh) {
 		if (RoomSrvc.ROOM_LOADING[roomId]) return RoomSrvc.ROOM_LOADING[roomId];
@@ -87,9 +99,11 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		if (!cached) RoomSrvc.CACHE[roomId] = RoomSrvc.NEW_BLANK_ROOM(roomId);
 		var message = new GWS_Message().cmd(0x1102).sync().write32(roomId);
 		var request = WebsocketSrvc.sendBinary(message).then(function(response) {
-			var room = RoomSrvc.parseRoomMessage(response);
-			RoomSrvc.CACHE[room.id()] = room;
-			return room;
+			return withRoomTypes(function() {
+				var room = RoomSrvc.parseRoomMessage(response);
+				RoomSrvc.CACHE[room.id()] = room;
+				return room;
+			});
 		});
 		RoomSrvc.ROOM_LOADING[roomId] = request;
 		function finished() {delete RoomSrvc.ROOM_LOADING[roomId];}
@@ -174,8 +188,10 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		var gwsMessage = new GWS_Message().cmd(0x1101).sync()
 			.writeFloat(position.lat).writeFloat(position.lng).write32(page).write32(per_page);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
-			RoomSrvc.NUM_ROOMS = msg.read32();
-			return RoomSrvc.parseRoomsMessage(msg);
+			return withRoomTypes(function() {
+				RoomSrvc.NUM_ROOMS = msg.read32();
+				return RoomSrvc.parseRoomsMessage(msg);
+			});
 		});
 	};
 	// Convenience for the few non-rail screens which only need nearby markers.
@@ -190,15 +206,14 @@ service('RoomSrvc', function($q, UserSrvc, LogoSrvc, CategorySrvc, PositionSrvc,
 		}
 		var position = PositionSrvc.CURRENT;
 		var request = RoomSrvc.loadRoomsPage(position, 1, 10);
-		RoomSrvc.ROOMS_LOADING = request;
-		request['finally'](function() { RoomSrvc.ROOMS_LOADING = null; });
-		return request;
+		RoomSrvc.ROOMS_LOADING = request['finally'](function() { RoomSrvc.ROOMS_LOADING = null; });
+		return RoomSrvc.ROOMS_LOADING;
 	};
 
 	RoomSrvc.searchRooms = function(query) {
 		var gwsMessage = new GWS_Message().cmd(0x1163).sync().writeString(query);
 		return WebsocketSrvc.sendBinary(gwsMessage).then(function(msg) {
-			return RoomSrvc.parseRoomsMessage(msg);
+			return withRoomTypes(function() { return RoomSrvc.parseRoomsMessage(msg); });
 		});
 	};
 	

@@ -53,6 +53,8 @@
 		<p>{{'TITLE_SETTINGS'|translate}}</p>
 	  </md-list-item>
 
+
+
 	  <md-list-item class="md-1-line nav-account" ng-click="gotoAccount()" ng-if="data.ownUser.isAuthed()">
 	    <i class="material-icons nav-icon">manage_accounts</i>
 		<p>{{'TITLE_ACCOUNT'|translate}}</p>
@@ -72,6 +74,11 @@
 	    <i class="material-icons nav-icon">social_distance</i>
 		<p>{{'TITLE_BUY_DISTANCE'|translate}}<small>{{'DISTANCE_SIDEBAR_COPY'|translate}} · {{ConfigSrvc.toleranceCreditsKM()}} {{'TITLE_CREDITS'|translate}}/km</small></p>
 	  </md-list-item>
+
+      <md-list-item class="md-1-line nav-gastro" ng-click="openLocationGastro()" ng-if="data.ownUser.isAuthed() && gastroVenues.length">
+        <i class="material-icons nav-icon">restaurant_menu</i>
+        <p>{{'GASTRO_MANAGE_LOCATION'|translate}}<small>{{gastroVenues.length === 1 ? gastroVenues[0].name : ('GASTRO_CHOOSE_LOCATION'|translate)}}</small></p>
+      </md-list-item>
 
 	  <md-list-item class="md-1-line nav-add-room" ng-click="gotoAddRoom()" ng-if="data.ownUser.isAuthed()" ng-class="{'lup-vip-locked': !data.ownUser.isVIP()}">
 	    <i class="material-icons nav-icon">add_circle_outline</i>
