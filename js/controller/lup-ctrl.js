@@ -276,6 +276,13 @@ controller('LUPCtrl', function($scope, $rootScope, $q, $timeout, $interval, $loc
 	};
 
 	$scope.setCookie = function(cookie, name) {
+		// Same-origin HTTP owns the HttpOnly session cookie and its rotation.
+		// Remove only the legacy JS domain cookie: keeping both makes PHP read
+		// the stale value after login and creates a new anonymous session.
+		if (new URL(LUP_CONFIG.server, window.location.href).origin === window.location.origin) {
+			document.cookie = name + "=; Max-Age=0; path=/; domain=" + LUP_CONFIG.server_domain;
+			return;
+		}
 		cookie = name + "=" + cookie + "; path=/; domain=" + LUP_CONFIG.server_domain;
 		document.cookie = cookie;
 	};
