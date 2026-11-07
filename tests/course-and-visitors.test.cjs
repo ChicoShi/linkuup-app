@@ -25,7 +25,7 @@ test('Empty visits, non-bar collections and frequency ties are deterministic',()
 function controller(file,name,deps){
  let ctor;
  const chain={config(){return chain},controller(n,fn){if(n===name)ctor=fn;return chain}};
- const context=vm.createContext({window:{LupCourseSummary:summary},console:{log(){}},angular:{module:()=>chain}});
+ const context=vm.createContext({window:{LupCourseSummary:summary,addEventListener(){},removeEventListener(){}},console:{log(){}},angular:{module:()=>chain}});
  vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
  const args=ctor.toString().match(/function\(([^)]*)\)/)[1].split(',').map(s=>s.trim());
  ctor(...args.map(arg=>deps[arg]||{}));return deps.$scope;

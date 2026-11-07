@@ -129,7 +129,13 @@ angular.module('LUP').config(function($routeProvider) {
     };
     $scope.$on('$routeChangeStart',function(){gastroDestroyed=true;});
     $scope.$on('lup-open-gastro',function(event,id){if($scope.data.room && String($scope.data.room.id())===String(id))$scope.openGastro();});
-    $scope.$on('$destroy',function(){gastroDestroyed=true;var d=document.getElementById('lup-gastro-sheet');if(d)d.remove();});
+    function closeGastroFromFrame(event) {
+        var d=document.getElementById('lup-gastro-sheet');
+        var frame=d && d.querySelector('iframe');
+        if(!gastroDestroyed && event.origin===location.origin && frame && event.source===frame.contentWindow && event.data && event.data.type==='gastro-close') d.close();
+    }
+    window.addEventListener('message',closeGastroFromFrame);
+    $scope.$on('$destroy',function(){gastroDestroyed=true;window.removeEventListener('message',closeGastroFromFrame);var d=document.getElementById('lup-gastro-sheet');if(d)d.remove();});
 	$scope.loadedRoom = function(room) {
 		console.log('LocationCtrl.loadedRoom()', room);
 		$scope.data.room = room;
