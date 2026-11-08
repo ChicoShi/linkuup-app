@@ -5,8 +5,9 @@ test('unconfigured operator login offers explicit retry and return without enrol
  const els={'#sidebar':{},'#mfa-retry':{},'#operator-return':{}};let calls=0,message;
  const app={innerHTML:''},parent={postMessage(m,o){message={m,o};}};
  const context={app,$:s=>els[s],state:{venue:{name:'Testbar'},mfa:{ready:false}},showNav(){},esc:s=>s,integrated:true,parent,window:{},location:{origin:'http://app.localhost'},refresh(){calls++;},run:f=>f()};
+ vm.runInNewContext(ui.slice(ui.indexOf('function returnToLocation(){'),ui.indexOf('function renderRequestState(')),context);
  vm.runInNewContext(ui.slice(ui.indexOf('function renderMfa(){'),ui.indexOf('function render(){')),context);
- context.renderMfa();assert.match(app.innerHTML,/Ein neuer Antrag ist nicht nötig/);assert.doesNotMatch(app.innerHTML,/Zugang wird vorbereitet|type="password"/);
+ context.renderMfa();assert.match(app.innerHTML,/Du brauchst keinen neuen Antrag/);assert.doesNotMatch(app.innerHTML,/Zugang wird vorbereitet|type="password"/);
  els['#mfa-retry'].onclick();assert.equal(calls,1);els['#operator-return'].onclick();assert.equal(message.m.type,'gastro-close');assert.equal(message.o,'http://app.localhost');
 });
 test('embedded return accepts only current same-origin iframe',()=>{
