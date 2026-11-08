@@ -830,5 +830,6 @@
   "GASTRO_CARD_RETRY": "Erneut versuchen",
   "GASTRO_CARD_READY": "Zugang geladen",
   "GASTRO_CARD_READY_COPY": "Du kannst den für dein Konto verfügbaren Bereich jetzt öffnen.",
-  "GASTRO_CARD_OPEN": "Bereich öffnen"
+  "GASTRO_CARD_OPEN": "Bereich öffnen",
+	"GASTRO_MENU_REVIEW": "Karte prüfen"
 }

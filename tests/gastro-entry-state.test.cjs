@@ -51,3 +51,12 @@ test('restored login refreshes unavailable access and logout clears it',async()=
  await new Promise(resolve=>setImmediate(resolve));assert.equal(scope.gastroVenuesState,'ready');
  scope.data.authenticated=false;authChanged(false,true);assert.equal(scope.gastroVenuesState,'unavailable');assert.equal(scope.gastroVenues.length,0);
 });
+
+test('review visibility comes from current server permissions and disappears on error/logout',async()=>{
+ const {scope,requests}=setup();let p=scope.refreshGastroVenues();
+ requests[0].resolve({ok:true,json:async()=>({venues:[],canReviewMenus:true})});await p;
+ assert.equal(scope.gastroCanReview,true);
+ const child=Object.create(scope);child.data={};assert.equal(child.gastroCanReview,true);
+ p=scope.refreshGastroVenues();assert.equal(child.gastroCanReview,false);requests[1].reject(Error('offline'));await assert.rejects(p);assert.equal(scope.gastroCanReview,false);
+ scope.data.authenticated=false;await scope.refreshGastroVenues();assert.equal(scope.gastroCanReview,false);
+});

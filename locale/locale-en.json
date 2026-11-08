@@ -830,5 +830,6 @@
   "GASTRO_CARD_RETRY": "Try again",
   "GASTRO_CARD_READY": "Access loaded",
   "GASTRO_CARD_READY_COPY": "You can now open the area available to your account.",
-  "GASTRO_CARD_OPEN": "Open area"
+  "GASTRO_CARD_OPEN": "Open area",
+	"GASTRO_MENU_REVIEW": "Review menu"
 }

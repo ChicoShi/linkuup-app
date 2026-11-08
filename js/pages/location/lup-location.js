@@ -114,7 +114,7 @@ angular.module('LUP').config(function($routeProvider) {
         $scope.data.gastroState = 'loading';
         var abort = new AbortController(), timer = setTimeout(function(){abort.abort();},10000);
         function current(){return !gastroDestroyed && sequence===gastroSequence && String($scope.data.room.id())===rid;}
-        return fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin',signal:abort.signal})
+        return fetch('/backend/index.php?_mo=LinkUUp&_me='+($scope.data.authenticated===false?'GastroMenu':'GastroLocal')+'&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin',signal:abort.signal})
             .then(function(r){if(!r.ok)throw new Error('Gastro request failed');return r.json();})
             .then(function(raw){var g=raw && (raw.data||raw);if(!g || typeof g.canManage!=='boolean')throw new Error('Invalid Gastro response');
                 $scope.$evalAsync(function(){if(!current())return;
@@ -128,9 +128,10 @@ angular.module('LUP').config(function($routeProvider) {
     function notifyGastro(frame, message) {
         if (!gastroDestroyed && frame && frame.contentWindow) frame.contentWindow.postMessage(message, location.origin);
     }
-    $scope.openGastro = function() {
+    $scope.openGastro = function(review, operator) {
+        review=review===true;
         if (gastroDestroyed) return;
-        if ($scope.data.gastroState !== 'ready' || !$scope.data.gastroAvailable) return $mdDialog.show({
+        if (!review && ($scope.data.gastroState !== 'ready' || !$scope.data.gastroAvailable)) return $mdDialog.show({
             locals: {cardData:$scope.data, retryCard:function(){return $scope.refreshGastro();}},
             controller: ['$scope', '$mdDialog', 'cardData', 'retryCard', function(dialogScope, dialog, cardData, retryCard) {
                 dialogScope.cardData=cardData;
@@ -151,12 +152,13 @@ angular.module('LUP').config(function($routeProvider) {
             var close=document.createElement('button');close.textContent='×';close.className='lup-gastro-close';close.setAttribute('aria-label',$translate.instant('GASTRO_CLOSE'));close.onclick=function(){d.close()};
             var frame=document.createElement('iframe');frame.title=$translate.instant('GASTRO_CARD');frame.addEventListener('load',function(){notifyGastro(frame,{type:'gastro-visibility',visible:d.open});if(d.open)notifyGastro(frame,{type:'gastro-refresh'})});d.addEventListener('close',function(){notifyGastro(frame,{type:'gastro-visibility',visible:false})});d.appendChild(close);d.appendChild(frame);document.body.appendChild(d);
         }
-        if(d.dataset.room!==id){d.dataset.room=id;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id);}
+        var mode=review?'review':operator===true?'operator':'public';
+        if(d.dataset.room!==id || d.dataset.mode!==mode){d.dataset.room=id;d.dataset.mode=mode;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id)+'&mode='+mode;}
         d.showModal();
         notifyGastro(d.querySelector('iframe'),{type:'gastro-refresh',visible:true});
     };
     $scope.$on('$routeChangeStart',function(){gastroDestroyed=true;});
-    $scope.$on('lup-open-gastro',function(event,id){if($scope.data.room && String($scope.data.room.id())===String(id))$scope.openGastro();});
+    $scope.$on('lup-open-gastro',function(event,id){if($scope.data.room && String($scope.data.room.id())===String(id))$scope.openGastro(false,true);});
     function closeGastroFromFrame(event) {
         var d=document.getElementById('lup-gastro-sheet');
         var frame=d && d.querySelector('iframe');

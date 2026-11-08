@@ -19,3 +19,5 @@ test('old request and navigation teardown cannot overwrite new state',async()=>{
  const late=x.scope.refreshGastro();x.handlers.$routeChangeStart();reply(x.requests[2],{canManage:false});await late;assert.equal(x.events.length,1);
 });
 test('unsupported host explicitly unavailable without issuing pilot request',async()=>{const x=setup('public.example');await x.scope.refreshGastro();assert.equal(x.scope.data.gastroState,'unavailable');assert.equal(x.requests.length,0);});
+
+test('anonymous card lookup uses read-only endpoint',async()=>{const x=setup();x.scope.data.authenticated=false;const p=x.scope.refreshGastro();assert.match(x.requests[0].url,/_me=GastroMenu&/);reply(x.requests[0],{canManage:false,menuPublished:true,readOnly:true});await p;assert.equal(x.scope.data.gastroAvailable,true);});
