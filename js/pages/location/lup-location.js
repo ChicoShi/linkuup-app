@@ -103,13 +103,41 @@ angular.module('LUP').config(function($routeProvider) {
 	
     var gastroDestroyed = false;
     $scope.data.gastroAvailable = false;
+    $scope.data.gastroState = 'idle';
+    var gastroSequence = 0;
+    $scope.refreshGastro = function() {
+        var sequence = ++gastroSequence, room = $scope.data.room, rid = String(room.id());
+        $scope.data.gastroAvailable = false;
+        if (!['app.localhost','localhost','127.0.0.1'].includes(location.hostname)) {
+            $scope.data.gastroState = 'unavailable'; return Promise.resolve();
+        }
+        $scope.data.gastroState = 'loading';
+        var abort = new AbortController(), timer = setTimeout(function(){abort.abort();},10000);
+        function current(){return !gastroDestroyed && sequence===gastroSequence && String($scope.data.room.id())===rid;}
+        return fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin',signal:abort.signal})
+            .then(function(r){if(!r.ok)throw new Error('Gastro request failed');return r.json();})
+            .then(function(raw){var g=raw && (raw.data||raw);if(!g || typeof g.canManage!=='boolean')throw new Error('Invalid Gastro response');
+                $scope.$evalAsync(function(){if(!current())return;
+                    $scope.data.gastroAvailable=!!(g.canManage||g.menuPublished||g.orderingEnabled||(Array.isArray(g.orders)&&g.orders.length));
+                    $scope.data.gastroState='ready';
+                    $scope.$emit('lup-gastro-context',$scope.data.gastroAvailable?{id:rid,name:room.name(),canManage:g.canManage}:null);
+                });
+            }).catch(function(){$scope.$evalAsync(function(){if(current())$scope.data.gastroState='error';});})
+            .finally(function(){clearTimeout(timer);});
+    };
     function notifyGastro(frame, message) {
         if (!gastroDestroyed && frame && frame.contentWindow) frame.contentWindow.postMessage(message, location.origin);
     }
     $scope.openGastro = function() {
         if (gastroDestroyed) return;
-        if (!$scope.data.gastroAvailable) return $mdDialog.show({
-            controller: ['$scope', '$mdDialog', function(dialogScope, dialog) { dialogScope.close = function() { dialog.hide(); }; }],
+        if ($scope.data.gastroState !== 'ready' || !$scope.data.gastroAvailable) return $mdDialog.show({
+            locals: {cardData:$scope.data, retryCard:function(){return $scope.refreshGastro();}},
+            controller: ['$scope', '$mdDialog', 'cardData', 'retryCard', function(dialogScope, dialog, cardData, retryCard) {
+                dialogScope.cardData=cardData;
+                dialogScope.close=function(){dialog.hide();};
+                dialogScope.retry=function(){return retryCard();};
+                dialogScope.openCard=function(){dialog.hide();$scope.openGastro();};
+            }],
             templateUrl: 'js/dialogs/lup-no-menu-dialog.html?v='+window.LUP_BUILD,
             parent: angular.element(document.body),
             clickOutsideToClose: true,
@@ -140,11 +168,7 @@ angular.module('LUP').config(function($routeProvider) {
 		console.log('LocationCtrl.loadedRoom()', room);
 		$scope.data.room = room;
 		$scope.data.roomReady = true;
-        $scope.data.gastroAvailable=false;
-        if(['app.localhost','localhost','127.0.0.1'].includes(location.hostname)){
-            var rid=String(room.id());
-            fetch('/backend/index.php?_mo=LinkUUp&_me=GastroLocal&_fmt=json&_ajax=1&room='+encodeURIComponent(rid),{credentials:'same-origin'}).then(function(r){return r.json()}).then(function(raw){var g=raw.data||raw;$scope.$evalAsync(function(){if(!gastroDestroyed && String($scope.data.room.id())===rid){$scope.data.gastroAvailable=typeof g.canManage==='boolean' && !!(g.canManage||g.menuPublished||g.orderingEnabled||(Array.isArray(g.orders)&&g.orders.length));$scope.$emit('lup-gastro-context',$scope.data.gastroAvailable?{id:rid,name:room.name(),canManage:g.canManage}:null);}});}).catch(angular.noop);
-        }
+        $scope.refreshGastro();
 		$scope.afterLoadedRoom();
 	};
 	

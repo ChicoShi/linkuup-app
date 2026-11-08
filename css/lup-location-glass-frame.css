@@ -438,7 +438,7 @@ md-sidenav.navigator-sidebar :is(.nav-credits,.nav-shout,.nav-buy-distance,.nav-
 @media(min-width:800px) {.account-home {display:grid;grid-template-columns:1fr 1fr;gap:24px;}.account-identity {grid-column:1/-1;}.account-details,.account-destinations {margin-top:0;}}
 @media(max-width:380px) {.account-page .account-home {width:calc(100% - 28px);margin-top:20px;}.account-identity {padding:22px 18px;}.account-identity-main {gap:12px;}.account-destinations > a {padding:16px 14px;gap:12px;}}
 
-md-dialog.lup-no-menu-dialog {width:calc(100% - 32px);max-width:400px;max-height:calc(100dvh - 40px);border:1px solid #36516b;border-radius:24px;background:#16283d;color:#e5f1fa;box-shadow:0 24px 80px #050c1b80;}
+body .md-dialog-container md-dialog.lup-no-menu-dialog {width:calc(100% - 32px);max-width:400px;max-height:calc(100dvh - 40px);border:1px solid #36516b;border-radius:24px;background:#16283d;color:#e5f1fa;box-shadow:0 24px 80px #050c1b80;}
 .lup-no-menu-dialog md-dialog-content {padding:30px 26px 12px;text-align:center;}
 .no-menu-art {display:grid;place-items:center;width:88px;height:88px;margin:0 auto 24px;border-radius:24px;background:#1b3045;color:#afc4d8;}
 .no-menu-art svg {width:56px;height:56px;}
@@ -446,6 +446,9 @@ md-dialog.lup-no-menu-dialog {width:calc(100% - 32px);max-width:400px;max-height
 .lup-no-menu-dialog h2 {font:500 24px/1.25 Ubuntu,sans-serif;margin:12px 0;}
 .lup-no-menu-dialog p {font:400 14px/1.7 Ubuntu,sans-serif;color:#b7cadb;margin:0;}
 .lup-no-menu-dialog p.no-menu-hint {margin-top:16px;color:#91a9bf;font-size:12px;}
-.lup-no-menu-dialog md-dialog-actions {display:block;padding:12px 26px 26px;}
+.lup-no-menu-dialog md-dialog-actions {display:flex;flex-direction:column;gap:10px;padding:12px 26px 26px;}
 .lup-no-menu-dialog button {width:100%;min-height:48px;padding:12px 16px;border:1px solid #426386;border-radius:12px;background:#23405e;color:#e5f1fa;font:500 14px Ubuntu,sans-serif;cursor:pointer;}
 .lup-no-menu-dialog button:focus-visible {outline:2px solid #afc4d8;outline-offset:3px;}
+
+/* Keep the status dialog consistent with the operator navy surface. */
+body .md-dialog-container md-dialog.lup-no-menu-dialog, body .md-dialog-container .lup-no-menu-dialog md-dialog-content {background:#16283d !important;color:#e5f1fa;}

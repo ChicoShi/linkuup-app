@@ -2,9 +2,9 @@
  <md-dialog-content>
   <span class="no-menu-art" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h19l3 4 3-4h19v38H35l-3 4-3-4H10Z M32 16v38 M17 22h8 M17 30h8 M17 38h5 M39 22h8 M39 30h8 M39 38h5"/></svg></span>
   <span class="no-menu-eyebrow">{{'GASTRO_CARD'|translate}}</span>
-  <h2 id="no-menu-title">{{'GASTRO_NO_MENU_TITLE'|translate}}</h2>
-  <p id="no-menu-copy">{{'GASTRO_NO_MENU'|translate}}</p>
-  <p class="no-menu-hint">{{'GASTRO_NO_MENU_HINT'|translate}}</p>
+  <h2 id="no-menu-title">{{(cardData.gastroState === 'ready' ? (cardData.gastroAvailable ? 'GASTRO_CARD_READY' : 'GASTRO_NO_MENU_TITLE') : 'GASTRO_CARD_' + cardData.gastroState)|translate}}</h2>
+  <p id="no-menu-copy">{{(cardData.gastroState === 'ready' ? (cardData.gastroAvailable ? 'GASTRO_CARD_READY_COPY' : 'GASTRO_NO_MENU') : 'GASTRO_CARD_' + cardData.gastroState + '_COPY')|translate}}</p>
+  <p class="no-menu-hint" ng-if="cardData.gastroState === 'ready' && !cardData.gastroAvailable">{{'GASTRO_NO_MENU_HINT'|translate}}</p>
  </md-dialog-content>
- <md-dialog-actions><button type="button" ng-click="close()">{{'GASTRO_NO_MENU_BACK'|translate}}</button></md-dialog-actions>
+ <md-dialog-actions><button type="button" ng-if="cardData.gastroState === 'error' || cardData.gastroState === 'idle'" ng-click="retry()">{{'GASTRO_CARD_RETRY'|translate}}</button><button type="button" ng-if="cardData.gastroState === 'ready' && cardData.gastroAvailable" ng-click="openCard()">{{'GASTRO_CARD_OPEN'|translate}}</button><button type="button" ng-click="close()">{{'GASTRO_NO_MENU_BACK'|translate}}</button></md-dialog-actions>
 </md-dialog>

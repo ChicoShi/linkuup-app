@@ -818,5 +818,17 @@
   "ACCOUNT_VISIBILITY_HINT": "Account details and who can see what",
   "GASTRO_NO_MENU_TITLE": "The menu is not here yet.",
   "GASTRO_NO_MENU_HINT": "Once a menu is published, you will find it here.",
-  "GASTRO_NO_MENU_BACK": "Back to the location"
+  "GASTRO_NO_MENU_BACK": "Back to the location",
+  "GASTRO_CARD_loading": "Loading menu",
+  "GASTRO_CARD_loading_COPY": "Please wait while availability is checked.",
+  "GASTRO_CARD_error": "Could not load menu",
+  "GASTRO_CARD_error_COPY": "Please check your connection and try again.",
+  "GASTRO_CARD_unavailable": "Menu feature not available here yet",
+  "GASTRO_CARD_unavailable_COPY": "This access is currently configured only for the local pilot. This does not indicate whether a menu exists.",
+  "GASTRO_CARD_idle": "Check menu",
+  "GASTRO_CARD_idle_COPY": "Availability has not been checked yet.",
+  "GASTRO_CARD_RETRY": "Try again",
+  "GASTRO_CARD_READY": "Access loaded",
+  "GASTRO_CARD_READY_COPY": "You can now open the area available to your account.",
+  "GASTRO_CARD_OPEN": "Open area"
 }

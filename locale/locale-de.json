@@ -818,5 +818,17 @@
   "ACCOUNT_VISIBILITY_HINT": "Kontodaten und wer was sehen darf",
   "GASTRO_NO_MENU_TITLE": "Hier fehlt noch die Karte.",
   "GASTRO_NO_MENU_HINT": "Sobald eine Karte veröffentlicht ist, findest du sie hier.",
-  "GASTRO_NO_MENU_BACK": "Zurück zur Location"
+  "GASTRO_NO_MENU_BACK": "Zurück zur Location",
+  "GASTRO_CARD_loading": "Karte wird geladen",
+  "GASTRO_CARD_loading_COPY": "Einen Moment bitte. Die Verfügbarkeit wird geprüft.",
+  "GASTRO_CARD_error": "Karte konnte nicht geladen werden",
+  "GASTRO_CARD_error_COPY": "Bitte prüfe deine Verbindung und versuche es erneut.",
+  "GASTRO_CARD_unavailable": "Kartenfunktion hier noch nicht verfügbar",
+  "GASTRO_CARD_unavailable_COPY": "Dieser Zugang ist derzeit nur im lokalen Pilotbetrieb eingerichtet. Das sagt nichts darüber aus, ob eine Karte hinterlegt ist.",
+  "GASTRO_CARD_idle": "Karte prüfen",
+  "GASTRO_CARD_idle_COPY": "Die Verfügbarkeit wurde noch nicht geprüft.",
+  "GASTRO_CARD_RETRY": "Erneut versuchen",
+  "GASTRO_CARD_READY": "Zugang geladen",
+  "GASTRO_CARD_READY_COPY": "Du kannst den für dein Konto verfügbaren Bereich jetzt öffnen.",
+  "GASTRO_CARD_OPEN": "Bereich öffnen"
 }
