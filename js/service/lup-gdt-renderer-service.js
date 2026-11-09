@@ -29,7 +29,7 @@ service('GDTRendererSrvc', function() {
 			return {control: 'input', input_type: 'tel'};
 		}
 		if (/GDT_(Int|UInt|Float|Decimal|Level|PersonHeight)$/.test(type)) {
-			return {control: 'input', input_type: 'number'};
+			return {control: 'input', input_type: 'number', step: /GDT_(Float|Decimal|PersonHeight)$/.test(type) ? 'any' : '1'};
 		}
 		if (/GDT_Time$/.test(type)) {
 			return this.dateRenderer(setting, 'time');
@@ -64,6 +64,11 @@ service('GDTRendererSrvc', function() {
 			return value;
 		}
 		var inputType = setting.renderer.input_type;
+		if (inputType === 'number') {
+			if (value === null || value === undefined || String(value).trim() === '') return null;
+			var number = Number(value);
+			return Number.isFinite(number) ? number : null;
+		}
 		var normalized = this.dateValue(value, inputType);
 		if (typeof normalized !== 'string') {
 			return normalized;

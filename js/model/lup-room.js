@@ -144,7 +144,13 @@ function LUPRoom(json) {
 	this.view = function() { return this.JSON.room_view; };
 	this.radius = function() { return this.JSON.room_radius; };
 	this.distance = function() {
-		return LUPRoom.PositionSrvc.hasPosition(true) ? LUPRoom.PositionSrvc.distanceTo(this.lat(), this.lng()) : null;
+		const lat = this.lat(), lng = this.lng();
+		if (lat === null || lng === null || lat === undefined || lng === undefined ||
+			String(lat).trim() === '' || String(lng).trim() === '' ||
+			!Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng)) ||
+			Math.abs(Number(lat)) > 90 || Math.abs(Number(lng)) > 180 ||
+			(Number(lat) === 0 && Number(lng) === 0)) return null;
+		return LUPRoom.PositionSrvc.hasPosition(true) ? LUPRoom.PositionSrvc.distanceTo(Number(lat), Number(lng)) : null;
 	};
 	this.inChatRange = function() {
 		// Nullable binary FLOAT arrives as NaN; NULL/missing is also legacy.
