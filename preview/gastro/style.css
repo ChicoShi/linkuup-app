@@ -198,3 +198,19 @@ button:not(:disabled):hover{background:#263f58;color:var(--ink);border-color:#a8
 /* Equal guest navigation columns, including the two-tab state without a wallet. */
 .tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0}
 .tabs>button{min-width:0;width:100%;padding:14px 4px;text-align:center;overflow-wrap:anywhere}
+
+/* Consistent operator navigation and data columns. */
+.operator-workspace .operator-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;overflow:visible}
+.operator-workspace .operator-tabs button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere;padding:12px 4px;text-align:center}
+.operator-workspace .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 0}
+.operator-workspace .stats>div,.operator-workspace .stats>div:first-child{min-width:0;padding:0 12px;border-left:0;text-align:center}
+.operator-workspace .stats b{overflow-wrap:anywhere}
+.operator-workspace .toolbar,.operator-workspace .ticket-actions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-columns:none}
+.operator-workspace .toolbar .primary{grid-column:auto}
+.operator-workspace .toolbar button,.operator-workspace .ticket-actions button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere;padding-left:8px;padding-right:8px}
+.payment-summary>b{text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:700px){
+ .operator-workspace .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .operator-workspace .edit-row{grid-template-columns:minmax(0,1fr) 88px}
+ .operator-workspace .edit-row>button{width:88px}
+}
