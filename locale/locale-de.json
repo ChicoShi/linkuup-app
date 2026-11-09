@@ -1,4 +1,6 @@
 {
+"ROUTE_UNAVAILABLE": "Route nicht verfügbar",
+"ROUTE_NO_DESTINATION": "Für diesen Ort fehlt ein verlässliches Routenziel.",
 "PROFILE_UP_INFO_TITLE": "Ups kommen von anderen",
 "PROFILE_UP_INFO_BODY": "Du kannst dir selbst kein Up geben. Mit einem Up zeigen andere Mitglieder ihre Anerkennung für dein Profil.",
 "PROFILE_UP_INFO_HELP": "Ziehe den Up-Marker in einem anderen Profil nach unten, um ein Up zu geben. Tippe auf den Marker, um die erhaltenen Ups anzusehen.",

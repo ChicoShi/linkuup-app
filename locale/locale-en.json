@@ -1,4 +1,6 @@
 {
+"ROUTE_UNAVAILABLE": "Directions unavailable",
+"ROUTE_NO_DESTINATION": "This place has no reliable destination yet.",
 "PROFILE_UP_INFO_TITLE": "Ups come from others",
 "PROFILE_UP_INFO_BODY": "You cannot give yourself an Up. Other members use Ups to show appreciation for your profile.",
 "PROFILE_UP_INFO_HELP": "Pull down the Up marker on another profile to give an Up. Tap the marker to see the Ups received.",

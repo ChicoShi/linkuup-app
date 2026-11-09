@@ -625,17 +625,22 @@ angular.module('LUP').config(function($routeProvider) {
 	$scope.mapsHref = function(room) {
 //		console.log("LocationsCtrl.mapsHref()", room);
 		var destination = $scope.mapsDestination(room);
+		if (!destination) return undefined;
 		return "https://www.google.com/maps/dir/?api=1&dir_action=navigate&travelmode=walking&destination=" + encodeURIComponent(destination);
 	};
 	
 	$scope.mapsDestination = function(room) {
 //		console.log("LocationsCtrl.mapsDestination()", room);
-		var lat = Number(room.lat());
-		var lng = Number(room.lng());
-		if (Number.isFinite(lat) && Number.isFinite(lng)) {
+		if (!room) return null;
+		var rawLat = room.lat(), rawLng = room.lng();
+		var lat = Number(rawLat), lng = Number(rawLng);
+		var supplied = function(value) { return value !== null && value !== undefined && String(value).trim() !== ''; };
+		// 0,0 is an unset-coordinate sentinel in current LinkUUp imports/test venues.
+		if (supplied(rawLat) && supplied(rawLng) && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 && !(lat === 0 && lng === 0)) {
 			return lat + "," + lng;
 		}
-		return [room.street(), room.zip(), room.city()].filter(Boolean).join(', ');
+		var street = String(room.street() || '').trim(), zip = String(room.zip() || '').trim(), city = String(room.city() || '').trim();
+		return street && (zip || city) ? [street, zip, city].filter(Boolean).join(', ') : null;
 	};
 
 	////////

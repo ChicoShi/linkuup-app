@@ -452,3 +452,7 @@ body .md-dialog-container md-dialog.lup-no-menu-dialog {width:calc(100% - 32px);
 
 /* Keep the status dialog consistent with the operator navy surface. */
 body .md-dialog-container md-dialog.lup-no-menu-dialog, body .md-dialog-container .lup-no-menu-dialog md-dialog-content {background:#16283d !important;color:#e5f1fa;}
+/* Unavailable routing stays readable, without looking like an active CTA. */
+.lup-place button.place-primary:disabled{background:#243b53;color:#c4d0df;cursor:not-allowed;border:1px solid #40536c;text-align:left;width:100%;box-shadow:none}
+
+.lup-place button.place-primary:disabled>span>small{color:#c4d0df}

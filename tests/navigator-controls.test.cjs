@@ -78,7 +78,7 @@ test('Opening a room preserves return selection; map route and chat remain separ
  assert.ok(s.mapsHref(mapRoom).endsWith('destination=52.27%2C10.53'));
  const html=fs.readFileSync(path.join(__dirname,'../js/pages/locations/lup-locations.html'),'utf8');
  assert.match(html,/ng-if="room.inChatRange\(\)" ng-click="gotoChat\(room\)"/);
- assert.match(html,/ng-if="!room.inChatRange\(\)" ng-href="\{\{mapsHref\(room\)\}\}"/);
+ assert.match(html,/ng-if="!room.inChatRange\(\) && mapsDestination\(room\)" ng-href="\{\{mapsHref\(room\)\}\}"/);
 });
 
 test('Presence shows up to 20 faces but keeps the real total, animates changes and cleans up', () => {
