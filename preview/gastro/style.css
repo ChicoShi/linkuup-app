@@ -194,3 +194,7 @@ button:not(:disabled):hover{background:#263f58;color:var(--ink);border-color:#a8
 .public-menu .dish{grid-template-columns:48px minmax(0,1fr) auto;gap:14px}.public-menu .dish h3,.public-menu .dish p{overflow-wrap:anywhere}.public-menu .dish .price{white-space:nowrap;font-size:15px}.dish-category{font-size:11px;color:var(--muted)}
 .public-menu-footer{border-top:1px solid var(--line);margin-top:28px;padding:24px 0;display:grid;gap:12px}.public-menu-footer p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}.public-menu-footer button{min-height:44px}
 @media(max-width:380px){.public-menu .dish{grid-template-columns:minmax(0,1fr) auto}.public-menu .dish-art{display:none}.flow-state{width:calc(100% - 24px)}}
+
+/* Equal guest navigation columns, including the two-tab state without a wallet. */
+.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0}
+.tabs>button{min-width:0;width:100%;padding:14px 4px;text-align:center;overflow-wrap:anywhere}

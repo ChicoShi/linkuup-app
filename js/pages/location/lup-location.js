@@ -153,7 +153,7 @@ angular.module('LUP').config(function($routeProvider) {
             var frame=document.createElement('iframe');frame.title=$translate.instant('GASTRO_CARD');frame.addEventListener('load',function(){notifyGastro(frame,{type:'gastro-visibility',visible:d.open});if(d.open)notifyGastro(frame,{type:'gastro-refresh'})});d.addEventListener('close',function(){notifyGastro(frame,{type:'gastro-visibility',visible:false})});d.appendChild(close);d.appendChild(frame);document.body.appendChild(d);
         }
         var mode=review?'review':operator===true?'operator':'public';
-        if(d.dataset.room!==id || d.dataset.mode!==mode){d.dataset.room=id;d.dataset.mode=mode;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id)+'&mode='+mode;}
+        if(d.dataset.room!==id || d.dataset.mode!==mode){d.dataset.room=id;d.dataset.mode=mode;d.querySelector('iframe').src='preview/gastro/embed.html?room='+encodeURIComponent(id)+'&mode='+mode+'&v='+encodeURIComponent(window.LUP_BUILD||'gastro-equal-tabs424');}
         d.showModal();
         notifyGastro(d.querySelector('iframe'),{type:'gastro-refresh',visible:true});
     };
