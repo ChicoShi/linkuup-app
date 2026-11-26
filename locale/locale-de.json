@@ -81,6 +81,7 @@
 "BACK_TO_LOGIN": "Zurück Zur Anmeldung",
 
 "TITLE_SIGNUP": "Registrierung",
+"SIGNUP_USERNAME_HINT": "2–32 Zeichen. Beginne mit einem Buchstaben. Danach sind Buchstaben, Ziffern (0–9), Bindestriche (-) und Unterstriche (_) erlaubt. Leerzeichen sind nicht erlaubt.",
 "USERNAME": "Benutzername",
 "PASSWORD_RETYPE": "Erneut eingeben",
 "EMAIL": "E-Mail",

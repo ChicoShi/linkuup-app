@@ -80,6 +80,7 @@
 "BACK_TO_LOGIN": "Back to login",
 
 "TITLE_SIGNUP": "Signup",
+"SIGNUP_USERNAME_HINT": "Use 2–32 characters. Start with a letter, then use letters, digits (0–9), hyphens (-) or underscores (_). No spaces.",
 "USERNAME": "Username",
 "PASSWORD_RETYPE": "repeat password",
 "EMAIL": "Email",

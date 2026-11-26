@@ -9498,3 +9498,11 @@ md-backdrop.md-dialog-backdrop { z-index:10010; }
 @media (prefers-reduced-motion:reduce) {
   .profile-page > md-content::before,.friends-page > md-content::before,.notification > md-content::before,.settings-page > md-content::before,.account-page > md-content::before,.likes-page > md-content::before { animation:none; }
 }
+
+#signup-username-guidance {
+  margin: 0 0 14px;
+  color: #bdcad9;
+  font-size: 13px;
+  line-height: 1.4;
+}
+#signup-username-guidance.error { color: #ffb4b4; }

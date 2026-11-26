@@ -4,9 +4,9 @@
 
 <md-input-container class="md-icon-float md-block">
   <label translate="USERNAME"></label>
-  <input name="user_name" ng-model="data.username" type="text" placeholder="{{'USERNAME'|translate}}">
-  <div class="error">{{data.errors.user_name}}</div>
+  <input name="user_name" ng-model="data.username" ng-trim="false" ng-change="data.errors.user_name = null" aria-describedby="signup-username-guidance" ng-attr-aria-invalid="{{!!data.errors.user_name}}" type="text" placeholder="{{'USERNAME'|translate}}">
 </md-input-container>
+<div id="signup-username-guidance" aria-live="polite" ng-class="{error: data.errors.user_name}">{{data.errors.user_name || ('SIGNUP_USERNAME_HINT' | translate)}}</div>
 
 <md-input-container class="md-icon-float md-block">
   <label translate="PASSWORD"></label>

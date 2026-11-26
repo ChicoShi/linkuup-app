@@ -39,6 +39,12 @@ angular.module('LUP').config(function($routeProvider) {
 	};
 	$scope.register = function() {
 		if ($scope.data.registerPending) return;
+		var username = $scope.data.username || '';
+		if (!/^\p{L}[-_\p{L}0-9]{1,31}$/u.test(username)) {
+			$scope.data.error = null;
+			$scope.data.errors.user_name = $translate.instant('SIGNUP_USERNAME_HINT');
+			return;
+		}
 		$scope.data.registerPending = true;
 		$scope.data.error = null; $scope.data.errors = {};
 		var data = $scope.data;
