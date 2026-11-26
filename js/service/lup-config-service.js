@@ -103,6 +103,11 @@ service('ConfigSrvc', function(RequestSrvc) {
 		return unit > 0 ? unit : .5;
 	};
 
+	ConfigSrvc.shoutCenterFee = function() {
+		var fee = (ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_center_fee;
+		return fee == null ? null : Number(fee);
+	};
+
 	ConfigSrvc.shoutCreditsKM = function() {
 		return Number((ConfigSrvc.CACHE.LinkUUp || {}).lup_shout_cost_per_km || 0);
 	};

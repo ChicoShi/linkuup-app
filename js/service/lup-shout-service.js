@@ -49,6 +49,9 @@ angular.module('LUP').service('ShoutSrvc', function($mdDialog, $q, $timeout, $tr
 		$scope.data = {
 			message: initialMessage,
 			radius: 1,
+			centerFee: ConfigSrvc.shoutCenterFee(),
+			custom: false,
+			moved: false,
 			creditsPerKM: ConfigSrvc.shoutCreditsKM(),
 			cost: 0,
 			mapStatus: $translate.instant('SHOUT_MAP_LOADING'),
@@ -56,7 +59,7 @@ angular.module('LUP').service('ShoutSrvc', function($mdDialog, $q, $timeout, $tr
 		};
 		$scope.cancel = function() { $mdDialog.cancel(); };
 		$scope.cost = function() {
-			return Math.ceil(Math.max(0.001, Number($scope.data.radius) || 0.001) * $scope.data.creditsPerKM);
+			return Math.ceil(Math.max(0.001, Number($scope.data.radius) || 0.001) * $scope.data.creditsPerKM) + ($scope.data.moved ? $scope.data.centerFee : 0);
 		};
 		$scope.updateRadius = function() {
 			$scope.data.radius = Math.max(0.001, Math.round((Number($scope.data.radius) || 0.001) * 1000) / 1000);
@@ -65,19 +68,26 @@ angular.module('LUP').service('ShoutSrvc', function($mdDialog, $q, $timeout, $tr
 		};
 		$scope.send = function() {
 			var text = String($scope.data.message || '').trim();
-			if (!text) { return; }
+			if (!text || $scope.data.sending) { return; }
+			$scope.data.sending = true;
 			$scope.updateRadius();
-			var center = radiusCircle && radiusCircle.getCenter();
-			var position = center ? {lat:center.lat(), lng:center.lng()} : PositionSrvc.CURRENT;
-			return ChatSrvc.sendShout($scope.data.radius, text, position).then(function(result) {
+			var center = $scope.data.moved && radiusCircle.getCenter();
+			var position = center ? {lat:center.lat(), lng:center.lng()} : null;
+			return ChatSrvc.sendShout($scope.data.radius, text, position, $scope.data.cost).then(function(result) {
 				$mdDialog.hide(result);
-			}, ErrorSrvc.websocketError);
+			}, ErrorSrvc.websocketError).finally(function() { $scope.data.sending = false; });
 		};
 
 		function setCenter(latLng) {
+			$scope.data.moved = $scope.data.custom && !new google.maps.LatLng(PositionSrvc.CURRENT).equals(latLng);
+			$scope.data.cost = $scope.cost();
 			centerMarker.setPosition(latLng);
 			radiusCircle.setCenter(latLng);
 		}
+		$scope.toggleCenter = function() {
+			centerMarker.setDraggable($scope.data.custom);
+			if (!$scope.data.custom) { setCenter(new google.maps.LatLng(PositionSrvc.CURRENT)); }
+		};
 		function addPointers(rooms) {
 			(rooms || []).forEach(function(room) {
 				var lat = Number(room.lat && room.lat()), lng = Number(room.lng && room.lng());
@@ -97,16 +107,16 @@ angular.module('LUP').service('ShoutSrvc', function($mdDialog, $q, $timeout, $tr
 				fullscreenControl: false, clickableIcons: false,
 			});
 			centerMarker = new google.maps.Marker({
-				map: map, position: origin, draggable: true, clickable: false, zIndex: 3,
+				map: map, position: origin, draggable: false, clickable: false, zIndex: 3,
 				icon: {path: google.maps.SymbolPath.CIRCLE, scale: 7, fillColor:'#fff4f4', fillOpacity:1, strokeColor:'#9e2339', strokeWeight:2},
 			});
 			radiusCircle = new google.maps.Circle({
 				map: map, center: origin, radius: $scope.data.radius * 1000,
 				strokeColor:'#d43b51', strokeOpacity:.95, strokeWeight:2,
-				fillColor:'#5e0717', fillOpacity:.43, editable: true, clickable: false, zIndex: 2,
+				fillColor:'#5e0717', fillOpacity:.43, editable: false, clickable: false, zIndex: 2,
 			});
-			map.addListener('click', function(event) { setCenter(event.latLng); $scope.$applyAsync(); });
-			centerMarker.addListener('dragend', function(event) { setCenter(event.latLng); $scope.$applyAsync(); });
+			map.addListener('click', function(event) { if (!$scope.data.custom) { return; } setCenter(event.latLng); $scope.$applyAsync(); });
+			centerMarker.addListener('dragend', function(event) { if (!$scope.data.custom) { return; } setCenter(event.latLng); $scope.$applyAsync(); });
 			radiusCircle.addListener('radius_changed', function() {
 				$scope.data.radius = Math.max(0.001, Math.round(radiusCircle.getRadius()) / 1000);
 				$scope.data.cost = $scope.cost();

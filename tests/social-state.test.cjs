@@ -107,3 +107,18 @@ test('Room activity signals new joins and shouts without replaying summaries or 
  assert.equal(events.length,3);
  assert.equal(chat.eventForRoom('shout',room).text,'Hello again');
 });
+
+test('Shout payload preserves GPS radius and quotes each custom centre separately', async () => {
+ const {ctor, context} = load('lup-chat-service.js', {GWF_USER: {JSON: {}}});
+ context.GWS_Message.prototype.writeFloat = function(value) { this.words.push(value); return this; };
+ const sent = [];
+ const socket = {sendBinary(packet) {
+  sent.push(packet.words);
+  return Promise.resolve({read32: () => 0});
+ }};
+ const chat = new ctor({$on() {}, $broadcast() {}}, q, {}, socket);
+ await chat.sendShout(0.25, 'GPS', null, 38);
+ await chat.sendShout(0.25, 'First', {lat: 52, lng: 10}, 538);
+ await chat.sendShout(0.25, 'Second', {lat: 52, lng: 10}, 538);
+ assert.deepEqual(sent, [[1, 'GPS', 250], [1, 'First', 52, 10, 250, 538], [1, 'Second', 52, 10, 250, 538]]);
+});
